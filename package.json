@@ -1,0 +1,45 @@
+{
+  "name": "careerbee-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint './src/**/*.{js,ts,jsx,tsx}'",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "5.67.3",
+    "autoprefixer": "^10.4.16",
+    "axios": "1.8.4",
+    "chart.js": "^4.4.1",
+    "lottie-react": "2.4.1",
+    "postcss": "^8.4.27",
+    "react": "^18.2.0",
+    "react-chartjs-2": "5.3.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "7.54.1",
+    "react-router-dom": "7.1.5",
+    "tailwindcss": "3.4.7",
+    "zustand": "5.0.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@types/react": "^18.2.62",
+    "@types/react-dom": "^18.2.17",
+    "@typescript-eslint/eslint-plugin": "^8.31.0",
+    "@typescript-eslint/parser": "^8.31.0",
+    "@vitejs/plugin-react": "^4.4.1",
+    "eslint": "^9.25.1",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "prettier": "^3.5.3",
+    "typescript": "5.4.5",
+    "typescript-eslint": "^8.26.1",
+    "vite": "^6.0.15"
+  }
+}
