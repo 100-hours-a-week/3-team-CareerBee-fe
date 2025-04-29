@@ -25,7 +25,9 @@
     /* path config */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@/pages/": ["src/pages/"],
+      "@/layout/": ["src/layout/"],
     }
   },
   "include": ["src"]
