@@ -15,13 +15,14 @@ const toggleVariants = cva(
     variants: {
       variant: {
         default: "bg-transparent",
-        outline:
-          "border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground",
+        pill:
+          `border border-border bg-background shadow-sm rounded-full
+          hover:bg-accent hover:text-accent-foreground
+          data-[state=on]:bg-secondary data-[state=on]:border-none`,
         save: 
-        `flex items-center
-        
-        w-8 h-8
-        data-[state=on]:fill-primary,`,
+          `flex items-center
+          w-8 h-8
+          data-[state=on]:fill-primary,`,
       },
       size: {
         default: "h-9 px-2 min-w-9",
