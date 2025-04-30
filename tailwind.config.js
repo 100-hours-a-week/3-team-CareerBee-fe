@@ -6,9 +6,11 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",],
   theme: {
   	extend: {
-		fontFamily: {
-			sans: ['var(--font-sans)'],
-		},
+  		fontFamily: {
+  			sans: [
+  				'var(--font-sans)'
+  			]
+  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
@@ -33,10 +35,10 @@ export default {
   				DEFAULT: 'hsl(var(--secondary))',
   				foreground: 'hsl(var(--secondary-foreground))'
   			},
-			text: {
-				primary: 'var(--text-primary)',
-				secondary: 'var(--text-secondary)',
-			},
+  			text: {
+  				primary: 'var(--text-primary)',
+  				secondary: 'var(--text-secondary)'
+  			},
   			muted: {
   				DEFAULT: 'hsl(var(--muted))',
   				foreground: 'hsl(var(--muted-foreground))'
@@ -59,8 +61,8 @@ export default {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			},
-			error: 'var(--error)',
-			success: 'var(--success)',
+  			error: 'var(--error)',
+  			success: 'var(--success)'
   		}
   	}
   },
