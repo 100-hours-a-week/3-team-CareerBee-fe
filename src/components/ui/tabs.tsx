@@ -22,13 +22,20 @@ const TabsList = React.forwardRef<
 TabsList.displayName = TabsPrimitive.List.displayName
 
 const TabsVariants = cva(
-  "inline-flex items-center rounded-none justify-center whitespace-nowrap px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow",
+  `inline-flex items-center justify-center 
+  rounded-none whitespace-nowrap px-3 py-1 bg-background
+  text-sm font-medium ring-offset-background transition-all 
+  focus-visible:outline-none 
+  focus-visible:ring-2 
+  focus-visible:ring-ring 
+  disabled:pointer-events-none 
+  disabled:opacity-50 
+  data-[state=active]:shadow`,
   {
     variants: {
       variant: {
         company:
-        `relative top-0 
-        data-[state=active]:text-text-primary 
+        `relative top-0 text-text-primary 
         data-[state=active]:font-semibold
         data-[state=active]:after:bg-primary 
         data-[state=active]:bg-secondary/80 
@@ -41,8 +48,11 @@ const TabsVariants = cva(
         after:bg-secondary 
         `,
       }
-    }
-  }
+    },
+    defaultVariants: {
+      variant: "company",
+    },
+  },
 )
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
