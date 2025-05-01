@@ -22,6 +22,9 @@ import { useToast } from "@/hooks/use-toast"
 import axios from "axios";
 import { ToastAction } from "@/components/ui/toast";
 // import { ToastAction } from "@/components/ui/toast";
+
+import { Modal } from "@/components/ui/modal";
+
 export default function Home() {
 
 
@@ -61,6 +64,16 @@ export default function Home() {
         variant: "success",
       });
     }}/>
+
+    <Modal
+        trigger="모달 열기"
+        title="모달입니다."
+        description="이야 대박"
+        cancelText="Cancel"
+        actionText="Continue"
+        cancelButton={true}
+    />
+
     </>
   );
   }
