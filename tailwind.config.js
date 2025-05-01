@@ -17,7 +17,10 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
-  			background: 'hsl(var(--background))',
+  			background: {
+				DEFAULT: 'hsl(var(--background))',
+				muted: 'hsl(var(--background-muted))',
+			},
   			foreground: 'hsl(var(--foreground))',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
@@ -63,8 +66,18 @@ export default {
   			},
   			error: 'var(--error)',
   			success: 'var(--success)'
-  		}
+  		},
+		boxShadow: {
+			'sides': '4px 0 8px -4px rgba(0,0,0,0.1), -4px 0 8px -4px rgba(0,0,0,0.1)',
+		}
   	}
   },
   plugins: [require("tailwindcss-animate")],
+  screens: {
+	sm: "640px",
+	md: "768px",
+	lg: "1024px",
+	xl: "1280px",
+	"2xl": "1536px",
+  }
 }
