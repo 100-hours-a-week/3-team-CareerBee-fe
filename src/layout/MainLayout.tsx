@@ -1,12 +1,16 @@
 import { Outlet } from 'react-router-dom';
+import {Header} from "@/components/layout/header";
 
 export default function MainLayout() {
   return (
     <div className="min-h-screen flex flex-col max-w-[600px] w-full mx-auto bg-background shadow-sides">
       {/* 공통 Header */}
-      <header className="h-16 w-full bg-yellow-400 flex items-center px-4">
-        <h1 className="text-xl font-bold">CareerBee</h1>
-      </header>
+      <Header type="main" point={999}/>
+      {/* <Header type="login" point={999} />
+      <Header type="down" point={999} />
+      <Header type="downLogin" point={999} />
+      <Header type="nav" point={999} />
+      <Header type="minimal" point={999} /> */}
 
       {/* 각 페이지가 여기에 끼워진다 */}
       <main className="flex-1 p-4">
