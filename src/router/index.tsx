@@ -19,7 +19,7 @@ export const router = createBrowserRouter([
       { path: 'my', element: <Mypage /> },
       { path: 'login', element: <Login /> },
       { path: 'login-required', element: <LoginRequired /> },
-      { path: 'to-be-continued', element: <ToBeContinued /> },
+      { path: '*', element: <ToBeContinued /> },
     ],
   },
   {
