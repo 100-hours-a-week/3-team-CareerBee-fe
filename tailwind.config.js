@@ -69,7 +69,21 @@ export default {
   		},
 		boxShadow: {
 			'sides': '4px 0 8px -4px rgba(0,0,0,0.1), -4px 0 8px -4px rgba(0,0,0,0.1)',
-		}
+		},
+		keyframes: {
+			wiggle: {
+					  '0%': { transform: 'rotate(0deg)' },
+					  '5%': { transform: 'rotate(-5deg)' },
+					  '10%': { transform: 'rotate(5deg)' },  // 오른쪽으로 10도
+					  '25%': { transform: 'rotate(-10deg)' },
+					  '45%': { transform: 'rotate(10deg)' },
+					  '55%': { transform: 'rotate(0deg)' },
+					  '100%': { transform: 'rotate(0deg)' }, // 멈춰 있는 상태
+			},
+		  },
+		  animation: {
+			wiggle: 'wiggle 1s ease-in-out infinite',
+		  },
   	}
   },
   plugins: [require("tailwindcss-animate")],
