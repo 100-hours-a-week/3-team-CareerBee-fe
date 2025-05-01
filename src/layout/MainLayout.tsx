@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import {Header} from "@/components/layout/header";
-import {Navbar} from "@/components/layout/navbar";
+import { Navbar } from "@/components/layout/navbar";
 
 export default function MainLayout() {
   return (
