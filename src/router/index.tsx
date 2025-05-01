@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import App from '@/App';
+
 import Home from '@/pages/Home';
 import CompanyDetail from '@/pages/CompanyDetail';
 import Mypage from '@/pages/Mypage';
@@ -19,7 +19,7 @@ export const router = createBrowserRouter([
       { path: 'my', element: <Mypage /> },
       { path: 'login', element: <Login /> },
       { path: 'login-required', element: <LoginRequired /> },
-      { path: 'to-be-continued', element: <ToBeContinued /> },
+      { path: '*', element: <ToBeContinued /> },
     ],
   },
   {
