@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import {Header} from "@/components/layout/header";
+import { Navbar } from "@/components/layout/navbar";
 
 export default function MainLayout() {
   return (
@@ -18,9 +19,7 @@ export default function MainLayout() {
       </main>
 
       {/* 공통 Nav */}
-      <footer className="h-16  w-full bg-gray-100 flex items-center justify-center">
-        <p className="text-sm text-gray-500">© 2025 CareerBee</p>
-      </footer>
+      <Navbar />
     </div>
   );
 }
