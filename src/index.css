@@ -21,6 +21,7 @@
 div#root{
   margin: 0 auto;
   width: 100%;
+
 }
 a {
   font-weight: 500;
@@ -37,6 +38,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: hsl(var(--background-muted));
 }
 
 h1 {
@@ -81,25 +83,27 @@ button:focus-visible {
     --secondary: 44 89% 82%;          /* #FBE3A3 */
   
     --background: 0 0% 98%;           /* #FAFAFA */
-  
+    --background-muted: 0, 0%, 96%;   /* #F5F5F5 */
+
     --text-primary: 0 0% 13%;         /* #212121 */
     --text-secondary: 0 0% 62%;       /* #9e9e9e */
     --border: 38 12% 30%;             /* #5d564c */
   
     --error: 0 67% 53%;               /* #D32F2F */
     --success: 152 100% 38%;          /* #00C471 */
-    /* --- */
-    --foreground: 0 0% 3.9%;
+
+
+    --foreground: 0 0% 13%;           /* #212121 */
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 0 0% 13%;      /* #212121 */
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
+    --popover-foreground: 0 0% 13%;   /* #212121 */
     --primary-foreground: 0 0% 98%;
     --secondary-foreground: 0 0% 9%;
-    --muted: 35, 5%, 45%;              /* #79746d */
-    --muted-foreground: 35, 5%, 45%;   /* #79746d */
+    --muted: 35, 5%, 45%;             /* #79746d */
+    --muted-foreground: 0 0% 13%;     /* #212121 */
     --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --accent-foreground:0 0% 13%;     /* #212121 */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --input: 0 0% 89.8%;
