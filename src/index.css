@@ -154,3 +154,10 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+
+@layer utilities {
+  .iconSize-default {
+    @apply w-8 h-8 text-text-primary;
+  }
+}
