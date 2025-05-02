@@ -80,10 +80,10 @@ export default {
 					  '55%': { transform: 'rotate(0deg)' },
 					  '100%': { transform: 'rotate(0deg)' }, // 멈춰 있는 상태
 			},
-		  },
-		  animation: {
+		},
+		animation: {
 			wiggle: 'wiggle 1s ease-in-out infinite',
-		  },
+		},
   	}
   },
   plugins: [require("tailwindcss-animate")],

@@ -1,6 +1,6 @@
 import { PiBell, PiBellRinging, PiCoinsDuotone, PiCaretDown, PiCaretLeft } from "react-icons/pi";
 import { cn } from "@/lib/utils";
-
+import logo from "@/assets/logo-with-text-2.png";
 interface HeaderProps {
   type:
     | "main"
@@ -36,7 +36,7 @@ export const Header = ({ type = "main", point = 0, hasNewNotification=false}: He
         ) : null}
 
         <a href="/">
-            <img src="src/assets/logo-with-text-2.png" alt="logo" className="h-9"/>
+            <img src={logo} alt="logo" className="h-9"/>
         </a>
       </div>
 

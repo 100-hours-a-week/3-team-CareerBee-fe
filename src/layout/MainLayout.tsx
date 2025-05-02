@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import {Header} from "@/components/layout/header";
+import { Navbar } from "@/components/layout/navbar";
 
 export default function MainLayout() {
   return (
@@ -16,6 +17,9 @@ export default function MainLayout() {
       <main className="flex-1 flex flex-col items-center justify-center p-4 ">
         <Outlet />
       </main>
+
+      {/* 공통 Nav */}
+      <Navbar />
     </div>
   );
 }
