@@ -9,7 +9,7 @@ export default function OAuthCallback() {
 
   useEffect(() => {
     const url = new URL(window.location.href)
-    const token = url.searchParams.get("token")
+    const token = url.searchParams.get("code")
 
     if (token) {
       setToken(token) // ✅ Zustand + persist로 저장됨
