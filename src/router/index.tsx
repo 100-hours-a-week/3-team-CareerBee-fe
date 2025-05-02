@@ -8,6 +8,7 @@ import LoginRequired from '@/pages/LoginRequired';
 import ToBeContinued from '@/pages/ToBeContinued';
 import MainLayout from '@/layout/MainLayout';
 import NotFound from '@/pages/NotFound';
+import OAuthCallback from '@/pages/OAuthCallback';
 
 export const router = createBrowserRouter([
   {
@@ -25,5 +26,9 @@ export const router = createBrowserRouter([
   {
     path: '*',
     element: <NotFound />,
+  },
+  {
+    path: "/oauth/callback",
+    element: <OAuthCallback />,
   }
 ]);
