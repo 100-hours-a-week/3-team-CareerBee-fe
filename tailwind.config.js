@@ -80,9 +80,31 @@ export default {
 					  '55%': { transform: 'rotate(0deg)' },
 					  '100%': { transform: 'rotate(0deg)' }, // 멈춰 있는 상태
 			},
+			'toast-slide-out': {
+				from: {
+					opacity: '1',
+					transform: 'translateY(0px)',
+				  },
+				  to: {
+					opacity: '0',
+					transform: 'translateY(16px)',
+				  },
+			},
+			'toast-slide-in': {
+				from: {
+					opacity: '0',
+					transform: 'translateY(16px)',
+				  },
+				  to: {
+					opacity: '1',
+					transform: 'translateY(0px)',
+				  },
+			},
 		},
 		animation: {
 			wiggle: 'wiggle 1s ease-in-out infinite',
+			'toast-slide-out': 'toast-slide-out 200ms ease-in forwards',
+			'toast-slide-in': 'toast-slide-in 200ms ease-out forwards',
 		},
   	}
   },

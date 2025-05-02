@@ -1,6 +1,7 @@
 import{useState, useEffect} from "react";
 
 import axios from "axios";
+
 export default function Home() {
   const [data, setData] = useState<string | null>(null);
 
@@ -19,9 +20,13 @@ export default function Home() {
   }, []);
 
   return (
+    <>
     <div className="flex flex-col items-center justify-center gap-4">
       <h1 className="text-2xl font-bold text-center">Careerbee에 오신 걸 환영합니다!</h1>
       <p className="text-lg text-center">헬스 체크 상태: {data}</p>
     </div>
+
+  
+    </>
   );
   }

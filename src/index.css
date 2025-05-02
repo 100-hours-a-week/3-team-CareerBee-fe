@@ -33,8 +33,6 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-color: hsl(var(--background-muted));
-  overflow: hidden;
 }
 
 h1 {
@@ -83,7 +81,7 @@ button:focus-visible {
     --border: 38 12% 30%;             /* #5d564c */
   
     --error: 0 67% 53%;               /* #D32F2F */
-    --success: 152 100% 38%;          /* #00C471 */
+    --success: 152 100% 38%;          /* #40B973 #3DD598 #2CA977 #FFD9B3 #F7C746 #FBE3A3 #FFF5CC */
 
 
     --foreground: 0 0% 13%;           /* #212121 */
@@ -93,7 +91,7 @@ button:focus-visible {
     --popover-foreground: 0 0% 13%;   /* #212121 */
     --primary-foreground: 0 0% 98%;
     --secondary-foreground: 0 0% 9%;
-    --muted: 35, 5%, 45%;             /* #79746d */
+    --muted: 35 5% 45%;               /* #79746d */
     --muted-foreground: 0 0% 13%;     /* #212121 */
     --accent: 0 0% 96.1%;
     --accent-foreground:0 0% 13%;     /* #212121 */
@@ -144,20 +142,18 @@ button:focus-visible {
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground min-h-screen overscroll-none;
   }
 }
-
 
 @layer utilities {
   .iconSize-default {
     @apply w-8 h-8 text-text-primary;
   }
 }
+
