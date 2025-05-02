@@ -20,7 +20,9 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
+
+    "incremental": true,
+    "composite": true,
 
     /* path config */
     "baseUrl": ".",
