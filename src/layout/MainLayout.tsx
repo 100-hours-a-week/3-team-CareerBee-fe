@@ -7,11 +7,11 @@ export default function MainLayout() {
     <div className="min-h-screen flex flex-col max-w-[600px] w-full mx-auto bg-background shadow-sides">
       {/* 공통 Header */}
       {/* <Header type="main" point={999}/> */}
-      <Header type="minimal"/>
+      <Header type="login"/>
       {/* <Header type="down" point={999} /> */}
-      {/* <Header type="downLogin" point={999} /> */}
+      {/* <Header type="downLogin" /> */}
       {/* <Header type="nav" point={999} /> */}
-      {/* <Header type="minimal" point={999} /> */}
+      {/* <Header type="minimal" /> */}
 
       {/* 각 페이지가 여기에 끼워진다 */}
       <main className="flex-1 flex flex-col items-center justify-center p-4 ">
