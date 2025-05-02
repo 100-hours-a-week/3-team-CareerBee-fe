@@ -33,8 +33,6 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-color: hsl(var(--background-muted));
-  overflow: hidden;
 }
 
 h1 {
@@ -144,20 +142,18 @@ button:focus-visible {
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground min-h-screen overscroll-none;
   }
 }
-
 
 @layer utilities {
   .iconSize-default {
     @apply w-8 h-8 text-text-primary;
   }
 }
+
