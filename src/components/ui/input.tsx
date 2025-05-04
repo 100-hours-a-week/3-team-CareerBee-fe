@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 import { cva } from "class-variance-authority"
 
 const SearchVariants = cva(
-  `flex w-full border placeholder:text-muted-foreground text-base`,
+  `flex w-full border placeholder:text-text-secondary text-base`,
   {
     variants:{
       variant:{
@@ -48,3 +48,4 @@ const Input = React.forwardRef<
 Input.displayName = "Input"
 
 export { Input }
+
