@@ -1,46 +1,66 @@
 import { Input } from "@/components/ui/input"
+import { SuggestionList } from "@/components/domain/SuggestionList"
 import { PiMagnifyingGlass, PiX } from "react-icons/pi"
-import { useRef, useState } from "react"
+import { useRef } from "react"
 import { Button } from "../ui/button"
 
-export function SearchBar(props: React.ComponentProps<typeof Input>) {
-  const [value, setValue] = useState("")
-  const inputRef = useRef<HTMLInputElement>(null)
 
-  return (
-    <div className="relative w-full">
+export function SearchBar({
+    suggestions=[],
+    onSuggestionSelect,
+    value,
+    onChange,
+    ...props
+  }: React.ComponentProps<typeof Input> & {
+    suggestions?: string[]
+    onSuggestionSelect?: (value: string) => void
+  }) {
+    const inputRef = useRef<HTMLInputElement>(null)
+  
+    return (
+      <div className="relative w-full">
         <Button
-            variant="icon"
-            className="absolute left-2 top-1/2 -translate-y-1/2"
-            label= {<PiMagnifyingGlass />}
-                    onClick={() => {
-            inputRef.current?.focus()
-            }}
-        >
-        </Button>
+          variant="icon"
+          className="absolute left-2 top-1/2 -translate-y-1/2"
+          label={<PiMagnifyingGlass />}
+          onClick={() => inputRef.current?.focus()}
+        />
         <Input
-            ref={inputRef}
-            variant="search"
-            className="pl-12 pr-10"
-            value={value}
-            onChange={(e) => {
-            setValue(e.target.value)
-            props.onChange?.(e)
-            }}
-            {...props}
+          ref={inputRef}
+          variant="search"
+          className="pl-12 pr-10"
+          value={value}
+          onChange={(e) => {
+            onChange?.(e)
+            console.log("SearchBar에서 onChange 호출:", e.target.value)
+          }}
+          {...props}
         />
         {value && (
-            <Button
+          <Button
             variant="icon"
             className="absolute right-2 top-1/2 -translate-y-1/2"
-            label= {<PiX />}
+            label={<PiX />}
             onClick={() => {
-                setValue("")
-                props.onChange?.({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>)
+              const syntheticEvent = {
+                target: { value: "" }
+              } as React.ChangeEvent<HTMLInputElement>
+              onChange?.(syntheticEvent)
             }}
-            >
-            </Button>
+          />
         )}
-    </div>
-  )
-}
+        {value && suggestions.length > 0 && (
+          <SuggestionList
+            filteredSuggestions={suggestions}
+            onSuggestionSelect={onSuggestionSelect}
+            onClose={() => {
+              const syntheticEvent = {
+                target: { value: "" }
+              } as React.ChangeEvent<HTMLInputElement>
+              onChange?.(syntheticEvent)
+            }}
+          />
+        )}
+      </div>
+    )
+  }
