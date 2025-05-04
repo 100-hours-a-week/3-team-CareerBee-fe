@@ -14,18 +14,24 @@ const mockData = [
 
 export default function Home() {
   const [search, setSearch] = useState("")
-
+  
+  localStorage.setItem("accessToken", "1234")
+  console.log("accessToken", localStorage.getItem("accessToken"));
+  const isLoggedIn = !!localStorage.getItem("accessToken");
+  console.log("isLoggedIn", isLoggedIn);
   return (
     <>
-    <SearchBar
-      placeholder="검색어를 입력하세요."
-      value={search}
-      onChange={(e) => setSearch(e.target.value)}
-      suggestions={mockData}
-      onSuggestionSelect={(value: string) => setSearch(value)}
-    />
-    <div className="mt-4"></div>
+    <div className="pt-2 w-full">
+      <SearchBar
+        placeholder="검색어를 입력하세요."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        suggestions={mockData}
+        onSuggestionSelect={(value: string) => setSearch(value)}
+      />
+      <div className="mt-4"></div>
       <h1 className="text-2xl font-bold">검색어: {search}</h1>
-      </>
+    </div>
+    </>
   )
 }
