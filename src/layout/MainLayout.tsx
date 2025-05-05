@@ -1,25 +1,39 @@
-import { Outlet } from 'react-router-dom';
-import {Header} from "@/components/layout/header";
+import { useEffect, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { Header } from "@/components/layout/header";
 import { Navbar } from "@/components/layout/navbar";
 
 export default function MainLayout() {
+  const location = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!token);
+  }, [location.pathname]);
+
+  const headerType = (() => {
+    if (location.pathname === "/login") return "login";
+    if (location.pathname === "/" && isLoggedIn) return "main";
+    if (location.pathname === "/" && !isLoggedIn) return "login";
+    if (location.pathname.startsWith("/company")) return "down";
+    if (location.pathname.startsWith("/notification")) return "nav";
+    return "minimal";
+  })();
+  const showNavbar =(()=>{
+    if(location.pathname.startsWith("/competition/entry")) return false;
+    return true;
+  })
+
   return (
     <div className="min-h-screen flex flex-col max-w-[600px] w-full mx-auto bg-background shadow-sides">
-      {/* 공통 Header */}
-      {/* <Header type="main" point={999}/> */}
-      <Header type="login"/>
-      {/* <Header type="down" point={999} /> */}
-      {/* <Header type="downLogin" /> */}
-      {/* <Header type="nav" point={999} /> */}
-      {/* <Header type="minimal" /> */}
 
-      {/* 각 페이지가 여기에 끼워진다 */}
-      <main className="flex-1 flex flex-col items-center justify-center p-4 ">
+      <Header type={headerType} hasNewNotification={false} point={100} />
+      <main className="flex-1 flex flex-col items-center justify-center w-full px-4 ">
         <Outlet />
       </main>
+      {showNavbar() ? <Navbar /> : null}
 
-      {/* 공통 Nav */}
-      <Navbar />
     </div>
   );
 }

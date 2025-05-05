@@ -15,7 +15,7 @@ const navItems: NavItem[] = [
 
 export const Navbar = () => {
     return (
-        <div className="flex items-center justify-between px-4 h-16 w-full gap-2">
+        <div className="flex items-center justify-between px-8 h-16 w-full gap-2">
             {navItems.map((item) => (
                 <a key={item.name} href={item.href}>
                     {item.icon}
