@@ -3,46 +3,22 @@
 
 import { useState, useEffect } from "react"
 import { SearchBar } from "@/components/domain/SearchBar"
+import  CompanyCard  from "@/components/domain/CompanyCard"
 import { Map, MapMarker } from "react-kakao-maps-sdk";
+import mapData from "@/data/MapData.json";
 
-const mockData = [
-  "카카오",
-  "카카오엔터테인먼트",
-  "카카오테크부트캠프 판교캠퍼스 교육장 유스페이스",
-  "카리나",
-  "카카오",
-  "카리나",
-  "카카오",
-  "카카오",
-]
-const positions = [
-  {
-    title: "카테부",
-    latlng: { lat: 37.40014087574066, lng: 127.10677853166985 },
-    imgSrc: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
-  },
-  {
-    title: "유스페이스1",
-    latlng: { lat: 37.40041106942548, lng: 127.10690314875184 },
-    imgSrc: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
-
-  },
-  {
-    title: "스타벅스",
-    latlng: { lat: 37.40150898203711, lng: 127.10836729941134 },
-    imgSrc: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
-
-  },
-]
-
-const KTB={
-  lat: 37.40014087574066,
-  lng: 127.10677853166985,
-}
+const mockData = mapData.mockData;
+const companies = mapData.companies;
+const companyInfo = mapData.companyInfo;
+const isBookmarked = 'true';
+const KTB = mapData.KTB;
 
 export default function Main() {
   const [search, setSearch] = useState("")
   const [loaded, setLoaded] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  const [openCardIndex, setOpenCardIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const script = document.createElement("script")
@@ -72,20 +48,36 @@ export default function Main() {
             className="w-[calc(100%+2rem)] h-full"
             level={3}
           >
-        {positions.map((position) => (
-        <MapMarker
-          key={`${position.title}-${position.latlng}`}
-          position={position.latlng}
-          image={{
-            src: position.imgSrc, 
-            size: {
-              width: 24,
-              height: 35
-            },
-          }}
-          title={position.title} 
-        />
-      ))}
+        {companies.map((company, index) => (
+          <MapMarker
+            key={`${company.id}-${company.locationInfo.latitude}-${company.locationInfo.longitude}`}
+            position={{
+              lat: company.locationInfo.latitude,
+              lng: company.locationInfo.longitude,
+            }}
+            image={{
+              src: company.logoUrl,
+              size: { width: 24, height: 35 },
+            }}
+            onClick={() => setOpenCardIndex(index)}
+          >
+            {openCardIndex === index && (
+              <CompanyCard
+                companyName={companyInfo.name}
+                bookmarkCount={companyInfo.wishCount}
+                tags={["카카오", "카카오엔터테인먼트", "집", "판교"]}
+                imageUrl={companyInfo.logoUrl}
+                onClose={() => setOpenCardIndex(null)}
+                {...(isLoggedIn ? {
+                  onToggleBookmark: () => {},
+                  isBookmarked: isBookmarked,
+                }:{
+                  isBookmarked: 'disabled',
+                })}
+              />
+            )}
+          </MapMarker>
+        ))}
           </Map>
         )}
         

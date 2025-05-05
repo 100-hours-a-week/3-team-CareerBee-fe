@@ -26,9 +26,9 @@ const buttonVariants = cva(
         icon: "bg-transparent text-border hover:text-border/80",
       },
       size: {
-        sm: "h-8 rounded-md px-3 text-xs",
-        md: "h-9 rounded-md px-4 text-sm",
-        lg: "h-10 rounded-md px-8 text-base",
+        sm: "h-8 rounded-md text-xs",
+        md: "h-9 rounded-md text-sm",
+        lg: "h-10 rounded-md text-base",
       },
       fullWidth: {
         true: "w-full",
