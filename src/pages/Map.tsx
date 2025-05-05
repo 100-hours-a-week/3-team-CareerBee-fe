@@ -1,3 +1,6 @@
+// 지도 기반의 검색 페이지. 메인 페이지이자 진입 페이지.
+// 도메인 상에서 "지도 도메인"
+
 import { useState } from "react"
 import { SearchBar } from "@/components/domain/SearchBar"
 
@@ -12,7 +15,7 @@ const mockData = [
   "카카오",
 ]
 
-export default function Home() {
+export default function Map() {
   const [search, setSearch] = useState("")
   
   localStorage.setItem("accessToken", "1234")
