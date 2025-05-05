@@ -15,7 +15,7 @@ const mockData = [
   "카카오",
 ]
 
-export default function Map() {
+export default function Main() {
   const [search, setSearch] = useState("")
   
   localStorage.setItem("accessToken", "1234")
@@ -32,9 +32,9 @@ export default function Map() {
         suggestions={mockData}
         onSuggestionSelect={(value: string) => setSearch(value)}
       />
-      <div className="mt-4"></div>
-      <h1 className="text-2xl font-bold">검색어: {search}</h1>
     </div>
+
+    
     </>
   )
 }
