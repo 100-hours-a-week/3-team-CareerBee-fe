@@ -1,0 +1,55 @@
+{
+  "mockData": [
+    "카카오",
+    "카카오엔터테인먼트",
+    "카카오테크부트캠프 판교캠퍼스 교육장 유스페이스",
+    "카리나",
+    "카카오",
+    "카리나",
+    "카카오",
+    "카카오"
+  ],
+    "companies": [
+        {
+        "id": 1,
+        "logoUrl": "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+        "locationInfo": {
+            "latitude": 37.40014087574066,
+            "longitude": 127.10677853166985
+        }
+        },
+        {
+        "id": 2,
+        "logoUrl": "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+        "locationInfo": {
+            "latitude": 37.40041106942548,
+            "longitude": 127.10690314875184
+        }
+        },
+        {
+        "id": 3,
+        "logoUrl": "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+        "locationInfo": {
+            "latitude": 37.40150898203711,
+            "longitude": 127.10836729941134
+        }
+        }
+    ],
+    "companyInfo": {
+        "id": 101,
+        "name": "카테부",
+        "logoUrl": "https://t1.kakaocdn.net/kakaocorp/kakaocorp/admin/thumbnail/logo_enterprise.png",
+        "wishCount": 128,
+        "keywords": [
+        { "content": "AI" },
+        { "content": "클라우드" },
+        { "content": "판교" },
+        { "content": "카카오테크부트캠프" }
+        ]
+    },
+
+  "KTB": {
+    "lat": 37.40014087574066,
+    "lng": 127.10677853166985
+  }
+}
