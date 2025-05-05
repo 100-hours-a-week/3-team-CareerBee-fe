@@ -45,7 +45,7 @@ export default function Main() {
   }, [])
   return (
     <>
-    <div className="pt-2 w-full">
+    <div className="py-2 w-full">
       <SearchBar
         placeholder="검색어를 입력하세요."
         value={search}
@@ -58,7 +58,7 @@ export default function Main() {
       {loaded && (
           <Map
             center={{ lat: 37.40014087574066, lng: 127.10677853166985 }}
-            className="w-[600px] h-[600px]"
+            className="w-[calc(100%+2rem)] h-full"
             level={4}
           />
         )}
