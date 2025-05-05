@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react"
 import { SearchBar } from "@/components/domain/SearchBar"
-import { Map } from "react-kakao-maps-sdk";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
 
 const mockData = [
   "카카오",
@@ -15,26 +15,38 @@ const mockData = [
   "카카오",
   "카카오",
 ]
+const positions = [
+  {
+    title: "카테부",
+    latlng: { lat: 37.40014087574066, lng: 127.10677853166985 },
+    imgSrc: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+  },
+  {
+    title: "유스페이스1",
+    latlng: { lat: 37.40041106942548, lng: 127.10690314875184 },
+    imgSrc: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+
+  },
+  {
+    title: "스타벅스",
+    latlng: { lat: 37.40150898203711, lng: 127.10836729941134 },
+    imgSrc: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
+
+  },
+]
+
+const KTB={
+  lat: 37.40014087574066,
+  lng: 127.10677853166985,
+}
 
 export default function Main() {
   const [search, setSearch] = useState("")
-  
-  localStorage.setItem("accessToken", "1234")
-  const isLoggedIn = !!localStorage.getItem("accessToken");
-
-  // const container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
-  // const options = { //지도를 생성할 때 필요한 기본 옵션
-  //   center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
-  //   level: 3 //지도의 레벨(확대, 축소 정도)
-  // };
-
-  // const map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
-
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     const script = document.createElement("script")
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAOMAP_KEY}&autoload=false`
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAOMAP_KEY}&autoload=false&libraries=clusterer,drawing`
     script.async = true
     script.onload = () => {
       window.kakao.maps.load(() => {
@@ -54,15 +66,29 @@ export default function Main() {
         onSuggestionSelect={(value: string) => setSearch(value)}
       />
     </div>
-    {/* <div className="flex-1 overflow-auto"> */}
       {loaded && (
           <Map
-            center={{ lat: 37.40014087574066, lng: 127.10677853166985 }}
+            center={{ lat: KTB.lat, lng: KTB.lng }}
             className="w-[calc(100%+2rem)] h-full"
-            level={4}
-          />
+            level={3}
+          >
+        {positions.map((position) => (
+        <MapMarker
+          key={`${position.title}-${position.latlng}`}
+          position={position.latlng}
+          image={{
+            src: position.imgSrc, 
+            size: {
+              width: 24,
+              height: 35
+            },
+          }}
+          title={position.title} 
+        />
+      ))}
+          </Map>
         )}
-    {/* </div> */}
+        
     </>
   )
 }
