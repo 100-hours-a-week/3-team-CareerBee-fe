@@ -4,6 +4,7 @@ import { Toggle } from '@/components/ui/toggle';
 import noImg from '@/assets/no-image.png';
 import companyCardBackground from '@/assets/company-card-background.png';
 interface CompanyCardProps {
+  companyId: number;
   companyName: string;
   bookmarkCount: number;
   tags: string[];
@@ -14,6 +15,7 @@ interface CompanyCardProps {
 }
 
 export default function CompanyCard({
+  companyId,
   companyName,
   bookmarkCount,
   tags,
@@ -36,7 +38,7 @@ export default function CompanyCard({
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-2">
         <a
-            href="/company/:id"
+            href={`/company/${companyId}`}
             className="text-md font-bold line-clamp-1 hover:text-text-primary"
         >
             {companyName}
