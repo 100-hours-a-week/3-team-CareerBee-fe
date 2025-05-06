@@ -1,14 +1,9 @@
-import { useToast } from "@/hooks/use-toast"
-import {
-  Toast,
-  ToastProvider,
-  ToastTitle,
-  ToastViewport,
-} from "@/components/ui/toast"
+import { useToast } from '@/hooks/use-toast';
+import { Toast, ToastProvider, ToastTitle, ToastViewport } from '@/components/ui/toast';
 
 //Toaster가 있어야 toast를 사용할 수 있다.
 export function Toaster() {
-  const { toasts } = useToast()
+  const { toasts } = useToast();
 
   return (
     <ToastProvider>
@@ -18,9 +13,9 @@ export function Toaster() {
             {title && <ToastTitle>{title}</ToastTitle>}
             {action}
           </Toast>
-        )
+        );
       })}
       <ToastViewport />
     </ToastProvider>
-  )
+  );
 }

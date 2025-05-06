@@ -1,23 +1,21 @@
-import { Toggle } from "@/components/ui/toggle";
-import { useState } from "react";
+import { Toggle } from '@/components/ui/toggle';
+import { useState } from 'react';
 
 interface FilterProps {
-    id: string;
-    label: string;
+  id: string;
+  label: string;
 }
-interface Props{
-    filters: FilterProps[];
+interface Props {
+  filters: FilterProps[];
 }
-const FilterGroup = ({filters} :Props) => {
+const FilterGroup = ({ filters }: Props) => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
   const toggleFilter = (id: string) => {
-    setActiveFilters((prev) =>
-      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
-    );
+    setActiveFilters((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]));
   };
 
-  console.log(  "Active Filters:", activeFilters);
+  console.log('Active Filters:', activeFilters);
   return (
     <div className="w-full px-4 py-2">
       <div className="overflow-x-auto">

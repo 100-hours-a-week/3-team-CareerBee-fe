@@ -28,7 +28,7 @@ export const router = createBrowserRouter([
     element: <NotFound />,
   },
   {
-    path: "/oauth/callback/kakao",
+    path: '/oauth/callback/kakao',
     element: <OAuthCallback />,
-  }
+  },
 ]);
