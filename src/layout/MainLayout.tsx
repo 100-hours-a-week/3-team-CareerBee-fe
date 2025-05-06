@@ -27,11 +27,13 @@ export default function MainLayout() {
 
   return (
     <div className="min-h-screen flex flex-col max-w-[600px] w-full mx-auto bg-background shadow-sides">
+      
       <Header type={headerType} hasNewNotification={false} point={100} />
       <main className="grow flex flex-col items-center justify-center w-full px-4 h-[calc(100vh-8rem)]">
         <Outlet />
       </main>
       {showNavbar() ? <Navbar /> : null}
+
     </div>
   );
 }
