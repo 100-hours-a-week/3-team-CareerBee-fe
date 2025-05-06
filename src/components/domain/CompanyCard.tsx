@@ -2,7 +2,7 @@ import { PiBookmarkSimple, PiX } from 'react-icons/pi';
 import { Button } from '@/components/ui/button';
 import { Toggle } from '@/components/ui/toggle';
 import noImg from '@/assets/no-image.png';
-
+import companyCardBackground from '@/assets/company-card-background.png';
 interface CompanyCardProps {
   companyName: string;
   bookmarkCount: number;
@@ -24,7 +24,15 @@ export default function CompanyCard({
 }: CompanyCardProps) {
     console.log(imageUrl)
   return (
-    <div className="relative rounded-lg border-2 border-border bg-white p-2 w-64 h-40 shadow-md cursor-default">
+    <div 
+    style={{
+      backgroundImage: `url(${companyCardBackground})`,
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+      width: '256px',
+      height: '176px',
+    }}
+    className="relative rounded-xl p-2 w-64 h-44 shadow-md cursor-default">
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-2">
         <a
