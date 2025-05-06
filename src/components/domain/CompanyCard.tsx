@@ -22,26 +22,27 @@ export default function CompanyCard({
   isBookmarked,
 }: CompanyCardProps) {
   return (
-    <div className="relative rounded-2xl bg-white p-3 w-[260px] shadow-md">
+    <div className="relative rounded-lg border-2 border-border bg-white p-2 w-full h-full shadow-md">
       {/* 헤더 */}
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between mb-1">
         <h2 className="font-semibold text-sm line-clamp-1 mr-1">{companyName}</h2>
         <div className="flex items-center gap-1">
-          <Toggle
-            variant="save"
-            label={<PiBookmarkSimple className="iconSize-default bg-transparent" />}
-            pressed={isBookmarked === 'true'}
-            onPressedChange={onToggleBookmark}
-          />
-
+            {isBookmarked === 'disabled' ? (null) : (
+                <Toggle
+                    variant="save"
+                    label={<PiBookmarkSimple className="[&_svg]:size-4 bg-transparent" />}
+                    pressed={isBookmarked === 'true'}
+                    onPressedChange={onToggleBookmark}
+                />
+            )}
           <span className="text-xs ml-1">{bookmarkCount}</span>
-          <Button variant="icon" label={<PiX />} onClick={onClose} className="px-0" />
+          <Button variant="icon" label={<PiX />} onClick={onClose} className="p-0" />
         </div>
       </div>
 
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center gap-2 mb-2">
         {/* 이미지 */}
-        <div className="w-[80px] h-[80px] rounded-md bg-muted flex items-center justify-center">
+        <div className="w-[100px] h-[100px] rounded-md bg-muted flex items-center justify-center overflow-hidden">
           {imageUrl ? (
             <img
               src={imageUrl}
@@ -54,11 +55,11 @@ export default function CompanyCard({
         </div>
 
         {/* 태그들 */}
-        <div className="mt-3 flex flex-wrap gap-1">
+        <div className="mt-1 flex flex-col flex-wrap gap-1">
           {tags.slice(0, 4).map((tag, i) => (
             <div
               key={i}
-              className="bg-[#F6C603] text-black text-xs px-2 py-1 rounded-full max-w-full truncate"
+              className="bg-secondary text-black text-xs px-2 py-1 rounded-full w-[120px] truncate"
             >
               {tag}
             </div>

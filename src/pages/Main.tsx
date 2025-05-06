@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { SearchBar } from '@/components/domain/SearchBar';
 import CompanyCard from '@/components/domain/CompanyCard';
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import { Map, MapMarker, CustomOverlayMap} from 'react-kakao-maps-sdk';
 import mapData from '@/data/MapData.json';
 
 const mockData = mapData.mockData;
@@ -48,38 +48,52 @@ export default function Main() {
           className="w-[calc(100%+2rem)] h-full"
           level={3}
         >
-          {companies.map((company, index) => (
-            <MapMarker
-              key={`${company.id}-${company.locationInfo.latitude}-${company.locationInfo.longitude}`}
-              position={{
-                lat: company.locationInfo.latitude,
-                lng: company.locationInfo.longitude,
-              }}
-              image={{
-                src: company.logoUrl,
-                size: { width: 24, height: 35 },
-              }}
-              onClick={() => setOpenCardIndex(index)}
-            >
-              {openCardIndex === index && (
-                <CompanyCard
-                  companyName={companyInfo.name}
-                  bookmarkCount={companyInfo.wishCount}
-                  tags={['카카오', '카카오엔터테인먼트', '집', '판교']}
-                  imageUrl={companyInfo.logoUrl}
-                  onClose={() => setOpenCardIndex(null)}
-                  {...(isLoggedIn
-                    ? {
-                        onToggleBookmark: () => {},
-                        isBookmarked: isBookmarked,
-                      }
-                    : {
-                        isBookmarked: 'disabled',
-                      })}
-                />
-              )}
-            </MapMarker>
-          ))}
+          {companies.map((company, index) => {
+            const isOpen = openCardIndex === index;
+
+            return (
+              <MapMarker
+                key={`${company.id}-${company.locationInfo.latitude}-${company.locationInfo.longitude}`}
+                position={{
+                  lat: company.locationInfo.latitude,
+                  lng: company.locationInfo.longitude,
+                }}
+                image={{
+                  src: company.logoUrl,
+                  size: { width: 24, height: 35 },
+                }}
+                clickable={true}
+                onClick={() => setOpenCardIndex(isOpen ? null : index)}
+              >
+                {isOpen && (
+                  <CustomOverlayMap
+                    position={{
+                      lat: company.locationInfo.latitude,
+                      lng: company.locationInfo.longitude,
+                    }}
+                    clickable={true}
+                    zIndex={20}
+                  >
+                    <CompanyCard
+                      companyName={companyInfo.name}
+                      bookmarkCount={companyInfo.wishCount}
+                      tags={['카카오', '카카오엔터테인먼트', '집', '판교']}
+                      imageUrl={companyInfo.logoUrl}
+                      onClose={() => setOpenCardIndex(null)}
+                      {...(isLoggedIn
+                        ? {
+                            onToggleBookmark: () => {},
+                            isBookmarked: isBookmarked,
+                          }
+                        : {
+                            isBookmarked: 'disabled',
+                          })}
+                    />
+                  </CustomOverlayMap>
+                )}
+              </MapMarker>
+            );
+          })}
         </Map>
       )}
     </>
