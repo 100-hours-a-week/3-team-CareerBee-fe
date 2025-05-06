@@ -1,14 +1,12 @@
-import * as React from "react"
+import * as React from 'react';
 
-import { cn } from "@/lib/utils"
-import { cva } from "class-variance-authority"
+import { cn } from '@/lib/utils';
+import { cva } from 'class-variance-authority';
 
-const SearchVariants = cva(
-  `flex w-full border placeholder:text-text-secondary text-base`,
-  {
-    variants:{
-      variant:{
-        default: `h-9 rounded-md border-input 
+const SearchVariants = cva(`flex w-full border placeholder:text-text-secondary text-base`, {
+  variants: {
+    variant: {
+      default: `h-9 rounded-md border-input 
         bg-transparent px-3 py-1
         file:border-0 file:bg-transparent 
         file:text-sm file:font-medium 
@@ -20,32 +18,28 @@ const SearchVariants = cva(
         disabled:opacity-50 
         md:text-sm`,
 
-        search: `h-11 rounded-full border-border bg-white pl-10 pr-10 `
-      },
-    },
-    defaultVariants:{
-      variant:"default"
+      search: `h-11 rounded-full border-border bg-white pl-10 pr-10 `,
     },
   },
-);
+  defaultVariants: {
+    variant: 'default',
+  },
+});
 
 const Input = React.forwardRef<
   HTMLInputElement,
-  React.ComponentProps<"input"> & { variant?: "default" | "search" }
->(({ className, type, maxLength, variant = "default", ...props }, ref) => {
+  React.ComponentProps<'input'> & { variant?: 'default' | 'search' }
+>(({ className, type, maxLength, variant = 'default', ...props }, ref) => {
   return (
     <input
       type={type}
-      className={cn(
-        SearchVariants({variant}), className
-      )}
+      className={cn(SearchVariants({ variant }), className)}
       ref={ref}
       maxLength={maxLength}
       {...props}
     />
-  )
-})
-Input.displayName = "Input"
+  );
+});
+Input.displayName = 'Input';
 
-export { Input }
-
+export { Input };

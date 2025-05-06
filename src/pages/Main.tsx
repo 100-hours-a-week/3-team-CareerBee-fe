@@ -1,94 +1,95 @@
 // 지도 기반의 검색 페이지. 메인 페이지이자 진입 페이지.
 // 도메인 상에서 "지도 도메인"
 
-import { useState, useEffect } from "react"
-import { SearchBar } from "@/components/domain/SearchBar"
-import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { useState, useEffect } from 'react';
+import { SearchBar } from '@/components/domain/SearchBar';
+import CompanyCard from '@/components/domain/CompanyCard';
+import { Map, MapMarker, CustomOverlayMap} from 'react-kakao-maps-sdk';
+import mapData from '@/data/MapData.json';
 
-const mockData = [
-  "카카오",
-  "카카오엔터테인먼트",
-  "카카오테크부트캠프 판교캠퍼스 교육장 유스페이스",
-  "카리나",
-  "카카오",
-  "카리나",
-  "카카오",
-  "카카오",
-]
-const positions = [
-  {
-    title: "카테부",
-    latlng: { lat: 37.40014087574066, lng: 127.10677853166985 },
-    imgSrc: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
-  },
-  {
-    title: "유스페이스1",
-    latlng: { lat: 37.40041106942548, lng: 127.10690314875184 },
-    imgSrc: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
-
-  },
-  {
-    title: "스타벅스",
-    latlng: { lat: 37.40150898203711, lng: 127.10836729941134 },
-    imgSrc: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
-
-  },
-]
-
-const KTB={
-  lat: 37.40014087574066,
-  lng: 127.10677853166985,
-}
+const mockData = mapData.mockData;
+const companies = mapData.companies;
+const companyInfo = mapData.companyInfo;
+const isBookmarked = 'true';
+const KTB = mapData.KTB;
 
 export default function Main() {
-  const [search, setSearch] = useState("")
-  const [loaded, setLoaded] = useState(false)
+  const [search, setSearch] = useState('');
+  const [loaded, setLoaded] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [openCardIndex, setOpenCardIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    const script = document.createElement("script")
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAOMAP_KEY}&autoload=false&libraries=clusterer,drawing`
-    script.async = true
+    const script = document.createElement('script');
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAOMAP_KEY}&autoload=false&libraries=clusterer,drawing`;
+    script.async = true;
     script.onload = () => {
       window.kakao.maps.load(() => {
-        setLoaded(true)
-      })
-    }
-    document.head.appendChild(script)
-  }, [])
+        setLoaded(true);
+      });
+    };
+    document.head.appendChild(script);
+  }, []);
   return (
     <>
-    <div className="py-2 w-full">
-      <SearchBar
-        placeholder="검색어를 입력하세요."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        suggestions={mockData}
-        onSuggestionSelect={(value: string) => setSearch(value)}
-      />
-    </div>
-      {loaded && (
-          <Map
-            center={{ lat: KTB.lat, lng: KTB.lng }}
-            className="w-[calc(100%+2rem)] h-full"
-            level={3}
-          >
-        {positions.map((position) => (
-        <MapMarker
-          key={`${position.title}-${position.latlng}`}
-          position={position.latlng}
-          image={{
-            src: position.imgSrc, 
-            size: {
-              width: 24,
-              height: 35
-            },
-          }}
-          title={position.title} 
+      <div className="py-2 w-full">
+        <SearchBar
+          placeholder="검색어를 입력하세요."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          suggestions={mockData}
+          onSuggestionSelect={(value: string) => setSearch(value)}
         />
-      ))}
-          </Map>
-        )}
-        
+      </div>
+      {loaded && (
+        <Map
+          center={{ lat: KTB.lat, lng: KTB.lng }}
+          className="w-[calc(100%+2rem)] h-full"
+          level={3}
+        >
+          {companies.map((company, index) => {
+          const isOpen = openCardIndex === index;
+          const position = {
+            lat: company.locationInfo.latitude,
+            lng: company.locationInfo.longitude,
+          };
+
+          return (
+            <div key={company.id}>
+              <MapMarker
+                position={position}
+                image={{
+                  src: company.logoUrl,
+                  size: { width: 24, height: 35 },
+                }}
+                clickable={true}
+                onClick={() => setOpenCardIndex(isOpen ? null : index)}
+              />
+              {isOpen && (
+                <CustomOverlayMap xAnchor={0.5} yAnchor={1.22} position={{ lat: position.lat, lng: position.lng }} clickable={true}>
+                  <CompanyCard
+                    companyName={companyInfo.name}
+                    bookmarkCount={companyInfo.wishCount}
+                    tags={companyInfo.keywords.slice(0, 4).map((k) => k.content) ?? []}
+                    imageUrl={companyInfo.logoUrl}
+                    onClose={() => setOpenCardIndex(null)}
+                    {...(isLoggedIn
+                      ? {
+                          onToggleBookmark: () => {},
+                          isBookmarked: isBookmarked,
+                        }
+                      : {
+                          isBookmarked: 'disabled',
+                        })}
+                  />
+                </CustomOverlayMap>
+              )}
+            </div>
+          );
+        })}
+        </Map>
+      )}
     </>
-  )
+  );
 }
