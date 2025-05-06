@@ -72,7 +72,7 @@ export default function CompanyCard({
           {tags.map((tag, i) => (
             <div
               key={i}
-              className="bg-secondary text-black text-xs px-2 py-1 rounded-full w-[120px] truncate"
+              className="bg-secondary text-black text-xs px-2 py-1 rounded-full w-[124px] truncate"
             >
               {tag}
             </div>
