@@ -67,7 +67,7 @@ export default function Main() {
                 onClick={() => setOpenCardIndex(isOpen ? null : index)}
               />
               {isOpen && (
-                <CustomOverlayMap position={position} clickable={true}>
+                <CustomOverlayMap xAnchor={0.5} yAnchor={1.25 } position={{ lat: position.lat, lng: position.lng }} clickable={true}>
                   <CompanyCard
                     companyName={companyInfo.name}
                     bookmarkCount={companyInfo.wishCount}
