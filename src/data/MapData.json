@@ -38,7 +38,7 @@
     "companyInfo": {
         "id": 101,
         "name": "카테부",
-        "logoUrl": "https://t1.kakaocdn.net/kakaocorp/kakaocorp/admin/thumbnail/logo_enterprise.png",
+        "logoUrl": null,
         "wishCount": 128,
         "keywords": [
         { "content": "AI" },

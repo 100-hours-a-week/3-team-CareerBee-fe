@@ -49,51 +49,45 @@ export default function Main() {
           level={3}
         >
           {companies.map((company, index) => {
-            const isOpen = openCardIndex === index;
+          const isOpen = openCardIndex === index;
+          const position = {
+            lat: company.locationInfo.latitude,
+            lng: company.locationInfo.longitude,
+          };
 
-            return (
+          return (
+            <div key={company.id}>
               <MapMarker
-                key={`${company.id}-${company.locationInfo.latitude}-${company.locationInfo.longitude}`}
-                position={{
-                  lat: company.locationInfo.latitude,
-                  lng: company.locationInfo.longitude,
-                }}
+                position={position}
                 image={{
                   src: company.logoUrl,
                   size: { width: 24, height: 35 },
                 }}
                 clickable={true}
                 onClick={() => setOpenCardIndex(isOpen ? null : index)}
-              >
-                {isOpen && (
-                  <CustomOverlayMap
-                    position={{
-                      lat: company.locationInfo.latitude,
-                      lng: company.locationInfo.longitude,
-                    }}
-                    clickable={true}
-                    zIndex={20}
-                  >
-                    <CompanyCard
-                      companyName={companyInfo.name}
-                      bookmarkCount={companyInfo.wishCount}
-                      tags={['카카오', '카카오엔터테인먼트', '집', '판교']}
-                      imageUrl={companyInfo.logoUrl}
-                      onClose={() => setOpenCardIndex(null)}
-                      {...(isLoggedIn
-                        ? {
-                            onToggleBookmark: () => {},
-                            isBookmarked: isBookmarked,
-                          }
-                        : {
-                            isBookmarked: 'disabled',
-                          })}
-                    />
-                  </CustomOverlayMap>
-                )}
-              </MapMarker>
-            );
-          })}
+              />
+              {isOpen && (
+                <CustomOverlayMap position={position} clickable={true}>
+                  <CompanyCard
+                    companyName={companyInfo.name}
+                    bookmarkCount={companyInfo.wishCount}
+                    tags={companyInfo.keywords.slice(0, 4).map((k) => k.content) ?? []}
+                    imageUrl={companyInfo.logoUrl}
+                    onClose={() => setOpenCardIndex(null)}
+                    {...(isLoggedIn
+                      ? {
+                          onToggleBookmark: () => {},
+                          isBookmarked: isBookmarked,
+                        }
+                      : {
+                          isBookmarked: 'disabled',
+                        })}
+                  />
+                </CustomOverlayMap>
+              )}
+            </div>
+          );
+        })}
         </Map>
       )}
     </>

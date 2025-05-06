@@ -1,12 +1,13 @@
 import { PiBookmarkSimple, PiX } from 'react-icons/pi';
 import { Button } from '@/components/ui/button';
 import { Toggle } from '@/components/ui/toggle';
+import noImg from '@/assets/no-image.png';
 
 interface CompanyCardProps {
   companyName: string;
   bookmarkCount: number;
   tags: string[];
-  imageUrl?: string;
+  imageUrl?: string | null;
   onClose: () => void;
   onToggleBookmark?: () => void;
   isBookmarked?: 'true' | 'false' | 'disabled';
@@ -21,42 +22,46 @@ export default function CompanyCard({
   onToggleBookmark,
   isBookmarked,
 }: CompanyCardProps) {
+    console.log(imageUrl)
   return (
-    <div className="relative rounded-lg border-2 border-border bg-white p-2 w-full h-full shadow-md">
+    <div className="relative rounded-lg border-2 border-border bg-white p-2 w-64 h-40 shadow-md cursor-default">
       {/* 헤더 */}
-      <div className="flex items-center justify-between mb-1">
-        <h2 className="font-semibold text-sm line-clamp-1 mr-1">{companyName}</h2>
-        <div className="flex items-center gap-1">
-            {isBookmarked === 'disabled' ? (null) : (
+      <div className="flex items-center justify-between mb-2">
+        <a
+            href="/company/:id"
+            className="text-md font-bold line-clamp-1 hover:text-text-primary"
+        >
+            {companyName}
+        </a>
+        <div className="flex items-center gap-1 [&_svg]:size-5 bg-transparent">
+            {isBookmarked === 'disabled' ? (
+                <PiBookmarkSimple />
+            ) : (
                 <Toggle
                     variant="save"
-                    label={<PiBookmarkSimple className="[&_svg]:size-4 bg-transparent" />}
+                    label={<PiBookmarkSimple />}
                     pressed={isBookmarked === 'true'}
                     onPressedChange={onToggleBookmark}
                 />
             )}
-          <span className="text-xs ml-1">{bookmarkCount}</span>
-          <Button variant="icon" label={<PiX />} onClick={onClose} className="p-0" />
+          <span className="text-sm mr-1">{bookmarkCount}</span>
+          <Button variant="icon" label={<PiX />} onClick={onClose} className="p-0 h-full" />
         </div>
       </div>
 
-      <div className="flex items-center gap-2 mb-2">
+      <div className="flex items-center">
         {/* 이미지 */}
-        <div className="w-[100px] h-[100px] rounded-md bg-muted flex items-center justify-center overflow-hidden">
-          {imageUrl ? (
+        <div className="w-[108px] h-[108px] rounded-md bg-muted flex items-center justify-center overflow-hidden mr-auto">
             <img
-              src={imageUrl}
+              src={imageUrl ? imageUrl : noImg}
               alt={companyName}
               className="w-full h-full object-cover rounded-md"
             />
-          ) : (
-            <span className="text-muted-foreground text-xs">No Image</span>
-          )}
         </div>
 
         {/* 태그들 */}
-        <div className="mt-1 flex flex-col flex-wrap gap-1">
-          {tags.slice(0, 4).map((tag, i) => (
+        <div className="flex flex-col flex-wrap gap-1">
+          {tags.map((tag, i) => (
             <div
               key={i}
               className="bg-secondary text-black text-xs px-2 py-1 rounded-full w-[120px] truncate"
