@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import CompanyTitle from '@/components/domain/CompanyTitle';
-
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import noImg from '@/assets/no-image.png';
 
 export interface CompanyDetailResponse {
@@ -95,7 +95,22 @@ export default function CompanyDetail() {
   if (!company) return <div>로딩 중...</div>;
 
   return (
-    <>
+    <div className="flex flex-col items-start">
+      {/* 갤러리 */}
+      <div className="grid grid-cols-4 grid-rows-2 gap-1 max-w-full mx-auto">
+      {[...Array(5)].map((_, index) => {
+          const photo = company.photos[index];
+          const imageUrl = photo?.url ?? noImg;
+          return (
+            <img
+              key={index}
+              src={imageUrl}
+              alt={company.name ?? "no image"}
+              className={index === 0 ? "col-span-2 row-span-2 aspect-[4/3] object-cover rounded-lg" : "aspect-[4/3] object-cover rounded-lg"}
+            />
+          );
+        })}
+      </div>
       <CompanyTitle 
           logoUrl={company.logoUrl ?? noImg}
           name={company.name}
@@ -103,6 +118,21 @@ export default function CompanyDetail() {
           isLoggedIn={isLoggedIn}
           isBookmarked={isBookmarked}
       />
-    </>
+
+      <Tabs defaultValue="main" className="mt-4 w-full">
+       <TabsList>
+          <TabsTrigger value="main" variant={"company"}>기본</TabsTrigger>
+          <TabsTrigger value="recruit" variant={"company"}>채용 정보</TabsTrigger>
+          <TabsTrigger value="issue" variant={"company"}>최근 이슈</TabsTrigger>
+          <TabsTrigger value="benefit" variant={"company"}>복지</TabsTrigger>
+          <TabsTrigger value="techStack" variant={"company"}>기술 스택</TabsTrigger>
+        </TabsList>
+        <TabsContent value="main">Make changes to your account here.</TabsContent>
+        <TabsContent value="recruit">Change your password here.</TabsContent>
+        <TabsContent value="issue">Change your password here.</TabsContent>
+        <TabsContent value="benefit">Change your password here.</TabsContent>
+        <TabsContent value="techStack">Change your password here.</TabsContent>
+      </Tabs>
+    </div>
   );
 }
