@@ -1,0 +1,38 @@
+import { useCallback } from 'react';
+import { useCompanyStore } from '@/store/company';
+import { useAuthStore } from '@/store/auth';
+import axios from 'axios';
+
+export function useCompanyDetail(companyId: number, index: number) {
+  const {
+    openCardIndex,
+    setOpenCardIndex,
+    setCompanyInfo,
+    setIsBookmarked,
+  } = useCompanyStore();
+  const token = useAuthStore((state) => state.token);
+
+  const fetchCompanyDetail = useCallback(async () => {
+    const newIndex = openCardIndex === index ? null : index;
+    setOpenCardIndex(newIndex);
+
+    try {
+      const { data } = await axios.get(`https://api.careerbee.co.kr/api/v1/companies/${companyId}/summary`);
+      setCompanyInfo(data.data);
+
+      if (token) {
+        const { data } = await axios.get(
+          `https://api.careerbee.co.kr/api/v1/members/wish-companies/${companyId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setIsBookmarked(data.data.isWish ? 'true' : 'false');
+      } else {
+        setIsBookmarked('disabled');
+      }
+    } catch (e) {
+      console.error('기업 간단 정보 조회 실패: ', e);
+    }
+  }, [openCardIndex, index, companyId, setOpenCardIndex, setCompanyInfo, setIsBookmarked, token]);
+
+  return { fetchCompanyDetail };
+}
