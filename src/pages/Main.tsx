@@ -4,14 +4,25 @@
 import { useState, useEffect } from 'react';
 import { SearchBar } from '@/components/domain/SearchBar';
 import CompanyCard from '@/components/domain/CompanyCard';
-import { Map, MapMarker, CustomOverlayMap} from 'react-kakao-maps-sdk';
+import { Map, MapMarker, CustomOverlayMap, ZoomControl} from 'react-kakao-maps-sdk';
 import mapData from '@/data/MapData.json';
+import axios from 'axios';
+import noImg from '@/assets/no-image.png';
 
 const mockData = mapData.mockData;
-const companies = mapData.companies;
+// const companies = mapData.companies;
 const companyInfo = mapData.companyInfo;
 const isBookmarked = 'true';
 const KTB = mapData.KTB;
+
+interface Company {
+  id: number;
+  logoUrl: string;
+  locationInfo: {
+    latitude: number;
+    longitude: number;
+  };
+}
 
 export default function Main() {
   const [search, setSearch] = useState('');
@@ -19,7 +30,40 @@ export default function Main() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [openCardIndex, setOpenCardIndex] = useState<number | null>(null);
+  const [companies, setCompanies] = useState<Company[]>([]);
 
+  const fetchCompanies = async (level: number) => {
+    const radiusMap: Record<number, number> = {
+      1: 100,
+      2: 200,
+      3: 300,
+      4: 600,
+      5: 1000,
+      6: 1500,
+      7: 2000,
+      8: 2500,
+      9: 3000,
+      10: 4000,
+      11: 5000,
+      12: 6000,
+      13: 8000,
+      14: 10000,
+    };
+    const radius = radiusMap[level] ?? 1000;
+    try {
+      const { data } = await axios.get('https://api.careerbee.co.kr/api/v1/companies', {
+        params: {
+          latitude: KTB.lat,
+          longitude: KTB.lng,
+          radius,
+        },
+      });
+      setCompanies(data.data.companies);
+      console.log(data.data.companies);
+    } catch (error) {
+      console.error('기업 리스트 조회 실패:', error);
+    }
+  };
   useEffect(() => {
     const script = document.createElement('script');
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAOMAP_KEY}&autoload=false&libraries=clusterer,drawing`;
@@ -27,6 +71,8 @@ export default function Main() {
     script.onload = () => {
       window.kakao.maps.load(() => {
         setLoaded(true);
+        
+        fetchCompanies(3);
       });
     };
     document.head.appendChild(script);
@@ -47,6 +93,10 @@ export default function Main() {
           center={{ lat: KTB.lat, lng: KTB.lng }}
           className="w-[calc(100%+2rem)] h-full"
           level={3}
+          onZoomChanged={(map) => {
+            const level = map.getLevel()
+            fetchCompanies(level);
+          }}
         >
           {companies.map((company, index) => {
           const isOpen = openCardIndex === index;
@@ -54,13 +104,12 @@ export default function Main() {
             lat: company.locationInfo.latitude,
             lng: company.locationInfo.longitude,
           };
-
           return (
             <div key={company.id}>
               <MapMarker
                 position={position}
                 image={{
-                  src: company.logoUrl,
+                  src: company.logoUrl ?? noImg,
                   size: { width: 24, height: 35 },
                 }}
                 clickable={true}

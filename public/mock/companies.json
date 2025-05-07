@@ -1,0 +1,32 @@
+{
+    "httpStatusCode": 200,
+    "message": "기업 조회에 성공하였습니다.",
+    "data": {
+      "companies": [
+        {
+          "id": 1,
+          "logoUrl": "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
+          "locationInfo": {
+            "latitude": 37.40014087574066,
+            "longitude": 127.10677853166985
+          }
+        },
+        {
+          "id": 2,
+          "logoUrl": "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
+          "locationInfo": {
+            "latitude": 37.40041106942548,
+            "longitude": 127.10690314875184
+          }
+        },
+        {
+          "id": 3,
+          "logoUrl": "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
+          "locationInfo": {
+            "latitude": 37.40150898203711,
+            "longitude": 127.10836729941134
+          }
+        }
+      ]
+    }
+  }
