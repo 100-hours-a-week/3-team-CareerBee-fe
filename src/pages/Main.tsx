@@ -4,18 +4,18 @@
 import { useState, useEffect } from 'react';
 import { SearchBar } from '@/components/domain/SearchBar';
 import CompanyCard from '@/components/domain/CompanyCard';
-import { Map, MapMarker, CustomOverlayMap} from 'react-kakao-maps-sdk';
+import { Map, MapMarker, CustomOverlayMap, ZoomControl} from 'react-kakao-maps-sdk';
 import mapData from '@/data/MapData.json';
 import axios from 'axios';
 import noImg from '@/assets/no-image.png';
 
 const mockData = mapData.mockData;
 // const companies = mapData.companies;
-const companyInfo = mapData.companyInfo;
+// const companyInfo = mapData.companyInfo;
 const isBookmarked = 'true';
 const KTB = mapData.KTB;
 
-interface Company {
+interface CompanyProps {
   id: number;
   logoUrl: string;
   locationInfo: {
@@ -24,13 +24,22 @@ interface Company {
   };
 }
 
+interface CompanyInfoProps{
+  id: number;
+  name: string;
+  logoUrl: string;
+  wishCount: number; 
+  keywords: { content: string }[];
+}
+
 export default function Main() {
   const [search, setSearch] = useState('');
   const [loaded, setLoaded] = useState(false);
   const [isLoggedIn] = useState(false);
 
   const [openCardIndex, setOpenCardIndex] = useState<number | null>(null);
-  const [companies, setCompanies] = useState<Company[]>([]);
+  const [companies, setCompanies] = useState<CompanyProps[]>([]);
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfoProps>(); // 초기 null
 
   const fetchCompanies = async (level: number) => {
     const radiusMap: Record<number, number> = {
@@ -64,6 +73,18 @@ export default function Main() {
       console.error('기업 리스트 조회 실패:', error);
     }
   };
+
+  const handleMarkerClick = async (companyId: number, index: number) => {
+    setOpenCardIndex(openCardIndex === index ? null : index);
+    try {
+      const { data } = await axios.get(`https://api.careerbee.co.kr/api/v1/companies/${companyId}/summary`);
+      setCompanyInfo(data.data);
+      console.log(data.data);
+    } catch (error) {
+      console.error('기업 간단 정보 조회 실패:', error);
+    }
+  };
+
   useEffect(() => {
     const script = document.createElement('script');
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAOMAP_KEY}&autoload=false&libraries=clusterer,drawing`;
@@ -110,15 +131,18 @@ export default function Main() {
                 position={position}
                 image={{
                   src: company.logoUrl ?? noImg,
-                  size: { width: 24, height: 35 },
+                  size: { width: 50, height: 50 },
                 }}
                 clickable={true}
-                onClick={() => setOpenCardIndex(isOpen ? null : index)}
+                onClick={() => {
+                  setOpenCardIndex(isOpen ? null : index)
+                  handleMarkerClick(company.id, index)
+                }}
               />
-              {isOpen && (
+              {isOpen && companyInfo && (
                 <CustomOverlayMap xAnchor={0.5} yAnchor={1.22} position={{ lat: position.lat, lng: position.lng }} clickable={true}>
                   <CompanyCard
-                    companyId={company.id}
+                    companyId={companyInfo.id}
                     companyName={companyInfo.name}
                     bookmarkCount={companyInfo.wishCount}
                     tags={companyInfo.keywords.slice(0, 4).map((k) => k.content) ?? []}
