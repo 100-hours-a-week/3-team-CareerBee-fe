@@ -67,7 +67,7 @@ const isBookmarked = true;
 export default function CompanyDetail() {
   const { id } = useParams<{ id: string }>();
   const [company, setCompany] = useState<Company | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn] = useState(false);
 
 
   useEffect(() => {
@@ -78,8 +78,8 @@ export default function CompanyDetail() {
 
     const fetchCompanyDetail =  () => {
        axios
-        // .get(`https://api.careerbee.co.kr/api/v1/companies/${id}`)
-        .get('/mock/CompanyDetail.json')
+        .get(`https://api.careerbee.co.kr/api/v1/companies/${id}`)
+        // .get('/mock/CompanyDetail.json')
         .then((response) => {
           const data = response.data;
           setCompany(data.data.company);
