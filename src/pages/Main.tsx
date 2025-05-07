@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { SearchBar } from '@/components/domain/SearchBar';
 import CompanyCard from '@/components/domain/CompanyCard';
-import { Map, MapMarker, CustomOverlayMap, ZoomControl} from 'react-kakao-maps-sdk';
+import { Map, MapMarker, CustomOverlayMap} from 'react-kakao-maps-sdk';
 import mapData from '@/data/MapData.json';
 import axios from 'axios';
 import noImg from '@/assets/no-image.png';
@@ -27,7 +27,7 @@ interface Company {
 export default function Main() {
   const [search, setSearch] = useState('');
   const [loaded, setLoaded] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn] = useState(false);
 
   const [openCardIndex, setOpenCardIndex] = useState<number | null>(null);
   const [companies, setCompanies] = useState<Company[]>([]);

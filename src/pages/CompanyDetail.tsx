@@ -67,7 +67,7 @@ const isBookmarked = true;
 export default function CompanyDetail() {
   const { id } = useParams<{ id: string }>();
   const [company, setCompany] = useState<Company | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn] = useState(false);
 
 
   useEffect(() => {
