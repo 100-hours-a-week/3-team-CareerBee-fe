@@ -4,12 +4,12 @@
 import { useState, useEffect } from 'react';
 import { SearchBar } from '@/components/domain/SearchBar';
 import CompanyCard from '@/components/domain/CompanyCard';
-import { Map, MapMarker, CustomOverlayMap, ZoomControl} from 'react-kakao-maps-sdk';
+import { Map, MapMarker, CustomOverlayMap} from 'react-kakao-maps-sdk';
 import mapData from '@/data/MapData.json';
 import axios from 'axios';
 import noImg from '@/assets/no-image.png';
 
-const mockData = mapData.mockData;
+// const mockData = mapData.mockData;
 // const companies = mapData.companies;
 // const companyInfo = mapData.companyInfo;
 const isBookmarked = 'true';
@@ -39,7 +39,30 @@ export default function Main() {
 
   const [openCardIndex, setOpenCardIndex] = useState<number | null>(null);
   const [companies, setCompanies] = useState<CompanyProps[]>([]);
-  const [companyInfo, setCompanyInfo] = useState<CompanyInfoProps>(); // 초기 null
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfoProps>();
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (search.length < 1) {
+        setSuggestions([]);
+        return;
+      }
+      try {
+        const { data } = await axios.get('https://api.careerbee.co.kr/api/v1/companies/search', {
+          params: {
+            keyword: search
+          }
+        });
+        const names = data.data.matchingCompanies.map((company: { name: string }) => company.name);
+        setSuggestions(names.slice(0, 8));
+      } catch (error) {
+        console.error('회사 검색 실패:', error);
+      }
+    };
+
+    fetchSuggestions();
+  }, [search]);
 
   const fetchCompanies = async (level: number) => {
     const radiusMap: Record<number, number> = {
@@ -105,7 +128,7 @@ export default function Main() {
           placeholder="검색어를 입력하세요."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          suggestions={mockData}
+          suggestions={suggestions}
           onSuggestionSelect={(value: string) => setSearch(value)}
         />
       </div>
