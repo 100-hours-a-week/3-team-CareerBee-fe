@@ -8,11 +8,8 @@ import { Map, MapMarker, CustomOverlayMap} from 'react-kakao-maps-sdk';
 import mapData from '@/data/MapData.json';
 import axios from 'axios';
 import noImg from '@/assets/no-image.png';
+import { useAuthStore } from '@/store/auth';
 
-// const mockData = mapData.mockData;
-// const companies = mapData.companies;
-// const companyInfo = mapData.companyInfo;
-const isBookmarked = 'true';
 const KTB = mapData.KTB;
 
 interface CompanyProps {
@@ -35,12 +32,15 @@ interface CompanyInfoProps{
 export default function Main() {
   const [search, setSearch] = useState('');
   const [loaded, setLoaded] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [openCardIndex, setOpenCardIndex] = useState<number | null>(null);
   const [companies, setCompanies] = useState<CompanyProps[]>([]);
   const [companyInfo, setCompanyInfo] = useState<CompanyInfoProps>();
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [isBookmarked, setIsBookmarked] = useState<'true' | 'false' | 'disabled'>('disabled');
+
+  const token = useAuthStore((state) => state.token);
+
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -103,8 +103,50 @@ export default function Main() {
       const { data } = await axios.get(`https://api.careerbee.co.kr/api/v1/companies/${companyId}/summary`);
       setCompanyInfo(data.data);
       console.log(data.data);
+
+      if (token) {
+        try {
+          const { data } = await axios.get(`https://api.careerbee.co.kr/api/v1/members/wish-companies/${companyId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setIsBookmarked(data.data.isWish ? 'true' : 'false');
+          console.log('관심 기업 여부: ',data.data.isWish);
+        } catch (error) {
+          console.error('관심기업 여부 조회 실패:', error);
+          setIsBookmarked('false');
+        }
+      } else {
+        setIsBookmarked('disabled');
+      }
     } catch (error) {
       console.error('기업 간단 정보 조회 실패:', error);
+    }
+  };
+
+  const handleToggleBookmark = async (companyId: number) => {
+    if (!token) return;
+
+    const url = `https://api.careerbee.co.kr/api/v1/members/wish-companies/${companyId}`;
+    try {
+      if (isBookmarked === 'true') {
+        await axios.delete(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setIsBookmarked('false');
+      } else if (isBookmarked === 'false') {
+        await axios.post(url, null, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setIsBookmarked('true');
+      }
+    } catch (error) {
+      console.error('관심기업 토글 실패:', error);
     }
   };
 
@@ -171,9 +213,9 @@ export default function Main() {
                     tags={companyInfo.keywords.slice(0, 4).map((k) => k.content) ?? []}
                     imageUrl={companyInfo.logoUrl}
                     onClose={() => setOpenCardIndex(null)}
-                    {...(isLoggedIn
+                    {...(token
                       ? {
-                          onToggleBookmark: () => {},
+                          onToggleBookmark: () => handleToggleBookmark(companyInfo.id),
                           isBookmarked: isBookmarked,
                         }
                       : {

@@ -1,4 +1,4 @@
-import { PiBookmarkSimple, PiX } from 'react-icons/pi';
+import { PiBookmarkSimple, PiBookmarkSimpleFill, PiX } from 'react-icons/pi';
 import { Button } from '@/components/ui/button';
 import { Toggle } from '@/components/ui/toggle';
 import noImg from '@/assets/no-image.png';
@@ -49,7 +49,14 @@ export default function CompanyCard({
             ) : (
                 <Toggle
                     variant="save"
-                    label={<PiBookmarkSimple />}
+                    size="xs"
+                    label={
+                      isBookmarked === 'true' ? (
+                        <PiBookmarkSimpleFill className="text-primary" />
+                      ) : (
+                        <PiBookmarkSimple />
+                      )
+                    }
                     pressed={isBookmarked === 'true'}
                     onPressedChange={onToggleBookmark}
                 />
