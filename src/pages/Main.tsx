@@ -6,12 +6,23 @@ import { SearchBar } from '@/components/domain/SearchBar';
 import CompanyCard from '@/components/domain/CompanyCard';
 import { Map, MapMarker, CustomOverlayMap} from 'react-kakao-maps-sdk';
 import mapData from '@/data/MapData.json';
+import axios from 'axios';
+import noImg from '@/assets/no-image.png';
 
 const mockData = mapData.mockData;
-const companies = mapData.companies;
+// const companies = mapData.companies;
 const companyInfo = mapData.companyInfo;
 const isBookmarked = 'true';
 const KTB = mapData.KTB;
+
+interface Company {
+  id: number;
+  logoUrl: string;
+  locationInfo: {
+    latitude: number;
+    longitude: number;
+  };
+}
 
 export default function Main() {
   const [search, setSearch] = useState('');
@@ -19,6 +30,7 @@ export default function Main() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [openCardIndex, setOpenCardIndex] = useState<number | null>(null);
+  const [companies, setCompanies] = useState<Company[]>([]);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -27,6 +39,22 @@ export default function Main() {
     script.onload = () => {
       window.kakao.maps.load(() => {
         setLoaded(true);
+        const fetchCompanies = async () => {
+          try {
+            const { data } = await axios.get('/mock/companies.json', {
+              params: {
+                latitude: KTB.lat,
+                longitude: KTB.lng,
+                radius: 1000,
+              },
+            });
+            setCompanies(data.data.companies);
+            console.log(companies)
+          } catch (error) {
+            console.error('기업 리스트 조회 실패:', error);
+          }
+        };
+        fetchCompanies();
       });
     };
     document.head.appendChild(script);
@@ -54,13 +82,13 @@ export default function Main() {
             lat: company.locationInfo.latitude,
             lng: company.locationInfo.longitude,
           };
-
+          console.log(company.locationInfo.latitude)
           return (
             <div key={company.id}>
               <MapMarker
                 position={position}
                 image={{
-                  src: company.logoUrl,
+                  src: company.logoUrl ?? noImg,
                   size: { width: 24, height: 35 },
                 }}
                 clickable={true}
