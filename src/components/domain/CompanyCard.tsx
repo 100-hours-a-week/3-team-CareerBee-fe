@@ -1,8 +1,10 @@
-import { PiBookmarkSimple, PiX } from 'react-icons/pi';
+import { PiBookmarkSimple, PiBookmarkSimpleFill, PiX } from 'react-icons/pi';
 import { Button } from '@/components/ui/button';
 import { Toggle } from '@/components/ui/toggle';
 import noImg from '@/assets/no-image.png';
 import companyCardBackground from '@/assets/company-card-background.png';
+import { useState, useEffect } from 'react';
+
 interface CompanyCardProps {
   companyId: number;
   companyName: string;
@@ -24,7 +26,11 @@ export default function CompanyCard({
   onToggleBookmark,
   isBookmarked,
 }: CompanyCardProps) {
-    console.log(imageUrl)
+  const [count, setCount] = useState(bookmarkCount);
+
+  useEffect(() => {
+    setCount(bookmarkCount);
+  }, [bookmarkCount]);
   return (
     <div 
     style={{
@@ -49,12 +55,24 @@ export default function CompanyCard({
             ) : (
                 <Toggle
                     variant="save"
-                    label={<PiBookmarkSimple />}
+                    size="xs"
+                    label={
+                      isBookmarked === 'true' ? (
+                        <PiBookmarkSimpleFill className="text-primary" />
+                      ) : (
+                        <PiBookmarkSimple />
+                      )
+                    }
                     pressed={isBookmarked === 'true'}
-                    onPressedChange={onToggleBookmark}
+                    onPressedChange={() => {
+                      if (onToggleBookmark) {
+                        onToggleBookmark();
+                        setCount(prev => isBookmarked === 'true' ? prev - 1 : prev + 1);
+                      }
+                    }}
                 />
             )}
-          <span className="text-sm mr-1">{bookmarkCount}</span>
+          <span className="text-sm mr-1">{count}</span>
           <Button variant="icon" label={<PiX />} onClick={onClose} className="p-0 h-full" />
         </div>
       </div>

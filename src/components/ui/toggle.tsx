@@ -9,7 +9,7 @@ const toggleVariants = cva(
   hover:text-border/80
   focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring 
   disabled:pointer-events-none disabled:opacity-50 
-  [&_svg]:pointer-events-none [&_svg]:size-8 [&_svg]:shrink-0 `,
+  [&_svg]:pointer-events-none [&_svg]:shrink-0 `,
   {
     variants: {
       variant: {
@@ -18,18 +18,18 @@ const toggleVariants = cva(
           hover:bg-accent hover:text-accent-foreground
           data-[state=on]:bg-secondary data-[state=on]:border-transparent`,
         save: `flex items-center
-          w-8 h-8
           data-[state=on]:fill-primary,`,
       },
       size: {
-        default: 'h-9 px-2 min-w-9',
+        xs: 'h-6 px-1 min-w-6', 
         sm: 'h-8 px-1.5 min-w-8',
+        md: 'h-9 px-2 min-w-9',
         lg: 'h-10 px-2.5 min-w-10',
       },
     },
     defaultVariants: {
       variant: 'default',
-      size: 'default',
+      size: 'md',
     },
   },
 );
