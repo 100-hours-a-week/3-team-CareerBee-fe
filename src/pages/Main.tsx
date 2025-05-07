@@ -64,7 +64,10 @@ export default function Main() {
     fetchSuggestions();
   }, [search]);
 
-  const fetchCompanies = async (level: number) => {
+  const fetchCompanies = async (
+    latitude: number,
+    longitude: number,
+    level: number) => {
     const radiusMap: Record<number, number> = {
       1: 100,
       2: 200,
@@ -85,8 +88,8 @@ export default function Main() {
     try {
       const { data } = await axios.get('https://api.careerbee.co.kr/api/v1/companies', {
         params: {
-          latitude: KTB.lat,
-          longitude: KTB.lng,
+          latitude: {latitude},
+          longitude: {longitude},
           radius,
         },
       });
@@ -158,7 +161,7 @@ export default function Main() {
       window.kakao.maps.load(() => {
         setLoaded(true);
         
-        fetchCompanies(3);
+        fetchCompanies(KTB.lat, KTB.lng, 3);
       });
     };
     document.head.appendChild(script);
@@ -181,7 +184,13 @@ export default function Main() {
           level={3}
           onZoomChanged={(map) => {
             const level = map.getLevel()
-            fetchCompanies(level);
+            const latlng = map.getCenter()
+            fetchCompanies(latlng.getLat(), latlng.getLng(), level);
+          }}
+          onDragEnd={(map) => {
+            const level = map.getLevel()
+            const latlng = map.getCenter()
+            fetchCompanies(latlng.getLat(), latlng.getLng(), level);
           }}
         >
           {companies.map((company, index) => {
