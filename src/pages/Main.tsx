@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { SearchBar } from '@/components/domain/SearchBar';
+import { FilterGroup } from '@/components/ui/filter'
 import { Map } from 'react-kakao-maps-sdk';
 import MapOverlay from '@/components/domain/MapOverlay';
 import { useCompanyStore } from '@/store/company';
@@ -31,7 +32,15 @@ const RADIUS_BY_LEVEL: Record<number, number> = {
   13: 8000,
   14: 10000,
 };
-
+const FILTERS = [
+  { id: "open", label: "✅ 채용 중" },
+  { id: "bookmark", label: "📍 저장" },
+  { id: "si", label: "SI" },
+  { id: "game", label: "게임" },
+  { id: "finance", label: "금융" },
+  { id: "security", label: "보안" },
+  { id: "service", label: "서비스" },
+];
 export interface CompanyProps {
   id: number;
   logoUrl: string;
@@ -102,24 +111,31 @@ export default function Main() {
           onSuggestionSelect={(value: string) => setSearch(value)}
         />
       </div>
-      {loaded && (
-        <Map
-          center={{ lat: KTB.lat, lng: KTB.lng }}
-          className="w-[calc(100%+2rem)] h-full"
-          level={3}
-          onZoomChanged={handleMapMove}
-          onDragEnd={handleMapMove}
-        >
-          {companies.map((company, index) => (
-            <MapOverlay
-              key={company.id}
-              company={company}
-              index={index}
-              isOpen={openCardIndex === index}
-            />
-          ))}
-        </Map>
-      )}
+      <div className="relative w-full h-full">
+        {loaded && (
+          <Map
+            center={{ lat: KTB.lat, lng: KTB.lng }}
+            className="w-[calc(100%+2rem)] h-full"
+            level={3}
+            onZoomChanged={handleMapMove}
+            onDragEnd={handleMapMove}
+          >
+            {companies.map((company, index) => (
+              <MapOverlay
+                key={company.id}
+                company={company}
+                index={index}
+                isOpen={openCardIndex === index}
+              />
+            ))}
+          </Map>
+        )}
+
+        {/* 필터 UI를 지도 위에 고정 */}
+        <div className="absolute top-2 left-1 z-10">
+          <FilterGroup filters={FILTERS} />
+        </div>
+      </div>
     </>
   );
 }

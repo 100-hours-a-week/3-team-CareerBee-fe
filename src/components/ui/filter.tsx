@@ -17,17 +17,18 @@ const FilterGroup = ({ filters }: Props) => {
 
   console.log('Active Filters:', activeFilters);
   return (
-    <div className="w-full px-4 py-2">
+    <div className="w-full px-4 py-2 overflow-x-auto">
       <div className="overflow-x-auto">
         <div className="flex items-center gap-2 w-max whitespace-nowrap">
           {filters.map(({ id, label }) => (
             <Toggle
               key={id}
               variant="pill"
+              label={label}
               pressed={activeFilters.includes(id)}
               onPressedChange={() => toggleFilter(id)}
+              className="shadow-md px-4 py-1 min-w-[72px] text-sm rounded-full border border-gray-300 bg-white text-gray-800 whitespace-nowrap"
             >
-              {label}
             </Toggle>
           ))}
         </div>
