@@ -27,7 +27,7 @@ interface Company {
 export default function Main() {
   const [search, setSearch] = useState('');
   const [loaded, setLoaded] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const [openCardIndex, setOpenCardIndex] = useState<number | null>(null);
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -51,7 +51,7 @@ export default function Main() {
     };
     const radius = radiusMap[level] ?? 1000;
     try {
-      const { data } = await axios.get('/mock/companies.json', {
+      const { data } = await axios.get('https://api.careerbee.co.kr/api/v1/companies', {
         params: {
           latitude: KTB.lat,
           longitude: KTB.lng,
@@ -98,7 +98,6 @@ export default function Main() {
             fetchCompanies(level);
           }}
         >
-          <ZoomControl />
           {companies.map((company, index) => {
           const isOpen = openCardIndex === index;
           const position = {
