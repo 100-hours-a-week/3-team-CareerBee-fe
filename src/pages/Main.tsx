@@ -27,7 +27,7 @@ interface Company {
 export default function Main() {
   const [search, setSearch] = useState('');
   const [loaded, setLoaded] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [openCardIndex, setOpenCardIndex] = useState<number | null>(null);
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -104,7 +104,6 @@ export default function Main() {
             lat: company.locationInfo.latitude,
             lng: company.locationInfo.longitude,
           };
-          console.log(company.locationInfo.latitude)
           return (
             <div key={company.id}>
               <MapMarker
@@ -119,6 +118,7 @@ export default function Main() {
               {isOpen && (
                 <CustomOverlayMap xAnchor={0.5} yAnchor={1.22} position={{ lat: position.lat, lng: position.lng }} clickable={true}>
                   <CompanyCard
+                    companyId={company.id}
                     companyName={companyInfo.name}
                     bookmarkCount={companyInfo.wishCount}
                     tags={companyInfo.keywords.slice(0, 4).map((k) => k.content) ?? []}
