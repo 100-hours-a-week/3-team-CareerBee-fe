@@ -69,6 +69,7 @@ export default function Main() {
               {isOpen && (
                 <CustomOverlayMap xAnchor={0.5} yAnchor={1.22} position={{ lat: position.lat, lng: position.lng }} clickable={true}>
                   <CompanyCard
+                    companyId={company.id}
                     companyName={companyInfo.name}
                     bookmarkCount={companyInfo.wishCount}
                     tags={companyInfo.keywords.slice(0, 4).map((k) => k.content) ?? []}
