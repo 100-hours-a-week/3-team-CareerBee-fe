@@ -4,7 +4,12 @@ import axios from 'axios';
 import CompanyTitle from '@/components/domain/CompanyTitle';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import noImg from '@/assets/no-image.png';
+import { PiStar, PiStarFill,PiStarHalfFill } from "react-icons/pi";
 
+import DefaultTab from '@/components/domain/company/defaultTab'
+import RecruitTab from '@/components/domain/company/recruit' 
+import IssueTab from '@/components/domain/company/issue'
+import BenefitTab from "@/components/domain/company/benefit";
 export interface CompanyDetailResponse {
   company: Company;
 }
@@ -82,7 +87,8 @@ export default function CompanyDetail() {
         // .get('/mock/CompanyDetail.json')
         .then((response) => {
           const data = response.data;
-          setCompany(data.data.company);
+          setCompany(data.data);
+          console.log(data);
         })
         .catch((error) => {
           console.error("기업 정보 불러오기 실패", error);
@@ -95,7 +101,7 @@ export default function CompanyDetail() {
   if (!company) return <div>로딩 중...</div>;
 
   return (
-    <div className="flex flex-col items-start">
+    <div className="flex flex-col grow">
       {/* 갤러리 */}
       <div className="grid grid-cols-4 grid-rows-2 gap-1 max-w-full mx-auto">
       {[...Array(5)].map((_, index) => {
@@ -106,31 +112,65 @@ export default function CompanyDetail() {
               key={index}
               src={imageUrl}
               alt={company.name ?? "no image"}
-              className={index === 0 ? "col-span-2 row-span-2 aspect-[4/3] object-cover rounded-lg" : "aspect-[4/3] object-cover rounded-lg"}
+              className={index === 0 ? "col-span-2 row-span-2 w-full h-full object-cover rounded-lg" : "aspect-[4/3] object-cover rounded-lg"}
             />
           );
         })}
       </div>
-      <CompanyTitle 
-          logoUrl={company.logoUrl ?? noImg}
-          name={company.name}
-          wishCount={company.wishCount}
-          isLoggedIn={isLoggedIn}
-          isBookmarked={isBookmarked}
-      />
+      <div className="-mt-9 pl-2 relative z-10">
+        <CompanyTitle 
+            logoUrl={company.logoUrl ?? noImg}
+            name={company.name}
+            wishCount={company.wishCount}
+            isLoggedIn={isLoggedIn}
+            isBookmarked={isBookmarked}
+        />
+      </div>
 
-      <Tabs defaultValue="main" className="mt-4 w-full">
+      {/* 기업 정보 */}
+      <div className="flex flex-col gap-2 my-2">
+      <div className="text-lg font-semibold">{company.title}</div>
+        <div className="flex gap-0.5 [&_svg]:size-5">
+        {[...Array(5)].map((_, index) => {
+          const full = Math.floor(company.rating);
+          const decimal = company.rating - full;
+          console.log(decimal)
+          if (index < full) {
+            return <PiStarFill key={index} />;
+          } else if (index === full) {
+            if (decimal < 0.333) return <PiStar key={index} />;
+            if (decimal < 0.666) return <PiStarHalfFill key={index} />;
+            return <PiStarFill key={index} />;
+          } else {
+            return <PiStar key={index} />;
+          }
+        })}
+          <p className="ml-2 text-sm text-text-secondary">캐치 종합 점수 기준</p>
+        </div>
+        <div className="w-full text-center font-semibold">
+  {`평균: ${
+    company.financials.annualSalary
+      ? (company.financials.annualSalary / 10000).toLocaleString()
+      : '-'
+  }만원 / 신입: ${
+    company.financials.startingSalary
+      ? (company.financials.startingSalary / 10000).toLocaleString()
+      : '-'
+  }만원`}
+</div>
+      </div>
+      <Tabs defaultValue="defaultTab" className="grow mt-4 w-full">
        <TabsList>
-          <TabsTrigger value="main" variant={"company"}>기본</TabsTrigger>
+          <TabsTrigger value="defaultTab" variant={"company"}>기본</TabsTrigger>
           <TabsTrigger value="recruit" variant={"company"}>채용 정보</TabsTrigger>
           <TabsTrigger value="issue" variant={"company"}>최근 이슈</TabsTrigger>
           <TabsTrigger value="benefit" variant={"company"}>복지</TabsTrigger>
           <TabsTrigger value="techStack" variant={"company"}>기술 스택</TabsTrigger>
         </TabsList>
-        <TabsContent value="main">Make changes to your account here.</TabsContent>
-        <TabsContent value="recruit">Change your password here.</TabsContent>
-        <TabsContent value="issue">Change your password here.</TabsContent>
-        <TabsContent value="benefit">Change your password here.</TabsContent>
+        <TabsContent value="defaultTab" className="grow"><DefaultTab company={company} /></TabsContent>
+        <TabsContent value="recruit"><RecruitTab recruitments={company.recruitments} /></TabsContent>
+        <TabsContent value="issue"><IssueTab name={company.name} issue={company.recentIssue}/></TabsContent>
+        <TabsContent value="benefit"><BenefitTab benefits={company.benefits}/></TabsContent>
         <TabsContent value="techStack">Change your password here.</TabsContent>
       </Tabs>
     </div>
