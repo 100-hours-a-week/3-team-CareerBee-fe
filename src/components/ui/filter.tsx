@@ -3,7 +3,7 @@ import { instance as axios } from '@/lib/axios';
 import { useState, useMemo } from 'react';
 import { CompanyProps } from '@/pages/Main';
 import { useMarkerStore } from '@/store/marker';
-
+import { useAuthStore } from '@/store/auth';
 
 const CATEGORY_FILTERS = ["PLATFORM", "SI", "COMMERCE", "GAME", "TELECOM", "SECURITY", "FINANCE"];
 
@@ -15,6 +15,28 @@ interface Props {
   filters: FilterProps[];
   companies: CompanyProps[];
 }
+const fetchBookmarkedIds = async (setBookmarkedIds: (ids: number[]) => void) => {
+  console.log('🚀 fetchBookmarkedIds called'); // ✅ 여기에 로그 넣기
+  const token = useAuthStore.getState().token;
+  console.log(token);
+  if (!token) return;
+
+  try {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/v1/members/wish-companies/id-list`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log(res.data.data.wishCompanies);
+    setBookmarkedIds(res.data.data.wishCompanies);
+  } catch (err) {
+    console.error('Failed to fetch bookmarked companies', err);
+  }
+};
+
 const FilterGroup = ({ filters, companies }: Props) => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const setCompanyDisabledMap = useMarkerStore((state) => state.setCompanyDisabledMap);
@@ -72,17 +94,7 @@ const FilterGroup = ({ filters, companies }: Props) => {
                   const recruiting = companies.filter((c) => c.recruitingStatus === 'ongoing');
                   console.log('Recruiting companies:', recruiting);
                 } else if (id === 'bookmark') {
-                  const token = localStorage.getItem('accessToken');
-                  if (!token) return;
-                  axios.get(`${import.meta.env.VITE_API_URL}/api/v1/members/wish-companies/id-list`, {
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
-                  }).then((res) => {
-                    setBookmarkedIds(res.data.data.wishCompanies);
-                  }).catch((err) => {
-                    console.error('Failed to fetch bookmarked companies', err);
-                  });
+                  fetchBookmarkedIds(setBookmarkedIds);
                 } else {
                   const filtered = companies.filter((c) => c.businessType === id);
                   console.log(`Filtered by category (${id}):`, filtered);
