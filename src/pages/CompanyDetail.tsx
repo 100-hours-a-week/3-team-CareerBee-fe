@@ -128,7 +128,7 @@ export default function CompanyDetail() {
       </div>
 
       {/* 기업 정보 */}
-      <div className="flex flex-col gap-2 my-2">
+      <div className="flex flex-col px-4 gap-2 my-2">
       <div className="text-lg font-semibold">{company.title}</div>
         <div className="flex gap-0.5 [&_svg]:size-5">
         {[...Array(5)].map((_, index) => {
@@ -171,7 +171,7 @@ export default function CompanyDetail() {
         <TabsContent value="recruit"><RecruitTab recruitments={company.recruitments} /></TabsContent>
         <TabsContent value="issue"><IssueTab name={company.name} issue={company.recentIssue}/></TabsContent>
         <TabsContent value="benefit"><BenefitTab benefits={company.benefits}/></TabsContent>
-        <TabsContent value="techStack">Change your password here.</TabsContent>
+        <TabsContent value="techStack">개발 중 입니다.</TabsContent>
       </Tabs>
     </div>
   );

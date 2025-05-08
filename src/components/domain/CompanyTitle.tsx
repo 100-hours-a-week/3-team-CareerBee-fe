@@ -18,7 +18,7 @@ export default function CompanyTitle({
 }:CompanyTitleProps){
 
     return (
-        <div className="flex items-center justify-end w-full text-2xl font-semibold">
+        <div className="flex items-center justify-end w-full px-2 text-2xl font-semibold">
         {/* 왼쪽 영역 */}
         <div className="flex gap-2 mr-auto">
           <img

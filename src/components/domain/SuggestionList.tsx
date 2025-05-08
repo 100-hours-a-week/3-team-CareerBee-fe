@@ -11,7 +11,7 @@ export function SuggestionList({
   onClose?: () => void;
 }) {
   return (
-    <ul className="absolute z-10 mt-1 w-full rounded-[24px] border bg-white shadow max-h-96 overflow-auto">
+    <ul className="absolute z-50 mt-1 w-full rounded-[24px] border bg-white shadow max-h-96 overflow-auto">
       {filteredSuggestions.slice(0, 8).map((item, i, arr) => {
         const isFirst = i === 0;
         const isLast = i === arr.length - 1;
