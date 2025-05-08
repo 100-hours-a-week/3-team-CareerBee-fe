@@ -13,7 +13,7 @@ export default function RecruitTab({ recruitments }: Props) {
       </div>
       {recruitments.length > 0
       ? (
-        <ul className="space-y-2">
+        <ul className="space-y-2 px-7">
           { recruitments.map((recruitment) => (
             <li key={recruitment.id} className="border p-3 rounded-md">
               <a
@@ -29,7 +29,7 @@ export default function RecruitTab({ recruitments }: Props) {
         </ul>
       )
       : (
-        <p>현재 채용 중이 아니에요.</p>
+        <p className="px-7">현재 채용 중이 아니에요.</p>
       )
       }
       </div>

@@ -9,6 +9,7 @@ import { PiStar, PiStarFill,PiStarHalfFill } from "react-icons/pi";
 import DefaultTab from '@/components/domain/company/defaultTab'
 import RecruitTab from '@/components/domain/company/recruit' 
 import IssueTab from '@/components/domain/company/issue'
+import BenefitTab from "@/components/domain/company/benefit";
 export interface CompanyDetailResponse {
   company: Company;
 }
@@ -169,7 +170,7 @@ export default function CompanyDetail() {
         <TabsContent value="defaultTab" className="grow"><DefaultTab company={company} /></TabsContent>
         <TabsContent value="recruit"><RecruitTab recruitments={company.recruitments} /></TabsContent>
         <TabsContent value="issue"><IssueTab name={company.name} issue={company.recentIssue}/></TabsContent>
-        <TabsContent value="benefit">Change your password here.</TabsContent>
+        <TabsContent value="benefit"><BenefitTab benefits={company.benefits}/></TabsContent>
         <TabsContent value="techStack">Change your password here.</TabsContent>
       </Tabs>
     </div>
