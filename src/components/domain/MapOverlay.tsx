@@ -60,7 +60,7 @@ export default function MapOverlay({
         position={position}
         image={{
           src: company.markerUrl ?? noImg,
-          size: { width: 50, height: 50 },
+          size: { width: 64, height: 64 },
         }}
         clickable={true}
         onClick={fetchCompanyDetail}

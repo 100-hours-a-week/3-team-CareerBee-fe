@@ -132,8 +132,10 @@ export default function Main() {
         )}
 
         {/* 필터 UI를 지도 위에 고정 */}
-        <div className="absolute top-2 left-1 z-10">
-          <FilterGroup filters={FILTERS} />
+        <div className="absolute top-2 left-1 right-2 z-10 px-2">
+          <div className="max-w-full overflow-x-auto ">
+            <FilterGroup filters={FILTERS} />
+          </div>
         </div>
       </div>
     </>
