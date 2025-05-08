@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from 'axios';
+import { instance as axios } from '@/lib/axios';
 import CompanyTitle from '@/components/domain/CompanyTitle';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import noImg from '@/assets/no-image.png';

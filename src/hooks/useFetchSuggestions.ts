@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import axios from 'axios';
+import { instance as axios } from '@/lib/axios';
 import { useSearchStore } from '@/store/search';
 
 export function useFetchSuggestions() {

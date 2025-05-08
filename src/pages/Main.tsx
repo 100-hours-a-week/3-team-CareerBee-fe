@@ -8,7 +8,7 @@ import { useSearchStore } from '@/store/search';
 import { useMarkerStore } from '@/store/marker';
 import { useFetchSuggestions } from '@/hooks/useFetchSuggestions';
 
-import axios from 'axios';
+import { instance as axios } from '@/lib/axios';
 
 const KTB = {
   "lat": 37.40014087574066,

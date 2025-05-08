@@ -12,10 +12,14 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       token: null,
       setToken: (token) => set({ token }),
-      clearToken: () => set({ token: null }),
-    }),
+      clearToken: () => {
+        localStorage.removeItem('auth-storage');
+        set({ token: null });
+    }}),
     {
       name: 'auth-storage', // localStorage 키 이름
     },
   ),
 );
+
+export const authStore = useAuthStore;
