@@ -4,6 +4,7 @@ import axios from 'axios';
 import CompanyTitle from '@/components/domain/CompanyTitle';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import noImg from '@/assets/no-image.png';
+import { PiStar } from "react-icons/pi";
 
 export interface CompanyDetailResponse {
   company: Company;
@@ -82,7 +83,8 @@ export default function CompanyDetail() {
         // .get('/mock/CompanyDetail.json')
         .then((response) => {
           const data = response.data;
-          setCompany(data.data.company);
+          setCompany(data.data);
+          console.log(data);
         })
         .catch((error) => {
           console.error("기업 정보 불러오기 실패", error);
@@ -95,7 +97,7 @@ export default function CompanyDetail() {
   if (!company) return <div>로딩 중...</div>;
 
   return (
-    <div className="flex flex-col items-start">
+    <div className="flex flex-col grow">
       {/* 갤러리 */}
       <div className="grid grid-cols-4 grid-rows-2 gap-1 max-w-full mx-auto">
       {[...Array(5)].map((_, index) => {
@@ -119,7 +121,22 @@ export default function CompanyDetail() {
           isBookmarked={isBookmarked}
       />
 
-      <Tabs defaultValue="main" className="mt-4 w-full">
+      {/* 기업 정보 */}
+      <div className="flex flex-col gap-2 my-2">
+      <div className="text-lg font-semibold">{company.title}</div>
+        <div className="flex gap-0.5 [&_svg]:size-5">
+        {[...Array(5)].map(() => {
+            return(
+              <PiStar />
+            )
+          })}
+          <p className="ml-2 text-sm text-text-secondary">캐치 종합 점수 기준</p>
+        </div>
+        <div className="w-full text-center font-700">
+          {`평균: ${company.financials.annualSalary}만원 / 신입: ${company.financials.startingSalary}만원`}
+          </div>
+      </div>
+      <Tabs defaultValue="main" className="grow mt-4 w-full">
        <TabsList>
           <TabsTrigger value="main" variant={"company"}>기본</TabsTrigger>
           <TabsTrigger value="recruit" variant={"company"}>채용 정보</TabsTrigger>
@@ -127,7 +144,7 @@ export default function CompanyDetail() {
           <TabsTrigger value="benefit" variant={"company"}>복지</TabsTrigger>
           <TabsTrigger value="techStack" variant={"company"}>기술 스택</TabsTrigger>
         </TabsList>
-        <TabsContent value="main">Make changes to your account here.</TabsContent>
+        <TabsContent value="main" className="grow">Make changes to your account here.</TabsContent>
         <TabsContent value="recruit">Change your password here.</TabsContent>
         <TabsContent value="issue">Change your password here.</TabsContent>
         <TabsContent value="benefit">Change your password here.</TabsContent>
