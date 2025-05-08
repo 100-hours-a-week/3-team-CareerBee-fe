@@ -4,7 +4,7 @@ import axios from 'axios';
 import CompanyTitle from '@/components/domain/CompanyTitle';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import noImg from '@/assets/no-image.png';
-import { PiStar } from "react-icons/pi";
+import { PiStar, PiStarFill,PiStarHalfFill } from "react-icons/pi";
 
 import DefaultTab from '@/components/domain/company/defaultTab'
 export interface CompanyDetailResponse {
@@ -126,15 +126,24 @@ export default function CompanyDetail() {
       <div className="flex flex-col gap-2 my-2">
       <div className="text-lg font-semibold">{company.title}</div>
         <div className="flex gap-0.5 [&_svg]:size-5">
-        {[...Array(5)].map(() => {
-            return(
-              <PiStar />
-            )
-          })}
+        {[...Array(5)].map((_, index) => {
+          const full = Math.floor(company.rating);
+          const decimal = company.rating - full;
+          console.log(decimal)
+          if (index < full) {
+            return <PiStarFill key={index} />;
+          } else if (index === full) {
+            if (decimal < 0.333) return <PiStar key={index} />;
+            if (decimal < 0.666) return <PiStarHalfFill key={index} />;
+            return <PiStarFill key={index} />;
+          } else {
+            return <PiStar key={index} />;
+          }
+        })}
           <p className="ml-2 text-sm text-text-secondary">캐치 종합 점수 기준</p>
         </div>
-        <div className="w-full text-center font-700">
-          {`평균: ${company.financials.annualSalary}만원 / 신입: ${company.financials.startingSalary}만원`}
+        <div className="w-full text-center font-semibold">
+          {`평균: ${company.financials.annualSalary || "- "}만원 / 신입: ${company.financials.startingSalary || "- "}만원`}
           </div>
       </div>
       <Tabs defaultValue="defaultTab" className="grow mt-4 w-full">
