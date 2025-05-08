@@ -15,6 +15,7 @@ export const useAuthStore = create<AuthState>()(
       clearToken: () => {
         localStorage.removeItem('auth-storage');
         set({ token: null });
+        window.location.reload();
     }}),
     {
       name: 'auth-storage', // localStorage 키 이름
