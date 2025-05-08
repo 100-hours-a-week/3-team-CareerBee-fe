@@ -7,6 +7,8 @@ import noImg from '@/assets/no-image.png';
 import { PiStar, PiStarFill,PiStarHalfFill } from "react-icons/pi";
 
 import DefaultTab from '@/components/domain/company/defaultTab'
+import RecruitTab from '@/components/domain/company/recruit' 
+import IssueTab from '@/components/domain/company/issue'
 export interface CompanyDetailResponse {
   company: Company;
 }
@@ -164,9 +166,9 @@ export default function CompanyDetail() {
           <TabsTrigger value="benefit" variant={"company"}>복지</TabsTrigger>
           <TabsTrigger value="techStack" variant={"company"}>기술 스택</TabsTrigger>
         </TabsList>
-        <TabsContent value="defaultTab" className="grow"><DefaultTab company={company}/></TabsContent>
-        <TabsContent value="recruit">Change your password here.</TabsContent>
-        <TabsContent value="issue">Change your password here.</TabsContent>
+        <TabsContent value="defaultTab" className="grow"><DefaultTab company={company} /></TabsContent>
+        <TabsContent value="recruit"><RecruitTab recruitments={company.recruitments} /></TabsContent>
+        <TabsContent value="issue"><IssueTab name={company.name} issue={company.recentIssue}/></TabsContent>
         <TabsContent value="benefit">Change your password here.</TabsContent>
         <TabsContent value="techStack">Change your password here.</TabsContent>
       </Tabs>
