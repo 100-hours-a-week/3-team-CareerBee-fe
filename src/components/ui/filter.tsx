@@ -55,9 +55,6 @@ const FilterGroup = ({ filters, companies }: Props) => {
     return filtered;
   }, [activeFilters, companies, setCompanyDisabledMap, bookmarkedIds]);
 
-  console.log('Active Filters:', activeFilters);
-  console.log('Filtered Companies:', filteredCompanies);
-
   return (
     <div className="w-full px-4 py-2 overflow-x-auto">
       {/* <div className="overflow-x-auto"> */}
