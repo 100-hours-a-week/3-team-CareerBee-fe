@@ -1,5 +1,5 @@
 import { Toggle } from '@/components/ui/toggle';
-import axios from 'axios';
+import { instance as axios } from '@/lib/axios';
 import { useEffect, useState, useMemo } from 'react';
 import { CompanyProps } from '@/pages/Main';
 import { useMarkerStore } from '@/store/marker';

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useCompanyStore } from '@/store/company';
 import { useAuthStore } from '@/store/auth';
-import axios from 'axios';
+import { instance as axios } from '@/lib/axios';
 
 export function useCompanyDetail(companyId: number, index: number) {
   const {
@@ -27,11 +27,9 @@ export function useCompanyDetail(companyId: number, index: number) {
           })
           .then((res) => {
             setIsBookmarked(res.data.data.isWish ? 'true' : 'false');
-            console.log(res.data.data.isWish ? 'true' : 'false');
           })
           .catch((err) => {
             console.error('관심기업 여부 조회 실패:', err);
-            console.log(companyId)
           });
       } else {
         setIsBookmarked('disabled');

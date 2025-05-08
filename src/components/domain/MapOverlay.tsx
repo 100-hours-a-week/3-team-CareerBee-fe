@@ -3,7 +3,7 @@ import CompanyCard from '@/components/domain/CompanyCard';
 import noImg from '@/assets/no-image.png';
 import { useCompanyStore } from '@/store/company';
 import { useAuthStore } from '@/store/auth';
-import axios from 'axios';
+import { instance as axios } from '@/lib/axios';
 import { useCompanyDetail } from '@/hooks/useCompanyDetail';
 import { CompanyProps } from '@/pages/Main'
 

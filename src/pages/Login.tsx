@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import axios from 'axios';
+import { instance as axios } from '@/lib/axios';
 
 export default function Login() {
   const handleLogin = async () => {
@@ -18,8 +18,7 @@ export default function Login() {
     }
   };
   return (
-    // <div></div>
-    <div className="flex flex-col items-center justify-center gap-4">
+    <div className="flex flex-col items-center justify-center my-auto px-16 gap-4">
       <h1 className="text-center text-2xl font-bold ">
         No.1 AI기반 커리어 길찾기 서비스
         <br />
