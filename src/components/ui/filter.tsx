@@ -1,5 +1,6 @@
 import { Toggle } from '@/components/ui/toggle';
-import { useState, useMemo } from 'react';
+import axios from 'axios';
+import { useEffect, useState, useMemo } from 'react';
 import { CompanyProps } from '@/pages/Main';
 import { useMarkerStore } from '@/store/marker';
 
@@ -17,6 +18,7 @@ interface Props {
 const FilterGroup = ({ filters, companies }: Props) => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const setCompanyDisabledMap = useMarkerStore((state) => state.setCompanyDisabledMap);
+  const [bookmarkedIds, setBookmarkedIds] = useState<number[]>([]);
 
   const toggleFilter = (id: string) => {
     setActiveFilters((prev) => {
@@ -38,6 +40,7 @@ const FilterGroup = ({ filters, companies }: Props) => {
       } else if (filterId === 'bookmark') {
         // TODO: Fetch bookmarked companies via API and filter accordingly
         // Placeholder: no filtering applied here
+        filtered = filtered.filter((c) => bookmarkedIds.includes(c.id));
       } else if (CATEGORY_FILTERS.includes(filterId)) {
         filtered = filtered.filter((c) => c.businessType === filterId);
       }
@@ -50,7 +53,7 @@ const FilterGroup = ({ filters, companies }: Props) => {
     setCompanyDisabledMap(disabledMap);
 
     return filtered;
-  }, [activeFilters, companies, setCompanyDisabledMap]);
+  }, [activeFilters, companies, setCompanyDisabledMap, bookmarkedIds]);
 
   console.log('Active Filters:', activeFilters);
   console.log('Filtered Companies:', filteredCompanies);
@@ -68,15 +71,22 @@ const FilterGroup = ({ filters, companies }: Props) => {
               onPressedChange={() => {
                 toggleFilter(id);
 
-                // Example filter logic (for illustration)
                 if (id === 'recruiting') {
                   const recruiting = companies.filter((c) => c.recruitingStatus === 'ongoing');
                   console.log('Recruiting companies:', recruiting);
                 } else if (id === 'bookmark') {
-                  // TODO: Fetch bookmarked companies via API and match IDs
-                  console.log('Fetch bookmarked company IDs');
+                  const token = localStorage.getItem('accessToken');
+                  if (!token) return;
+                  axios.get(`${import.meta.env.VITE_API_URL}/api/v1/members/wish-companies/id-list`, {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  }).then((res) => {
+                    setBookmarkedIds(res.data.data.wishCompanies);
+                  }).catch((err) => {
+                    console.error('Failed to fetch bookmarked companies', err);
+                  });
                 } else {
-                  // Category filter (businessType)
                   const filtered = companies.filter((c) => c.businessType === id);
                   console.log(`Filtered by category (${id}):`, filtered);
                 }
