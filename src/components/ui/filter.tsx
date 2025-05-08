@@ -1,6 +1,6 @@
 import { Toggle } from '@/components/ui/toggle';
 import { instance as axios } from '@/lib/axios';
-import { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { CompanyProps } from '@/pages/Main';
 import { useMarkerStore } from '@/store/marker';
 
@@ -30,7 +30,7 @@ const FilterGroup = ({ filters, companies }: Props) => {
     });
   };
 
-  const filteredCompanies = useMemo(() => {
+ useMemo(() => {
     let filtered = companies;
 
     activeFilters.forEach((filterId) => {
