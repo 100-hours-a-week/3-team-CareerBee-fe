@@ -17,22 +17,22 @@ export default function DefaultTab({ company }: Props) {
         <p>명</p>
       </div>
       <div className="flex gap-2 py-2 [&_svg]:size-5">
-  {company.homepageUrl ? (
-    <a
-      href={company.homepageUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex items-center gap-1 underline hover:text-border"
-    >
-      <PiLink /> {company.homepageUrl}
-    </a>
-  ) : (
-    <>
-      <PiLink /> -
-    </>
-  )}
-</div>
-      <div className="flex gap-2 py-2 [&_svg]:size-9">
+        {company.homepageUrl ? (
+          <a
+            href={company.homepageUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 underline hover:text-border"
+          >
+            <PiLink /> {company.homepageUrl}
+          </a>
+        ) : (
+          <>
+            <PiLink /> -
+          </>
+        )}
+      </div>
+      <div className="flex gap-2 py-2 [&_svg]:size-5">
         <PiMegaphone /> {company.description} 
       </div>
       <div className="flex gap-2 py-2 [&_svg]:size-5">
