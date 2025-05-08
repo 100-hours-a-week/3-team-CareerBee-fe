@@ -14,6 +14,8 @@ export const useAuthStore = create<AuthState>()(
       setToken: (token) => set({ token }),
       clearToken: () => {
         localStorage.removeItem('auth-storage');
+        localStorage.removeItem('userPoint');
+        localStorage.removeItem('hasNewAlarm');
         set({ token: null });
         window.location.reload();
     }}),
