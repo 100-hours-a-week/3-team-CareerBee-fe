@@ -114,13 +114,15 @@ export default function CompanyDetail() {
           );
         })}
       </div>
-      <CompanyTitle 
-          logoUrl={company.logoUrl ?? noImg}
-          name={company.name}
-          wishCount={company.wishCount}
-          isLoggedIn={isLoggedIn}
-          isBookmarked={isBookmarked}
-      />
+      <div className="-mt-9 pl-2 relative z-10">
+        <CompanyTitle 
+            logoUrl={company.logoUrl ?? noImg}
+            name={company.name}
+            wishCount={company.wishCount}
+            isLoggedIn={isLoggedIn}
+            isBookmarked={isBookmarked}
+        />
+      </div>
 
       {/* 기업 정보 */}
       <div className="flex flex-col gap-2 my-2">

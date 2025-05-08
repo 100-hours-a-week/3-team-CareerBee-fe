@@ -32,7 +32,7 @@ export default function CompanyTitle({
         </div>
 
         {/* 오른쪽 영역 */}
-        <div className="flex flex-col h-full justify-end gap-2">
+        <div className="flex flex-col mt-auto gap-2">
           <div className="flex items-center gap-1 [&_svg]:size-6 bg-transparent">
             <Button variant="icon" label={<PiShare/>} className="text-text-primary"/>
               {isLoggedIn ? (
