@@ -35,11 +35,13 @@ const RADIUS_BY_LEVEL: Record<number, number> = {
 const FILTERS = [
   { id: "open", label: "✅ 채용 중" },
   { id: "bookmark", label: "📍 저장" },
-  { id: "si", label: "SI" },
-  { id: "game", label: "게임" },
-  { id: "finance", label: "금융" },
-  { id: "security", label: "보안" },
-  { id: "service", label: "서비스" },
+  { id: "PLATFORM", label: "플랫폼" },
+  { id: "SI", label: "SI" },
+  { id: "COMMERCE", label: "커머스" },
+  { id: "GAME", label: "게임" },
+  { id: "TELECOM", label: "통신" },
+  { id: "SECURITY", label: "보안" },
+  { id: "FINANCE", label: "금융" },
 ];
 export interface CompanyProps {
   id: number;

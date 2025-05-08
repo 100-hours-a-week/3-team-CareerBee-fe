@@ -1,6 +1,8 @@
 import { Toggle } from '@/components/ui/toggle';
 import { useState } from 'react';
 
+const CATEGORY_FILTERS = ["PLATFORM", "SI", "COMMERCE", "GAME", "TELECOM", "SECURITY", "FINANCE"];
+
 interface FilterProps {
   id: string;
   label: string;
@@ -12,7 +14,13 @@ const FilterGroup = ({ filters }: Props) => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
   const toggleFilter = (id: string) => {
-    setActiveFilters((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]));
+    setActiveFilters((prev) => {
+      if (CATEGORY_FILTERS.includes(id)) {
+        const others = prev.filter((f) => !CATEGORY_FILTERS.includes(f));
+        return prev.includes(id) ? others : [...others, id];
+      }
+      return prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id];
+    });
   };
 
   console.log('Active Filters:', activeFilters);
