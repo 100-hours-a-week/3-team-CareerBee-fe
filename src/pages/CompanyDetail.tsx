@@ -6,6 +6,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import noImg from '@/assets/no-image.png';
 import { PiStar } from "react-icons/pi";
 
+import DefaultTab from '@/components/domain/company/defaultTab'
 export interface CompanyDetailResponse {
   company: Company;
 }
@@ -108,7 +109,7 @@ export default function CompanyDetail() {
               key={index}
               src={imageUrl}
               alt={company.name ?? "no image"}
-              className={index === 0 ? "col-span-2 row-span-2 aspect-[4/3] object-cover rounded-lg" : "aspect-[4/3] object-cover rounded-lg"}
+              className={index === 0 ? "col-span-2 row-span-2 w-full h-full object-cover rounded-lg" : "aspect-[4/3] object-cover rounded-lg"}
             />
           );
         })}
@@ -136,15 +137,15 @@ export default function CompanyDetail() {
           {`평균: ${company.financials.annualSalary}만원 / 신입: ${company.financials.startingSalary}만원`}
           </div>
       </div>
-      <Tabs defaultValue="main" className="grow mt-4 w-full">
+      <Tabs defaultValue="defaultTab" className="grow mt-4 w-full">
        <TabsList>
-          <TabsTrigger value="main" variant={"company"}>기본</TabsTrigger>
+          <TabsTrigger value="defaultTab" variant={"company"}>기본</TabsTrigger>
           <TabsTrigger value="recruit" variant={"company"}>채용 정보</TabsTrigger>
           <TabsTrigger value="issue" variant={"company"}>최근 이슈</TabsTrigger>
           <TabsTrigger value="benefit" variant={"company"}>복지</TabsTrigger>
           <TabsTrigger value="techStack" variant={"company"}>기술 스택</TabsTrigger>
         </TabsList>
-        <TabsContent value="main" className="grow">Make changes to your account here.</TabsContent>
+        <TabsContent value="defaultTab" className="grow"><DefaultTab company={company}/></TabsContent>
         <TabsContent value="recruit">Change your password here.</TabsContent>
         <TabsContent value="issue">Change your password here.</TabsContent>
         <TabsContent value="benefit">Change your password here.</TabsContent>
