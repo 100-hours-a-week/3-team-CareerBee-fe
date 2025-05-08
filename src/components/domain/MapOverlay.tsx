@@ -59,7 +59,7 @@ export default function MapOverlay({
       <MapMarker
         position={position}
         image={{
-          src: company.logoUrl ?? noImg,
+          src: company.markerUrl ?? noImg,
           size: { width: 50, height: 50 },
         }}
         clickable={true}

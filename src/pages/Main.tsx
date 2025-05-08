@@ -43,7 +43,7 @@ const FILTERS = [
 ];
 export interface CompanyProps {
   id: number;
-  logoUrl: string;
+  markerUrl: string;
   locationInfo: {
     latitude: number;
     longitude: number;
@@ -102,7 +102,7 @@ export default function Main() {
   };
   return (
     <>
-      <div className="py-2 w-full">
+      <div className="py-2 px-4 w-full">
         <SearchBar
           placeholder="검색어를 입력하세요."
           value={search}
@@ -111,11 +111,11 @@ export default function Main() {
           onSuggestionSelect={(value: string) => setSearch(value)}
         />
       </div>
-      <div className="relative w-full h-full">
+      <div className="flex item-center justify-center relative w-full h-full">
         {loaded && (
           <Map
             center={{ lat: KTB.lat, lng: KTB.lng }}
-            className="w-[calc(100%+2rem)] h-full"
+            className="w-full h-full"
             level={3}
             onZoomChanged={handleMapMove}
             onDragEnd={handleMapMove}
