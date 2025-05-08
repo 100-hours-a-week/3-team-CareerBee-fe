@@ -23,4 +23,4 @@ export const useAuthStore = create<AuthState>()(
   ),
 );
 
-export const authStore = useAuthStore;
+// export const authStore = useAuthStore;

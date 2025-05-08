@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { authStore } from '@/store/auth';
+import { useAuthStore } from '@/store/auth';
 
 export const instance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL, // .env 파일에 설정
@@ -11,7 +11,6 @@ export const instance = axios.create({
 
 instance.interceptors.response.use(
   (response) => {
-    console.log("api");
     return response},
   (error) => {
     const res = error.response;
@@ -23,10 +22,10 @@ instance.interceptors.response.use(
       logoutMessage?.includes("다시 로그인")
     ) {
       console.warn('자동 로그아웃 처리됨 (토큰 만료 또는 세션 종료)');
-      authStore.getState().clearToken();
+      useAuthStore.getState().clearToken();
     }
     else{
-      console.log("idontknow")
+      console.log("API response fail")
     }
 
     return Promise.reject(error);

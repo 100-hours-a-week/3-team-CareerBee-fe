@@ -7,9 +7,9 @@ export default function Login() {
       const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/auth/oauth`, {
         params: { type: 'KAKAO' },
       });
-      console.log(res.data);
       const loginUrl = res.data.data.loginUrl;
       if (loginUrl) {
+        console.log(loginUrl)
         window.location.href = loginUrl;
       }
     } catch (error) {

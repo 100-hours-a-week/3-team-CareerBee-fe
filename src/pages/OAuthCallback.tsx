@@ -1,10 +1,8 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth';
 import { instance as axios } from '@/lib/axios';
 
 export default function OAuthCallback() {
-  const navigate = useNavigate();
   const setToken = useAuthStore((state) => state.setToken);
 
   useEffect(() => {
@@ -20,7 +18,7 @@ export default function OAuthCallback() {
         .then((response) => {
           const accessToken = response.data.data.accessToken;
           setToken(accessToken); // ✅ Zustand + persist로 저장됨
-          navigate('/'); // ✅ 로그인 성공 후 홈으로 이동
+          window.location.href = '/'; // ✅ 로그인 성공 후 홈으로 이동
           console.log('✅ Login successful:', accessToken);
         })
         .catch((error) => {
@@ -28,9 +26,9 @@ export default function OAuthCallback() {
         });
     } else {
       console.error('❌ No token found in URL');
-      navigate('/login'); // ❌ 토큰 없으면 로그인 페이지로
+      window.location.href = '/login'; // ❌ 토큰 없으면 로그인 페이지로
     }
-  }, [setToken, navigate]);
+  }, [setToken]);
 
   return (
     <div className="flex h-screen items-center justify-center text-lg font-semibold">
