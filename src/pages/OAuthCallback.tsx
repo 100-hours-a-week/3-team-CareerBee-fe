@@ -16,8 +16,10 @@ export default function OAuthCallback() {
           authorizationCode: token,
         })
         .then((response) => {
-          const accessToken = response.data.data.accessToken;
+          const { accessToken, userInfo } = response.data.data;
           setToken(accessToken); // ✅ Zustand + persist로 저장됨
+          localStorage.setItem('userPoint', userInfo.userPoint);
+          localStorage.setItem('hasNewAlarm', userInfo.hasNewAlarm);
           window.location.href = '/'; // ✅ 로그인 성공 후 홈으로 이동
           console.log('✅ Login successful:', accessToken);
         })

@@ -24,6 +24,8 @@ export default function MainLayout() {
     if (location.pathname.startsWith('/notification')) return 'nav';
     return 'minimal';
   })();
+  const point = Number(localStorage.getItem('userPoint')) || 0;
+  const hasNewNotification = localStorage.getItem('hasNewAlarm') === 'true';
   const showNavbar = () => {
     if (location.pathname.startsWith('/competition/entry')) return false;
     return true;
@@ -32,7 +34,7 @@ export default function MainLayout() {
   return (
     <div className="min-h-screen flex flex-col max-w-[600px] w-full mx-auto bg-background shadow-sides">
       
-      <Header type={headerType} hasNewNotification={false} point={100} />
+      <Header type={headerType} hasNewNotification={hasNewNotification} point={point} />
       <main className="grow flex flex-col w-full h-[calc(100vh-8rem)] overflow-auto">
         <Outlet />
       </main>

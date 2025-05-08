@@ -1,5 +1,6 @@
 import { PiBell, PiBellRinging, PiCoinsDuotone, PiCaretDown, PiCaretLeft } from 'react-icons/pi';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 import logo from '@/assets/logo-with-text-2.png';
 interface HeaderProps {
   type: 'main' | 'login' | 'down' | 'downLogin' | 'nav' | 'minimal';
@@ -8,7 +9,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ type = 'main', point = 0, hasNewNotification = false }: HeaderProps) => {
-  //   const showLogin= type === "login" || type === "downLogin";
+  const navigate = useNavigate();
   const showUserAssets = type === 'main' || type === 'down' || type === 'nav';
   const isDown = type === 'down' || type === 'downLogin';
   const isNav = type === 'nav' || type === 'minimal';
@@ -19,9 +20,13 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
       {/* 왼쪽 영역 */}
       <div className="flex items-center gap-2">
         {isNav ? (
+          <button onClick={() => navigate(-1)}>
           <PiCaretLeft className="w-7 h-7 " />
+          </button>
         ) : isDown ? (
+          <button onClick={() => navigate(-1)}>
           <PiCaretDown className="w-7 h-7" />
+            </button>
         ) : null}
 
         <a href="/">
