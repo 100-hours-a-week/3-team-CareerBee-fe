@@ -15,20 +15,20 @@ const KTB = {
   "lng": 127.10677853166985
 }
 const RADIUS_BY_LEVEL: Record<number, number> = {
-  1: 100,
-  2: 200,
-  3: 300,
-  4: 600,
-  5: 1000,
-  6: 1500,
-  7: 2000,
-  8: 2500,
-  9: 3000,
-  10: 4000,
-  11: 5000,
-  12: 6000,
-  13: 8000,
-  14: 10000,
+  1: 150,
+  2: 250,
+  3: 500,
+  4: 1100,
+  5: 2000,
+  6: 4000,
+  7: 8000,
+  8: 16250,
+  9: 32500,
+  10: 75000,
+  11: 150000,
+  12: 300000,
+  13: 585000,
+  14: 1170000,
 };
 const FILTERS = [
   { id: "recruiting", label: "✅ 채용 중" },
@@ -138,7 +138,7 @@ export default function Main() {
 
         {/* 필터 UI를 지도 위에 고정 */}
         <div className="absolute top-2 left-1 right-2 z-10 px-2">
-          <div className="max-w-full overflow-x-auto ">
+          <div className="max-w-full ">
             <FilterGroup filters={FILTERS} companies={companies} />
           </div>
         </div>
