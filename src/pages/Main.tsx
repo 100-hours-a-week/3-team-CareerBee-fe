@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { SearchBar } from '@/components/domain/SearchBar';
 import { FilterGroup } from '@/components/ui/filter'
 import { Map } from 'react-kakao-maps-sdk';
@@ -65,6 +65,8 @@ export default function Main() {
 
   const { markerDisabledMap } = useMarkerStore();
 
+  const mapRef = useRef<kakao.maps.Map | null>(null);
+
   const fetchCompanies = async (
     latitude: number,
     longitude: number,
@@ -112,12 +114,24 @@ export default function Main() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           suggestions={suggestions}
-          onSuggestionSelect={(value: string) => setSearch(value)}
+          onSuggestionSelect={(value: string) => {
+            setSearch(value);
+            const matched = companies.find((c) => c.id.toString() === value || c.name === value);
+            if (matched && mapRef.current) {
+              const latLng = new window.kakao.maps.LatLng(
+                matched.locationInfo.latitude,
+                matched.locationInfo.longitude
+              );
+              mapRef.current.setLevel(3);
+              mapRef.current.setCenter(latLng);
+            }
+          }}
         />
       </div>
       <div className="flex item-center justify-center relative w-full h-full">
         {loaded && (
           <Map
+            ref={mapRef}
             center={{ lat: KTB.lat, lng: KTB.lng }}
             className="w-full h-full"
             level={3}
