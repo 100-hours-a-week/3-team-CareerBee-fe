@@ -69,8 +69,8 @@ export default function Main() {
     try {
       const { data } = await axios.get('https://api.careerbee.co.kr/api/v1/companies', {
         params: {
-          latitude: {latitude},
-          longitude: {longitude},
+          latitude,
+          longitude,
           radius,
         },
       });
