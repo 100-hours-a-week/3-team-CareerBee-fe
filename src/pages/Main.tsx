@@ -1,6 +1,3 @@
-// 지도 기반의 검색 페이지. 메인 페이지이자 진입 페이지.
-// 도메인 상에서 "지도 도메인"
-
 import { useState, useEffect } from 'react';
 import { SearchBar } from '@/components/domain/SearchBar';
 import { FilterGroup } from '@/components/ui/filter'
@@ -8,6 +5,7 @@ import { Map } from 'react-kakao-maps-sdk';
 import MapOverlay from '@/components/domain/MapOverlay';
 import { useCompanyStore } from '@/store/company';
 import { useSearchStore } from '@/store/search';
+import { useMarkerStore } from '@/store/marker';
 import { useFetchSuggestions } from '@/hooks/useFetchSuggestions';
 
 import axios from 'axios';
@@ -33,7 +31,7 @@ const RADIUS_BY_LEVEL: Record<number, number> = {
   14: 10000,
 };
 const FILTERS = [
-  { id: "open", label: "✅ 채용 중" },
+  { id: "recruiting", label: "✅ 채용 중" },
   { id: "bookmark", label: "📍 저장" },
   { id: "PLATFORM", label: "플랫폼" },
   { id: "SI", label: "SI" },
@@ -46,6 +44,8 @@ const FILTERS = [
 export interface CompanyProps {
   id: number;
   markerUrl: string;
+  businessType: string;
+  recruitingStatus: string;
   locationInfo: {
     latitude: number;
     longitude: number;
@@ -62,6 +62,8 @@ export default function Main() {
   const {
     openCardIndex,
   } = useCompanyStore();
+
+  const { markerDisabledMap } = useMarkerStore();
 
   const fetchCompanies = async (
     latitude: number,
@@ -128,6 +130,7 @@ export default function Main() {
                 company={company}
                 index={index}
                 isOpen={openCardIndex === index}
+                disabled={markerDisabledMap[company.id] ?? false}
               />
             ))}
           </Map>
@@ -136,7 +139,7 @@ export default function Main() {
         {/* 필터 UI를 지도 위에 고정 */}
         <div className="absolute top-2 left-1 right-2 z-10 px-2">
           <div className="max-w-full overflow-x-auto ">
-            <FilterGroup filters={FILTERS} />
+            <FilterGroup filters={FILTERS} companies={companies} />
           </div>
         </div>
       </div>

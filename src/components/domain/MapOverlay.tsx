@@ -11,12 +11,14 @@ interface MapOverlayProps {
   company: CompanyProps;
   index: number;
   isOpen: boolean;
+  disabled: boolean;
 }
 
 export default function MapOverlay({
   company,
   index,
   isOpen,
+  disabled,
 }: MapOverlayProps) {
   const {
     companyInfo,
@@ -56,15 +58,17 @@ export default function MapOverlay({
 
   return (
     <>
-      <MapMarker
-        position={position}
-        image={{
-          src: company.markerUrl ?? noImg,
-          size: { width: 64, height: 64 },
-        }}
-        clickable={true}
-        onClick={fetchCompanyDetail}
-      />
+      {!disabled &&
+          <MapMarker
+            position={position}
+            image={{
+              src: company.markerUrl ?? noImg,
+              size: { width: 64, height: 64 },
+            }}
+            clickable={true}
+            onClick={fetchCompanyDetail}
+          />
+      }
       {isOpen && companyInfo && (
         <CustomOverlayMap xAnchor={0.5} yAnchor={1.22} position={position} clickable={true}>
           <CompanyCard
