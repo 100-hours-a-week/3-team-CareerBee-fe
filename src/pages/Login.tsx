@@ -4,7 +4,7 @@ import axios from 'axios';
 export default function Login() {
   const handleLogin = async () => {
     try {
-      const res = await axios.get('https://api.careerbee.co.kr/api/v1/auth/oauth', {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/auth/oauth`, {
         params: { type: 'KAKAO' },
       });
       console.log(res.data);

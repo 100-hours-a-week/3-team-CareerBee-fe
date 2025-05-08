@@ -36,7 +36,7 @@ export default function MapOverlay({
   const handleToggleBookmark = async () => {
     if (!token) return;
 
-    const url = `https://api.careerbee.co.kr/api/v1/members/wish-companies/${company.id}`;
+    const url = `${import.meta.env.VITE_API_URL}/api/v1/members/wish-companies/${company.id}`;
     try {
       if (isBookmarked === 'true') {
         await axios.delete(url, {
