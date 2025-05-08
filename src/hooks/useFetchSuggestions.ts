@@ -12,7 +12,7 @@ export function useFetchSuggestions() {
         return;
       }
       try {
-        const { data } = await axios.get('https://api.careerbee.co.kr/api/v1/companies/search', {
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies/search`, {
           params: { keyword: search },
         });
         const names = data.data.matchingCompanies.map((company: { name: string }) => company.name);

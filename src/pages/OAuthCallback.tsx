@@ -14,7 +14,7 @@ export default function OAuthCallback() {
 
     if (token) {
       axios
-        .post(`https://api.careerbee.co.kr/api/v1/auth/oauth/tokens/kakao`, {
+        .post(`${import.meta.env.VITE_API_URL}/api/v1/auth/oauth/tokens/kakao`, {
           authorizationCode: token,
         })
         .then((response) => {

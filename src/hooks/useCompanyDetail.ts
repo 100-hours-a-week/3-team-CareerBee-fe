@@ -17,12 +17,12 @@ export function useCompanyDetail(companyId: number, index: number) {
     setOpenCardIndex(newIndex);
 
     try {
-      const { data } = await axios.get(`https://api.careerbee.co.kr/api/v1/companies/${companyId}/summary`);
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${companyId}/summary`);
       setCompanyInfo(data.data);
 
       if (token) {
         const { data } = await axios.get(
-          `https://api.careerbee.co.kr/api/v1/members/wish-companies/${companyId}`,
+          `${import.meta.env.VITE_API_URL}/api/v1/members/wish-companies/${companyId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setIsBookmarked(data.data.isWish ? 'true' : 'false');
