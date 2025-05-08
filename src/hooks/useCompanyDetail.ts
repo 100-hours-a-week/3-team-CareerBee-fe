@@ -21,11 +21,18 @@ export function useCompanyDetail(companyId: number, index: number) {
       setCompanyInfo(data.data);
 
       if (token) {
-        const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/v1/members/wish-companies/${companyId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setIsBookmarked(data.data.isWish ? 'true' : 'false');
+        axios
+          .get(`${import.meta.env.VITE_API_URL}/api/v1/members/wish-companies/${companyId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then((res) => {
+            setIsBookmarked(res.data.data.isWish ? 'true' : 'false');
+            console.log(res.data.data.isWish ? 'true' : 'false');
+          })
+          .catch((err) => {
+            console.error('관심기업 여부 조회 실패:', err);
+            console.log(companyId)
+          });
       } else {
         setIsBookmarked('disabled');
       }
