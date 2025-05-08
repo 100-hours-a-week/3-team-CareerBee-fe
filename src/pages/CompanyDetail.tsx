@@ -143,8 +143,16 @@ export default function CompanyDetail() {
           <p className="ml-2 text-sm text-text-secondary">캐치 종합 점수 기준</p>
         </div>
         <div className="w-full text-center font-semibold">
-          {`평균: ${company.financials.annualSalary || "- "}만원 / 신입: ${company.financials.startingSalary || "- "}만원`}
-          </div>
+  {`평균: ${
+    company.financials.annualSalary
+      ? (company.financials.annualSalary / 10000).toLocaleString()
+      : '-'
+  }만원 / 신입: ${
+    company.financials.startingSalary
+      ? (company.financials.startingSalary / 10000).toLocaleString()
+      : '-'
+  }만원`}
+</div>
       </div>
       <Tabs defaultValue="defaultTab" className="grow mt-4 w-full">
        <TabsList>
