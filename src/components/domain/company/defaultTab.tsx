@@ -32,8 +32,8 @@ export default function DefaultTab({ company }: Props) {
           </>
         )}
       </div>
-      <div className="flex gap-2 py-2 [&_svg]:size-5">
-        <PiMegaphone /> {company.description} 
+      <div className="flex gap-2 py-2 [&_svg]:size-5 ">
+        <PiMegaphone className="min-w-[18px]"/> {company.description} 
       </div>
       <div className="flex gap-2 py-2 [&_svg]:size-5">
         <PiBuildings />

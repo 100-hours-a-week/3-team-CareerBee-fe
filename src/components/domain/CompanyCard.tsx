@@ -40,7 +40,7 @@ export default function CompanyCard({
       width: '256px',
       height: '176px',
     }}
-    className="relative rounded-xl p-2 w-64 h-44 shadow-md cursor-default">
+    className="relative rounded-xl p-2 w-64 h-44  cursor-default">
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-2">
         <a
