@@ -67,7 +67,7 @@ export default function Main() {
     level: number) => {
     const radius = RADIUS_BY_LEVEL[level] ?? 1000;
     try {
-      const { data } = await axios.get('https://api.careerbee.co.kr/api/v1/companies', {
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies`, {
         params: {
           latitude,
           longitude,
