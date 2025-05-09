@@ -6,8 +6,8 @@ export default function Mypage() {
   return (
     <>
     <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-4xl font-bold mb-4">마이페이지</h1>
-      <p className="text-lg">이 페이지는 아직 개발 중입니다.</p>
+      <h1 className="text-4xl font-bold mb-4">🎉 로그인 완료</h1>
+      <p className="text-lg">마이페이지는 현재 준비 중이에요. 곧 만나요!</p>
     </div>
     <Button
       label="로그아웃"
