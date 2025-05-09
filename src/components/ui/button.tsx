@@ -22,7 +22,7 @@ const buttonVariants = cva(
         secondary: 'bg-secondary text-text-primary hover:bg-secondary/80',
         transparent: 'bg-transparent text-text-primary',
         danger: 'bg-error text-white hover:bg-error/80',
-        link: 'text-primary underline-offset-4 hover:underline',
+        link: 'text-text-secondary underline-offset-4 hover:underline',
         icon: 'bg-transparent text-border hover:text-border/80',
       },
       size: {
