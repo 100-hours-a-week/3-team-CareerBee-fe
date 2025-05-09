@@ -20,11 +20,11 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
       {/* 왼쪽 영역 */}
       <div className="flex items-center gap-2">
         {isNav ? (
-          <button onClick={() => navigate(-1)}>
+          <button onClick={() => navigate(-1)} style={{ padding: 'inherit' }}>
           <PiCaretLeft className="w-7 h-7 " />
           </button>
         ) : isDown ? (
-          <button onClick={() => navigate(-1)}>
+          <button onClick={() => navigate(-1)} style={{ padding: 'inherit' }}>
           <PiCaretDown className="w-7 h-7" />
             </button>
         ) : null}
