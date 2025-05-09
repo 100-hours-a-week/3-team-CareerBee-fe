@@ -13,6 +13,8 @@ import { useFetchSuggestions } from '@/hooks/useFetchSuggestions';
 
 import { instance as axios } from '@/lib/axios';
 
+import { useAuthStore  } from '@/store/auth';
+
 const KTB = {
   "lat": 37.40014087574066,
   "lng": 127.10677853166985
@@ -56,6 +58,17 @@ export interface CompanyProps {
 }
 
 export default function Main() {
+    const token=useAuthStore((state) => state.token);
+    console.log('zustand 저장 토큰: ', token);
+    const token2 = localStorage.getItem('auth-storage');
+    if (token2) {
+      const parsed = JSON.parse(token2);
+      const accessToken = parsed?.state?.token;
+
+      console.log('localStorage 토큰: ', accessToken);
+    } else {
+      console.log('⚠️ No token found in localStorage');
+    }
   const { search, setSearch, suggestions } = useSearchStore();
   useFetchSuggestions();
 

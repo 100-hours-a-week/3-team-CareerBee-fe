@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
+import { Loader } from '@/components/ui/loader';
 import { useAuthStore } from '@/store/auth';
 import { instance as axios } from '@/lib/axios';
+
 
 export default function OAuthCallback() {
   const setToken = useAuthStore((state) => state.setToken);
@@ -8,7 +10,7 @@ export default function OAuthCallback() {
   useEffect(() => {
     const url = new URL(window.location.href);
     const token = url.searchParams.get('code');
-    console.log(token);
+    // console.log(token);
 
     if (token) {
       axios
@@ -33,8 +35,11 @@ export default function OAuthCallback() {
   }, [setToken]);
 
   return (
-    <div className="flex h-screen items-center justify-center text-lg font-semibold">
-      로그인 처리 중입니다...
+    <div className="flex flex-col gap-4 h-screen items-center justify-center text-lg font-semibold">
+      <Loader/>
+      <p>
+        로그인 중이에요...
+      </p>
     </div>
   );
 }
