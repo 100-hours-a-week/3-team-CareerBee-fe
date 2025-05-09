@@ -20,7 +20,8 @@ export default function MainLayout() {
     if (location.pathname === '/login') return 'login';
     if (location.pathname === '/' && isLoggedIn) return 'main';
     if (location.pathname === '/' && !isLoggedIn) return 'login';
-    if (location.pathname.startsWith('/company')) return 'down';
+    if (location.pathname.startsWith('/company') && !isLoggedIn) return 'downLogin';
+    else if (location.pathname.startsWith('/company')) return 'down';
     if (location.pathname.startsWith('/notification')) return 'nav';
     return 'minimal';
   })();
