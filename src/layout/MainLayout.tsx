@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from '@/components/layout/header';
 import { Navbar } from '@/components/layout/navbar';
@@ -7,21 +6,15 @@ import { useAuthStore } from '@/store/auth';
 
 export default function MainLayout() {
   const location = useLocation();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   const token = useAuthStore((state) => state.token);
   
-  useEffect(() => {
-    // const token = localStorage.getItem('accessToken');
-    setIsLoggedIn(!!token);
-  }, [location.pathname]);
 
   const headerType = (() => {
     if (location.pathname === '/login') return 'login';
-    if (location.pathname === '/' && isLoggedIn) return 'main';
-    if (location.pathname === '/' && !isLoggedIn) return 'login';
-    if (location.pathname.startsWith('/company') && !isLoggedIn) return 'downLogin';
-    else if (location.pathname.startsWith('/company')) return 'down';
+    if (location.pathname === '/' && !!token) return 'main';
+    else if (location.pathname === '/') return 'login';
+    if (location.pathname.startsWith('/company') && !!token) return 'down';
+    else if (location.pathname.startsWith('/company')) return 'downLogin';
     if (location.pathname.startsWith('/notification')) return 'nav';
     return 'minimal';
   })();
