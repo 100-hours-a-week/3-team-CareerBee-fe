@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { useAuthStore } from '@/store/auth';
 
+
 export const instance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL, // .env 파일에 설정
+  baseURL: import.meta.env.VITE_API_BASE_URL, // .env
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
   },
 });
-
 
 instance.interceptors.response.use(
   (response) => response,
