@@ -7,7 +7,7 @@ interface Props {
   
   export default function IssueTab({ name, issue }: Props) {
     return (
-      <div>
+      <div className="px-2">
       <div className="flex gap-2 py-2 [&_svg]:size-5">
         <PiPresentationChart /> 
         <p>{`${name}의 사업 현황은?`}</p>
