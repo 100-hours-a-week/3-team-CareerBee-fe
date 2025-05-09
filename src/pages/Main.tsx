@@ -1,3 +1,6 @@
+// 지도 기반의 검색 페이지. 메인 페이지이자 진입 페이지.
+// 도메인 상에서 "지도 도메인"
+
 import { useState, useEffect, useRef } from 'react';
 import { SearchBar } from '@/components/domain/SearchBar';
 import { FilterGroup } from '@/components/ui/filter'
