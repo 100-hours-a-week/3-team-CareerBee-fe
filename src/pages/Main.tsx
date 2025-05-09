@@ -114,18 +114,7 @@ export default function Main() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           suggestions={suggestions}
-          onSuggestionSelect={(value: string) => {
-            setSearch(value);
-            const matched = companies.find((c) => c.id.toString() === value || c.name === value);
-            if (matched && mapRef.current) {
-              const latLng = new window.kakao.maps.LatLng(
-                matched.locationInfo.latitude,
-                matched.locationInfo.longitude
-              );
-              mapRef.current.setLevel(3);
-              mapRef.current.setCenter(latLng);
-            }
-          }}
+          onSuggestionSelect={(value: string) => setSearch(value)}
         />
       </div>
       <div className="flex item-center justify-center relative w-full h-full">
