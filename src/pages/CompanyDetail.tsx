@@ -10,6 +10,7 @@ import DefaultTab from '@/components/domain/company/defaultTab'
 import RecruitTab from '@/components/domain/company/recruit' 
 import IssueTab from '@/components/domain/company/issue'
 import BenefitTab from "@/components/domain/company/benefit";
+import TechstackTab from '@/components/domain/company/techstack'
 export interface CompanyDetailResponse {
   company: Company;
 }
@@ -83,11 +84,12 @@ export default function CompanyDetail() {
 
     const fetchCompanyDetail =  () => {
        axios
-        .get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${id}`)
-        // .get('/mock/CompanyDetail.json')
+        // .get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${id}`)
+        .get('/mock/CompanyDetail.json')
         .then((response) => {
           const data = response.data;
-          setCompany(data.data);
+          // setCompany(data.data);
+          setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
           console.log(data);
         })
         .catch((error) => {
@@ -105,7 +107,7 @@ export default function CompanyDetail() {
       {/* 갤러리 */}
       <div className="grid grid-cols-4 grid-rows-2 gap-1 max-w-full mx-auto">
       {[...Array(5)].map((_, index) => {
-          const photo = company.photos[index];
+          const photo = company.photos?.[index];
           const imageUrl = photo?.url ?? noImg;
           return (
             <img
@@ -129,7 +131,7 @@ export default function CompanyDetail() {
 
       {/* 기업 정보 */}
       <div className="flex flex-col px-4 gap-2 my-2">
-      <div className="text-lg font-semibold">{company.title}</div>
+        <div className="text-lg font-semibold">{company.title}</div>
         <div className="flex gap-0.5 [&_svg]:size-5">
         {[...Array(5)].map((_, index) => {
           const full = Math.floor(company.rating);
@@ -145,19 +147,19 @@ export default function CompanyDetail() {
             return <PiStar key={index} />;
           }
         })}
-          <p className="ml-2 text-sm text-text-secondary">캐치 종합 점수 기준</p>
+        <p className="ml-2 text-sm text-text-secondary">캐치 종합 점수 기준</p>
         </div>
         <div className="w-full text-center font-semibold">
-  {`평균: ${
-    company.financials.annualSalary
-      ? (company.financials.annualSalary / 10000).toLocaleString()
-      : '-'
-  }만원 / 신입: ${
-    company.financials.startingSalary
-      ? (company.financials.startingSalary / 10000).toLocaleString()
-      : '-'
-  }만원`}
-</div>
+          {`평균: ${
+            company.financials.annualSalary
+              ? (company.financials.annualSalary / 10000).toLocaleString()
+              : '-'
+          }만원 / 신입: ${
+            company.financials.startingSalary
+              ? (company.financials.startingSalary / 10000).toLocaleString()
+              : '-'
+          }만원`}
+        </div>
       </div>
       <Tabs defaultValue="defaultTab" className="grow mt-4 w-full">
        <TabsList>
@@ -171,7 +173,7 @@ export default function CompanyDetail() {
         <TabsContent value="recruit"><RecruitTab recruitments={company.recruitments} /></TabsContent>
         <TabsContent value="issue"><IssueTab name={company.name} issue={company.recentIssue}/></TabsContent>
         <TabsContent value="benefit"><BenefitTab benefits={company.benefits}/></TabsContent>
-        <TabsContent value="techStack">개발 중 입니다.</TabsContent>
+        <TabsContent value="techStack"><TechstackTab techstacks={company.techStacks}></TechstackTab></TabsContent>
       </Tabs>
     </div>
   );
