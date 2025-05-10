@@ -105,7 +105,10 @@ export default {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [
+    require('tailwindcss-animate'),
+    require('@tailwindcss/line-clamp')
+  ],
   screens: {
     sm: '640px',
     md: '768px',

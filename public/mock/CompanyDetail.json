@@ -11,16 +11,16 @@
         "companyType": "ENTERPRISE",
         "recruitingStatus": "ONGOING",
         "address": "경기 OO시 OO구 OOO로 123경기 OO시 OO구 OOO로 123경기 OO시 OO구 OOO로 123경기 OO시 OO구 OOO로 123경기 OO시 OO구 OOO로 123경기 OO시 OO구 OOO로 123경기 OO시 OO구 OOO로 123",
-        "employeeCount": 123,
-        "homepageUrl": "https://www.ssammmu.com",
+        "employeeCount": 0,
+        "homepageUrl": "https://www.ssammmu.comhttps://www.ssammmu.comhttps://www.ssammmu.comhttps://www.ssammmu.comhttps://www.ssammmu.comhttps://www.ssammmu.comhttps://www.ssammmu.comhttps://www.ssammmu.com",
         "description": "쌈뽕한 회사 소개",
         "wishCount": 33,
         "rating": 3.5,
         "financials": {
-          "annualSalary": 45000000,
-          "startingSalary": 40000000,
-          "revenue": 12,
-          "operatingProfit": 15
+          "annualSalary": 4500000,
+          "startingSalary": 40000000000,
+          "revenue": 12123456789,
+          "operatingProfit": 1500000000
         },
         "photos": [
           {
@@ -59,18 +59,42 @@
           }
         ],
         "techStacks": [
-          {
-            "id": 1,
-            "name": "Java",
-            "type": "BACKEND",
-            "imgUrl": null
-          },
-          {
-            "id": 2,
-            "name": "React",
-            "type": "FRONTEND",
-            "imgUrl": null
-          }
+          { "id": 1, "name": "Java", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 2, "name": "Spring", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 3, "name": "Node.js", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 4, "name": "Express", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 5, "name": "Django", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 6, "name": "Flask", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 7, "name": "Go", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 8, "name": "Kotlin", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+
+          { "id": 9, "name": "React", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 10, "name": "Vue", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 11, "name": "Angular", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 12, "name": "Svelte", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 13, "name": "Next.js", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 14, "name": "Nuxt", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 15, "name": "TypeScript", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 16, "name": "Tailwind CSS", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+
+          { "id": 17, "name": "PyTorch", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 18, "name": "TensorFlow", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 19, "name": "Keras", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 20, "name": "Hugging Face", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 21, "name": "OpenCV", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 22, "name": "Scikit-learn", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 23, "name": "XGBoost", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 24, "name": "Numpy", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+
+          { "id": 25, "name": "Docker", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 26, "name": "Kubernetes", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 27, "name": "Terraform", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 28, "name": "Ansible", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 29, "name": "Jenkins", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 30, "name": "GitHub Actions", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 31, "name": "Prometheus", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 32, "name": "Grafana", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" }
+
         ],
         "recruitments": [
           {
