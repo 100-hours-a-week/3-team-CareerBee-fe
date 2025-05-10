@@ -3,9 +3,9 @@ import CompanyCard from '@/components/domain/CompanyCard';
 import noImg from '@/assets/no-image.png';
 import { useCompanyStore } from '@/store/company';
 import { useAuthStore } from '@/store/auth';
-import { instance as axios } from '@/lib/axios';
-import { useCompanyDetail } from '@/hooks/useCompanyDetail';
+import { useFetchCompanyCard } from '@/hooks/useFetchCompanyCard';
 import { CompanyProps } from '@/pages/Main'
+import { handleToggleBookmark as toggleBookmarkUtil } from '@/lib/toggleBookmark';
 
 interface MapOverlayProps {
   company: CompanyProps;
@@ -33,27 +33,11 @@ export default function MapOverlay({
     lng: company.locationInfo.longitude,
   };
 
-  const { fetchCompanyDetail } = useCompanyDetail(company.id, index);
+  const { fetchCompanyDetail } = useFetchCompanyCard(company.id, index);
 
-  const handleToggleBookmark = async () => {
-    if (!token) return;
-
-    const url = `${import.meta.env.VITE_API_URL}/api/v1/members/wish-companies/${company.id}`;
-    try {
-      if (isBookmarked === 'true') {
-        await axios.delete(url, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setIsBookmarked('false');
-      } else if (isBookmarked === 'false') {
-        await axios.post(url, null, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setIsBookmarked('true');
-      }
-    } catch (error) {
-      console.error('관심기업 토글 실패:', error);
-    }
+  const handleToggleBookmark = () => {
+    if (!token || isBookmarked==="disabled") return;
+    toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
   };
 
   return (

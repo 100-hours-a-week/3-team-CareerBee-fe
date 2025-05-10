@@ -1,21 +1,29 @@
-import { PiBookmarkSimple, PiShare } from 'react-icons/pi';
+import { PiBookmarkSimple, PiBookmarkSimpleFill, PiShare } from 'react-icons/pi';
 import {Toggle} from '@/components/ui/toggle';
 import {Button} from '@/components/ui/button';
+import {useState, useEffect} from 'react';
 
 interface CompanyTitleProps{
     logoUrl: string;
     name: string;
     wishCount: number;
     isLoggedIn: boolean;
-    isBookmarked: boolean;
+    onToggleBookmark?: () => void;
+    isBookmarked?: 'true' | 'false' | 'disabled';
 }
 export default function CompanyTitle({
     logoUrl,
     name,
     wishCount,
     isLoggedIn,
+    onToggleBookmark,
     isBookmarked,
 }:CompanyTitleProps){
+    const [count, setCount] = useState(wishCount);
+  
+    useEffect(() => {
+      setCount(wishCount);
+    }, [wishCount]);
 
     return (
         <div className="flex items-center justify-end w-full px-2 text-2xl font-semibold">
@@ -36,15 +44,28 @@ export default function CompanyTitle({
           <div className="flex items-center gap-1 [&_svg]:size-6 bg-transparent">
             <Button variant="icon" label={<PiShare/>} className="text-text-primary"/>
               {isLoggedIn ? (
-                  <Toggle
-                  variant="save"
-                  label={<PiBookmarkSimple />}
-                  pressed={isBookmarked}
-              />
+                   <Toggle
+                    variant="save"
+                    size="xs"
+                    label={
+                      isBookmarked === 'true' ? (
+                        <PiBookmarkSimpleFill className="text-primary" />
+                      ) : (
+                        <PiBookmarkSimple />
+                      )
+                    }
+                    pressed={isBookmarked === 'true'}
+                    onPressedChange={() => {
+                      if (onToggleBookmark) {
+                        onToggleBookmark();
+                        setCount(prev => isBookmarked === 'true' ? prev - 1 : prev + 1);
+                      }
+                    }}
+                />
               ) : (
                 <PiBookmarkSimple />
               )}
-            <span className="text-lg mr-1">{wishCount}</span>
+            <span className="text-lg mr-1">{count}</span>
           </div>
         </div>
       </div>

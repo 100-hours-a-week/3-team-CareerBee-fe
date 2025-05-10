@@ -11,6 +11,10 @@ import RecruitTab from '@/components/domain/company/recruit'
 import IssueTab from '@/components/domain/company/issue'
 import BenefitTab from "@/components/domain/company/benefit";
 import TechstackTab from '@/components/domain/company/techstack'
+import { handleToggleBookmark as toggleBookmarkUtil } from '@/lib/toggleBookmark';
+
+import { useFetchBookmarkStatus } from "@/hooks/useFetchBookmarkStatus";
+import { useAuthStore } from '@/store/auth';
 export interface CompanyDetailResponse {
   company: Company;
 }
@@ -68,14 +72,14 @@ export interface Recruitment {
   endDate: string;
 }
 
-const isBookmarked = true;
-
 export default function CompanyDetail() {
   const { id } = useParams<{ id: string }>();
   const [company, setCompany] = useState<Company | null>(null);
   const [isLoggedIn] = useState(false);
-
-
+  const [isBookmarked, setIsBookmarked] = useState<'true' | 'false' | 'disabled'>('false');
+  const token = useAuthStore((state) => state.token);
+  
+  const { bookmarkStatus } = useFetchBookmarkStatus();
   useEffect(() => {
     if (!id) {
       console.log("no id")
@@ -91,6 +95,7 @@ export default function CompanyDetail() {
           // setCompany(data.data);
           setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
           console.log(data);
+          bookmarkStatus(Number(id), setIsBookmarked);
         })
         .catch((error) => {
           console.error("기업 정보 불러오기 실패", error);
@@ -98,8 +103,11 @@ export default function CompanyDetail() {
       }
 
     fetchCompanyDetail();
-  }, [id]);
-
+  }, [id, bookmarkStatus]);
+  const handleToggleBookmark = () => {
+    if (!token || isBookmarked==="disabled" || !company) return;
+    toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
+  };
   if (!company) return <div>로딩 중...</div>;
 
   return (
@@ -119,13 +127,22 @@ export default function CompanyDetail() {
           );
         })}
       </div>
+
+      {/* 기업 제목 */}
       <div className="-mt-9 pl-2 relative z-10">
         <CompanyTitle 
             logoUrl={company.logoUrl ?? noImg}
             name={company.name}
             wishCount={company.wishCount}
             isLoggedIn={isLoggedIn}
-            isBookmarked={isBookmarked}
+            {...(token
+              ? {
+                  onToggleBookmark: handleToggleBookmark,
+                  isBookmarked: isBookmarked,
+                }
+              : {
+                  isBookmarked: 'disabled',
+                })}
         />
       </div>
 
