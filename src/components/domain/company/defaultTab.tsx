@@ -6,9 +6,9 @@ interface Props {
 }
 export default function DefaultTab({ company }: Props) {
     return (
-      <div>
+      <div className="px-2">
       <div className="flex gap-2 py-2 [&_svg]:size-5">
-        <PiMapPin /> {company.address}
+        <PiMapPin className="min-w-[18px]"/> {company.address}
       </div>
       <div className="flex gap-2 py-2 [&_svg]:size-5">
         <PiUsers /> {`${company.employeeCount

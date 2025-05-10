@@ -19,7 +19,7 @@ interface Props {
 export default function BenefitTab({ benefits }: Props) {
     console.log(benefits);
     return (
-        <div>
+      <div className="px-2">
         {Object.entries(BENEFIT_TYPE_MAP).map(([key, { label, icon }]) => {
           const benefit = benefits.find((b) => b.type === key);
           console.log(benefit?.description)
