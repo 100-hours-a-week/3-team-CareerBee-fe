@@ -9,4 +9,7 @@ export default defineConfig({
       '@': '/src',
     },
   },
+  optimizeDeps: {
+    exclude: ['react-icons'],
+  },
 });

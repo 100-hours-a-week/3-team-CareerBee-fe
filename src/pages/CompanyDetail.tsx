@@ -78,6 +78,7 @@ export default function CompanyDetail() {
   const [isLoggedIn] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState<'true' | 'false' | 'disabled'>('false');
   const token = useAuthStore((state) => state.token);
+  const [lastRecruitMonth, setLastRecruitMonth] = useState<number | null>(null);
   
   const { bookmarkStatus } = useFetchBookmarkStatus();
   useEffect(() => {
@@ -85,33 +86,58 @@ export default function CompanyDetail() {
       console.log("no id")
       return;
     }
-
     const fetchCompanyDetail =  () => {
-       axios
-        // .get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${id}`)
-        .get('/mock/CompanyDetail.json')
-        .then((response) => {
-          const data = response.data;
-          // setCompany(data.data);
-          setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
-          console.log(data);
-          bookmarkStatus(Number(id), setIsBookmarked);
-        })
-        .catch((error) => {
-          console.error("기업 정보 불러오기 실패", error);
-        })
-      }
-
+      axios
+      // .get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${id}`)
+      .get('/mock/CompanyDetail.json')
+      .then((response) => {
+        const data = response.data;
+        // setCompany(data.data);
+        setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
+        console.log(data);
+        bookmarkStatus(Number(id), setIsBookmarked);
+      })
+      .catch((error) => {
+        console.error("기업 정보 불러오기 실패", error);
+      })
+    }
+    
     fetchCompanyDetail();
+    if(company && company?.recruitments){
+      setLastRecruitMonth(10); // TODO: api 받아서 넣기
+    }
   }, [id, bookmarkStatus]);
+
   const handleToggleBookmark = () => {
     if (!token || isBookmarked==="disabled" || !company) return;
     toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
   };
+
   if (!company) return <div>로딩 중...</div>;
 
   return (
     <div className="flex flex-col grow">
+      <div className="overflow-hidden h-6 bg-secondary text-text-primary text-sm flex items-center">
+        {company.recruitments && company.recruitments.length > 0 ? (
+          <div className="flex animate-marquee whitespace-nowrap min-w-max">
+            <span className="mx-16">현재 채용 중입니다.</span>
+            <span className="mx-16">현재 채용 중입니다.</span>
+            <span className="mx-16">현재 채용 중입니다.</span>
+            <span className="mx-16">현재 채용 중입니다.</span>
+          </div>
+        ) : (
+          <div className="flex min-w-max m-auto">
+            <span className="">
+              {company.name} 은/는 작년{" "}
+              <span className="font-bold">
+                {lastRecruitMonth ? `${lastRecruitMonth}월` : 'OO월'}
+              </span>
+              에 채용 시작했습니다.
+            </span>
+          </div>
+        )}
+      </div>
+        
       {/* 갤러리 */}
       <div className="grid grid-cols-4 grid-rows-2 gap-1 max-w-full mx-auto">
       {[...Array(5)].map((_, index) => {

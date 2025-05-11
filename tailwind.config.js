@@ -1,7 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ['class'],
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  content: [
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
+    '!./src/mock/**',
+    '!./src/icons/**',
+    '!./src/assets/**',
+  ],
   theme: {
     extend: {
       fontFamily: {
@@ -97,11 +103,16 @@ export default {
             transform: 'translateY(0px)',
           },
         },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-25%)' },
+        },
       },
       animation: {
         wiggle: 'wiggle 1s ease-in-out infinite',
         'toast-slide-out': 'toast-slide-out 200ms ease-in forwards',
         'toast-slide-in': 'toast-slide-in 200ms ease-out forwards',
+        marquee: 'marquee 5s linear infinite',
       },
     },
   },
