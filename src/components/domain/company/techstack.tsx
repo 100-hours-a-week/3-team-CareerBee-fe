@@ -43,7 +43,7 @@ export default function TechstackTab({ techstacks }: Props) {
                 </div>
               ))
             ) : (
-              <p className="text-sm text-muted px-2">-</p>
+              <p className="text-sm text-text-primary px-2">-</p>
             )}
           </div>
         </div>
