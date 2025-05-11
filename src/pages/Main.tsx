@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { SearchBar } from '@/components/domain/SearchBar';
 import { FilterGroup } from '@/components/ui/filter'
-import { Map } from 'react-kakao-maps-sdk';
+import { Map, Polygon } from 'react-kakao-maps-sdk';
 import MapOverlay from '@/components/domain/MapOverlay';
 import { useCompanyStore } from '@/store/company';
 import { useSearchStore } from '@/store/search';
@@ -19,37 +19,8 @@ import { PiCrosshairSimple } from "react-icons/pi";
 
 import {useToast} from '@/hooks/useToast';
 import {Toaster} from "@/components/ui/toaster";
-const KTB = {
-  "lat": 37.40014087574066,
-  "lng": 127.10677853166985
-}
-const RADIUS_BY_LEVEL: Record<number, number> = {
-  1: 150,
-  2: 250,
-  3: 500,
-  4: 1100,
-  5: 2000,
-  6: 4000,
-  7: 8000,
-  8: 16250,
-  9: 32500,
-  10: 75000,
-  11: 150000,
-  12: 300000,
-  13: 585000,
-  14: 1170000,
-};
-const FILTERS = [
-  { id: "recruiting", label: "✅ 채용 중" },
-  { id: "bookmark", label: "📍 저장" },
-  { id: "PLATFORM", label: "플랫폼" },
-  { id: "SI", label: "SI" },
-  { id: "COMMERCE", label: "커머스" },
-  { id: "GAME", label: "게임" },
-  { id: "TELECOM", label: "통신" },
-  { id: "SECURITY", label: "보안" },
-  { id: "FINANCE", label: "금융" },
-];
+
+import { KTB, RADIUS_BY_LEVEL, FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/data/map';
 export interface CompanyProps {
   id: number;
   markerUrl: string;
@@ -153,6 +124,9 @@ export default function Main() {
       }
     );
   };
+
+
+
   return (
     <>
       <Toaster />
@@ -184,6 +158,14 @@ export default function Main() {
                 disabled={markerDisabledMap[company.id] ?? false}
               />
             ))}
+            <Polygon
+              path={[MAP_POLYGON_PATH, MAP_POLYGON_HOLE]}
+              strokeWeight={2}
+              strokeColor={'#D32F2F'}
+              strokeOpacity={0.6}
+              fillColor={'#D32F2F'}
+              fillOpacity={0.3}
+            />
           </Map>
         )}
 
