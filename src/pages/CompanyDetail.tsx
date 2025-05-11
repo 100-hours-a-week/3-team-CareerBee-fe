@@ -112,9 +112,15 @@ export default function CompanyDetail() {
 
   return (
     <div className="flex flex-col grow">
-      <div className="flex items-center justify-center h-6 bg-secondary text-sm text-text-primary leading-none py-2">
-        <p>현재 채용 중 입니다.</p>
-      </div>
+      <div className="overflow-hidden h-6 bg-secondary text-text-primary text-sm flex items-center">
+  <div className="flex animate-marquee whitespace-nowrap min-w-max">
+    <span className="mx-16">현재 채용 중입니다.</span>
+    <span className="mx-16">현재 채용 중입니다.</span>
+    <span className="mx-16">현재 채용 중입니다.</span>
+    <span className="mx-16">현재 채용 중입니다.</span>
+  </div>
+</div>
+        
       {/* 갤러리 */}
       <div className="grid grid-cols-4 grid-rows-2 gap-1 max-w-full mx-auto">
       {[...Array(5)].map((_, index) => {
