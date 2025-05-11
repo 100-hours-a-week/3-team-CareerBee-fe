@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { SearchBar } from '@/components/domain/SearchBar';
 import { FilterGroup } from '@/components/ui/filter'
-import { Map } from 'react-kakao-maps-sdk';
+import { Map, MarkerClusterer } from 'react-kakao-maps-sdk';
 import MapOverlay from '@/components/domain/MapOverlay';
 import { useCompanyStore } from '@/store/company';
 import { useSearchStore } from '@/store/search';
@@ -175,6 +175,10 @@ export default function Main() {
             onZoomChanged={handleMapMove}
             onDragEnd={handleMapMove}
           >
+            <MarkerClusterer
+              averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+              minLevel={10} // 클러스터 할 최소 지도 레벨
+            >
             {companies.map((company, index) => (
               <MapOverlay
                 key={company.id}
@@ -184,6 +188,7 @@ export default function Main() {
                 disabled={markerDisabledMap[company.id] ?? false}
               />
             ))}
+            </MarkerClusterer>
           </Map>
         )}
 
