@@ -14,7 +14,8 @@ import { useFetchSuggestions } from '@/hooks/useFetchSuggestions';
 import { instance as axios } from '@/lib/axios';
 
 import { useAuthStore  } from '@/store/auth';
-
+import { Button } from '@/components/ui/button';
+import { PiCrosshairSimple } from "react-icons/pi";
 const KTB = {
   "lat": 37.40014087574066,
   "lng": 127.10677853166985
@@ -122,6 +123,28 @@ export default function Main() {
     const latlng = map.getCenter();
     fetchCompanies(latlng.getLat(), latlng.getLng(), level);
   };
+
+  const handleMoveToCurrentLocation = () => {
+    if (!mapRef.current) return;
+  
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const currentPos = new window.kakao.maps.LatLng(latitude, longitude);
+        mapRef.current?.setCenter(currentPos);
+
+        setTimeout(() => {
+          if (mapRef.current) {
+            handleMapMove(mapRef.current);
+          }
+        }, 300);
+      },
+      (error) => {
+        console.error('내 위치 가져오기 실패:', error);
+        alert('위치 정보를 가져올 수 없습니다.');
+      }
+    );
+  };
   return (
     <>
       <div className="py-2 px-4 w-full">
@@ -160,6 +183,18 @@ export default function Main() {
           <div className="max-w-full ">
             <FilterGroup filters={FILTERS} companies={companies} />
           </div>
+        </div>
+
+        {/* 내 위치 찾기 버튼 */}
+        <div className="absolute bottom-6 left-3 z-10 [&_svg]:size-8">
+          <div>
+            <Button
+              label={<PiCrosshairSimple/>}
+              variant="icon"
+              className='bg-white rounded-full w-12 h-12 m-0 p-2 shadow-md'
+              onClick={handleMoveToCurrentLocation}
+              />
+              </div>
         </div>
       </div>
     </>
