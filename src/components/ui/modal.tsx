@@ -90,7 +90,7 @@ const AlertDialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Description
     ref={ref}
-    className={cn('text-sm text-muted-foreground', className)}
+    className={cn('text-sm text-text-primary', className)}
     {...props}
   />
 ));
@@ -153,7 +153,7 @@ export const Modal = ({
             {cancelButton ? (
               <AlertDialogCancel
                 variant="transparent"
-                className="p-1 text-muted-foreground hover:text-foreground"
+                className="p-1 text-text-primary hover:text-foreground"
               >
                 <PiX className="iconSize-default" />
               </AlertDialogCancel>

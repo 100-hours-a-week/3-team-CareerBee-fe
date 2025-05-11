@@ -14,7 +14,11 @@ import { useFetchSuggestions } from '@/hooks/useFetchSuggestions';
 import { instance as axios } from '@/lib/axios';
 
 import { useAuthStore  } from '@/store/auth';
+import { Button } from '@/components/ui/button';
+import { PiCrosshairSimple } from "react-icons/pi";
 
+import {useToast} from '@/hooks/useToast';
+import {Toaster} from "@/components/ui/toaster";
 const KTB = {
   "lat": 37.40014087574066,
   "lng": 127.10677853166985
@@ -58,17 +62,19 @@ export interface CompanyProps {
 }
 
 export default function Main() {
-    const token=useAuthStore((state) => state.token);
-    console.log('zustand 저장 토큰: ', token);
-    const token2 = localStorage.getItem('auth-storage');
-    if (token2) {
-      const parsed = JSON.parse(token2);
-      const accessToken = parsed?.state?.token;
+  const token=useAuthStore((state) => state.token);
+  console.log('zustand 저장 토큰: ', token);
+  const token2 = localStorage.getItem('auth-storage');
+  if (token2) {
+    const parsed = JSON.parse(token2);
+    const accessToken = parsed?.state?.token;
 
-      console.log('localStorage 토큰: ', accessToken);
-    } else {
-      console.log('⚠️ No token found in localStorage');
-    }
+    console.log('localStorage 토큰: ', accessToken);
+  } else {
+    console.log('⚠️ No token found in localStorage');
+  }
+
+  const {toast} = useToast();
   const { search, setSearch, suggestions } = useSearchStore();
   useFetchSuggestions();
 
@@ -122,8 +128,34 @@ export default function Main() {
     const latlng = map.getCenter();
     fetchCompanies(latlng.getLat(), latlng.getLng(), level);
   };
+
+  const handleMoveToCurrentLocation = () => {
+    if (!mapRef.current) return;
+  
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const currentPos = new window.kakao.maps.LatLng(latitude, longitude);
+        mapRef.current?.setCenter(currentPos);
+
+        setTimeout(() => {
+          if (mapRef.current) {
+            handleMapMove(mapRef.current);
+          }
+        }, 300);
+      },
+      (error) => {
+         if (error.code === error.PERMISSION_DENIED) {
+          toast({title: `위치 권한이 차단되어 있어요.\n브라우저 설정에서 권한을 허용해주세요.`});
+        } else {
+          toast({title: '위치 정보를 가져올 수 없습니다.'});
+        }
+      }
+    );
+  };
   return (
     <>
+      <Toaster />
       <div className="py-2 px-4 w-full">
         <SearchBar
           placeholder="검색어를 입력하세요."
@@ -160,6 +192,18 @@ export default function Main() {
           <div className="max-w-full ">
             <FilterGroup filters={FILTERS} companies={companies} />
           </div>
+        </div>
+
+        {/* 내 위치 찾기 버튼 */}
+        <div className="absolute bottom-6 left-3 z-10 [&_svg]:size-8">
+          <div>
+            <Button
+              label={<PiCrosshairSimple/>}
+              variant="icon"
+              className='bg-white rounded-full w-12 h-12 m-0 p-2 shadow-md'
+              onClick={handleMoveToCurrentLocation}
+              />
+              </div>
         </div>
       </div>
     </>

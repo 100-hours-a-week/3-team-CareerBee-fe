@@ -79,7 +79,7 @@ export default function CompanyCard({
 
       <div className="flex items-center">
         {/* 이미지 */}
-        <div className="w-[108px] h-[108px] rounded-md bg-muted flex items-center justify-center overflow-hidden mr-auto">
+        <div className="w-[108px] h-[108px] rounded-md flex items-center justify-center overflow-hidden mr-auto">
             <img
               src={imageUrl ? imageUrl : noImg}
               alt={companyName}
