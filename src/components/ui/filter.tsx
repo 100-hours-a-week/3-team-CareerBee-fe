@@ -78,7 +78,7 @@ const FilterGroup = ({ filters, companies }: Props) => {
   }, [activeFilters, companies, setCompanyDisabledMap, bookmarkedIds]);
 
   return (
-    <div className="w-full px-4 py-2 overflow-x-auto">
+    <div className="w-full px-4 py-2 overflow-x-auto scrollbar-hide group-hover:scrollbar-default">
       {/* <div className="overflow-x-auto"> */}
         <div className="flex items-center gap-2 w-max whitespace-nowrap">
           {filters.map(({ id, label }) => (
