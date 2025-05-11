@@ -43,10 +43,9 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
               <span className="text-base font-semibold">{point}</span>
             </div>
             <a href="/notification">
-              {hasNewNotification ? (
-                <PiBellRinging className="w-8 h-8 animate-wiggle" />
-              ) : (
-                <PiBell className="w-8 h-8" />
+              <PiBell className="w-8 h-8" />
+              {hasNewNotification && (
+                <span className="absolute -top-1 -right-1 block h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-white" />
               )}
             </a>
           </>
