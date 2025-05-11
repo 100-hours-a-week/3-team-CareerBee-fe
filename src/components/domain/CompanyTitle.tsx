@@ -2,7 +2,9 @@ import { PiBookmarkSimple, PiBookmarkSimpleFill, PiShare } from 'react-icons/pi'
 import {Toggle} from '@/components/ui/toggle';
 import {Button} from '@/components/ui/button';
 import {useState, useEffect} from 'react';
-
+import {useToast} from '@/hooks/useToast';
+import {Toaster} from "@/components/ui/toaster";
+import { ToastAction } from "@/components/ui/toast";
 interface CompanyTitleProps{
     logoUrl: string;
     name: string;
@@ -20,13 +22,15 @@ export default function CompanyTitle({
     isBookmarked,
 }:CompanyTitleProps){
     const [count, setCount] = useState(wishCount);
-  
+    const { toast } = useToast();
+
     useEffect(() => {
       setCount(wishCount);
     }, [wishCount]);
 
     return (
         <div className="flex items-center justify-end w-full px-2 text-2xl font-semibold">
+          <Toaster />
         {/* 왼쪽 영역 */}
         <div className="flex gap-2 mr-auto">
           <img
@@ -42,7 +46,16 @@ export default function CompanyTitle({
         {/* 오른쪽 영역 */}
         <div className="flex flex-col mt-auto gap-2">
           <div className="flex items-center gap-1 [&_svg]:size-6 bg-transparent">
-            <Button variant="icon" label={<PiShare/>} className="text-text-primary"/>
+          <Button
+              variant="icon"
+              label={<PiShare />}
+              className="text-text-primary"
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                  toast({ title: '링크가 복사되었습니다.' });
+                });
+              }}
+            />
               {isLoggedIn ? (
                    <Toggle
                     variant="save"
