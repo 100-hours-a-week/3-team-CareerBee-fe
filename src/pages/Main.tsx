@@ -16,6 +16,9 @@ import { instance as axios } from '@/lib/axios';
 import { useAuthStore  } from '@/store/auth';
 import { Button } from '@/components/ui/button';
 import { PiCrosshairSimple } from "react-icons/pi";
+
+import {useToast} from '@/hooks/useToast';
+import {Toaster} from "@/components/ui/toaster";
 const KTB = {
   "lat": 37.40014087574066,
   "lng": 127.10677853166985
@@ -59,17 +62,19 @@ export interface CompanyProps {
 }
 
 export default function Main() {
-    const token=useAuthStore((state) => state.token);
-    console.log('zustand 저장 토큰: ', token);
-    const token2 = localStorage.getItem('auth-storage');
-    if (token2) {
-      const parsed = JSON.parse(token2);
-      const accessToken = parsed?.state?.token;
+  const token=useAuthStore((state) => state.token);
+  console.log('zustand 저장 토큰: ', token);
+  const token2 = localStorage.getItem('auth-storage');
+  if (token2) {
+    const parsed = JSON.parse(token2);
+    const accessToken = parsed?.state?.token;
 
-      console.log('localStorage 토큰: ', accessToken);
-    } else {
-      console.log('⚠️ No token found in localStorage');
-    }
+    console.log('localStorage 토큰: ', accessToken);
+  } else {
+    console.log('⚠️ No token found in localStorage');
+  }
+
+  const {toast} = useToast();
   const { search, setSearch, suggestions } = useSearchStore();
   useFetchSuggestions();
 
@@ -140,13 +145,17 @@ export default function Main() {
         }, 300);
       },
       (error) => {
-        console.error('내 위치 가져오기 실패:', error);
-        alert('위치 정보를 가져올 수 없습니다.');
+         if (error.code === error.PERMISSION_DENIED) {
+          toast({title: '위치 권한이 차단되어 있어요. 브라우저 설정에서 권한을 허용해주세요.'});
+        } else {
+          toast({title: '위치 정보를 가져올 수 없습니다.'});
+        }
       }
     );
   };
   return (
     <>
+      <Toaster />
       <div className="py-2 px-4 w-full">
         <SearchBar
           placeholder="검색어를 입력하세요."
