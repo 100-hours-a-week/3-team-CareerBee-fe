@@ -34,7 +34,7 @@ export interface CompanyProps {
 
 export default function Main() {
   // 디버그용 콘솔 찍기
-  console.count('🌀 Main 렌더링 횟수');
+  // console.count('🌀 Main 렌더링 횟수');
   const token=useAuthStore((state) => state.token);
   useEffect(() => {
     // const token = useAuthStore.getState().token;
@@ -173,7 +173,18 @@ export default function Main() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           suggestions={suggestions}
-          onSuggestionSelect={(value: string) => setSearch(value)}
+          onSuggestionSelect={(suggestion) => {
+            setSearch(suggestion.name);
+            const map = mapRef.current;
+            if (map) {
+              const newCenter = new window.kakao.maps.LatLng(suggestion.lat, suggestion.lng);
+              map.setLevel(3); // 무조건 3으로 고정
+              map.setCenter(newCenter);
+              setTimeout(() => {
+                fetchCompanies(suggestion.lat, suggestion.lng, 3);
+              }, 300);
+            }
+          }}
         />
       </div>
       <div className="flex item-center justify-center relative w-full h-full">

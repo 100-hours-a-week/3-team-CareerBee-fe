@@ -3,6 +3,7 @@ import { SuggestionList } from '@/components/domain/SuggestionList';
 import { PiMagnifyingGlass, PiX } from 'react-icons/pi';
 import { useRef } from 'react';
 import { Button } from '../ui/button';
+import { CompanySuggestion } from '@/store/search';
 
 export function SearchBar({
   suggestions = [],
@@ -11,8 +12,8 @@ export function SearchBar({
   onChange,
   ...props
 }: React.ComponentProps<typeof Input> & {
-  suggestions?: string[];
-  onSuggestionSelect?: (value: string) => void;
+  suggestions?: CompanySuggestion[];
+  onSuggestionSelect?: (value: CompanySuggestion) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
 

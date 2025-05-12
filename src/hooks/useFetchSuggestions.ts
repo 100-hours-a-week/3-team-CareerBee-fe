@@ -15,7 +15,14 @@ export function useFetchSuggestions() {
         const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies/search`, {
           params: { keyword: search },
         });
-        const names = data.data.matchingCompanies.map((company: { name: string }) => company.name);
+        console.log('🔍', data.data)
+        const names = data.data.matchingCompanies.map(
+          (company: { name: string; latitude: number; longitude: number }) => ({
+            name: company.name,
+            lat: company.latitude,
+            lng: company.longitude,
+          })
+        );
         setSuggestions(names.slice(0, 8));
       } catch (error) {
         console.error('회사 검색 실패:', error);
