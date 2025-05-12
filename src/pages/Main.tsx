@@ -63,15 +63,15 @@ export interface CompanyProps {
 
 export default function Main() {
   const token=useAuthStore((state) => state.token);
-  console.log('zustand 저장 토큰: ', token);
+  // console.log('zustand 저장 토큰: ', token);
   const token2 = localStorage.getItem('auth-storage');
   if (token2) {
     const parsed = JSON.parse(token2);
     const accessToken = parsed?.state?.token;
 
-    console.log('localStorage 토큰: ', accessToken);
+    // console.log('localStorage 토큰: ', accessToken);
   } else {
-    console.log('⚠️ No token found in localStorage');
+    // console.log('⚠️ No token found in localStorage');
   }
 
   const {toast} = useToast();
@@ -153,6 +153,24 @@ export default function Main() {
       }
     );
   };
+
+  const onClusterclick = (_target: kakao.maps.MarkerClusterer, cluster: kakao.maps.Cluster) => {
+    const map = mapRef.current;
+    if (!map) return;
+  
+    // 기업 카드가 열려있으면 확대하지 않음
+    if (openCardIndex !== null) {
+      console.log(openCardIndex," 📌 기업 카드 열려있어서 확대 취소");
+      return;
+    }
+  
+    // 현재 지도 레벨에서 1레벨 확대한 레벨
+    const level = map.getLevel() - 1;
+  
+    // 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확대
+    map.setLevel(level, { anchor: cluster.getCenter() });
+  };
+  console.log(openCardIndex, '1️⃣ 열린 기업 카드')
   return (
     <>
       <Toaster />
@@ -177,14 +195,16 @@ export default function Main() {
           >
             <MarkerClusterer
               averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
-              minLevel={10} // 클러스터 할 최소 지도 레벨
+              minLevel={3} // 클러스터 할 최소 지도 레벨
+              disableClickZoom={true} 
+              onClusterclick={onClusterclick}
             >
             {companies.map((company, index) => (
               <MapOverlay
                 key={company.id}
                 company={company}
                 index={index}
-                isOpen={openCardIndex === index}
+                isOpen={openCardIndex === company.id}
                 disabled={markerDisabledMap[company.id] ?? false}
               />
             ))}

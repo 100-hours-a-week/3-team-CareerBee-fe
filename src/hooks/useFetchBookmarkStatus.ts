@@ -23,7 +23,9 @@ export function useFetchBookmarkStatus() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      
       const value = data.data.isWish ? 'true' : 'false';
+      console.log("🎀 저장 여부 조회 성공!", value)
       if (setter) setter(value);
       else setIsBookmarked(value);
     } catch (err) {
