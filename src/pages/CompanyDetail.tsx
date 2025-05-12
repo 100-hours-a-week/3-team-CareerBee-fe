@@ -87,12 +87,12 @@ export default function CompanyDetail() {
     }
     const fetchCompanyDetail =  () => {
       axios
-      .get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${id}`)
-      // .get('/mock/CompanyDetail.json') //🚨 목 데이터로 작업시에만 켜기!!!
+      // .get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${id}`)
+      .get('/mock/CompanyDetail.json') //🚨 목 데이터로 작업시에만 켜기!!!
       .then((response) => {
         const data = response.data;
-        setCompany(data.data);
-        // setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
+        // setCompany(data.data);
+        setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
         console.log(data);
         console.count('😈기업 상세 렌더링 횟수');
         bookmarkStatus(Number(id), setIsBookmarked);
@@ -147,7 +147,7 @@ export default function CompanyDetail() {
               key={index}
               src={imageUrl}
               alt={company.name ?? "no image"}
-              className={index === 0 ? "col-span-2 row-span-2 w-full h-full object-cover rounded-lg" : "aspect-[4/3] object-cover rounded-lg"}
+              className={index === 0 ? "col-span-2 row-span-2 w-full h-full rounded-lg aspect-[4/3] object-cover" : "aspect-[4/3] object-cover rounded-lg"}
             />
           );
         })}
