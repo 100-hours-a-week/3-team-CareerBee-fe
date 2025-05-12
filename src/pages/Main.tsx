@@ -104,6 +104,7 @@ export default function Main() {
     fetchCompanies(latlng.getLat(), latlng.getLng(), level);
   };
 
+  const {toast} = useToast();
   const handleMoveToCurrentLocation = () => {
     if (!mapRef.current) return;
   
