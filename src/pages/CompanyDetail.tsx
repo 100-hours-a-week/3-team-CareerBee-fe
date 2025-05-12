@@ -75,10 +75,9 @@ export interface Recruitment {
 export default function CompanyDetail() {
   const { id } = useParams<{ id: string }>();
   const [company, setCompany] = useState<Company | null>(null);
-  const [isLoggedIn] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState<'true' | 'false' | 'disabled'>('false');
   const token = useAuthStore((state) => state.token);
-  const [lastRecruitMonth] = useState<number | null>(10);
+  // const [lastRecruitMonth] = useState<number | null>(10);
   
   const { bookmarkStatus } = useFetchBookmarkStatus();
   useEffect(() => {
@@ -160,7 +159,7 @@ export default function CompanyDetail() {
             logoUrl={company.logoUrl ?? noImg}
             name={company.name}
             wishCount={company.wishCount}
-            isLoggedIn={isLoggedIn}
+            isLoggedIn={!!token}
             {...(token
               ? {
                   onToggleBookmark: handleToggleBookmark,
@@ -179,7 +178,6 @@ export default function CompanyDetail() {
         {[...Array(5)].map((_, index) => {
           const full = Math.floor(company.rating);
           const decimal = company.rating - full;
-          console.log(decimal)
           if (index < full) {
             return <PiStarFill key={index} />;
           } else if (index === full) {
