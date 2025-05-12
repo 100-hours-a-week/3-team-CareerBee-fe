@@ -211,11 +211,62 @@ export default function Main() {
             onDragEnd={handleMapMove}
           >
             <MarkerClusterer
-              averageCenter={true}
-              minLevel={3}
-              minClusterSize={3}
-              onCreate={onCreate}
-            >
+  averageCenter={true}
+  minLevel={3}
+  minClusterSize={3}
+  onCreate={onCreate}
+  calculator={[10, 30, 50, 100]}
+  styles={[
+    {
+      width: '30px',
+      height: '30px',
+      background: 'radial-gradient(circle, rgba(26, 143, 227, 0.8) 40%, rgba(0, 0, 0, 0) 100%', // deep blue
+      borderRadius: '50%',
+      color: '#fff',
+      textAlign: 'center',
+      lineHeight: '30px',
+      fontSize: '13px',
+      fontWeight: 'bold',
+      boxShadow: '0 0 6px 4px rgba(26, 143, 227, 0.3)',
+    },
+    {
+      width: '40px',
+      height: '40px',
+      background: 'radial-gradient(circle, rgba(93, 162, 113, 0.8) 40%, rgba(0, 0, 0, 0) 100% )', // teal
+      borderRadius: '50%',
+      color: '#fff',
+      textAlign: 'center',
+      lineHeight: '40px',
+      fontSize: '14px',
+      fontWeight: 'bold', 
+      boxShadow: '0 0 6px 4px rgba(93, 162, 113, 0.3)',
+    },
+    {
+      width: '50px',
+      height: '50px',
+      background: 'radial-gradient(circle, rgba(247, 199, 70, 0.9) 40%, rgba(0, 0, 0, 0) 100%', // yellow
+      borderRadius: '50%',
+      color: '#fff',
+      textAlign: 'center',
+      lineHeight: '50px',
+      fontSize: '15px',
+      fontWeight: 'bold',
+      boxShadow: '0 0 10px 6px rgba(254, 228, 64, 0.3)',
+    },
+    {
+      width: '60px',
+      height: '60px',
+      background: 'radial-gradient(circle, rgba(231, 111, 81, 0.8) 40%, rgba(0, 0, 0, 0) 100% )',
+      borderRadius: '50%',
+      color: '#fff',
+      textAlign: 'center',
+      lineHeight: '60px',
+      fontSize: '16px',
+      fontWeight: 'bold',
+      boxShadow: '0 0 10px 6px rgba(231, 111, 81, 0.3)',
+    },
+  ]}
+>
             {companies.map((company, index) => (
               <MapOverlay
                 key={company.id}
