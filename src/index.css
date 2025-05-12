@@ -56,6 +56,41 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* ✅ 트랙 배경을 투명하게 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(93, 86, 76, 0.4); /* 스크롤바 손잡이는 반투명하게 (원한다면) */
+  border-radius: 4px;
+}
+
+/* 기본적으로 스크롤바 숨김 */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* hover 시 보여줄 스크롤바 */
+.group-hover\:scrollbar-default:hover::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+  height: 8px;
+}
+
+.group-hover\:scrollbar-default:hover::-webkit-scrollbar-thumb {
+  background: rgba(93, 86, 76, 0.4);
+  border-radius: 4px;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
