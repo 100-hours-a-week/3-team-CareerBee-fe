@@ -174,12 +174,12 @@ export default function CompanyDetail() {
       {/* 기업 정보 */}
       <div className="flex flex-col px-4 gap-2 my-2">
         <div className="text-lg font-semibold">{company.title}</div>
-        <div className="flex gap-0.5 [&_svg]:size-5">
+        <div className="flex gap-0.5 [&_svg]:size-5 text-primary">
         {[...Array(5)].map((_, index) => {
           const full = Math.floor(company.rating);
           const decimal = company.rating - full;
           if (index < full) {
-            return <PiStarFill key={index} />;
+            return <PiStarFill key={index}/>;
           } else if (index === full) {
             if (decimal < 0.333) return <PiStar key={index} />;
             if (decimal < 0.666) return <PiStarHalfFill key={index} />;
