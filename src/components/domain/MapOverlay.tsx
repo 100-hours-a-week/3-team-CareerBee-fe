@@ -12,6 +12,7 @@ interface MapOverlayProps {
   index: number;
   isOpen: boolean;
   disabled: boolean;
+  isHighlighted: boolean;
 }
 
 export default function MapOverlay({
@@ -19,6 +20,7 @@ export default function MapOverlay({
   index,
   isOpen,
   disabled,
+  isHighlighted,
 }: MapOverlayProps) {
   const {
     companyInfo,
@@ -48,7 +50,7 @@ export default function MapOverlay({
             position={position}
             image={{
               src: company.markerUrl ?? noImg,
-              size: { width:37 ,height: 50 },
+              size: isHighlighted ? { width: 44, height: 60 } : { width: 37, height: 50 },
             }}
             clickable={true}
             onClick={fetchCompanyDetail}

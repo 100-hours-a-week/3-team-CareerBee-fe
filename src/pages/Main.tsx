@@ -163,7 +163,7 @@ export default function Main() {
       }
     });
   };
-  
+  const [highlightedCompanyId, setHighlightedCompanyId] = useState<number | null>(null);
   return (
     <>
       <Toaster />
@@ -175,6 +175,7 @@ export default function Main() {
           suggestions={suggestions}
           onSuggestionSelect={(suggestion) => {
             setSearch(suggestion.name);
+            setHighlightedCompanyId(suggestion.id); 
             const map = mapRef.current;
             if (map) {
               const newCenter = new window.kakao.maps.LatLng(suggestion.lat, suggestion.lng);
@@ -261,6 +262,7 @@ export default function Main() {
                 index={index}
                 isOpen={openCardIndex === company.id}
                 disabled={markerDisabledMap[company.id] ?? false}
+                isHighlighted={highlightedCompanyId === company.id}
               />
             ))}
             </MarkerClusterer>

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 export interface CompanySuggestion {
+  id: number;
   name: string;
   lat: number;
   lng: number;

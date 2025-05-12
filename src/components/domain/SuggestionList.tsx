@@ -6,8 +6,8 @@ export function SuggestionList({
   onSuggestionSelect,
   onClose,
 }: {
-  filteredSuggestions: { name: string; lat: number; lng: number }[];
-  onSuggestionSelect?: (value: { name: string; lat: number; lng: number }) => void;
+  filteredSuggestions: { id: number; name: string; lat: number; lng: number }[];
+  onSuggestionSelect?: (value: { id: number; name: string; lat: number; lng: number }) => void;
   onClose?: () => void;
 }) {
   return (
