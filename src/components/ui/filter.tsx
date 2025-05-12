@@ -1,6 +1,6 @@
 import { Toggle } from '@/components/ui/toggle';
 import { instance as axios } from '@/lib/axios';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { CompanyProps } from '@/pages/Main';
 import { useMarkerStore } from '@/store/marker';
 import { useAuthStore } from '@/store/auth';
@@ -52,30 +52,30 @@ const FilterGroup = ({ filters, companies }: Props) => {
     });
   };
 
- useMemo(() => {
-    let filtered = companies;
-
+  const filtered = useMemo(() => {
+    let result = companies;
+  
     activeFilters.forEach((filterId) => {
       if (filterId === 'recruiting') {
-        filtered = filtered.filter((c) => c.recruitingStatus === 'ongoing');
-        
+        result = result.filter((c) => c.recruitingStatus === 'ongoing');
       } else if (filterId === 'bookmark') {
-        // TODO: Fetch bookmarked companies via API and filter accordingly
-        // Placeholder: no filtering applied here
-        filtered = filtered.filter((c) => bookmarkedIds.includes(c.id));
+        result = result.filter((c) => bookmarkedIds.includes(c.id));
       } else if (CATEGORY_FILTERS.includes(filterId)) {
-        filtered = filtered.filter((c) => c.businessType === filterId);
+        result = result.filter((c) => c.businessType === filterId);
       }
     });
-
+  
+    return result;
+  }, [activeFilters, companies, bookmarkedIds]);
+  
+  useEffect(() => {
     const disabledMap = companies.reduce((acc, company) => {
       acc[company.id] = !filtered.some((c) => c.id === company.id);
       return acc;
     }, {} as Record<number, boolean>);
+  
     setCompanyDisabledMap(disabledMap);
-
-    return filtered;
-  }, [activeFilters, companies, setCompanyDisabledMap, bookmarkedIds]);
+  }, [filtered, companies, setCompanyDisabledMap]);
 
   return (
     <div className="w-full px-4 py-2 overflow-x-auto">
