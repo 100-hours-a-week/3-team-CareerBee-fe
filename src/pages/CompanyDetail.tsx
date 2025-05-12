@@ -78,7 +78,7 @@ export default function CompanyDetail() {
   const [isLoggedIn] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState<'true' | 'false' | 'disabled'>('false');
   const token = useAuthStore((state) => state.token);
-  const [lastRecruitMonth, setLastRecruitMonth] = useState<number | null>(null);
+  const [lastRecruitMonth] = useState<number | null>(10);
   
   const { bookmarkStatus } = useFetchBookmarkStatus();
   useEffect(() => {
@@ -95,6 +95,7 @@ export default function CompanyDetail() {
         setCompany(data.data);
         // setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
         console.log(data);
+        console.count('😈기업 상세 렌더링 횟수');
         bookmarkStatus(Number(id), setIsBookmarked);
       })
       .catch((error) => {
@@ -103,9 +104,7 @@ export default function CompanyDetail() {
     }
     
     fetchCompanyDetail();
-    if(company && company?.recruitments){
-      setLastRecruitMonth(10); // TODO: api 받아서 넣기
-    }
+
   }, [id, bookmarkStatus]);
 
   const handleToggleBookmark = () => {
@@ -117,26 +116,27 @@ export default function CompanyDetail() {
 
   return (
     <div className="flex flex-col grow">
-      <div className="overflow-hidden h-6 bg-secondary text-text-primary text-sm flex items-center">
         {company.recruitments && company.recruitments.length > 0 ? (
+      <div className="overflow-hidden h-6 bg-secondary text-text-primary text-sm flex items-center">
           <div className="flex animate-marquee whitespace-nowrap min-w-max">
             <span className="mx-16">현재 채용 중입니다.</span>
             <span className="mx-16">현재 채용 중입니다.</span>
             <span className="mx-16">현재 채용 중입니다.</span>
             <span className="mx-16">현재 채용 중입니다.</span>
           </div>
-        ) : (
-          <div className="flex min-w-max m-auto">
-            <span className="">
-              {company.name} 은/는 작년{" "}
-              <span className="font-bold">
-                {lastRecruitMonth ? `${lastRecruitMonth}월` : 'OO월'}
-              </span>
-              에 채용 시작했습니다.
-            </span>
           </div>
+        ) : (
+          // <div className="flex min-w-max m-auto">
+          //   <span className="">
+          //     {company.name} 은/는 작년{" "}
+          //     <span className="font-bold">
+          //       {lastRecruitMonth ? `${lastRecruitMonth}월` : 'OO월'}
+          //     </span>
+          //     에 채용 시작했습니다.
+          //   </span>
+          // </div>
+          <></>
         )}
-      </div>
         
       {/* 갤러리 */}
       <div className="grid grid-cols-4 grid-rows-2 gap-1 max-w-full mx-auto">

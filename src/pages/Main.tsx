@@ -58,20 +58,25 @@ export interface CompanyProps {
 }
 
 export default function Main() {
-    const token=useAuthStore((state) => state.token);
-    console.log('zustand 저장 토큰: ', token);
+  // 디버그용 콘솔 찍기
+  console.count('🌀 Main 렌더링 횟수');
+  const token=useAuthStore((state) => state.token);
+  useEffect(() => {
+    // const token = useAuthStore.getState().token;
+    console.log('zustand 저장 토큰:', token);
     const token2 = localStorage.getItem('auth-storage');
     if (token2) {
       const parsed = JSON.parse(token2);
-      const accessToken = parsed?.state?.token;
-
-      console.log('localStorage 토큰: ', accessToken);
+      console.log('localStorage 토큰:', parsed?.state?.token);
     } else {
       console.log('⚠️ No token found in localStorage');
     }
+  }, [token]);
+
   const { search, setSearch, suggestions } = useSearchStore();
   useFetchSuggestions();
 
+  
   const [loaded, setLoaded] = useState(false);
   const [companies, setCompanies] = useState<CompanyProps[]>([]);
   
@@ -109,9 +114,10 @@ export default function Main() {
     script.async = true;
     script.onload = () => {
       window.kakao.maps.load(() => {
-        setLoaded(true);
-        
         fetchCompanies(KTB.lat, KTB.lng, 3);
+        setTimeout(() => {
+          setLoaded(true);
+        }, 300); // 지도 초기화 후 이벤트 발생 시간보다 약간 뒤에 false로 설정
       });
     };
     document.head.appendChild(script);

@@ -1,12 +1,14 @@
 import { useAuthStore } from '@/store/auth';
 import { useCompanyStore } from '@/store/company';
 import { instance as axios } from '@/lib/axios';
+import { useCallback } from 'react';
 
 export function useFetchBookmarkStatus() {
   const token = useAuthStore((state) => state.token);
   const { setIsBookmarked } = useCompanyStore();
 
-  const bookmarkStatus = async (
+  const bookmarkStatus = useCallback(
+    async (
     companyId: number,
     setter?: (value: 'true' | 'false' | 'disabled') => void
   ) => {
@@ -29,7 +31,8 @@ export function useFetchBookmarkStatus() {
     } catch (err) {
       console.error('관심기업 여부 조회 실패:', err);
     }
-  };
+  },[token]
+);
 
   return { bookmarkStatus };
 }
