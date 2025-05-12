@@ -166,11 +166,88 @@ export default function Main() {
     }
   
     // 현재 지도 레벨에서 1레벨 확대한 레벨
-    const level = map.getLevel() - 1;
+    // const level = map.getLevel() - 1;
   
     // 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확대
-    map.setLevel(level, { anchor: cluster.getCenter() });
+    // map.setLevel(level, { anchor: cluster.getCenter() });
   };
+
+  // const onCreate = (_target: kakao.maps.MarkerClusterer) => {
+  //   const clusterer = _target as unknown as {
+  //     _clusters: {
+  //       _markers: (kakao.maps.Marker | kakao.maps.CustomOverlay)[];
+  //     }[];
+  //   };
+  
+  //   clusterer._clusters.forEach((cluster) => {
+  //     const markers = cluster._markers;
+  
+  //     // I 타입 (클러스터 마커) 제외하고 개수 세기
+  //     const realMarkers = markers.filter(
+  //       (marker) => marker.constructor.name !== 'I'
+  //     );
+  
+  //     if (realMarkers.length === 2) {
+  //       realMarkers.forEach((marker) => {
+  //         console.log('🎀 실제 마커:', marker.constructor.name);
+  //         // 여기서 추가 로직을 넣어줘도 돼
+  //       });
+  //     }
+  //   });
+  // };
+  // 타입 안정성을 위한 SafeCluster
+  type SafeCluster = kakao.maps.Cluster & {
+    _markers?: (kakao.maps.Marker | kakao.maps.CustomOverlay)[];
+    _clusterMarker?: kakao.maps.Marker;
+  };
+  
+  // const onCreate = (_target: kakao.maps.MarkerClusterer) => {
+  //   const clusterer = _target as unknown as {
+  //     _clusters: SafeCluster[];
+  //   };
+  
+  //   clusterer._clusters.forEach((cluster) => {
+  //     const markers = cluster._markers ?? [];
+  
+  //     // 실제 마커만 필터링
+  //     const realMarkers = markers.filter(
+  //       (marker) => marker.constructor.name !== 'I'
+  //     );
+  
+  //     // 클러스터 마커 제거 조건: 실제 마커가 정확히 2개인 경우
+  //     if (realMarkers.length === 2 && cluster._clusterMarker) {
+  //       cluster._clusterMarker.setVisible(false);
+  //     }
+  //   });
+  // };
+  const onCreate = (_target: kakao.maps.MarkerClusterer) => {
+    const map = mapRef.current;
+    if (!map) return;
+  
+    const clusterer = _target as unknown as {
+      _clusters: SafeCluster[];
+    };
+  
+    clusterer._clusters.forEach((cluster) => {
+      const markers = cluster._markers ?? [];
+  
+      // 실제 마커만 필터링(실제 마커: u, 기업 간단 카드: I)
+      const realMarkers = markers.filter(
+        (marker) => marker.constructor.name !== 'I'
+      );
+  
+      if (realMarkers.length === 2 && cluster._clusterMarker) {
+        // 1. 클러스터 마커 숨기기
+        cluster._clusterMarker.setVisible(false);
+  
+        // 2. 내부 마커 직접 지도에 표시
+        markers.forEach((marker) => {
+          marker.setMap(map);
+        });
+      }
+    });
+  };
+  
   console.log(openCardIndex, '1️⃣ 열린 기업 카드')
   return (
     <>
@@ -198,8 +275,9 @@ export default function Main() {
               averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
               minLevel={3} // 클러스터 할 최소 지도 레벨
               // disableClickZoom={true} 
-              // onClusterclick={onClusterclick}
+              onClusterclick={onClusterclick}
               minClusterSize={3}
+              onCreate={onCreate}
             >
             {companies.map((company, index) => (
               <MapOverlay
