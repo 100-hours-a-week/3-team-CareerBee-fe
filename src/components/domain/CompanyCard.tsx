@@ -45,7 +45,7 @@ export default function CompanyCard({
       <div className="flex items-center justify-between mb-2">
         <a
             href={`/company/${companyId}`}
-            className="text-md font-bold line-clamp-1 hover:text-text-primary"
+            className="text-md font-bold hover:text-text-primary truncate break-all "
         >
             {companyName}
         </a>

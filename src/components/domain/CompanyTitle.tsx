@@ -4,6 +4,7 @@ import {Button} from '@/components/ui/button';
 import {useState, useEffect} from 'react';
 import {useToast} from '@/hooks/useToast';
 import {Toaster} from "@/components/ui/toaster";
+
 interface CompanyTitleProps{
     logoUrl: string;
     name: string;

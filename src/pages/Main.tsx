@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { SearchBar } from '@/components/domain/SearchBar';
 import { FilterGroup } from '@/components/ui/filter'
-import { Map, MarkerClusterer } from 'react-kakao-maps-sdk';
+import { Map, MarkerClusterer, Polygon  } from 'react-kakao-maps-sdk';
 import MapOverlay from '@/components/domain/MapOverlay';
 import { useCompanyStore } from '@/store/company';
 import { useSearchStore } from '@/store/search';
@@ -19,37 +19,8 @@ import { PiCrosshairSimple } from "react-icons/pi";
 
 import {useToast} from '@/hooks/useToast';
 import {Toaster} from "@/components/ui/toaster";
-const KTB = {
-  "lat": 37.40014087574066,
-  "lng": 127.10677853166985
-}
-const RADIUS_BY_LEVEL: Record<number, number> = {
-  1: 150,
-  2: 250,
-  3: 500,
-  4: 1100,
-  5: 2000,
-  6: 4000,
-  7: 8000,
-  8: 16250,
-  9: 32500,
-  10: 75000,
-  11: 150000,
-  12: 300000,
-  13: 585000,
-  14: 1170000,
-};
-const FILTERS = [
-  { id: "recruiting", label: "✅ 채용 중" },
-  { id: "bookmark", label: "📍 저장" },
-  { id: "PLATFORM", label: "플랫폼" },
-  { id: "SI", label: "SI" },
-  { id: "COMMERCE", label: "커머스" },
-  { id: "GAME", label: "게임" },
-  { id: "TELECOM", label: "통신" },
-  { id: "SECURITY", label: "보안" },
-  { id: "FINANCE", label: "금융" },
-];
+
+import { KTB, RADIUS_BY_LEVEL, FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/data/map';
 export interface CompanyProps {
   id: number;
   markerUrl: string;
@@ -62,22 +33,25 @@ export interface CompanyProps {
 }
 
 export default function Main() {
+  // 디버그용 콘솔 찍기
+  console.count('🌀 Main 렌더링 횟수');
   const token=useAuthStore((state) => state.token);
-  // console.log('zustand 저장 토큰: ', token);
-  const token2 = localStorage.getItem('auth-storage');
-  if (token2) {
-    const parsed = JSON.parse(token2);
-    const accessToken = parsed?.state?.token;
+  useEffect(() => {
+    // const token = useAuthStore.getState().token;
+    console.log('zustand 저장 토큰:', token);
+    const token2 = localStorage.getItem('auth-storage');
+    if (token2) {
+      const parsed = JSON.parse(token2);
+      console.log('localStorage 토큰:', parsed?.state?.token);
+    } else {
+      console.log('⚠️ No token found in localStorage');
+    }
+  }, [token]);
 
-    // console.log('localStorage 토큰: ', accessToken);
-  } else {
-    // console.log('⚠️ No token found in localStorage');
-  }
-
-  const {toast} = useToast();
   const { search, setSearch, suggestions } = useSearchStore();
   useFetchSuggestions();
 
+  
   const [loaded, setLoaded] = useState(false);
   const [companies, setCompanies] = useState<CompanyProps[]>([]);
   
@@ -115,9 +89,10 @@ export default function Main() {
     script.async = true;
     script.onload = () => {
       window.kakao.maps.load(() => {
-        setLoaded(true);
-        
         fetchCompanies(KTB.lat, KTB.lng, 3);
+        setTimeout(() => {
+          setLoaded(true);
+        }, 300); // 지도 초기화 후 이벤트 발생 시간보다 약간 뒤에 false로 설정
       });
     };
     document.head.appendChild(script);
@@ -277,6 +252,14 @@ export default function Main() {
               />
             ))}
             </MarkerClusterer>
+            <Polygon
+              path={[MAP_POLYGON_PATH, MAP_POLYGON_HOLE]}
+              strokeWeight={2}
+              strokeColor={'#D32F2F'}
+              strokeOpacity={0.6}
+              fillColor={'#D32F2F'}
+              fillOpacity={0.3}
+            />
           </Map>
         )}
 
