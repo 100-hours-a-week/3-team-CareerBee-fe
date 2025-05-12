@@ -1,4 +1,4 @@
-import { PiBell, PiBellRinging, PiCoinsDuotone, PiCaretDown, PiCaretLeft } from 'react-icons/pi';
+import { PiBell, PiCoinsDuotone, PiCaretDown, PiCaretLeft } from 'react-icons/pi';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import logo from '@/assets/logo-with-text-2.png';
@@ -16,7 +16,7 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
   const isMinimal = type === 'minimal';
 
   return (
-    <header className={cn('flex items-center justify-between px-4 h-16 w-full')}>
+    <header className={cn('flex items-center justify-between px-4 h-14 w-full')}>
       {/* 왼쪽 영역 */}
       <div className="flex items-center gap-2">
         {isNav ? (
@@ -30,7 +30,7 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
         ) : null}
 
         <a href="/">
-          <img src={logo} alt="logo" className="h-9" />
+          <img src={logo} alt="logo" className="h-8" />
         </a>
       </div>
 
