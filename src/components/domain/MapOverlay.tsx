@@ -39,8 +39,8 @@ export default function MapOverlay({
     if (!token || isBookmarked==="disabled") return;
     toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
   };
-  if(isOpen)
-    console.log("🟢 companyInfo:", companyInfo);
+  // if(isOpen)
+  //   console.log("🟢 companyInfo:", companyInfo);
   return (
     <>
       {!disabled &&

@@ -158,6 +158,7 @@ export default function Main() {
     const map = mapRef.current;
     if (!map) return;
   
+    console.log('🎀 열려있는 것들', _target, cluster)
     // 기업 카드가 열려있으면 확대하지 않음
     if (openCardIndex !== null) {
       console.log(openCardIndex," 📌 기업 카드 열려있어서 확대 취소");
@@ -196,8 +197,9 @@ export default function Main() {
             <MarkerClusterer
               averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
               minLevel={3} // 클러스터 할 최소 지도 레벨
-              disableClickZoom={true} 
-              onClusterclick={onClusterclick}
+              // disableClickZoom={true} 
+              // onClusterclick={onClusterclick}
+              minClusterSize={3}
             >
             {companies.map((company, index) => (
               <MapOverlay
