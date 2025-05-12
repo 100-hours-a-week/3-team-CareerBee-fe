@@ -88,12 +88,12 @@ export default function CompanyDetail() {
     }
     const fetchCompanyDetail =  () => {
       axios
-      // .get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${id}`)
-      .get('/mock/CompanyDetail.json')
+      .get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${id}`)
+      // .get('/mock/CompanyDetail.json') //🚨 목 데이터로 작업시에만 켜기!!!
       .then((response) => {
         const data = response.data;
-        // setCompany(data.data);
-        setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
+        setCompany(data.data);
+        // setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
         console.log(data);
         bookmarkStatus(Number(id), setIsBookmarked);
       })
