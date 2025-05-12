@@ -187,7 +187,7 @@ export default function Main() {
           >
             <MarkerClusterer
   averageCenter={true}
-  minLevel={3}
+  minLevel={4}
   minClusterSize={3}
   onCreate={onCreate}
   calculator={[10, 30, 50, 100]}
