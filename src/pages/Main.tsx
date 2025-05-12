@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { SearchBar } from '@/components/domain/SearchBar';
 import { FilterGroup } from '@/components/ui/filter'
-import { Map, Polygon } from 'react-kakao-maps-sdk';
+import { Map, MarkerClusterer, Polygon  } from 'react-kakao-maps-sdk';
 import MapOverlay from '@/components/domain/MapOverlay';
 import { useCompanyStore } from '@/store/company';
 import { useSearchStore } from '@/store/search';
@@ -129,8 +129,40 @@ export default function Main() {
     );
   };
 
+  // 타입 안정성을 위한 SafeCluster
+  type SafeCluster = kakao.maps.Cluster & {
+    _markers?: (kakao.maps.Marker | kakao.maps.CustomOverlay)[];
+    _clusterMarker?: kakao.maps.Marker;
+  };
 
-
+  const onCreate = (_target: kakao.maps.MarkerClusterer) => {
+    const map = mapRef.current;
+    if (!map) return;
+  
+    const clusterer = _target as unknown as {
+      _clusters: SafeCluster[];
+    };
+  
+    clusterer._clusters.forEach((cluster) => {
+      const markers = cluster._markers ?? [];
+  
+      // 실제 마커만 필터링(실제 마커: u, 기업 간단 카드: I)
+      const realMarkers = markers.filter(
+        (marker) => marker.constructor.name !== 'I'
+      );
+  
+      if (realMarkers.length === 2 && cluster._clusterMarker) {
+        // 1. 클러스터 마커 숨기기
+        cluster._clusterMarker.setVisible(false);
+  
+        // 2. 내부 마커 직접 지도에 표시
+        markers.forEach((marker) => {
+          marker.setMap(map);
+        });
+      }
+    });
+  };
+  
   return (
     <>
       <Toaster />
@@ -153,15 +185,73 @@ export default function Main() {
             onZoomChanged={handleMapMove}
             onDragEnd={handleMapMove}
           >
+            <MarkerClusterer
+  averageCenter={true}
+  minLevel={3}
+  minClusterSize={3}
+  onCreate={onCreate}
+  calculator={[10, 30, 50, 100]}
+  styles={[
+    {
+      width: '30px',
+      height: '30px',
+      background: 'radial-gradient(circle, rgba(26, 143, 227, 0.8) 40%, rgba(0, 0, 0, 0) 100%', // deep blue
+      borderRadius: '50%',
+      color: '#fff',
+      textAlign: 'center',
+      lineHeight: '30px',
+      fontSize: '13px',
+      fontWeight: 'bold',
+      boxShadow: '0 0 6px 4px rgba(26, 143, 227, 0.3)',
+    },
+    {
+      width: '40px',
+      height: '40px',
+      background: 'radial-gradient(circle, rgba(93, 162, 113, 0.8) 40%, rgba(0, 0, 0, 0) 100% )', // teal
+      borderRadius: '50%',
+      color: '#fff',
+      textAlign: 'center',
+      lineHeight: '40px',
+      fontSize: '14px',
+      fontWeight: 'bold', 
+      boxShadow: '0 0 6px 4px rgba(93, 162, 113, 0.3)',
+    },
+    {
+      width: '50px',
+      height: '50px',
+      background: 'radial-gradient(circle, rgba(247, 199, 70, 0.9) 40%, rgba(0, 0, 0, 0) 100%', // yellow
+      borderRadius: '50%',
+      color: '#fff',
+      textAlign: 'center',
+      lineHeight: '50px',
+      fontSize: '15px',
+      fontWeight: 'bold',
+      boxShadow: '0 0 10px 6px rgba(254, 228, 64, 0.3)',
+    },
+    {
+      width: '60px',
+      height: '60px',
+      background: 'radial-gradient(circle, rgba(231, 111, 81, 0.8) 40%, rgba(0, 0, 0, 0) 100% )',
+      borderRadius: '50%',
+      color: '#fff',
+      textAlign: 'center',
+      lineHeight: '60px',
+      fontSize: '16px',
+      fontWeight: 'bold',
+      boxShadow: '0 0 10px 6px rgba(231, 111, 81, 0.3)',
+    },
+  ]}
+>
             {companies.map((company, index) => (
               <MapOverlay
                 key={company.id}
                 company={company}
                 index={index}
-                isOpen={openCardIndex === index}
+                isOpen={openCardIndex === company.id}
                 disabled={markerDisabledMap[company.id] ?? false}
               />
             ))}
+            </MarkerClusterer>
             <Polygon
               path={[MAP_POLYGON_PATH, MAP_POLYGON_HOLE]}
               strokeWeight={2}

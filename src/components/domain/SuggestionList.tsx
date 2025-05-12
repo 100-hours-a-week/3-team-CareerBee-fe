@@ -13,6 +13,7 @@ export function SuggestionList({
   return (
     <ul className="absolute z-50 mt-1 w-full rounded-[24px] border bg-white shadow max-h-96 overflow-auto">
       {filteredSuggestions.slice(0, 8).map((item, i, arr) => {
+        console.log('🔍 추천 항목:', item, ' ', i); // ← 여기에 추가
         const isFirst = i === 0;
         const isLast = i === arr.length - 1;
         return (
