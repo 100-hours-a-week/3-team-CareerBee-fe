@@ -42,11 +42,10 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
               <PiCoinsDuotone className="fill-yellow-400 w-9 h-9" />
               <span className="text-base font-semibold">{point}</span>
             </div>
-            <a href="/notification">
-              {hasNewNotification ? (
-                <PiBellRinging className="w-8 h-8 animate-wiggle" />
-              ) : (
-                <PiBell className="w-8 h-8" />
+            <a href="/notification" className="relative">
+              <PiBell className="w-8 h-8" />
+              {hasNewNotification && (
+                <span className="absolute top-1 right-1 block h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background" />
               )}
             </a>
           </>
