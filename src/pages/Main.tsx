@@ -101,6 +101,8 @@ export default function Main() {
   const handleMapMove = (map: kakao.maps.Map) => {
     const level = map.getLevel();
     const latlng = map.getCenter();
+    setHighlightedCompanyId(null);
+
     fetchCompanies(latlng.getLat(), latlng.getLng(), level);
   };
 
