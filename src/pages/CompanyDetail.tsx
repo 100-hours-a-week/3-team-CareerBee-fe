@@ -15,6 +15,8 @@ import { handleToggleBookmark as toggleBookmarkUtil } from '@/lib/toggleBookmark
 
 import { useFetchBookmarkStatus } from "@/hooks/useFetchBookmarkStatus";
 import { useAuthStore } from '@/store/auth';
+import { Loader } from "@/components/ui/loader";
+
 export interface CompanyDetailResponse {
   company: Company;
 }
@@ -111,7 +113,14 @@ export default function CompanyDetail() {
     toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
   };
 
-  if (!company) return <div>로딩 중...</div>;
+  if (!company) return (
+        <div className="flex flex-col gap-4 h-screen items-center justify-center text-lg font-semibold">
+          <Loader/>
+          <p>
+            기업 정보를 불러오는 중이에요...
+          </p>
+        </div>
+  );
 
   return (
     <div className="flex flex-col grow">
