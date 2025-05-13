@@ -41,8 +41,9 @@ instance.interceptors.response.use(
       else if (message?.match("만료된 토큰입니다.")) {
         console.log('🔑 토큰 만료됨');
         try {
+          console.log('🔑 try')
           const refreshResponse = await axios.post(
-            `${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/reissue`,
+            `${import.meta.env.VITE_API_URL}/api/v1/auth/reissue`,
             null,
             { withCredentials: true }
           );
