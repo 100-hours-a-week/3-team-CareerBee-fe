@@ -18,6 +18,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
 div#root{
   margin: 0 auto;
   width: 100%;

@@ -3,7 +3,6 @@ import { Header } from '@/components/layout/header';
 import { Navbar } from '@/components/layout/navbar';
 import { useAuthStore } from '@/store/auth';
 
-
 export default function MainLayout() {
   const location = useLocation();
   const token = useAuthStore((state) => state.token);
@@ -27,17 +26,11 @@ export default function MainLayout() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col max-w-[600px] w-full mx-auto bg-background shadow-sides"
-    style={{
-      height: `calc(var(--vh, 1vh) * 100)`,
-    }}
-    >
-      
+    <div
+      className="flex flex-col h-dvh fixed inset-0 max-w-[600px] w-full mx-auto bg-background shadow-sides"
+    > 
       <Header type={headerType} hasNewNotification={hasNewNotification} point={point} />
-      <main className="grow flex flex-col w-full h-[calc(100vh-8rem)] overflow-auto"
-      // style={{
-      //   height: `calc(var(--vh, 1vh) * 100 - 4rem${showNavbar() ? ' - 4rem' : ''})`,
-      // }}
+      <main className="flex flex-col flex-1 w-full overflow-auto"
       >
         <Outlet />
       </main>
