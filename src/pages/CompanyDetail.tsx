@@ -87,12 +87,12 @@ export default function CompanyDetail() {
     }
     const fetchCompanyDetail =  () => {
       axios
-      // .get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${id}`)
-      .get('/mock/CompanyDetail.json') //🚨 목 데이터로 작업시에만 켜기!!!
+      .get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${id}`)
+      // .get('/mock/CompanyDetail.json') //🚨 목 데이터로 작업시에만 켜기!!!
       .then((response) => {
         const data = response.data;
-        // setCompany(data.data);
-        setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
+        setCompany(data.data);
+        // setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
         console.log(data);
         console.count('😈기업 상세 렌더링 횟수');
         bookmarkStatus(Number(id), setIsBookmarked);
@@ -208,14 +208,15 @@ export default function CompanyDetail() {
           <TabsTrigger value="recruit" variant={"company"}>채용 정보</TabsTrigger>
           <TabsTrigger value="issue" variant={"company"}>최근 이슈</TabsTrigger>
           <TabsTrigger value="benefit" variant={"company"}>복지</TabsTrigger>
-          <TabsTrigger value="techStack" variant={"company"}>기술 스택</TabsTrigger>
+          {company.techStacks.length > 0 && (<TabsTrigger value="techStack" variant={"company"}>기술 스택</TabsTrigger>)}
         </TabsList>
         <TabsContent value="defaultTab" className="grow"><DefaultTab company={company} /></TabsContent>
         <TabsContent value="recruit"><RecruitTab recruitments={company.recruitments} /></TabsContent>
         <TabsContent value="issue"><IssueTab name={company.name} issue={company.recentIssue}/></TabsContent>
         <TabsContent value="benefit"><BenefitTab benefits={company.benefits}/></TabsContent>
-        <TabsContent value="techStack"><TechstackTab techstacks={company.techStacks}></TechstackTab></TabsContent>
-      </Tabs>
+        {company.techStacks.length > 0 && (
+          <TabsContent value="techStack"><TechstackTab techstacks={company.techStacks} /></TabsContent>
+        )}</Tabs>
     </div>
   );
 }
