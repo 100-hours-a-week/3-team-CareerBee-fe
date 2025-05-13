@@ -60,13 +60,13 @@ const AlertDialogContent = React.forwardRef<
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
 
 const AlertDialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('flex flex-col space-y-2 text-center sm:text-left', className)} {...props} />
+  <div className={cn('flex flex-col space-y-2 text-center w-full sm:text-left', className)} {...props} />
 );
 AlertDialogHeader.displayName = 'AlertDialogHeader';
 
 const AlertDialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn('flex flex-row space-x-2 m-auto sm:m-0 sm:justify-end', className)}
+    className={cn('flex flex-row m-auto gap-4', className)}
     {...props}
   />
 );
@@ -90,7 +90,7 @@ const AlertDialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Description
     ref={ref}
-    className={cn('text-sm text-text-primary', className)}
+    className={cn('text-sm text-text-primary text-center', className)}
     {...props}
   />
 ));
@@ -102,7 +102,7 @@ const AlertDialogAction = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Action
     ref={ref}
-    className={cn(buttonVariants(), className, 'w-24')}
+    className={cn(buttonVariants(), className)}
     {...props}
   />
 ));
@@ -127,12 +127,13 @@ const AlertDialogCancel = React.forwardRef<
 AlertDialogCancel.displayName = AlertDialogPrimitive.Cancel.displayName;
 
 interface ModalProps {
-  trigger: string;
+  trigger: React.ReactNode;
   title: string;
-  description: string;
+  description: React.ReactNode;
   cancelText?: string;
   actionText?: string;
   cancelButton?: boolean;
+  onAction: ()=>void;
 }
 
 export const Modal = ({
@@ -142,13 +143,14 @@ export const Modal = ({
   cancelText,
   actionText,
   cancelButton = false,
+  onAction,
 }: ModalProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger>{trigger}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <div className="flex items-start justify-between">
+          <div className="flex items-center justify-center">
             <AlertDialogTitle>{title}</AlertDialogTitle>
             {cancelButton ? (
               <AlertDialogCancel
@@ -162,8 +164,8 @@ export const Modal = ({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          {cancelText ? <AlertDialogCancel className="w-24">{cancelText}</AlertDialogCancel> : null}
-          {actionText ? <AlertDialogAction className="w-24">{actionText}</AlertDialogAction> : null}
+          {cancelText ? <AlertDialogCancel className="w-28">{cancelText}</AlertDialogCancel> : null}
+          {actionText ? <AlertDialogAction className="w-28" onClick={onAction}>{actionText}</AlertDialogAction> : null}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

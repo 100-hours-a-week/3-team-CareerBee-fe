@@ -1,4 +1,4 @@
-import { PiBell, PiBellRinging, PiCoinsDuotone, PiCaretDown, PiCaretLeft } from 'react-icons/pi';
+import { PiBell, PiCoinsDuotone, PiCaretDown, PiCaretLeft } from 'react-icons/pi';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import logo from '@/assets/logo-with-text-2.png';
