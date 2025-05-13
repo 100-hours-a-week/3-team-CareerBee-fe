@@ -23,7 +23,7 @@ const buttonVariants = cva(
         transparent: 'bg-transparent text-text-primary',
         danger: 'bg-error text-white hover:bg-error/80',
         link: 'text-text-secondary underline-offset-4 hover:underline',
-        icon: 'bg-transparent text-border hover:text-border/80',
+        icon: 'bg-transparent text-text-primary hover:text-border/80',
       },
       size: {
         sm: 'h-8 rounded-md text-xs',

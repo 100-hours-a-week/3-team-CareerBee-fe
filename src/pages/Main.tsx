@@ -34,7 +34,7 @@ export interface CompanyProps {
 
 export default function Main() {
   // 디버그용 콘솔 찍기
-  console.count('🌀 Main 렌더링 횟수');
+  // console.count('🌀 Main 렌더링 횟수');
   const token=useAuthStore((state) => state.token);
   useEffect(() => {
     // const token = useAuthStore.getState().token;
@@ -101,6 +101,8 @@ export default function Main() {
   const handleMapMove = (map: kakao.maps.Map) => {
     const level = map.getLevel();
     const latlng = map.getCenter();
+    setHighlightedCompanyId(null);
+
     fetchCompanies(latlng.getLat(), latlng.getLng(), level);
   };
 
@@ -163,7 +165,7 @@ export default function Main() {
       }
     });
   };
-  
+  const [highlightedCompanyId, setHighlightedCompanyId] = useState<number | null>(null);
   return (
     <>
       <Toaster />
@@ -173,7 +175,30 @@ export default function Main() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           suggestions={suggestions}
-          onSuggestionSelect={(value: string) => setSearch(value)}
+          onSuggestionSelect={async (suggestion) => {
+            try {
+              console.log('🔎', suggestion)
+              const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${suggestion.id}/locations`);
+              const { latitude, longitude } = res.data.data.locationInfo;
+
+              console.log('🔎', latitude, ' ', longitude)
+              // setSearch(suggestion.name);
+              setHighlightedCompanyId(suggestion.id);
+
+              const map = mapRef.current;
+              if (map) {
+                const newCenter = new window.kakao.maps.LatLng(latitude, longitude);
+                map.setLevel(3);
+                map.setCenter(newCenter);
+
+                setTimeout(() => {
+                  fetchCompanies(latitude, longitude, 3);
+                }, 300);
+              }
+            } catch (error) {
+              console.error('❌ 기업 위치 정보 조회 실패', error);
+            }
+          }}
         />
       </div>
       <div className="flex item-center justify-center relative w-full h-full">
@@ -250,6 +275,7 @@ export default function Main() {
                 index={index}
                 isOpen={openCardIndex === company.id}
                 disabled={markerDisabledMap[company.id] ?? false}
+                isHighlighted={highlightedCompanyId === company.id}
               />
             ))}
             </MarkerClusterer>
@@ -272,7 +298,7 @@ export default function Main() {
         </div>
 
         {/* 내 위치 찾기 버튼 */}
-        <div className="absolute bottom-6 left-3 z-10 [&_svg]:size-8">
+        <div className="absolute bottom-6 left-3 z-40 [&_svg]:size-8">
           <div>
             <Button
               label={<PiCrosshairSimple/>}
