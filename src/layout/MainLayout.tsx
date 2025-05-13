@@ -27,13 +27,18 @@ export default function MainLayout() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col max-w-[600px] w-full mx-auto bg-background shadow-sides">
+    <div className="min-h-screen flex flex-col max-w-[600px] w-full mx-auto bg-background shadow-sides"
+    style={{
+      height: `calc(var(--vh, 1vh) * 100)`,
+    }}
+    >
       
       <Header type={headerType} hasNewNotification={hasNewNotification} point={point} />
       <main className="grow flex flex-col w-full h-[calc(100vh-8rem)] overflow-auto"
-      style={{
-        height: `calc(var(--vh, 1vh) * 100 - 4rem${showNavbar() ? ' - 4rem' : ''})`,
-      }}>
+      // style={{
+      //   height: `calc(var(--vh, 1vh) * 100 - 4rem${showNavbar() ? ' - 4rem' : ''})`,
+      // }}
+      >
         <Outlet />
       </main>
       {showNavbar() ? <Navbar /> : null}
