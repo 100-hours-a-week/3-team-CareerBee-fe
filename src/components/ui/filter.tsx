@@ -52,30 +52,37 @@ const FilterGroup = ({ filters, companies }: Props) => {
     });
   };
 
-  const filtered = useMemo(() => {
-    let result = companies;
+  useMemo(() =>{
+    let filtered = companies;
+  // const filtered = useMemo(() => {
+  //   let result = companies;
   
     activeFilters.forEach((filterId) => {
       if (filterId === 'recruiting') {
-        result = result.filter((c) => c.recruitingStatus === 'ongoing');
+        filtered=filtered.filter((c)=>c.recruitingStatus === 'ongoing');
+        // result = result.filter((c) => c.recruitingStatus === 'ongoing');
       } else if (filterId === 'bookmark') {
-        result = result.filter((c) => bookmarkedIds.includes(c.id));
+        filtered = filtered.filter((c) => bookmarkedIds.includes(c.id));
+        // result = result.filter((c) => bookmarkedIds.includes(c.id));
       } else if (CATEGORY_FILTERS.includes(filterId)) {
-        result = result.filter((c) => c.businessType === filterId);
+        filtered = filtered.filter((c) => c.businessType === filterId);
+        // result = result.filter((c) => c.businessType === filterId);
       }
     });
   
-    return result;
-  }, [activeFilters, companies, bookmarkedIds]);
+  //   return result;
+  // }, [activeFilters, companies, bookmarkedIds]);
   
-  useEffect(() => {
+  // useEffect(() => {
     const disabledMap = companies.reduce((acc, company) => {
       acc[company.id] = !filtered.some((c) => c.id === company.id);
       return acc;
     }, {} as Record<number, boolean>);
   
     setCompanyDisabledMap(disabledMap);
-  }, [filtered, companies, setCompanyDisabledMap]);
+    return filtered;
+  }, [activeFilters, companies, setCompanyDisabledMap, bookmarkedIds]);
+  // }, [filtered, companies, setCompanyDisabledMap]);
 
   return (
     <div className="w-full px-4 py-2 overflow-x-auto scrollbar-hide group-hover:scrollbar-default">
