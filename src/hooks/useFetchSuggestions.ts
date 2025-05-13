@@ -17,10 +17,9 @@ export function useFetchSuggestions() {
         });
         console.log('🔍', data.data)
         const names = data.data.matchingCompanies.map(
-          (company: { name: string; latitude: number; longitude: number }) => ({
+          (company: { id: number; name: string; }) => ({
+            id: company.id,
             name: company.name,
-            lat: company.latitude,
-            lng: company.longitude,
           })
         );
         setSuggestions(names.slice(0, 8));

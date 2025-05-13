@@ -173,17 +173,28 @@ export default function Main() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           suggestions={suggestions}
-          onSuggestionSelect={(suggestion) => {
-            setSearch(suggestion.name);
-            setHighlightedCompanyId(suggestion.id); 
-            const map = mapRef.current;
-            if (map) {
-              const newCenter = new window.kakao.maps.LatLng(suggestion.lat, suggestion.lng);
-              map.setLevel(3); // 무조건 3으로 고정
-              map.setCenter(newCenter);
-              setTimeout(() => {
-                fetchCompanies(suggestion.lat, suggestion.lng, 3);
-              }, 300);
+          onSuggestionSelect={async (suggestion) => {
+            try {
+              console.log('🔎', suggestion)
+              const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${suggestion.id}/locations`);
+              const { latitude, longitude } = res.data.data.locationInfo;
+
+              console.log('🔎', latitude, ' ', longitude)
+              setSearch(suggestion.name);
+              setHighlightedCompanyId(suggestion.id);
+
+              const map = mapRef.current;
+              if (map) {
+                const newCenter = new window.kakao.maps.LatLng(latitude, longitude);
+                map.setLevel(3);
+                map.setCenter(newCenter);
+
+                setTimeout(() => {
+                  fetchCompanies(latitude, longitude, 3);
+                }, 300);
+              }
+            } catch (error) {
+              console.error('❌ 기업 위치 정보 조회 실패', error);
             }
           }}
         />
