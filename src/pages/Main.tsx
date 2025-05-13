@@ -180,7 +180,7 @@ export default function Main() {
               const { latitude, longitude } = res.data.data.locationInfo;
 
               console.log('🔎', latitude, ' ', longitude)
-              setSearch(suggestion.name);
+              // setSearch(suggestion.name);
               setHighlightedCompanyId(suggestion.id);
 
               const map = mapRef.current;
