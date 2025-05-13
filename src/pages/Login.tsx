@@ -34,7 +34,7 @@ export default function Login() {
         label="카카오톡으로 시작하기"
         size="lg"
         fullWidth={true}
-        className="mx-16 mb-8"
+        className="mx-16 mb-8 font-bold"
         onClick={handleLogin}
       ></Button>
     </div>

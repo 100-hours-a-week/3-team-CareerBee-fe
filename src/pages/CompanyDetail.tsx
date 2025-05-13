@@ -147,7 +147,7 @@ export default function CompanyDetail() {
               key={index}
               src={imageUrl}
               alt={company.name ?? "no image"}
-              className={index === 0 ? "col-span-2 row-span-2 w-full h-full object-cover rounded-lg" : "aspect-[4/3] object-cover rounded-lg"}
+              className={index === 0 ? "col-span-2 row-span-2 w-full h-full rounded-lg aspect-[4/3] object-cover" : "aspect-[4/3] object-cover rounded-lg"}
             />
           );
         })}
@@ -174,12 +174,12 @@ export default function CompanyDetail() {
       {/* 기업 정보 */}
       <div className="flex flex-col px-4 gap-2 my-2">
         <div className="text-lg font-semibold">{company.title}</div>
-        <div className="flex gap-0.5 [&_svg]:size-5">
+        <div className="flex gap-0.5 [&_svg]:size-5 text-primary">
         {[...Array(5)].map((_, index) => {
           const full = Math.floor(company.rating);
           const decimal = company.rating - full;
           if (index < full) {
-            return <PiStarFill key={index} />;
+            return <PiStarFill key={index}/>;
           } else if (index === full) {
             if (decimal < 0.333) return <PiStar key={index} />;
             if (decimal < 0.666) return <PiStarHalfFill key={index} />;
@@ -208,14 +208,15 @@ export default function CompanyDetail() {
           <TabsTrigger value="recruit" variant={"company"}>채용 정보</TabsTrigger>
           <TabsTrigger value="issue" variant={"company"}>최근 이슈</TabsTrigger>
           <TabsTrigger value="benefit" variant={"company"}>복지</TabsTrigger>
-          <TabsTrigger value="techStack" variant={"company"}>기술 스택</TabsTrigger>
+          {company.techStacks.length > 0 && (<TabsTrigger value="techStack" variant={"company"}>기술 스택</TabsTrigger>)}
         </TabsList>
         <TabsContent value="defaultTab" className="grow"><DefaultTab company={company} /></TabsContent>
         <TabsContent value="recruit"><RecruitTab recruitments={company.recruitments} /></TabsContent>
         <TabsContent value="issue"><IssueTab name={company.name} issue={company.recentIssue}/></TabsContent>
         <TabsContent value="benefit"><BenefitTab benefits={company.benefits}/></TabsContent>
-        <TabsContent value="techStack"><TechstackTab techstacks={company.techStacks}></TechstackTab></TabsContent>
-      </Tabs>
+        {company.techStacks.length > 0 && (
+          <TabsContent value="techStack"><TechstackTab techstacks={company.techStacks} /></TabsContent>
+        )}</Tabs>
     </div>
   );
 }

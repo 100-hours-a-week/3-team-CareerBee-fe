@@ -1,18 +1,21 @@
-import { PiBookOpenText, PiMedalMilitary, PiMapTrifold, PiShoppingCartSimple, PiUser } from 'react-icons/pi';
+// import { PiBookOpenText, PiMedalMilitary, PiMapTrifold, PiShoppingCartSimple, PiUser } from 'react-icons/pi';
+import { PiBookOpenTextLight, PiMedalMilitaryLight, PiMapTrifoldLight, PiShoppingCartSimpleLight, PiUserLight } from 'react-icons/pi';
+
 import { useAuthStore } from '@/store/auth';
 interface NavItem {
-  name: string;
+  id: string;
+  title: string;
   href: string;
   icon: React.ReactNode;
 }
 const getNavItems = (token: string | null): NavItem[] => [
-  { name: 'Interview', href: '/interview', icon: <PiBookOpenText className="iconSize-default" /> },
-  { name: 'Ranking', href: '/competition', icon: <PiMedalMilitary className="iconSize-default" /> },
-  { name: 'Home', href: '/', icon: <PiMapTrifold className="iconSize-default" /> },
-  { name: 'Store', href: '/store', icon: <PiShoppingCartSimple className="iconSize-default" /> },
+  { id: 'Interview', title: '면접 대비', href: '/interview', icon: <PiBookOpenTextLight className="iconSize-default" /> },
+  { id: 'Ranking',title: '대회', href: '/competition', icon: <PiMedalMilitaryLight className="iconSize-default" /> },
+  { id: 'Home', title: '지도', href: '/', icon: <PiMapTrifoldLight className="iconSize-default" /> },
+  { id: 'Store', title: '상점', href: '/store', icon: <PiShoppingCartSimpleLight className="iconSize-default" /> },
   ...(token
-    ? [{ name: 'My Page', href: '/my', icon: <PiUser className="iconSize-default" /> }]
-    : [{ name: 'Login Required', href: '/login-required', icon: <PiUser className="iconSize-default" /> }]),
+    ? [{ id: 'My Page', title: '마이페이지', href: '/my', icon: <PiUserLight className="iconSize-default" /> }]
+    : [{ id: 'Login Required', title: '마이페이지', href: '/login-required', icon: <PiUserLight className="iconSize-default" /> }]),
 ];
 
 export const Navbar = () => {
@@ -22,9 +25,12 @@ export const Navbar = () => {
   return (
     <div className="flex items-center justify-between px-8 h-16 w-full gap-2 bg-background">
       {navItems.map((item) => (
-        <a key={item.name} href={item.href}>
-          {item.icon}
-        </a>
+        <div className='flex flex-col gap-0.5 justify-center items-center [&_svg]:size-7'>
+          <a key={item.id} href={item.href}>
+            {item.icon}
+          </a>
+          <div className='text-xs text-text-primary'>{item.title}</div>
+        </div>
       ))}
     </div>
   );

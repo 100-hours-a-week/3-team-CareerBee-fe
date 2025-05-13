@@ -32,7 +32,7 @@ export default function TechstackTab({ techstacks }: Props) {
               grouped[type].map((techstack) => (
                 <div
                   key={techstack.id}
-                  className="flex items-center border rounded-md border-border/30 py-1 px-2 gap-1"
+                  className="flex items-center border rounded-md border-border/30 py-1 px-2 gap-1 bg-white"
                 >
                   <img
                     src={techstack.imgUrl}
