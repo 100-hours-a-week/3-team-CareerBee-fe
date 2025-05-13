@@ -41,7 +41,7 @@ export default function Main() {
     // console.log('zustand 저장 토큰:', token);
     const token2 = localStorage.getItem('auth-storage');
     if (token2) {
-      const parsed = JSON.parse(token2);
+      // const parsed = JSON.parse(token2);
       // console.log('localStorage 토큰:', parsed?.state?.token);
     } else {
       console.log('⚠️ No token found in localStorage');
