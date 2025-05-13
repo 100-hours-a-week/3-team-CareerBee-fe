@@ -1,4 +1,6 @@
-import axios from "axios";
+// import axios from "axios";
+import { instance as axios } from '@/lib/axios';
+
 import { useAuthStore } from "@/store/auth";
 import { Button } from "@/components/ui/button";
 import noProfile from '@/assets/no-profile.png'
@@ -30,7 +32,10 @@ export default function Mypage() {
   const [nickname, setNickname] = useState<string>("닉네임");
 
   useEffect(() => {
-    if (!token) return;
+    // if (!token) {
+    //   console.log('🔑 토큰 없음');
+    //   return;
+    // }
 
     const fetchUserInfo = async () => {
       try {
