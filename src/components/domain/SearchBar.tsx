@@ -32,7 +32,7 @@ export function SearchBar({
         value={value}
         onChange={(e) => {
           onChange?.(e);
-          console.log('SearchBar에서 onChange 호출:', e.target.value);
+          // console.log('SearchBar에서 onChange 호출:', e.target.value);
         }}
         {...props}
       />

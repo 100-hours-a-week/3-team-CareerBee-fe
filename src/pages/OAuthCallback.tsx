@@ -23,7 +23,7 @@ export default function OAuthCallback() {
           localStorage.setItem('userPoint', userInfo.userPoint);
           localStorage.setItem('hasNewAlarm', userInfo.hasNewAlarm);
           window.location.href = '/'; // ✅ 로그인 성공 후 홈으로 이동
-          console.log('✅ Login successful:', accessToken);
+          console.log('✅ Login successful');
         })
         .catch((error) => {
           console.error('Login failed:', error);

@@ -15,11 +15,11 @@ instance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const res = error.response;
-    console.log(res?.status);
+    // console.log(res?.status);
     if (res?.status === 400) {
       const message = res?.data?.message;
       const status=res.data.httpStatusCode;
-      console.log(res.data.httpStatusCode);
+      // console.log(res.data.httpStatusCode);
       if(status===404){
         const message = res?.data?.message;
   
@@ -47,7 +47,7 @@ instance.interceptors.response.use(
             const newToken = refreshResponse.data.data.newAccessToken;
             useAuthStore.getState().setToken(newToken);
 
-            console.log('🔑 토큰 재발급 성공', newToken)
+            console.log('🔑 토큰 재발급 성공');
 
             const originalRequest = error.config;
             originalRequest.headers.Authorization = `Bearer ${newToken}`;

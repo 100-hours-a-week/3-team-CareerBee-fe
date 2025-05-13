@@ -77,7 +77,7 @@ export default function Main() {
         },
       });
       setCompanies(data.data.companies);
-      console.log(data.data.companies);
+      // console.log(data.data.companies);
     } catch (error) {
       console.error('기업 리스트 조회 실패:', error);
     }
@@ -180,11 +180,11 @@ export default function Main() {
           suggestions={suggestions}
           onSuggestionSelect={async (suggestion) => {
             try {
-              console.log('🔎', suggestion)
+              // console.log('🔎', suggestion)
               const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${suggestion.id}/locations`);
               const { latitude, longitude } = res.data.data.locationInfo;
 
-              console.log('🔎', latitude, ' ', longitude)
+              // console.log('🔎', latitude, ' ', longitude)
               // setSearch(suggestion.name);
               setHighlightedCompanyId(suggestion.id);
 
