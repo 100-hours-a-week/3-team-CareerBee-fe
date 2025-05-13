@@ -1,10 +1,17 @@
 import { create } from 'zustand';
 
+export interface CompanySuggestion {
+  id: number;
+  name: string;
+  // lat: number;
+  // lng: number;
+}
+
 interface SearchState {
   search: string;
-  suggestions: string[];
+  suggestions: CompanySuggestion[];
   setSearch: (value: string) => void;
-  setSuggestions: (suggestions: string[]) => void;
+  setSuggestions: (suggestions: CompanySuggestion[]) => void;
 }
 
 export const useSearchStore = create<SearchState>((set) => ({

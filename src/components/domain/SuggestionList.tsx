@@ -1,19 +1,18 @@
 import { cn } from '@/lib/utils';
 
+// 수정된 타입
 export function SuggestionList({
   filteredSuggestions,
   onSuggestionSelect,
   onClose,
 }: {
-  filteredSuggestions: string[];
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSuggestionSelect?: (value: string) => void;
+  filteredSuggestions: { id: number; name: string; }[];
+  onSuggestionSelect?: (value: { id: number; name: string;}) => void;
   onClose?: () => void;
 }) {
   return (
     <ul className="absolute z-50 mt-1 w-full rounded-[24px] border bg-white shadow max-h-96 overflow-auto">
       {filteredSuggestions.slice(0, 8).map((item, i, arr) => {
-        console.log('🔍 추천 항목:', item, ' ', i); // ← 여기에 추가
         const isFirst = i === 0;
         const isLast = i === arr.length - 1;
         return (
@@ -29,7 +28,7 @@ export function SuggestionList({
               onClose?.();
             }}
           >
-            {item}
+            {item.name}
           </li>
         );
       })}
