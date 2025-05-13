@@ -54,10 +54,11 @@ export default function MapOverlay({
             }}
             clickable={true}
             onClick={fetchCompanyDetail}
+            zIndex={isHighlighted ? 2 : 1}
           />
       }
       {isOpen && companyInfo && (
-        <CustomOverlayMap xAnchor={0.5} yAnchor={1.22} position={position} clickable={true}>
+        <CustomOverlayMap xAnchor={0.5} yAnchor={1.22} position={position} clickable={true} zIndex={30}>
           <CompanyCard
             companyId={companyInfo.id}
             companyName={companyInfo.name}

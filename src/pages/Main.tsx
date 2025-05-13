@@ -291,14 +291,14 @@ export default function Main() {
         )}
 
         {/* 필터 UI를 지도 위에 고정 */}
-        <div className="absolute top-2 left-1 right-2 z-10 px-2">
+        <div className="absolute top-2 left-1 right-2 z-40 px-2">
           <div className="max-w-full ">
             <FilterGroup filters={FILTERS} companies={companies} />
           </div>
         </div>
 
         {/* 내 위치 찾기 버튼 */}
-        <div className="absolute bottom-6 left-3 z-10 [&_svg]:size-8">
+        <div className="absolute bottom-6 left-3 z-40 [&_svg]:size-8">
           <div>
             <Button
               label={<PiCrosshairSimple/>}
