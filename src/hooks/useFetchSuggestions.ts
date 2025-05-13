@@ -15,7 +15,7 @@ export function useFetchSuggestions() {
         const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies/search`, {
           params: { keyword: search },
         });
-        console.log('🔍', data.data)
+        // console.log('🔍', data.data)
         const names = data.data.matchingCompanies.map(
           (company: { id: number; name: string; }) => ({
             id: company.id,

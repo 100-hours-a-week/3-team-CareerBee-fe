@@ -16,7 +16,7 @@ interface Props {
   companies: CompanyProps[];
 }
 const fetchBookmarkedIds = async (setBookmarkedIds: (ids: number[]) => void, triggerFilterUpdate: () => void) => {
-  console.log('🚀 fetchBookmarkedIds called'); // ✅ 여기에 로그 넣기
+  // console.log('🚀 fetchBookmarkedIds called'); // ✅ 여기에 로그 넣기
   const token = useAuthStore.getState().token;
   if (!token) return;
 
@@ -29,7 +29,7 @@ const fetchBookmarkedIds = async (setBookmarkedIds: (ids: number[]) => void, tri
         },
       }
     );
-    console.log(res.data.data.wishCompanies);
+    // console.log(res.data.data.wishCompanies);
     setBookmarkedIds(res.data.data.wishCompanies);
     triggerFilterUpdate();
   } catch (err) {
@@ -125,13 +125,13 @@ const FilterGroup = ({ filters, companies }: Props) => {
                 toggleFilter(id);
 
                 if (id === 'recruiting') {
-                  const recruiting = companies.filter((c) => c.recruitingStatus === 'ongoing');
-                  console.log('Recruiting companies:', recruiting);
+                  // const recruiting = companies.filter((c) => c.recruitingStatus === 'ongoing');
+                  // console.log('Recruiting companies:', recruiting);
                 } else if (id === 'bookmark') {
                   fetchBookmarkedIds(setBookmarkedIds, () => {setFilterTrigger((v) => v + 1);});
                 } else {
-                  const filtered = companies.filter((c) => c.businessType === id);
-                  console.log(`Filtered by category (${id}):`, filtered);
+                  // const filtered = companies.filter((c) => c.businessType === id);
+                  // console.log(`Filtered by category (${id}):`, filtered);
                 }
               }}
               className="shadow-md px-4 py-1 min-w-[72px] text-sm rounded-full border border-border/50 bg-white text-gray-800 whitespace-nowrap"

@@ -9,7 +9,7 @@ export default function LoginRequired() {
       });
       const loginUrl = res.data.data.loginUrl;
       if (loginUrl) {
-        console.log(loginUrl)
+        // console.log(loginUrl)
         window.location.href = loginUrl;
       }
     } catch (error) {
