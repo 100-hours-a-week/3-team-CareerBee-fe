@@ -30,6 +30,7 @@ const logout = async () => {
 export default function Mypage() {
   const token = useAuthStore((state) => state.token);
   const [nickname, setNickname] = useState<string>("닉네임");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     // if (!token) {
@@ -74,7 +75,6 @@ export default function Mypage() {
                   variant="link"
                   className="mx-16 mb-8"
                 />}
-        // trigger="로그아웃"
         title="로그아웃 하시겠어요?"
         description=  {<>
                         다음에 서비스를 더 편하게 이용하시려면<br />로그인 상태를 유지해 주세요.

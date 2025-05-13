@@ -145,9 +145,13 @@ export const Modal = ({
   cancelButton = false,
   onAction,
 }: ModalProps) => {
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
   return (
     <AlertDialog>
-      <AlertDialogTrigger>{trigger}</AlertDialogTrigger>
+      <AlertDialogTrigger asChild>
+        {React.cloneElement(trigger as React.ReactElement, {
+          ref: triggerRef,
+        })}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <div className="flex items-center justify-center">
