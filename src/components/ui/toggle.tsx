@@ -17,7 +17,7 @@ const toggleVariants = cva(
         pill: `border border-border bg-background shadow-sm rounded-full
           hover:bg-accent hover:text-accent-foreground
           data-[state=on]:bg-secondary data-[state=on]:border-transparent`,
-        save: `flex items-center
+        save: `flex items-center bg-transparent
           data-[state=on]:fill-primary,`,
       },
       size: {
