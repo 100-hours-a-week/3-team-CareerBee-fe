@@ -3,9 +3,11 @@ import { router } from '@/router';
 import { useEffect } from 'react';
 import { useAuthStore } from '@/store/auth';
 import { useGlobalErrorToast } from '@/hooks/useGlobalErrorToast';
+import { useViewportHeight } from './hooks/useViewportHeight';
 
 function App() {
   useGlobalErrorToast();
+  useViewportHeight();
   //토큰 복원
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
