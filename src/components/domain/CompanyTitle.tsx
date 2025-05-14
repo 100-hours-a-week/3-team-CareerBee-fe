@@ -36,7 +36,7 @@ export default function CompanyTitle({
           <img
             src={logoUrl}
             alt={`${name} 로고`}
-            className="w-20 h-20 rounded-md object-contain border border-text-primary"
+            className="w-20 h-20 rounded-md object-contain border border-text-primary bg-white"
           />
           <div className="flex flex-col justify-end">
             <span>{name}</span>
