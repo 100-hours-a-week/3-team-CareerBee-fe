@@ -44,7 +44,7 @@ export default function Main() {
       // const parsed = JSON.parse(token2);
       // console.log('localStorage 토큰:', parsed?.state?.token);
     } else {
-      console.log('⚠️ No token found in localStorage');
+      // console.log('⚠️ No token found in localStorage');
     }
   }, [token]);
 

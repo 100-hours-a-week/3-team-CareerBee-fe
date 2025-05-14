@@ -96,7 +96,7 @@ export default function CompanyDetail() {
         setCompany(data.data);
         // setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
         // console.log(data);
-        console.count('😈기업 상세 렌더링 횟수');
+        // console.count('😈기업 상세 렌더링 횟수');
         bookmarkStatus(Number(id), setIsBookmarked);
       })
       .catch((error) => {
