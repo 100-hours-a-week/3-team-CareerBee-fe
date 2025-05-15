@@ -12,7 +12,7 @@ interface CompanyCardProps {
   tags: string[];
   imageUrl?: string | null;
   onClose: () => void;
-  onToggleBookmark?: () => void;
+  onToggleBookmark?: () => Promise<boolean>;
   isBookmarked?: boolean;
 }
 

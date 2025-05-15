@@ -76,8 +76,8 @@ export interface Recruitment {
 
 export default function CompanyDetail() {
   const { id } = useParams<{ id: string }>();
-  const [company, setCompany] = useState<Company | null>(null);
-  const [isBookmarked, setIsBookmarked] = useState<'true' | 'false' | 'disabled'>('false');
+  const [company, setCompany] = useState<Company>();
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const token = useAuthStore((state) => state.token);
   // const [lastRecruitMonth] = useState<number | null>(10);
   
@@ -108,9 +108,13 @@ export default function CompanyDetail() {
 
   }, [id, bookmarkStatus]);
 
-  const handleToggleBookmark = () => {
-    if (!token || isBookmarked==="disabled" || !company) return;
-    toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
+  const handleToggleBookmark = async () => {
+    if (!token) {
+      console.error("login first");
+      return;
+    }
+    if(!company)  return;
+    return await toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
   };
 
   if (!company) return (
@@ -175,7 +179,7 @@ export default function CompanyDetail() {
                   isBookmarked: isBookmarked,
                 }
               : {
-                  isBookmarked: 'disabled',
+                  isBookmarked: false,
                 })}
         />
       </div>

@@ -37,13 +37,13 @@ export default function MapOverlay({
 
   const { fetchCompanyDetail } = useFetchCompanyCard(company.id, index);
 
-  const handleToggleBookmark = () => {
-    if (!token) {
-      console.error("login first");
-      return;
-    }
-    toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
-  };
+const handleToggleBookmark = async () => {
+  if (!token) {
+    throw new Error("로그인 필요");
+  }
+
+  return await toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
+};
   // if(isOpen)
   //   console.log("🟢 companyInfo:", companyInfo);
   return (

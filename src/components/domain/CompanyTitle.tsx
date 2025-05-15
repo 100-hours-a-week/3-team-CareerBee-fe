@@ -10,7 +10,7 @@ interface CompanyTitleProps{
     name: string;
     wishCount: number;
     isLoggedIn: boolean;
-    onToggleBookmark?: () => void;
+    onToggleBookmark?: () => Promise<boolean>;
     isBookmarked?: boolean;
 }
 export default function CompanyTitle({
@@ -68,16 +68,24 @@ export default function CompanyTitle({
                       )
                     }
                     pressed={isBookmarked === true}
-                    onPressedChange={() => {
+                    onPressedChange={async () => {
                       if (onToggleBookmark) {
                         try{
-                          await onToggleBookmark();
-                          setCount(prev => isBookmarked === true ? prev - 1 : prev + 1);
+                          const result = await onToggleBookmark();
+                          if (result === true) {
+                            setCount(prev => prev + 1);
+                          } else if (result === false) {
+                            setCount(prev => prev - 1);
+                          }
+                          else{
+                            toast({ title: `북마크 토글 실패 ${result}` });
+                          }
                         }
                         catch(error){
                           console.error('북마크 토글 실패: ', error);
                         }
                       }
+
                     }}
                 />
               ) : (

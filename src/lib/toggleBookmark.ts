@@ -8,6 +8,20 @@ export const handleToggleBookmark = async (
   isBookmarked: boolean,
   setIsBookmarked: (value: boolean) => void
 ) => {
+    if (import.meta.env.VITE_USE_MOCK === 'true') {
+    console.warn('[mock] toggleBookmark 작동 중');
+
+    return new Promise<boolean>((resolve) => {
+      setTimeout(() => {
+        const next = !isBookmarked;
+        setIsBookmarked(next);
+        resolve(next);
+        // console.log('🎀', next);
+        // return next;
+      }, 300);
+    });
+  }
+
   if (!token) return;
 
   const url = `${import.meta.env.VITE_API_URL}/api/v1/members/wish-companies/${companyId}`;
@@ -18,13 +32,17 @@ export const handleToggleBookmark = async (
         headers: { Authorization: `Bearer ${token}` },
       });
       setIsBookmarked(false);
+      return false;
     } else {
       await axios.post(url, null, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setIsBookmarked(true);
+      return true;
     }
   } catch (error) {
     console.error('관심기업 토글 실패:', error);
+    // throw error;
+    return null;
   }
 };
