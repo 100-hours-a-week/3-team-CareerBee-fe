@@ -1,0 +1,64 @@
+name: Deploy React Frontend to GCE (PROD)
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      COMMIT_HASH: ${{ github.sha }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        run: |
+          corepack prepare pnpm@10.7.1 --activate
+
+      - name: Install dependencies
+        run: |
+          pnpm install
+
+      - name: Build React App
+        run: pnpm build
+
+      - name: Google Auth
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: "${{ secrets.GCP_SA_KEY }}"
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          version: 'latest'
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Set timestamp-based path (Asia/Seoul)
+        run: |
+          TIMESTAMP=$(TZ='Asia/Seoul' date +%Y-%m-%d_%H_%M_%S)
+          echo "DEPLOY_PATH=${TIMESTAMP}_${COMMIT_HASH}" >> $GITHUB_ENV
+
+      - name: Upload build to GCS
+        run: |
+          echo "Uploading to: ${{ secrets.GCS_PROD_BUCKET_PATH }}/fe/$DEPLOY_PATH"
+          gcloud storage cp -r ./dist/* "${{ secrets.GCS_PROD_BUCKET_PATH }}/fe/$DEPLOY_PATH/"
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.GCE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.GCE_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Trigger remote deploy script on GCE
+        run: |
+          ssh ${{ secrets.GCE_USER }}@${{ secrets.GCE_HOST }} "bash ~/release/deploy-fe.sh $DEPLOY_PATH"
