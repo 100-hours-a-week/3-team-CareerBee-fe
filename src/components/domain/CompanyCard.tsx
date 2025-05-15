@@ -13,7 +13,7 @@ interface CompanyCardProps {
   imageUrl?: string | null;
   onClose: () => void;
   onToggleBookmark?: () => void;
-  isBookmarked?: 'true' | 'false' | 'disabled';
+  isBookmarked?: boolean;
 }
 
 export default function CompanyCard({
@@ -50,28 +50,28 @@ export default function CompanyCard({
             {companyName}
         </a>
         <div className="flex items-center gap-1 [&_svg]:size-5 bg-transparent">
-            {isBookmarked === 'disabled' ? (
+            {/* {isBookmarked === null ? (
                 <PiBookmarkSimple />
-            ) : (
+            ) : ( */}
                 <Toggle
                     variant="save"
                     size="xs"
                     label={
-                      isBookmarked === 'true' ? (
+                      isBookmarked === true ? (
                         <PiBookmarkSimpleFill className="text-primary" />
                       ) : (
                         <PiBookmarkSimple />
                       )
                     }
-                    pressed={isBookmarked === 'true'}
+                    pressed={isBookmarked === true}
                     onPressedChange={() => {
                       if (onToggleBookmark) {
                         onToggleBookmark();
-                        setCount(prev => isBookmarked === 'true' ? prev - 1 : prev + 1);
+                        setCount(prev => isBookmarked === true ? prev - 1 : prev + 1);
                       }
                     }}
                 />
-            )}
+            {/* )} */}
           <span className="text-sm mr-1">{count}</span>
           <Button variant="icon" label={<PiX />} onClick={onClose} className="p-0 h-full" />
         </div>

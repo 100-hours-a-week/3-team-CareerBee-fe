@@ -38,7 +38,10 @@ export default function MapOverlay({
   const { fetchCompanyDetail } = useFetchCompanyCard(company.id, index);
 
   const handleToggleBookmark = () => {
-    if (!token || isBookmarked==="disabled") return;
+    if (!token) {
+      console.error("login first");
+      return;
+    }
     toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
   };
   // if(isOpen)
@@ -72,7 +75,7 @@ export default function MapOverlay({
                   isBookmarked: isBookmarked,
                 }
               : {
-                  isBookmarked: 'disabled',
+                  isBookmarked: false,
                 })}
           />
         </CustomOverlayMap>

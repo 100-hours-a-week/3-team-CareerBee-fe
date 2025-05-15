@@ -11,7 +11,7 @@ interface CompanyTitleProps{
     wishCount: number;
     isLoggedIn: boolean;
     onToggleBookmark?: () => void;
-    isBookmarked?: 'true' | 'false' | 'disabled';
+    isBookmarked?: boolean;
 }
 export default function CompanyTitle({
     logoUrl,
@@ -61,17 +61,22 @@ export default function CompanyTitle({
                     variant="save"
                     size="xs"
                     label={
-                      isBookmarked === 'true' ? (
+                      isBookmarked === true ? (
                         <PiBookmarkSimpleFill className="text-primary" />
                       ) : (
                         <PiBookmarkSimple />
                       )
                     }
-                    pressed={isBookmarked === 'true'}
+                    pressed={isBookmarked === true}
                     onPressedChange={() => {
                       if (onToggleBookmark) {
-                        onToggleBookmark();
-                        setCount(prev => isBookmarked === 'true' ? prev - 1 : prev + 1);
+                        try{
+                          await onToggleBookmark();
+                          setCount(prev => isBookmarked === true ? prev - 1 : prev + 1);
+                        }
+                        catch(error){
+                          console.error('북마크 토글 실패: ', error);
+                        }
                       }
                     }}
                 />
