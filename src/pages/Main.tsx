@@ -13,7 +13,7 @@ import { useFetchSuggestions } from '@/hooks/useFetchSuggestions';
 
 import { instance as axios } from '@/lib/axios';
 
-import { useAuthStore  } from '@/store/auth';
+// import { useAuthStore  } from '@/store/auth';
 import { Button } from '@/components/ui/button';
 import { PiCrosshairSimple } from "react-icons/pi";
 

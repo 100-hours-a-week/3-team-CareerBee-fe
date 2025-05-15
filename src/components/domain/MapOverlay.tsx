@@ -16,7 +16,6 @@ interface MapOverlayProps {
 
 export default function MapOverlay({
   company,
-  index,
   isOpen,
   disabled,
   isHighlighted,
@@ -34,7 +33,7 @@ export default function MapOverlay({
     lng: company.locationInfo.longitude,
   };
 
-  const { fetchCompanyDetail } = useFetchCompanyCard(company.id, index);
+  const { fetchCompanyDetail } = useFetchCompanyCard(company.id);
 
 
   // if(isOpen)
