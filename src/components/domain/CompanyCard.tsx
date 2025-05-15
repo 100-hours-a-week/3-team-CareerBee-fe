@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { useToggleBookmarkMutation } from '@/hooks/useToggleBookmarkMutation';
 import {useToast} from '@/hooks/useToast';
 import {Toaster} from "@/components/ui/toaster";
+import { useNavigate } from 'react-router-dom';
 
 interface CompanyCardProps {
   companyId: number;
@@ -36,43 +37,56 @@ export default function CompanyCard({
   setIsBookmarked,
 }: CompanyCardProps) {
   const [count, setCount] = useState(bookmarkCount);
-    const { toast } = useToast();
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setCount(bookmarkCount);
   }, [bookmarkCount]);
 
   const handleToggleBookmark = useToggleBookmarkMutation({
-        // token,
-        companyId,
-        isBookmarked,
-        setIsBookmarked,
-        onSuccess: (next) => {
-          setCount(prev => next ? prev + 1 : prev - 1);
-        },
-        onError: () => {
-          toast({ title: '북마크 토글 실패' });
-        },
-      });
+    companyId,
+    isBookmarked,
+    setIsBookmarked,
+    onSuccess: (next) => {
+      setCount(prev => next ? prev + 1 : prev - 1);
+    },
+    onError: () => {
+      toast({ title: '북마크 토글 실패' });
+    },
+  });
+
+
+  const handleClickAnywhere = (e: React.MouseEvent<HTMLDivElement>) => {
+    // 북마크 토글, X 버튼 클릭한 경우엔 무시
+    const target = e.target as HTMLElement;
+    if (
+      target.closest('button') ||  // 닫기, 북마크 버튼
+      target.closest('svg') ||     // 아이콘
+      target.closest('a')          // 기업명
+    ) {
+      return;
+    }
+    navigate(`/company/${companyId}`);
+  };
   return (
     <div 
+    onClick={handleClickAnywhere}
     style={{
       backgroundImage: `url(${companyCardBackground})`,
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
       width: '256px',
       height: '176px',
+      cursor: 'pointer'
     }}
     className="relative rounded-xl p-2 w-64 h-44 z-30 cursor-default">
           <Toaster />
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-2">
-        <a
-            href={`/company/${companyId}`}
-            className="text-md font-bold hover:text-text-primary truncate break-all "
-        >
+        <p className="text-md font-bold hover:text-text-primary truncate break-all">
             {companyName}
-        </a>
+        </p>
         <div className="flex items-center gap-1 [&_svg]:size-5 bg-transparent">
              {isLoggedIn ? (
                    <Toggle

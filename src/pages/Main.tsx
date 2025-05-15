@@ -57,6 +57,7 @@ export default function Main() {
   
   const {
     openCardIndex,
+    setOpenCardIndex
   } = useCompanyStore();
 
   const { markerDisabledMap } = useMarkerStore();
@@ -211,6 +212,7 @@ export default function Main() {
             level={3}
             onZoomChanged={handleMapMove}
             onDragEnd={handleMapMove}
+            onClick={() => setOpenCardIndex(null)} 
           >
             <MarkerClusterer
               averageCenter={true}
