@@ -35,18 +35,18 @@ export interface CompanyProps {
 export default function Main() {
   // 디버그용 콘솔 찍기
   // console.count('🌀 Main 렌더링 횟수');
-  const token=useAuthStore((state) => state.token);
-  useEffect(() => {
-    // const token = useAuthStore.getState().token;
-    // console.log('zustand 저장 토큰:', token);
-    const token2 = localStorage.getItem('auth-storage');
-    if (token2) {
-      // const parsed = JSON.parse(token2);
-      // console.log('localStorage 토큰:', parsed?.state?.token);
-    } else {
-      console.log('⚠️ No token found in localStorage');
-    }
-  }, [token]);
+  // const token=useAuthStore((state) => state.token);
+  // useEffect(() => {
+  //   // const token = useAuthStore.getState().token;
+  //   // console.log('zustand 저장 토큰:', token);
+  //   const token2 = localStorage.getItem('auth-storage');
+  //   if (token2) {
+  //     // const parsed = JSON.parse(token2);
+  //     // console.log('localStorage 토큰:', parsed?.state?.token);
+  //   } else {
+  //     console.log('⚠️ No token found in localStorage');
+  //   }
+  // }, [token]);
 
   const { search, setSearch, suggestions } = useSearchStore();
   useFetchSuggestions();
