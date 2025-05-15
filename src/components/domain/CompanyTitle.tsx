@@ -70,22 +70,37 @@ export default function CompanyTitle({
                     pressed={isBookmarked === true}
                     onPressedChange={async () => {
                       if (onToggleBookmark) {
-                        try{
+                        // 낙관적 업데이트 먼저 수행
+                        if (isBookmarked === true) {
+                          setCount(prev => prev - 1);
+                        } else {
+                          setCount(prev => prev + 1);
+                        }
+
+                        try {
                           const result = await onToggleBookmark();
-                          if (result === true) {
+
+                          // 실패한 경우 롤백
+                          if (result === null) {
+                            toast({ title: '북마크 토글 실패' });
+                            // 롤백
+                            if (isBookmarked === true) {
+                              setCount(prev => prev + 1); // 다시 복구
+                            } else {
+                              setCount(prev => prev - 1);
+                            }
+                          }
+                        } catch (error) {
+                          console.error('북마크 토글 실패:', error);
+                          toast({ title: '북마크 토글 중 오류 발생' });
+                          // 롤백
+                          if (isBookmarked === true) {
                             setCount(prev => prev + 1);
-                          } else if (result === false) {
+                          } else {
                             setCount(prev => prev - 1);
                           }
-                          else{
-                            toast({ title: `북마크 토글 실패 ${result}` });
-                          }
-                        }
-                        catch(error){
-                          console.error('북마크 토글 실패: ', error);
                         }
                       }
-
                     }}
                 />
               ) : (
