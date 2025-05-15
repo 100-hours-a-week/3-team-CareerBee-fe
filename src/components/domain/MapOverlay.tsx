@@ -5,7 +5,7 @@ import { useCompanyStore } from '@/store/company';
 import { useAuthStore } from '@/store/auth';
 import { useFetchCompanyCard } from '@/hooks/useFetchCompanyCard';
 import { CompanyProps } from '@/pages/Main'
-import { handleToggleBookmark as toggleBookmarkUtil } from '@/lib/toggleBookmark';
+// import { handleToggleBookmark as toggleBookmarkUtil } from '@/lib/toggleBookmark';
 
 interface MapOverlayProps {
   company: CompanyProps;
@@ -37,13 +37,7 @@ export default function MapOverlay({
 
   const { fetchCompanyDetail } = useFetchCompanyCard(company.id, index);
 
-const handleToggleBookmark = async () => {
-  if (!token) {
-    throw new Error("로그인 필요");
-  }
 
-  return await toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
-};
   // if(isOpen)
   //   console.log("🟢 companyInfo:", companyInfo);
   return (
@@ -68,15 +62,16 @@ const handleToggleBookmark = async () => {
             bookmarkCount={companyInfo.wishCount}
             tags={companyInfo.keywords.slice(0, 4).map((k) => k.content) ?? []}
             imageUrl={companyInfo.logoUrl}
+            isLoggedIn={!!token}
             onClose={() => setOpenCardIndex(null)}
             {...(token
               ? {
-                  onToggleBookmark: handleToggleBookmark,
                   isBookmarked: isBookmarked,
                 }
               : {
                   isBookmarked: false,
                 })}
+            setIsBookmarked= {setIsBookmarked}
           />
         </CustomOverlayMap>
       )}

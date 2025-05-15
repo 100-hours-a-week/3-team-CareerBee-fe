@@ -11,7 +11,7 @@ import RecruitTab from '@/components/domain/company/recruit'
 import IssueTab from '@/components/domain/company/issue'
 import BenefitTab from "@/components/domain/company/benefit";
 import TechstackTab from '@/components/domain/company/techstack'
-import { handleToggleBookmark as toggleBookmarkUtil } from '@/lib/toggleBookmark';
+// import { handleToggleBookmark as toggleBookmarkUtil } from '@/lib/toggleBookmark';
 
 import { useFetchBookmarkStatus } from "@/hooks/useFetchBookmarkStatus";
 import { useAuthStore } from '@/store/auth';

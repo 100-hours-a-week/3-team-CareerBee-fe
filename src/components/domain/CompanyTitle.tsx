@@ -33,7 +33,7 @@ export default function CompanyTitle({
       setCount(wishCount);
     }, [wishCount]);
 
-    const mutation = useToggleBookmarkMutation({
+    const handleToggleBookmark = useToggleBookmarkMutation({
       // token,
       companyId,
       isBookmarked,
@@ -86,8 +86,8 @@ export default function CompanyTitle({
                     }
                     pressed={isBookmarked === true}
                     onPressedChange={()=>{
-                        if (!mutation.isPending) {
-                          mutation.mutate();
+                        if (!handleToggleBookmark.isPending) {
+                          handleToggleBookmark.mutate();
                         }         
                     }}
                 />
