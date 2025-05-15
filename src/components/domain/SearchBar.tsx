@@ -18,37 +18,44 @@ export function SearchBar({
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="relative w-full">
-      <Button
-        variant="icon"
-        className="absolute left-2 top-1/2 -translate-y-1/2"
-        label={<PiMagnifyingGlass />}
-        onClick={() => inputRef.current?.focus()}
-      />
-      <Input
-        ref={inputRef}
-        variant="search"
-        className="pl-12 pr-10"
-        value={value}
-        onChange={(e) => {
-          onChange?.(e);
-          // console.log('SearchBar에서 onChange 호출:', e.target.value);
-        }}
-        {...props}
-      />
-      {value && (
-        <Button
-          variant="icon"
-          className="absolute right-2 top-1/2 -translate-y-1/2"
-          label={<PiX />}
-          onClick={() => {
-            const syntheticEvent = {
-              target: { value: '' },
-            } as React.ChangeEvent<HTMLInputElement>;
-            onChange?.(syntheticEvent);
-          }}
-        />
-      )}
+    <div className="absolute w-full z-50 px-4 py-2">
+      <div
+        className={` overflow-hidden transition-all duration-300 border bg-white shadow rounded-3xl
+          ${!value ? ' rounded-3xl ' : ' rounded-t-3xl' }
+        ${suggestions.length > 0 ? 'max-h-[400px]' : 'max-h-[56px]'}`}
+      >
+        <div className="relative">
+          <Button
+            variant="icon"
+            className="absolute left-2 top-1/2 -translate-y-1/2"
+            label={<PiMagnifyingGlass />}
+            onClick={() => inputRef.current?.focus()}
+          />
+          <Input
+            ref={inputRef}
+            variant="search"
+            className="pl-12 pr-10"
+            value={value}
+            onChange={(e) => {
+              onChange?.(e);
+              // console.log('SearchBar에서 onChange 호출:', e.target.value);
+            }}
+            {...props}
+          />
+          {value && (
+            <Button
+              variant="icon"
+              className="absolute right-2 top-1/2 -translate-y-1/2"
+              label={<PiX />}
+              onClick={() => {
+                const syntheticEvent = {
+                  target: { value: '' },
+                } as React.ChangeEvent<HTMLInputElement>;
+                onChange?.(syntheticEvent);
+              }}
+            />
+          )}
+        </div>
       {value && suggestions.length > 0 && (
         <SuggestionList
           filteredSuggestions={suggestions}
@@ -61,6 +68,7 @@ export function SearchBar({
           }}
         />
       )}
+      </div>
     </div>
   );
 }
