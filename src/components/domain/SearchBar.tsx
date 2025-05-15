@@ -5,6 +5,7 @@ import { Button } from '../ui/button';
 import { CompanySuggestion } from '@/store/search';
 import { useRef } from 'react';
 import { cn } from '@/lib/utils';
+import { useState, useEffect } from 'react';
 
 export function SearchBar({
   suggestions = [],
@@ -17,15 +18,21 @@ export function SearchBar({
   onSuggestionSelect?: (value: CompanySuggestion) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const showList = value && suggestions.length > 0;
+  const showList = value && suggestions.length > 0; 
+  const [selectedIndex, setSelectedIndex] = useState<number>(-2);
 
   const clearInput = () => {
+    setSelectedIndex(-2);
     const syntheticEvent = {
       target: { value: '' },
     } as React.ChangeEvent<HTMLInputElement>;
     onChange?.(syntheticEvent);
   };
-
+useEffect(() => {
+  if (value === '') {
+    setSelectedIndex(-2);
+  }
+}, [value]);
   return (
     <div className="absolute w-full z-50 px-4 py-2">
       <div
@@ -47,6 +54,30 @@ export function SearchBar({
             className="pl-12 pr-10"
             value={value}
             onChange={onChange}
+            onKeyDown={(e) => {
+              if (!suggestions.length) return;
+
+              if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setSelectedIndex((prev) => (prev + 1) % suggestions.length);
+              }
+
+              if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setSelectedIndex((prev) =>
+                  prev <= 0 ? suggestions.length - 1 : prev - 1
+                );
+              }
+
+              if (e.key === 'Enter' && selectedIndex >= 0) {
+                e.preventDefault();
+                onSuggestionSelect?.(suggestions[selectedIndex]);
+              }
+
+              if (e.key === 'Escape') {
+                clearInput();
+              }
+            }}
             {...props}
           />
           {value && (
@@ -64,6 +95,7 @@ export function SearchBar({
             filteredSuggestions={suggestions}
             onSuggestionSelect={onSuggestionSelect}
             onClose={clearInput}
+            selectedIndex={selectedIndex}
           />
         )}
       </div>
