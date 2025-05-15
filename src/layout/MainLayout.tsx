@@ -4,6 +4,7 @@ import { Navbar } from '@/components/layout/navbar';
 import { useAuthStore } from '@/store/auth';
 import { AnimatePresence } from 'motion/react';
 import { Toaster } from '@/components/ui/toaster';
+import { AnimatePresence } from 'motion/react';
 
 export default function MainLayout() {
   const location = useLocation();
@@ -39,8 +40,7 @@ export default function MainLayout() {
           <Outlet />
         </main>
         </AnimatePresence>
-
-      {showNavbar() ? <Navbar /> : null}
+        {showNavbar() ? <Navbar /> : null}
 
       </div>
     </>
