@@ -4,22 +4,27 @@ import {Button} from '@/components/ui/button';
 import {useState, useEffect} from 'react';
 import {useToast} from '@/hooks/useToast';
 import {Toaster} from "@/components/ui/toaster";
+import { useToggleBookmarkMutation } from '@/hooks/useToggleBookmarkMutation';
 
 interface CompanyTitleProps{
     logoUrl: string;
     name: string;
     wishCount: number;
     isLoggedIn: boolean;
-    onToggleBookmark?: () => Promise<boolean>;
+    // onToggleBookmark?: () => Promise<boolean>;
+    companyId: number;
     isBookmarked?: boolean;
+    setIsBookmarked: (val: boolean) => void;
 }
 export default function CompanyTitle({
     logoUrl,
     name,
     wishCount,
     isLoggedIn,
-    onToggleBookmark,
+    // onToggleBookmark,
+    companyId,
     isBookmarked,
+    setIsBookmarked,
 }:CompanyTitleProps){
     const [count, setCount] = useState(wishCount);
     const { toast } = useToast();
@@ -28,6 +33,18 @@ export default function CompanyTitle({
       setCount(wishCount);
     }, [wishCount]);
 
+    const mutation = useToggleBookmarkMutation({
+      // token,
+      companyId,
+      isBookmarked,
+      setIsBookmarked,
+      onSuccess: (next) => {
+        setCount(prev => next ? prev + 1 : prev - 1);
+      },
+      onError: () => {
+        toast({ title: '북마크 토글 실패' });
+      },
+    });
     return (
         <div className="flex items-center justify-end w-full px-2 text-2xl font-semibold">
           <Toaster />
@@ -68,39 +85,10 @@ export default function CompanyTitle({
                       )
                     }
                     pressed={isBookmarked === true}
-                    onPressedChange={async () => {
-                      if (onToggleBookmark) {
-                        // 낙관적 업데이트 먼저 수행
-                        if (isBookmarked === true) {
-                          setCount(prev => prev - 1);
-                        } else {
-                          setCount(prev => prev + 1);
-                        }
-
-                        try {
-                          const result = await onToggleBookmark();
-
-                          // 실패한 경우 롤백
-                          if (result === null) {
-                            toast({ title: '북마크 토글 실패' });
-                            // 롤백
-                            if (isBookmarked === true) {
-                              setCount(prev => prev + 1); // 다시 복구
-                            } else {
-                              setCount(prev => prev - 1);
-                            }
-                          }
-                        } catch (error) {
-                          console.error('북마크 토글 실패:', error);
-                          toast({ title: '북마크 토글 중 오류 발생' });
-                          // 롤백
-                          if (isBookmarked === true) {
-                            setCount(prev => prev + 1);
-                          } else {
-                            setCount(prev => prev - 1);
-                          }
-                        }
-                      }
+                    onPressedChange={()=>{
+                        if (!mutation.isPending) {
+                          mutation.mutate();
+                        }         
                     }}
                 />
               ) : (

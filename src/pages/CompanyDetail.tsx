@@ -108,14 +108,14 @@ export default function CompanyDetail() {
 
   }, [id, bookmarkStatus]);
 
-  const handleToggleBookmark = async () => {
-    if (!token) {
-      console.error("login first");
-      return;
-    }
-    if(!company)  return;
-    return await toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
-  };
+  // const handleToggleBookmark = async () => {
+  //   if (!token) {
+  //     console.error("login first");
+  //     return;
+  //   }
+  //   if(!company)  return;
+  //   return await toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
+  // };
 
   if (!company) return (
         <div className="flex flex-col gap-4 h-screen items-center justify-center text-lg font-semibold">
@@ -173,14 +173,16 @@ export default function CompanyDetail() {
             name={company.name}
             wishCount={company.wishCount}
             isLoggedIn={!!token}
+            companyId={company.id}
             {...(token
               ? {
-                  onToggleBookmark: handleToggleBookmark,
+                  // onToggleBookmark: handleToggleBookmark,
                   isBookmarked: isBookmarked,
                 }
               : {
                   isBookmarked: false,
                 })}
+            setIsBookmarked={setIsBookmarked}
         />
       </div>
 
