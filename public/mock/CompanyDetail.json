@@ -1,0 +1,117 @@
+{
+    "httpStatusCode": 200,
+    "message": "기업 상세 정보 조회에 성공하였습니다.",
+    "data": {
+      "company": {
+        "id": 3,
+        "name": "쌈뽕한 회사",
+        "title": "가장 가고싶어하는 회사 1위",
+        "logoUrl": null,
+        "recentIssue": "이 회사는 최근에 ~~ 가 대단했습니다.",
+        "companyType": "ENTERPRISE",
+        "recruitingStatus": "ONGOING",
+        "address": "경기 OO시 OO구 OOO로 123경기 OO시 OO구 OOO로 123경기 OO시 OO구 OOO로 123경기 OO시 OO구 OOO로 123경기 OO시 OO구 OOO로 123경기 OO시 OO구 OOO로 123경기 OO시 OO구 OOO로 123",
+        "employeeCount": 0,
+        "homepageUrl": "https://www.ssammmu.comhttps://www.ssammmu.comhttps://www.ssammmu.comhttps://www.ssammmu.comhttps://www.ssammmu.comhttps://www.ssammmu.comhttps://www.ssammmu.comhttps://www.ssammmu.com",
+        "description": "쌈뽕한 회사 소개",
+        "wishCount": 33,
+        "rating": 3.5,
+        "financials": {
+          "annualSalary": 4500000,
+          "startingSalary": 40000000000,
+          "revenue": 12123456789,
+          "operatingProfit": 1500000000
+        },
+        "photos": [
+          {
+            "order": 1,
+            "url": "https://i.namu.wiki/i/Oo1GmkBX5Kc1M86lchOHZIZJ_R_85GqX-7nbkbtpbong2dM_1MZODkSCouy--hoj9MbD0_flxyNFh6CJjKlhAjDk4VhdLydF9Qa0U2aN_cP-2AoZh-wbJVWjqUspK9wMCJTxbPlf9kUpvCFRLT3HqA.webp"
+          },
+          {
+            "order": 2,
+            "url": "https://i.namu.wiki/i/Oo1GmkBX5Kc1M86lchOHZIZJ_R_85GqX-7nbkbtpbong2dM_1MZODkSCouy--hoj9MbD0_flxyNFh6CJjKlhAjDk4VhdLydF9Qa0U2aN_cP-2AoZh-wbJVWjqUspK9wMCJTxbPlf9kUpvCFRLT3HqA.webp"
+          }
+        ],
+        "benefits": [
+          {
+            "type": "COMPENSATION",
+            "description": "야근 수당, 인센티브"
+          },
+          {
+            "type": "LEAVE",
+            "description": "연차, 반차, 육아휴직"
+          },
+          {
+            "type": "TRANSPORT_MEALS",
+            "description": "교통비·식비 지원"
+          },
+          {
+            "type": "EDUCATION_EVENTS",
+            "description": "교육비 지원, 세미나"
+          },
+          {
+            "type": "WELLNESS",
+            "description": "건강검진, 헬스장 지원"
+          },
+          {
+            "type": "ETC",
+            "description": "사내 동호회, 간식 제공"
+          }
+        ],
+        "techStacks": [
+          { "id": 1, "name": "Java", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 2, "name": "Spring", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 3, "name": "Node.js", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 4, "name": "Express", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 5, "name": "Django", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 6, "name": "Flask", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 7, "name": "Go", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 8, "name": "Kotlin", "type": "BACKEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+
+          { "id": 9, "name": "React", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 10, "name": "Vue", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 11, "name": "Angular", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 12, "name": "Svelte", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 13, "name": "Next.js", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 14, "name": "Nuxt", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 15, "name": "TypeScript", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 16, "name": "Tailwind CSS", "type": "FRONTEND", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+
+          { "id": 17, "name": "PyTorch", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 18, "name": "TensorFlow", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 19, "name": "Keras", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 20, "name": "Hugging Face", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 21, "name": "OpenCV", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 22, "name": "Scikit-learn", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 23, "name": "XGBoost", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 24, "name": "Numpy", "type": "AI", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+
+          { "id": 25, "name": "Docker", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 26, "name": "Kubernetes", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 27, "name": "Terraform", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 28, "name": "Ansible", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 29, "name": "Jenkins", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 30, "name": "GitHub Actions", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 31, "name": "Prometheus", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" },
+          { "id": 32, "name": "Grafana", "type": "DEVOPS", "imgUrl": "https://image.wanted.co.kr/optimize?src=https://static.codenary.co.kr/framework_logo/cplusplus.png&w=720&q=90" }
+
+        ],
+        "recruitments": [
+          {
+            "id": 101,
+            "url": "https://careers.ssammmu.com/101https://careers.ssammmu.com/101https://careers.ssammmu.com/101https://careers.ssammmu.com/101https://careers.ssammmu.com/101https://careers.ssammmu.com/101https://careers.ssammmu.com/101https://careers.ssammmu.com/101https://careers.ssammmu.com/101https://careers.ssammmu.com/101https://careers.ssammmu.com/101https://careers.ssammmu.com/101https://careers.ssammmu.com/101https://careers.ssammmu.com/101",
+            "title": "백엔드 개발자 채용",
+            "startDate": "2025-06-01T00:00:00",
+            "endDate": "2025-06-30T23:59:59"
+          },
+          {
+            "id": 102,
+            "url": "https://careers.ssammmu.com/102",
+            "title": "프론트엔드 개발자 채용",
+            "startDate": "2025-07-05T00:00:00",
+            "endDate": "2025-07-20T23:59:59"
+          }
+        ]
+      }
+    }
+  }

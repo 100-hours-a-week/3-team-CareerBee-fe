@@ -1,22 +1,41 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
+import { Header } from '@/components/layout/header';
+import { Navbar } from '@/components/layout/navbar';
+import { useAuthStore } from '@/store/auth';
 
 export default function MainLayout() {
-  return (
-    <div className="min-h-screen flex flex-col">
-      {/* 공통 Header */}
-      <header className="h-16 w-screen bg-yellow-400 flex items-center px-4">
-        <h1 className="text-xl font-bold">CareerBee</h1>
-      </header>
+  const location = useLocation();
+  const token = useAuthStore((state) => state.token);
+  
 
-      {/* 각 페이지가 여기에 끼워진다 */}
-      <main className="flex-1 p-4">
+  const headerType = (() => {
+    if (location.pathname === '/login') return 'login';
+    if (location.pathname === '/' && !!token) return 'main';
+    else if (location.pathname === '/') return 'login';
+    if (location.pathname.startsWith('/company') && !!token) return 'down';
+    else if (location.pathname.startsWith('/company')) return 'downLogin';
+    if (location.pathname.startsWith('/notification')) return 'nav';
+    if (location.pathname.startsWith('/my')) return 'nav';
+    return 'minimal';
+  })();
+  const point = Number(localStorage.getItem('userPoint')) || 0;
+  const hasNewNotification = localStorage.getItem('hasNewAlarm') === 'true';
+  const showNavbar = () => {
+    if (location.pathname.startsWith('/competition/entry')) return false;
+    return true;
+  };
+
+  return (
+    <div
+      className="flex flex-col h-dvh fixed inset-0 max-w-[600px] w-full mx-auto bg-background shadow-sides"
+    > 
+      <Header type={headerType} hasNewNotification={hasNewNotification} point={point} />
+      <main className="flex flex-col flex-1 w-full overflow-auto"
+      >
         <Outlet />
       </main>
+      {showNavbar() ? <Navbar /> : null}
 
-      {/* 공통 Footer */}
-      <footer className="h-16  w-screen bg-gray-100 flex items-center justify-center">
-        <p className="text-sm text-gray-500">© 2025 CareerBee</p>
-      </footer>
     </div>
   );
 }
