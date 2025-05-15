@@ -26,6 +26,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          corepack enable
           pnpm install
 
       - name: Build React App
