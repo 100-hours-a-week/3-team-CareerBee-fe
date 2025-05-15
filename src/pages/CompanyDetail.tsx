@@ -16,6 +16,7 @@ import { useFetchBookmarkStatus } from "@/hooks/useFetchBookmarkStatus";
 import { useAuthStore } from '@/store/auth';
 import { Loader } from "@/components/ui/loader";
 
+import { motion } from 'motion/react'
 export interface CompanyDetailResponse {
   company: Company;
 }
@@ -117,6 +118,13 @@ export default function CompanyDetail() {
   );
 
   return (
+    <motion.div
+      initial={{ y: '100vh', opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: '100vh', opacity: 0 }}
+      transition={{ duration: 0.4, ease: 'easeInOut' }}
+      // className="absolute h" // 전체 페이지를 덮는 느낌
+    >
     <div className="flex flex-col grow">
         {company.recruitments && company.recruitments.length > 0 ? (
       <div className="overflow-hidden h-6 bg-secondary text-text-primary text-sm flex items-center">
@@ -223,5 +231,6 @@ export default function CompanyDetail() {
           <TabsContent value="techStack"><TechstackTab techstacks={company.techStacks} /></TabsContent>
         )}</Tabs>
     </div>
+    </motion.div>
   );
 }

@@ -62,12 +62,13 @@ export default function CompanyCard({
     const target = e.target as HTMLElement;
     if (
       target.closest('button') ||  // 닫기, 북마크 버튼
-      target.closest('svg') ||     // 아이콘
-      target.closest('a')          // 기업명
+      target.closest('svg')    // 아이콘
     ) {
       return;
     }
-    navigate(`/company/${companyId}`);
+    setTimeout(() => {
+      navigate(`/company/${companyId}`);
+    }, 300); // ⏱ 페이지 전환 타이밍과 맞춤
   };
   return (
     <div 

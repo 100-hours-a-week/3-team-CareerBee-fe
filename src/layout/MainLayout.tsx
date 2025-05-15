@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from '@/components/layout/header';
 import { Navbar } from '@/components/layout/navbar';
 import { useAuthStore } from '@/store/auth';
+import { AnimatePresence } from 'motion/react';
 
 export default function MainLayout() {
   const location = useLocation();
@@ -30,10 +31,14 @@ export default function MainLayout() {
       className="flex flex-col h-dvh fixed inset-0 max-w-[600px] w-full mx-auto bg-background shadow-sides"
     > 
       <Header type={headerType} hasNewNotification={hasNewNotification} point={point} />
+      <AnimatePresence mode="wait">
       <main className="flex flex-col flex-1 w-full overflow-auto"
       >
+
         <Outlet />
       </main>
+    </AnimatePresence>
+
       {showNavbar() ? <Navbar /> : null}
 
     </div>
