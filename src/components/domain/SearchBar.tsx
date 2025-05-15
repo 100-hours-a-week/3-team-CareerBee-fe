@@ -1,9 +1,10 @@
 import { Input } from '@/components/ui/input';
 import { SuggestionList } from '@/components/domain/SuggestionList';
 import { PiMagnifyingGlass, PiX } from 'react-icons/pi';
-import { useRef } from 'react';
 import { Button } from '../ui/button';
 import { CompanySuggestion } from '@/store/search';
+import { useRef } from 'react';
+import { cn } from '@/lib/utils';
 
 export function SearchBar({
   suggestions = [],
@@ -16,13 +17,22 @@ export function SearchBar({
   onSuggestionSelect?: (value: CompanySuggestion) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const showList = value && suggestions.length > 0;
+
+  const clearInput = () => {
+    const syntheticEvent = {
+      target: { value: '' },
+    } as React.ChangeEvent<HTMLInputElement>;
+    onChange?.(syntheticEvent);
+  };
 
   return (
     <div className="absolute w-full z-50 px-4 py-2">
       <div
-        className={` overflow-hidden transition-all duration-300 border bg-white shadow rounded-3xl
-          ${!value ? ' rounded-3xl ' : ' rounded-t-3xl' }
-        ${suggestions.length > 0 ? 'max-h-[400px]' : 'max-h-[56px]'}`}
+        className={cn(
+          'overflow-hidden transition-all duration-300 border bg-white shadow rounded-3xl',
+          showList ? 'max-h-[400px]' : 'max-h-[56px]'
+        )}
       >
         <div className="relative">
           <Button
@@ -36,10 +46,7 @@ export function SearchBar({
             variant="search"
             className="pl-12 pr-10"
             value={value}
-            onChange={(e) => {
-              onChange?.(e);
-              // console.log('SearchBar에서 onChange 호출:', e.target.value);
-            }}
+            onChange={onChange}
             {...props}
           />
           {value && (
@@ -47,27 +54,18 @@ export function SearchBar({
               variant="icon"
               className="absolute right-2 top-1/2 -translate-y-1/2"
               label={<PiX />}
-              onClick={() => {
-                const syntheticEvent = {
-                  target: { value: '' },
-                } as React.ChangeEvent<HTMLInputElement>;
-                onChange?.(syntheticEvent);
-              }}
+              onClick={clearInput}
             />
           )}
         </div>
-      {value && suggestions.length > 0 && (
-        <SuggestionList
-          filteredSuggestions={suggestions}
-          onSuggestionSelect={onSuggestionSelect}
-          onClose={() => {
-            const syntheticEvent = {
-              target: { value: '' },
-            } as React.ChangeEvent<HTMLInputElement>;
-            onChange?.(syntheticEvent);
-          }}
-        />
-      )}
+
+        {showList && (
+          <SuggestionList
+            filteredSuggestions={suggestions}
+            onSuggestionSelect={onSuggestionSelect}
+            onClose={clearInput}
+          />
+        )}
       </div>
     </div>
   );

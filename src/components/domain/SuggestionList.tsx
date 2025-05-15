@@ -5,13 +5,15 @@ export function SuggestionList({
   filteredSuggestions,
   onSuggestionSelect,
   onClose,
+  isClosing = false,
 }: {
   filteredSuggestions: { id: number; name: string; }[];
   onSuggestionSelect?: (value: { id: number; name: string;}) => void;
   onClose?: () => void;
+  isClosing?: boolean;
 }) {
   return (
-    <ul className="transition-all z-50 duration-300 w-full rounded-b-3xl max-h-96 overflow-auto">
+    <ul className="z-50 duration-300 w-full rounded-b-3xl max-h-96 overflow-auto">
       {filteredSuggestions.slice(0, 8).map((item, i, arr) => {
         const isLast = i === arr.length - 1;
         return (
