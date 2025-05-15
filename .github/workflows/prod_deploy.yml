@@ -32,6 +32,7 @@ jobs:
       - name: Create .env file
         run: |
           echo "${{ secrets.ENV_FILE_CONTENTS }}" > .env
+          
       - name: Build React App
         run: pnpm build
 
