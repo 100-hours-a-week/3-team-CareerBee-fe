@@ -11,7 +11,6 @@ import RecruitTab from '@/components/domain/company/recruit'
 import IssueTab from '@/components/domain/company/issue'
 import BenefitTab from "@/components/domain/company/benefit";
 import TechstackTab from '@/components/domain/company/techstack'
-import { handleToggleBookmark as toggleBookmarkUtil } from '@/lib/toggleBookmark';
 
 import { useFetchBookmarkStatus } from "@/hooks/useFetchBookmarkStatus";
 import { useAuthStore } from '@/store/auth';
@@ -76,8 +75,8 @@ export interface Recruitment {
 
 export default function CompanyDetail() {
   const { id } = useParams<{ id: string }>();
-  const [company, setCompany] = useState<Company | null>(null);
-  const [isBookmarked, setIsBookmarked] = useState<'true' | 'false' | 'disabled'>('false');
+  const [company, setCompany] = useState<Company>();
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const token = useAuthStore((state) => state.token);
   // const [lastRecruitMonth] = useState<number | null>(10);
   
@@ -107,11 +106,6 @@ export default function CompanyDetail() {
     fetchCompanyDetail();
 
   }, [id, bookmarkStatus]);
-
-  const handleToggleBookmark = () => {
-    if (!token || isBookmarked==="disabled" || !company) return;
-    toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
-  };
 
   if (!company) return (
         <div className="flex flex-col gap-4 h-screen items-center justify-center text-lg font-semibold">
@@ -169,14 +163,16 @@ export default function CompanyDetail() {
             name={company.name}
             wishCount={company.wishCount}
             isLoggedIn={!!token}
+            companyId={company.id}
             {...(token
               ? {
-                  onToggleBookmark: handleToggleBookmark,
+                  // onToggleBookmark: handleToggleBookmark,
                   isBookmarked: isBookmarked,
                 }
               : {
-                  isBookmarked: 'disabled',
+                  isBookmarked: false,
                 })}
+            setIsBookmarked={setIsBookmarked}
         />
       </div>
 

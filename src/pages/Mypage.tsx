@@ -30,14 +30,8 @@ const logout = async () => {
 export default function Mypage() {
   const token = useAuthStore((state) => state.token);
   const [nickname, setNickname] = useState<string>("닉네임");
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    // if (!token) {
-    //   console.log('🔑 토큰 없음');
-    //   return;
-    // }
-
     const fetchUserInfo = async () => {
       try {
         const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/members`, {
@@ -64,7 +58,6 @@ export default function Mypage() {
           <div className="text-sm">포인트 0</div>
         </div>
       </div>
-      {/* <p className="px-8 py-4 text-sm leading-8">마이페이지는 업데이트 예정입니다.<br/> 커리어비의 여정을 지켜봐주세요!</p> */}
       <p className="w-full flex items-center justify-center text-xl font-black text-border pt-2">. . .</p>
     </div>
 

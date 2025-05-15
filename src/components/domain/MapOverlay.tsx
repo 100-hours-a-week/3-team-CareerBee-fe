@@ -5,7 +5,6 @@ import { useCompanyStore } from '@/store/company';
 import { useAuthStore } from '@/store/auth';
 import { useFetchCompanyCard } from '@/hooks/useFetchCompanyCard';
 import { CompanyProps } from '@/pages/Main'
-import { handleToggleBookmark as toggleBookmarkUtil } from '@/lib/toggleBookmark';
 
 interface MapOverlayProps {
   company: CompanyProps;
@@ -17,7 +16,6 @@ interface MapOverlayProps {
 
 export default function MapOverlay({
   company,
-  index,
   isOpen,
   disabled,
   isHighlighted,
@@ -35,12 +33,9 @@ export default function MapOverlay({
     lng: company.locationInfo.longitude,
   };
 
-  const { fetchCompanyDetail } = useFetchCompanyCard(company.id, index);
+  const { fetchCompanyDetail } = useFetchCompanyCard(company.id);
 
-  const handleToggleBookmark = () => {
-    if (!token || isBookmarked==="disabled") return;
-    toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
-  };
+
   // if(isOpen)
   //   console.log("🟢 companyInfo:", companyInfo);
   return (
@@ -65,15 +60,16 @@ export default function MapOverlay({
             bookmarkCount={companyInfo.wishCount}
             tags={companyInfo.keywords.slice(0, 4).map((k) => k.content) ?? []}
             imageUrl={companyInfo.logoUrl}
+            isLoggedIn={!!token}
             onClose={() => setOpenCardIndex(null)}
             {...(token
               ? {
-                  onToggleBookmark: handleToggleBookmark,
                   isBookmarked: isBookmarked,
                 }
               : {
-                  isBookmarked: 'disabled',
+                  isBookmarked: false,
                 })}
+            setIsBookmarked= {setIsBookmarked}
           />
         </CustomOverlayMap>
       )}

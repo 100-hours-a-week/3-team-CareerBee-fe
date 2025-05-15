@@ -4,6 +4,9 @@ import { Toggle } from '@/components/ui/toggle';
 import noImg from '@/assets/no-image.png';
 import companyCardBackground from '@/assets/company-card-background.png';
 import { useState, useEffect } from 'react';
+import { useToggleBookmarkMutation } from '@/hooks/useToggleBookmarkMutation';
+import {useToast} from '@/hooks/useToast';
+import {Toaster} from "@/components/ui/toaster";
 
 interface CompanyCardProps {
   companyId: number;
@@ -12,8 +15,12 @@ interface CompanyCardProps {
   tags: string[];
   imageUrl?: string | null;
   onClose: () => void;
-  onToggleBookmark?: () => void;
-  isBookmarked?: 'true' | 'false' | 'disabled';
+    isLoggedIn: boolean;
+
+  onToggleBookmark?: () => Promise<boolean>;
+  isBookmarked?: boolean;
+  setIsBookmarked: (val: boolean) => void;
+
 }
 
 export default function CompanyCard({
@@ -23,14 +30,30 @@ export default function CompanyCard({
   tags,
   imageUrl,
   onClose,
-  onToggleBookmark,
+  // onToggleBookmark,
+  isLoggedIn,
   isBookmarked,
+  setIsBookmarked,
 }: CompanyCardProps) {
   const [count, setCount] = useState(bookmarkCount);
+    const { toast } = useToast();
 
   useEffect(() => {
     setCount(bookmarkCount);
   }, [bookmarkCount]);
+
+  const handleToggleBookmark = useToggleBookmarkMutation({
+        // token,
+        companyId,
+        isBookmarked,
+        setIsBookmarked,
+        onSuccess: (next) => {
+          setCount(prev => next ? prev + 1 : prev - 1);
+        },
+        onError: () => {
+          toast({ title: '북마크 토글 실패' });
+        },
+      });
   return (
     <div 
     style={{
@@ -41,6 +64,7 @@ export default function CompanyCard({
       height: '176px',
     }}
     className="relative rounded-xl p-2 w-64 h-44 z-30 cursor-default">
+          <Toaster />
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-2">
         <a
@@ -50,28 +74,27 @@ export default function CompanyCard({
             {companyName}
         </a>
         <div className="flex items-center gap-1 [&_svg]:size-5 bg-transparent">
-            {isBookmarked === 'disabled' ? (
-                <PiBookmarkSimple />
-            ) : (
-                <Toggle
+             {isLoggedIn ? (
+                   <Toggle
                     variant="save"
                     size="xs"
                     label={
-                      isBookmarked === 'true' ? (
+                      isBookmarked === true ? (
                         <PiBookmarkSimpleFill className="text-primary" />
                       ) : (
                         <PiBookmarkSimple />
                       )
                     }
-                    pressed={isBookmarked === 'true'}
-                    onPressedChange={() => {
-                      if (onToggleBookmark) {
-                        onToggleBookmark();
-                        setCount(prev => isBookmarked === 'true' ? prev - 1 : prev + 1);
-                      }
+                    pressed={isBookmarked === true}
+                    onPressedChange={()=>{
+                        if (!handleToggleBookmark.isPending) {
+                          handleToggleBookmark.mutate();
+                        }         
                     }}
                 />
-            )}
+              ) : (
+                <PiBookmarkSimple />
+              )}
           <span className="text-sm mr-1">{count}</span>
           <Button variant="icon" label={<PiX />} onClick={onClose} className="p-0 h-full" />
         </div>

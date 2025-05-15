@@ -10,11 +10,11 @@ export function useFetchBookmarkStatus() {
   const bookmarkStatus = useCallback(
     async (
     companyId: number,
-    setter?: (value: 'true' | 'false' | 'disabled') => void
+    setter?: (value: boolean) => void
   ) => {
     if (!token) {
-      if (setter) setter('disabled');
-      else setIsBookmarked('disabled');
+      if (setter) setter(false);
+      else setIsBookmarked(false);
       return;
     }
 
@@ -26,14 +26,13 @@ export function useFetchBookmarkStatus() {
         }
       );
       
-      const value = data.data.isWish ? 'true' : 'false';
       // console.log("🎀 저장 여부 조회 성공!", value)
-      if (setter) setter(value);
-      else setIsBookmarked(value);
+      if (setter) setter(data.data.isWish);
+      else setIsBookmarked(data.data.isWish);
     } catch (err) {
       console.error('관심기업 여부 조회 실패:', err);
     }
-  },[token]
+  },[token, setIsBookmarked]
 );
 
   return { bookmarkStatus };
