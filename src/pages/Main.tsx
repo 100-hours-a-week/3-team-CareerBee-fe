@@ -202,7 +202,7 @@ export default function Main() {
             }
           }}
         />
-      <div className="relative flex item-center justify-center w-full h-full top-16">
+      <div className="relative flex item-center justify-center w-full h-full top-16 pb-16">
         {loaded && (
           <Map
             ref={mapRef}
@@ -299,7 +299,7 @@ export default function Main() {
         </div>
 
         {/* 내 위치 찾기 버튼 */}
-        <div className="absolute bottom-6 left-3 z-40 [&_svg]:size-8">
+        <div className="absolute bottom-[88px] left-3 z-40 [&_svg]:size-8">
           <div>
             <Button
               label={<PiCrosshairSimple/>}
