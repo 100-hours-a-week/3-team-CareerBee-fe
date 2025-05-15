@@ -33,16 +33,16 @@ export interface CompanyProps {
 }
 
 export default function Main() {
-  // 디버그용 콘솔 찍기
+  // // 디버그용 콘솔 찍기
   // console.count('🌀 Main 렌더링 횟수');
   // const token=useAuthStore((state) => state.token);
   // useEffect(() => {
-  //   // const token = useAuthStore.getState().token;
-  //   // console.log('zustand 저장 토큰:', token);
+  //   const token = useAuthStore.getState().token;
+  //   console.log('zustand 저장 토큰:', token);
   //   const token2 = localStorage.getItem('auth-storage');
   //   if (token2) {
-  //     // const parsed = JSON.parse(token2);
-  //     // console.log('localStorage 토큰:', parsed?.state?.token);
+  //     const parsed = JSON.parse(token2);
+  //     console.log('localStorage 토큰:', parsed?.state?.token);
   //   } else {
   //     console.log('⚠️ No token found in localStorage');
   //   }
@@ -172,7 +172,6 @@ export default function Main() {
   return (
     <>
       <Toaster />
-      <div className="py-2 px-4 w-full">
         <SearchBar
           placeholder="검색어를 입력하세요."
           value={search}
@@ -203,8 +202,7 @@ export default function Main() {
             }
           }}
         />
-      </div>
-      <div className="flex item-center justify-center relative w-full h-full">
+      <div className="relative flex item-center justify-center w-full h-full top-16 pb-16">
         {loaded && (
           <Map
             ref={mapRef}
@@ -301,7 +299,7 @@ export default function Main() {
         </div>
 
         {/* 내 위치 찾기 버튼 */}
-        <div className="absolute bottom-6 left-3 z-40 [&_svg]:size-8">
+        <div className="absolute bottom-[88px] left-3 z-40 [&_svg]:size-8">
           <div>
             <Button
               label={<PiCrosshairSimple/>}

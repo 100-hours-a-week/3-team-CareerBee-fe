@@ -95,7 +95,7 @@ export default function CompanyDetail() {
         setCompany(data.data);
         // setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
         // console.log(data);
-        console.count('😈기업 상세 렌더링 횟수');
+        // console.count('😈기업 상세 렌더링 횟수');
         bookmarkStatus(Number(id), setIsBookmarked);
       })
       .catch((error) => {
@@ -179,7 +179,7 @@ export default function CompanyDetail() {
       {/* 기업 정보 */}
       <div className="flex flex-col px-4 gap-2 my-2">
         <div className="text-lg font-semibold">{company.title}</div>
-        <div className="flex gap-0.5 [&_svg]:size-5 text-primary">
+        <div className="flex gap-0.5 [&_svg]:size-5 text-primary ">
         {[...Array(5)].map((_, index) => {
           const full = Math.floor(company.rating);
           const decimal = company.rating - full;
@@ -193,7 +193,7 @@ export default function CompanyDetail() {
             return <PiStar key={index} />;
           }
         })}
-        <p className="ml-2 text-sm text-text-secondary">캐치 종합 점수 기준</p>
+          <p className="ml-2 text-xs text-text-secondary mt-auto">캐치 종합 점수 기준</p>
         </div>
         <div className="w-full text-center font-semibold">
           {`평균: ${
