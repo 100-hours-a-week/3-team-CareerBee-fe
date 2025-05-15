@@ -11,7 +11,6 @@ import RecruitTab from '@/components/domain/company/recruit'
 import IssueTab from '@/components/domain/company/issue'
 import BenefitTab from "@/components/domain/company/benefit";
 import TechstackTab from '@/components/domain/company/techstack'
-// import { handleToggleBookmark as toggleBookmarkUtil } from '@/lib/toggleBookmark';
 
 import { useFetchBookmarkStatus } from "@/hooks/useFetchBookmarkStatus";
 import { useAuthStore } from '@/store/auth';
@@ -89,12 +88,12 @@ export default function CompanyDetail() {
     }
     const fetchCompanyDetail =  () => {
       axios
-      // .get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${id}`)
-      .get('/mock/CompanyDetail.json') //🚨 목 데이터로 작업시에만 켜기!!!
+      .get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${id}`)
+      // .get('/mock/CompanyDetail.json') //🚨 목 데이터로 작업시에만 켜기!!!
       .then((response) => {
         const data = response.data;
-        // setCompany(data.data);
-        setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
+        setCompany(data.data);
+        // setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
         // console.log(data);
         console.count('😈기업 상세 렌더링 횟수');
         bookmarkStatus(Number(id), setIsBookmarked);
@@ -107,15 +106,6 @@ export default function CompanyDetail() {
     fetchCompanyDetail();
 
   }, [id, bookmarkStatus]);
-
-  // const handleToggleBookmark = async () => {
-  //   if (!token) {
-  //     console.error("login first");
-  //     return;
-  //   }
-  //   if(!company)  return;
-  //   return await toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
-  // };
 
   if (!company) return (
         <div className="flex flex-col gap-4 h-screen items-center justify-center text-lg font-semibold">

@@ -11,7 +11,6 @@ interface CompanyTitleProps{
     name: string;
     wishCount: number;
     isLoggedIn: boolean;
-    // onToggleBookmark?: () => Promise<boolean>;
     companyId: number;
     isBookmarked?: boolean;
     setIsBookmarked: (val: boolean) => void;
@@ -21,7 +20,6 @@ export default function CompanyTitle({
     name,
     wishCount,
     isLoggedIn,
-    // onToggleBookmark,
     companyId,
     isBookmarked,
     setIsBookmarked,
@@ -34,7 +32,6 @@ export default function CompanyTitle({
     }, [wishCount]);
 
     const handleToggleBookmark = useToggleBookmarkMutation({
-      // token,
       companyId,
       isBookmarked,
       setIsBookmarked,

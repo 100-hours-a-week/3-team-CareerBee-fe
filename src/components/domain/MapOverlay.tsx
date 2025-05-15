@@ -5,7 +5,6 @@ import { useCompanyStore } from '@/store/company';
 import { useAuthStore } from '@/store/auth';
 import { useFetchCompanyCard } from '@/hooks/useFetchCompanyCard';
 import { CompanyProps } from '@/pages/Main'
-// import { handleToggleBookmark as toggleBookmarkUtil } from '@/lib/toggleBookmark';
 
 interface MapOverlayProps {
   company: CompanyProps;
