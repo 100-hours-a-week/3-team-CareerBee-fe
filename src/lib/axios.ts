@@ -1,8 +1,7 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useAuthStore } from '@/store/auth';
 import { publishErrorToast } from '@/lib/errorEvents'
-// import { useToast } from '@/hooks/useToast';
-
+import { logout } from '@/lib/logout';
 
 export const instance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL, // .env
@@ -60,19 +59,25 @@ instance.interceptors.response.use(
           } catch (err) {
             console.error("🔑 토큰 재발급 실패", err);
             retryCount++;
+            const axiosError = err as AxiosError;
             if (retryCount >= 3) {
               // 너무 많이 실패하면 로그아웃 처리
-              if (!res) {
-                // 네트워크 오류 (서버 응답 없음)
-                publishErrorToast("네트워크 문제입니다. 다시 시도해 주세요.");
-                // toast({title: "네트워크 문제입니다. 다시 시도해 주세요."});
-                return Promise.reject(err);
-              } else if (res.status === 401 || res.status === 403) {
-                // 재로그인 유도
-                publishErrorToast("다시 로그인해주세요 ㅠㅜ");
-                // toast({title: "다시 로그인해주세요 ㅠㅜ"});
+              console.log(res)
+              if (axiosError.status===500) {
+                // 네트워크 오류 (서버 응답 없음), 중복 토큰 존재
+                publishErrorToast("에러가 발생했습니다. 다시 시도해 주세요.");
                 useAuthStore.getState().clearToken();
                 window.location.href = "/login";
+                // toast({title: "네트워크 문제입니다. 다시 시도해 주세요."});
+                return Promise.reject(axiosError);
+              } else if (axiosError.status === 401 || axiosError.status === 403) {
+                // 재로그인 유도
+                publishErrorToast("에러가 발생했습니다. 다시 로그인해주세요 ㅠㅜ");
+                setTimeout(() => {
+                  logout();
+                  useAuthStore.getState().clearToken();
+                  // window.location.href = "/login";
+                }, 3000);
               }
             }
           }
