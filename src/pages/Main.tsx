@@ -17,8 +17,7 @@ import { instance as axios } from '@/lib/axios';
 import { Button } from '@/components/ui/button';
 import { PiCrosshairSimple } from "react-icons/pi";
 
-import {useToast} from '@/hooks/useToast';
-import {Toaster} from "@/components/ui/toaster";
+import {toast} from '@/hooks/useToast';
 
 import { KTB, RADIUS_BY_LEVEL, FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/data/map';
 export interface CompanyProps {
@@ -107,7 +106,6 @@ export default function Main() {
     fetchCompanies(latlng.getLat(), latlng.getLng(), level);
   };
 
-  const {toast} = useToast();
   const handleMoveToCurrentLocation = () => {
     if (!mapRef.current) return;
   
@@ -169,10 +167,8 @@ export default function Main() {
 
   const [highlightedCompanyId, setHighlightedCompanyId] = useState<number | null>(null);
 
-
   return (
     <>
-      <Toaster />
         <SearchBar
           placeholder="검색어를 입력하세요."
           value={search}

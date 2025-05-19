@@ -6,26 +6,7 @@ import { Button } from "@/components/ui/button";
 import noProfile from '@/assets/no-profile.png'
 import { Modal } from "@/components/ui/modal";
 import { useState, useEffect } from "react";
-
-const logout = async () => {
-  const token = useAuthStore.getState().token;
-  if (!token) return;
-
-  try {
-    await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/auth/logout`, null, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    useAuthStore.getState().clearToken?.();
-    window.location.href = "/";
-  } catch (error) {
-    console.error("로그아웃 실패:", error);
-    
-  }
-}
-
+import { logout } from '@/lib/logout';
 
 export default function Mypage() {
   const token = useAuthStore((state) => state.token);
