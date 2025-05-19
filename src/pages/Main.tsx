@@ -204,7 +204,7 @@ export default function Main() {
           <Map
             ref={mapRef}
             center={{ lat: KTB.lat, lng: KTB.lng }}
-            className="w-full h-full"
+            className="w-full h-full pb-16"
             level={3}
             onZoomChanged={handleMapMove}
             onDragEnd={handleMapMove}

@@ -60,13 +60,13 @@ export default function CompanyCard({
     const target = e.target as HTMLElement;
     if (
       target.closest('button') ||  // 닫기, 북마크 버튼
-      target.closest('svg') ||     // 아이콘
-      target.closest('a')          // 기업명
+      target.closest('svg')    // 아이콘
     ) {
       return;
     }
     navigate(`/company/${companyId}`);
   };
+
   return (
     <div 
     onClick={handleClickAnywhere}

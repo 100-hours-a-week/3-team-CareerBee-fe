@@ -2,6 +2,7 @@ import { PiBell, PiCoinsDuotone, PiCaretDown, PiCaretLeft } from 'react-icons/pi
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import logo from '@/assets/logo-with-text-2.png';
+import { useUiStore } from '@/store/ui';
 interface HeaderProps {
   type: 'main' | 'login' | 'down' | 'downLogin' | 'nav' | 'minimal';
   point?: number;
@@ -15,6 +16,8 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
   const isNav = type === 'nav' || type === 'minimal';
   const isMinimal = type === 'minimal';
 
+  const setBackPressedFromHeader = useUiStore((state) => state.setBackPressedFromHeader);
+
   return (
     <header className={cn('flex items-center justify-between px-4 h-14 w-full')}>
       {/* 왼쪽 영역 */}
@@ -24,13 +27,33 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
           <PiCaretLeft className="w-7 h-7 " />
           </button>
         ) : isDown ? (
-          <button onClick={() => navigate(-1)} style={{ padding: 'inherit' }}>
-          <PiCaretDown className="w-7 h-7" />
-            </button>
+          <button
+            onClick={() => { 
+              setBackPressedFromHeader(true);
+              setTimeout(() => {
+                navigate(-1);
+                setBackPressedFromHeader(false);
+              }, 400);
+            }}
+            style={{ padding: 'inherit' }}
+          >
+            <PiCaretDown className="w-7 h-7" />
+          </button>
         ) : null}
 
-        <a href="/">
-          <img src={logo} alt="logo" className="h-8" />
+        <a
+          onClick={(e) => {
+            if (isDown) {
+              e.preventDefault();
+              setBackPressedFromHeader(true);
+              setTimeout(() => {
+                navigate(-1);
+                setBackPressedFromHeader(false);
+              }, 400);
+            }
+          }}
+        >
+          <img src={logo} alt="logo" className="h-8 cursor-pointer" />
         </a>
       </div>
 

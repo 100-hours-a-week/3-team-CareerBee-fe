@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useAuthStore } from '@/store/auth';
 import { useGlobalErrorToast } from '@/hooks/useGlobalErrorToast';
 // import { useViewportHeight } from './hooks/useViewportHeight';
+// import { AnimatePresence } from 'motion/react';
 
 function App() {
   useGlobalErrorToast();
@@ -16,7 +17,11 @@ function App() {
     }
   }, []);
 
-  return <RouterProvider router={router} />;
+  return (
+    // <AnimatePresence mode="wait">
+      <RouterProvider router={router} />
+    // </AnimatePresence>
+  );
 }
 
 export default App;

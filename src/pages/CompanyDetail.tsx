@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+// import { useParams, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { instance as axios } from '@/lib/axios';
 import CompanyTitle from '@/components/domain/CompanyTitle';
@@ -15,6 +15,11 @@ import TechstackTab from '@/components/domain/company/techstack'
 import { useFetchBookmarkStatus } from "@/hooks/useFetchBookmarkStatus";
 import { useAuthStore } from '@/store/auth';
 import { Loader } from "@/components/ui/loader";
+
+import { motion } from 'motion/react'
+import { useParams, useLocation } from "react-router-dom";
+import { useUiStore } from '@/store/ui';
+import { AnimatePresence } from 'motion/react';
 
 export interface CompanyDetailResponse {
   company: Company;
@@ -75,12 +80,19 @@ export interface Recruitment {
 
 export default function CompanyDetail() {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
   const [company, setCompany] = useState<Company>();
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const token = useAuthStore((state) => state.token);
   // const [lastRecruitMonth] = useState<number | null>(10);
   
   const { bookmarkStatus } = useFetchBookmarkStatus();
+
+  const backPressedFromHeader = useUiStore((state) => state.backPressedFromHeader);
+  const mapPressedFromNavbar = useUiStore((state) => state.mapPressedFromNavbar);
+  const exit=backPressedFromHeader || mapPressedFromNavbar;
+
+  // 존재하지 않는 기업
   useEffect(() => {
     if (!id) {
       console.log("no id")
@@ -116,7 +128,18 @@ export default function CompanyDetail() {
         </div>
   );
 
+
+  
   return (
+    <AnimatePresence>
+    {!exit &&
+    (<motion.div
+      key={location.pathname}
+      initial={{ y: '100vh', opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: '100vh', opacity: 0 }}
+      transition={{ duration: 0.4, ease: 'easeInOut' }}
+    >
     <div className="flex flex-col grow">
         {company.recruitments && company.recruitments.length > 0 ? (
       <div className="overflow-hidden h-6 bg-secondary text-text-primary text-sm flex items-center">
@@ -166,7 +189,6 @@ export default function CompanyDetail() {
             companyId={company.id}
             {...(token
               ? {
-                  // onToggleBookmark: handleToggleBookmark,
                   isBookmarked: isBookmarked,
                 }
               : {
@@ -223,5 +245,7 @@ export default function CompanyDetail() {
           <TabsContent value="techStack"><TechstackTab techstacks={company.techStacks} /></TabsContent>
         )}</Tabs>
     </div>
+    </motion.div>)}
+    </AnimatePresence>
   );
 }
