@@ -20,7 +20,7 @@ import { PiCrosshairSimple } from "react-icons/pi";
 import {toast} from '@/hooks/useToast';
 
 import { useMapStore } from '@/store/map';
-import { KTB, RADIUS_BY_LEVEL, FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/data/map';
+import { RADIUS_BY_LEVEL, FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/data/map';
 
 import { useQuery } from '@tanstack/react-query';
 import { Loader } from '@/components/ui/loader';
@@ -45,7 +45,7 @@ export default function Main() {
   // const [companies, setCompanies] = useState<CompanyProps[]>([]);
   
   const { openCardIndex, setOpenCardIndex } = useCompanyStore();
-  const { center, zoom } = useMapStore.getState();
+  const { center, zoom, setCenter, setZoom } = useMapStore();
 
   const { markerDisabledMap } = useMarkerStore();
 
@@ -61,10 +61,16 @@ const {
     const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies`, {
       params: { latitude: center.lat, longitude: center.lng, radius },
     });
-    return data.data.companies;
+    // const { data } = await axios.get('/mock/companies.json');  //🚨 목 데이터로 작업할 때만 켜기
+    console.log("🐳 api fetch: ", center.lat, " ", center.lng, " ", zoom)
+    return data.data.companies; 
   },
   placeholderData: (previous) => previous,
 });
+
+useEffect(()=>{
+  console.log("🐝 ", center.lat, " ", center.lng, " ", zoom)
+},[center, zoom])
   
 
   useEffect(() => {
@@ -73,7 +79,6 @@ const {
     script.async = true;
     script.onload = () => {
       window.kakao.maps.load(() => {
-        // fetchCompanies(KTB.lat, KTB.lng, 3);
         setTimeout(() => {
           setLoaded(true);
         }, 300); // 지도 초기화 후 이벤트 발생 시간보다 약간 뒤에 false로 설정
@@ -86,13 +91,11 @@ const {
     const level = map.getLevel();
     const latlng = map.getCenter();
     setHighlightedCompanyId(null);
-    useMapStore.getState().setCenter({
+    setCenter({
       lat: latlng.getLat(),
       lng: latlng.getLng(),
     });
-    useMapStore.getState().setZoom(level);
-
-    // fetchCompanies(latlng.getLat(), latlng.getLng(), level);
+    setZoom(level);
   };
 
   const handleMoveToCurrentLocation = () => {
@@ -179,14 +182,11 @@ const {
                 map.setLevel(3);
                 map.setCenter(newCenter);
 
-                useMapStore.getState().setCenter({
+                setCenter({
                   lat: newCenter.getLat(),
                   lng: newCenter.getLng(),
                 });
-                useMapStore.getState().setZoom(3);
-                setTimeout(() => {
-                  // fetchCompanies(latitude, longitude, 3);
-                }, 300);
+                setZoom(3);
               }
             } catch (error) {
               console.error('❌ 기업 위치 정보 조회 실패', error);
