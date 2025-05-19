@@ -1,24 +1,14 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
 import { Header } from '@/components/layout/header';
 import { Navbar } from '@/components/layout/navbar';
 import { useAuthStore } from '@/store/auth';
 import { Toaster } from '@/components/ui/toaster';
-import { prevPathStore } from '@/store/prevPath';
 
 export default function MainLayout() {
   const location = useLocation();
-  const prevPathRef = useRef<string | null>(null);
-  const setPreviousPath = prevPathStore((state) => state.setPreviousPath);
-
-  useEffect(() => {
-    setPreviousPath(prevPathRef.current ?? '/');
-    prevPathRef.current = location.pathname;
-  }, [location]);
 
   const token = useAuthStore((state) => state.token);
   
-
   const headerType = (() => {
     if (location.pathname === '/login') return 'login';
     if (location.pathname === '/' && !!token) return 'main';

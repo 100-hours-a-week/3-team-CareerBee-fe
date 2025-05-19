@@ -42,7 +42,6 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
         ) : null}
 
         <a
-          // href="/"
           onClick={(e) => {
             if (isDown) {
               e.preventDefault();

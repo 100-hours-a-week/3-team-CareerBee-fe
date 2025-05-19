@@ -17,8 +17,7 @@ import { useAuthStore } from '@/store/auth';
 import { Loader } from "@/components/ui/loader";
 
 import { motion } from 'motion/react'
-import { prevPathStore } from "@/store/prevPath";
-import { useParams, useLocation, useNavigate, useNavigationType } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useUiStore } from '@/store/ui';
 import { AnimatePresence } from 'motion/react';
 
@@ -89,18 +88,9 @@ export default function CompanyDetail() {
   
   const { bookmarkStatus } = useFetchBookmarkStatus();
 
-  const prevPath = prevPathStore((state) => state.previousPath);
-
   const backPressedFromHeader = useUiStore((state) => state.backPressedFromHeader);
   const mapPressedFromNavbar = useUiStore((state) => state.mapPressedFromNavbar);
   const exit=backPressedFromHeader || mapPressedFromNavbar;
-  // useEffect(() => {
-  //   console.log('2️⃣', backPressedFromHeader)
-
-  //   if (prevPath === '/' && backPressedFromHeader) {
-  //     console.log('💎', backPressedFromHeader)
-  //   }
-  // }, [navigationType, navigate, prevPath, backPressedFromHeader]);
 
   // 존재하지 않는 기업
   useEffect(() => {
@@ -199,7 +189,6 @@ export default function CompanyDetail() {
             companyId={company.id}
             {...(token
               ? {
-                  // onToggleBookmark: handleToggleBookmark,
                   isBookmarked: isBookmarked,
                 }
               : {

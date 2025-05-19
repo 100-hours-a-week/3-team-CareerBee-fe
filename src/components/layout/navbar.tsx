@@ -28,7 +28,6 @@ export const Navbar = () => {
   const location = useLocation();
   const isCompanyDetailPage = location.pathname.startsWith('/company/');
 
- console.log(isCompanyDetailPage)
   return (
     <div className="flex items-center justify-between px-8 h-16 w-full gap-2 bg-background">
       {navItems.map((item) => (
