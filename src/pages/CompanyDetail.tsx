@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+// import { useParams, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { instance as axios } from '@/lib/axios';
 import CompanyTitle from '@/components/domain/CompanyTitle';
@@ -17,6 +17,11 @@ import { useAuthStore } from '@/store/auth';
 import { Loader } from "@/components/ui/loader";
 
 import { motion } from 'motion/react'
+import { prevPathStore } from "@/store/prevPath";
+import { useParams, useLocation, useNavigate, useNavigationType } from "react-router-dom";
+import { useUiStore } from '@/store/ui';
+import { AnimatePresence } from 'motion/react';
+
 export interface CompanyDetailResponse {
   company: Company;
 }
@@ -76,12 +81,26 @@ export interface Recruitment {
 
 export default function CompanyDetail() {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
   const [company, setCompany] = useState<Company>();
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const token = useAuthStore((state) => state.token);
   // const [lastRecruitMonth] = useState<number | null>(10);
   
   const { bookmarkStatus } = useFetchBookmarkStatus();
+
+  const prevPath = prevPathStore((state) => state.previousPath);
+
+  const backPressedFromHeader = useUiStore((state) => state.backPressedFromHeader);
+  // useEffect(() => {
+  //   console.log('2️⃣', backPressedFromHeader)
+
+  //   if (prevPath === '/' && backPressedFromHeader) {
+  //     console.log('💎', backPressedFromHeader)
+  //   }
+  // }, [navigationType, navigate, prevPath, backPressedFromHeader]);
+
+  // 존재하지 않는 기업
   useEffect(() => {
     if (!id) {
       console.log("no id")
@@ -117,13 +136,17 @@ export default function CompanyDetail() {
         </div>
   );
 
+
+  
   return (
-    <motion.div
+    <AnimatePresence>
+    {!backPressedFromHeader &&
+    (<motion.div
+      key={location.pathname}
       initial={{ y: '100vh', opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: '100vh', opacity: 0 }}
       transition={{ duration: 0.4, ease: 'easeInOut' }}
-      // className="absolute h" // 전체 페이지를 덮는 느낌
     >
     <div className="flex flex-col grow">
         {company.recruitments && company.recruitments.length > 0 ? (
@@ -231,6 +254,7 @@ export default function CompanyDetail() {
           <TabsContent value="techStack"><TechstackTab techstacks={company.techStacks} /></TabsContent>
         )}</Tabs>
     </div>
-    </motion.div>
+    </motion.div>)}
+    </AnimatePresence>
   );
 }

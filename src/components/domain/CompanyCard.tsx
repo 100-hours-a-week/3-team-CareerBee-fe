@@ -64,10 +64,9 @@ export default function CompanyCard({
     ) {
       return;
     }
-    setTimeout(() => {
-      navigate(`/company/${companyId}`);
-    }, 300); // ⏱ 페이지 전환 타이밍과 맞춤
+    navigate(`/company/${companyId}`);
   };
+
   return (
     <div 
     onClick={handleClickAnywhere}
