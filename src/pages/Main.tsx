@@ -24,6 +24,7 @@ import { KTB, RADIUS_BY_LEVEL, FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } fro
 
 import { useQuery } from '@tanstack/react-query';
 import { Loader } from '@/components/ui/loader';
+import { CLUSTER_STYLES } from '@/assets/clusterStyles';
 
 export interface CompanyProps {
   id: number;
@@ -37,32 +38,13 @@ export interface CompanyProps {
 }
 
 export default function Main() {
-  // // 디버그용 콘솔 찍기
-  // console.count('🌀 Main 렌더링 횟수');
-  // const token=useAuthStore((state) => state.token);
-  // useEffect(() => {
-  //   const token = useAuthStore.getState().token;
-  //   console.log('zustand 저장 토큰:', token);
-  //   const token2 = localStorage.getItem('auth-storage');
-  //   if (token2) {
-  //     const parsed = JSON.parse(token2);
-  //     console.log('localStorage 토큰:', parsed?.state?.token);
-  //   } else {
-  //     console.log('⚠️ No token found in localStorage');
-  //   }
-  // }, [token]);
-
   const { search, setSearch, suggestions } = useSearchStore();
   useFetchSuggestions();
-
   
   const [loaded, setLoaded] = useState(false);
   // const [companies, setCompanies] = useState<CompanyProps[]>([]);
   
-  const {
-    openCardIndex,
-    setOpenCardIndex
-  } = useCompanyStore();
+  const { openCardIndex, setOpenCardIndex } = useCompanyStore();
   const { center, zoom } = useMapStore.getState();
 
   const { markerDisabledMap } = useMarkerStore();
@@ -81,7 +63,6 @@ const {
     });
     return data.data.companies;
   },
-  // enabled: !isComingBackFromDetail,
   placeholderData: (previous) => previous,
 });
   
@@ -230,56 +211,7 @@ const {
               minClusterSize={3}
               onCreate={onCreate}
               calculator={[10, 30, 50, 100]}
-              styles={[
-                {
-                  width: '30px',
-                  height: '30px',
-                  background: 'radial-gradient(circle, rgba(26, 143, 227, 0.8) 40%, rgba(0, 0, 0, 0) 100%', // deep blue
-                  borderRadius: '50%',
-                  color: '#fff',
-                  textAlign: 'center',
-                  lineHeight: '30px',
-                  fontSize: '13px',
-                  fontWeight: 'bold',
-                  boxShadow: '0 0 6px 4px rgba(26, 143, 227, 0.3)',
-                },
-                {
-                  width: '45px',
-                  height: '45px',
-                  background: 'radial-gradient(circle, rgba(93, 162, 113, 0.8) 40%, rgba(0, 0, 0, 0) 100% )', // teal
-                  borderRadius: '50%',
-                  color: '#fff',
-                  textAlign: 'center',
-                  lineHeight: '45px',
-                  fontSize: '14px',
-                  fontWeight: 'bold', 
-                  boxShadow: '0 0 6px 4px rgba(93, 162, 113, 0.3)',
-                },
-                {
-                  width: '60px',
-                  height: '60px',
-                  background: 'radial-gradient(circle, rgba(247, 199, 70, 0.9) 40%, rgba(0, 0, 0, 0) 100%', // yellow
-                  borderRadius: '50%',
-                  color: '#fff',
-                  textAlign: 'center',
-                  lineHeight: '60px',
-                  fontSize: '15px',
-                  fontWeight: 'bold',
-                  boxShadow: '0 0 10px 6px rgba(254, 228, 64, 0.3)',
-                },
-                {
-                  width: '70px',
-                  height: '70px',
-                  background: 'radial-gradient(circle, rgba(231, 111, 81, 0.8) 40%, rgba(0, 0, 0, 0) 100% )',
-                  borderRadius: '50%',
-                  color: '#fff',
-                  textAlign: 'center',
-                  lineHeight: '70px',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  boxShadow: '0 0 10px 6px rgba(231, 111, 81, 0.3)',
-                },
-              ]}
+              styles={CLUSTER_STYLES}
             >
             {companies.map((company, index) => (
               <MapOverlay
