@@ -1,5 +1,5 @@
 import { PiBriefcase } from "react-icons/pi";
-import { Recruitment } from "@/pages/CompanyDetail";
+import { Recruitment } from "@/features/Company/CompanyDetail";
 
 interface Props {
     recruitments: Recruitment[];

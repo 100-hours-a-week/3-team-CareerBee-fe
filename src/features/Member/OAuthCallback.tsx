@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Loader } from '@/components/ui/loader';
-import { useAuthStore } from '@/store/auth';
-import { instance as axios } from '@/lib/axios';
+import { useAuthStore } from '@/features/Member/store/auth';
+import { instance as axios } from '@/features/Member/lib/axios';
 
 
 export default function OAuthCallback() {

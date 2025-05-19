@@ -1,7 +1,7 @@
 // import { PiBookOpenText, PiMedalMilitary, PiMapTrifold, PiShoppingCartSimple, PiUser } from 'react-icons/pi';
 import { PiBookOpenTextLight, PiMedalMilitaryLight, PiMapTrifoldLight, PiShoppingCartSimpleLight, PiUserLight } from 'react-icons/pi';
 
-import { useAuthStore } from '@/store/auth';
+import { useAuthStore } from '@/features/Member/store/auth';
 import { useUiStore } from '@/store/ui';
 import { useLocation } from 'react-router-dom';
 

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { KTB } from '@/data/map';
+import { KTB } from '@/features/Map/assets/map';
 import { persist } from 'zustand/middleware';
 
 type LatLng = { lat: number; lng: number };

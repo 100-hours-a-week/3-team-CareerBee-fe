@@ -1,5 +1,5 @@
 import { PiCardholder, PiSuitcaseRolling, PiTrain, PiChalkboardTeacher, PiHeartbeat, PiDotsThreeCircle } from "react-icons/pi";
-import { CompanyBenefit } from "@/pages/CompanyDetail";
+import { CompanyBenefit } from "@/features/Company/CompanyDetail";
 
 type BenefitType = 'COMPENSATION' | 'LEAVE' | 'TRANSPORT_MEALS' | 'WELLNESS' | 'EDUCATION_EVENTS' | 'ETC';
 

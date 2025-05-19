@@ -2,7 +2,7 @@ import { PiBookmarkSimple, PiBookmarkSimpleFill, PiX } from 'react-icons/pi';
 import { Button } from '@/components/ui/button';
 import { Toggle } from '@/components/ui/toggle';
 import noImg from '@/assets/no-image.png';
-import companyCardBackground from '@/assets/company-card-background.png';
+import companyCardBackground from '@/features/Map/assets/company-card-background.png';
 import { useState, useEffect } from 'react';
 import { useToggleBookmarkMutation } from '@/hooks/useToggleBookmarkMutation';
 import {toast} from '@/hooks/useToast';

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import { instance as axios } from '@/lib/axios';
-import { useSearchStore } from '@/store/search';
-import { useDebounce } from './useDebounce'; 
+import { instance as axios } from '@/features/Member/lib/axios';
+import { useSearchStore } from '@/features/Map/store/search';
+import { useDebounce } from '@/hooks/useDebounce'; 
 
 export function useFetchSuggestions() {
   const { search, setSuggestions } = useSearchStore();

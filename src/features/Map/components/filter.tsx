@@ -1,9 +1,9 @@
 import { Toggle } from '@/components/ui/toggle';
-import { instance as axios } from '@/lib/axios';
+import { instance as axios } from '@/features/Member/lib/axios';
 import { useState, useEffect } from 'react';
-import { CompanyProps } from '@/pages/Main';
-import { useMarkerStore } from '@/store/marker';
-import { useAuthStore } from '@/store/auth';
+import { CompanyProps } from '@/features/Map/Main';
+import { useMarkerStore } from '@/features/Map/store/marker';
+import { useAuthStore } from '@/features/Member/store/auth';
 
 const CATEGORY_FILTERS = ["PLATFORM", "SI", "COMMERCE", "GAME", "TELECOM", "SECURITY", "FINANCE"];
 

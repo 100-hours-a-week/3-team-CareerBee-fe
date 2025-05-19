@@ -1,6 +1,6 @@
-import { useAuthStore } from '@/store/auth';
+import { useAuthStore } from '@/features/Member/store/auth';
 import { useCompanyStore } from '@/store/company';
-import { instance as axios } from '@/lib/axios';
+import { instance as axios } from '@/features/Member/lib/axios';
 import { useCallback } from 'react';
 
 export function useFetchBookmarkStatus() {

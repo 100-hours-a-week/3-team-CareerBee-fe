@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from '@/components/layout/header';
 import { Navbar } from '@/components/layout/navbar';
-import { useAuthStore } from '@/store/auth';
+import { useAuthStore } from '@/features/Member/store/auth';
 import { Toaster } from '@/components/ui/toaster';
 import { useGlobalErrorToast } from '@/hooks/useGlobalErrorToast';
 
