@@ -19,7 +19,13 @@ import { PiCrosshairSimple } from "react-icons/pi";
 
 import {toast} from '@/hooks/useToast';
 
-import { KTB, RADIUS_BY_LEVEL, FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/data/map';
+import { useMapStore } from '@/store/map';
+import { RADIUS_BY_LEVEL, FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/data/map';
+
+import { useQuery } from '@tanstack/react-query';
+// import { Loader } from '@/components/ui/loader';
+import { CLUSTER_STYLES } from '@/assets/clusterStyles';
+
 export interface CompanyProps {
   id: number;
   markerUrl: string;
@@ -32,56 +38,40 @@ export interface CompanyProps {
 }
 
 export default function Main() {
-  // // 디버그용 콘솔 찍기
-  // console.count('🌀 Main 렌더링 횟수');
-  // const token=useAuthStore((state) => state.token);
-  // useEffect(() => {
-  //   const token = useAuthStore.getState().token;
-  //   console.log('zustand 저장 토큰:', token);
-  //   const token2 = localStorage.getItem('auth-storage');
-  //   if (token2) {
-  //     const parsed = JSON.parse(token2);
-  //     console.log('localStorage 토큰:', parsed?.state?.token);
-  //   } else {
-  //     console.log('⚠️ No token found in localStorage');
-  //   }
-  // }, [token]);
-
   const { search, setSearch, suggestions } = useSearchStore();
   useFetchSuggestions();
-
   
   const [loaded, setLoaded] = useState(false);
-  const [companies, setCompanies] = useState<CompanyProps[]>([]);
+  // const [companies, setCompanies] = useState<CompanyProps[]>([]);
   
-  const {
-    openCardIndex,
-    setOpenCardIndex
-  } = useCompanyStore();
+  const { openCardIndex, setOpenCardIndex } = useCompanyStore();
+  const { center, zoom, setCenter, setZoom } = useMapStore();
 
   const { markerDisabledMap } = useMarkerStore();
 
   const mapRef = useRef<kakao.maps.Map | null>(null);
 
-  const fetchCompanies = async (
-    latitude: number,
-    longitude: number,
-    level: number) => {
-    const radius = RADIUS_BY_LEVEL[level] ?? 1000;
-    try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies`, {
-        params: {
-          latitude,
-          longitude,
-          radius,
-        },
-      });
-      setCompanies(data.data.companies);
-      // console.log(data.data.companies);
-    } catch (error) {
-      console.error('기업 리스트 조회 실패:', error);
-    }
-  };
+const {
+  data: companies = [],
+  // isFetching,
+} = useQuery<CompanyProps[], Error>({
+  queryKey: ['companyList', center.lat, center.lng, zoom],
+  queryFn: async () => {
+    const radius = RADIUS_BY_LEVEL[zoom] ?? 1000;
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies`, {
+      params: { latitude: center.lat, longitude: center.lng, radius },
+    });
+    // const { data } = await axios.get('/mock/companies.json');  //🚨 목 데이터로 작업할 때만 켜기
+    // console.log("🐳 api fetch: ", center.lat, " ", center.lng, " ", zoom)
+    return data.data.companies; 
+  },
+  placeholderData: (previous) => previous,
+});
+
+// useEffect(()=>{
+//   console.log("🐝 ", center.lat, " ", center.lng, " ", zoom)
+// },[center, zoom])
+  
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -89,7 +79,6 @@ export default function Main() {
     script.async = true;
     script.onload = () => {
       window.kakao.maps.load(() => {
-        fetchCompanies(KTB.lat, KTB.lng, 3);
         setTimeout(() => {
           setLoaded(true);
         }, 300); // 지도 초기화 후 이벤트 발생 시간보다 약간 뒤에 false로 설정
@@ -102,8 +91,11 @@ export default function Main() {
     const level = map.getLevel();
     const latlng = map.getCenter();
     setHighlightedCompanyId(null);
-
-    fetchCompanies(latlng.getLat(), latlng.getLng(), level);
+    setCenter({
+      lat: latlng.getLat(),
+      lng: latlng.getLng(),
+    });
+    setZoom(level);
   };
 
   const handleMoveToCurrentLocation = () => {
@@ -190,9 +182,11 @@ export default function Main() {
                 map.setLevel(3);
                 map.setCenter(newCenter);
 
-                setTimeout(() => {
-                  fetchCompanies(latitude, longitude, 3);
-                }, 300);
+                setCenter({
+                  lat: newCenter.getLat(),
+                  lng: newCenter.getLng(),
+                });
+                setZoom(3);
               }
             } catch (error) {
               console.error('❌ 기업 위치 정보 조회 실패', error);
@@ -200,12 +194,13 @@ export default function Main() {
           }}
         />
       <div className="relative flex item-center justify-center w-full h-full top-16 pb-16">
+        {/* {isFetching && <div className='absolute z-50 mt-72'><Loader/></div>} */}
         {loaded && (
           <Map
             ref={mapRef}
-            center={{ lat: KTB.lat, lng: KTB.lng }}
+            center={{ lat: center.lat , lng: center.lng }}
             className="w-full h-full pb-16"
-            level={3}
+            level={zoom}
             onZoomChanged={handleMapMove}
             onDragEnd={handleMapMove}
             onClick={() => setOpenCardIndex(null)} 
@@ -216,56 +211,7 @@ export default function Main() {
               minClusterSize={3}
               onCreate={onCreate}
               calculator={[10, 30, 50, 100]}
-              styles={[
-                {
-                  width: '30px',
-                  height: '30px',
-                  background: 'radial-gradient(circle, rgba(26, 143, 227, 0.8) 40%, rgba(0, 0, 0, 0) 100%', // deep blue
-                  borderRadius: '50%',
-                  color: '#fff',
-                  textAlign: 'center',
-                  lineHeight: '30px',
-                  fontSize: '13px',
-                  fontWeight: 'bold',
-                  boxShadow: '0 0 6px 4px rgba(26, 143, 227, 0.3)',
-                },
-                {
-                  width: '45px',
-                  height: '45px',
-                  background: 'radial-gradient(circle, rgba(93, 162, 113, 0.8) 40%, rgba(0, 0, 0, 0) 100% )', // teal
-                  borderRadius: '50%',
-                  color: '#fff',
-                  textAlign: 'center',
-                  lineHeight: '45px',
-                  fontSize: '14px',
-                  fontWeight: 'bold', 
-                  boxShadow: '0 0 6px 4px rgba(93, 162, 113, 0.3)',
-                },
-                {
-                  width: '60px',
-                  height: '60px',
-                  background: 'radial-gradient(circle, rgba(247, 199, 70, 0.9) 40%, rgba(0, 0, 0, 0) 100%', // yellow
-                  borderRadius: '50%',
-                  color: '#fff',
-                  textAlign: 'center',
-                  lineHeight: '60px',
-                  fontSize: '15px',
-                  fontWeight: 'bold',
-                  boxShadow: '0 0 10px 6px rgba(254, 228, 64, 0.3)',
-                },
-                {
-                  width: '70px',
-                  height: '70px',
-                  background: 'radial-gradient(circle, rgba(231, 111, 81, 0.8) 40%, rgba(0, 0, 0, 0) 100% )',
-                  borderRadius: '50%',
-                  color: '#fff',
-                  textAlign: 'center',
-                  lineHeight: '70px',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  boxShadow: '0 0 10px 6px rgba(231, 111, 81, 0.3)',
-                },
-              ]}
+              styles={CLUSTER_STYLES}
             >
             {companies.map((company, index) => (
               <MapOverlay
