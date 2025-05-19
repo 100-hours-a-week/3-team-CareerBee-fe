@@ -23,7 +23,7 @@ import { useMapStore } from '@/store/map';
 import { RADIUS_BY_LEVEL, FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/data/map';
 
 import { useQuery } from '@tanstack/react-query';
-import { Loader } from '@/components/ui/loader';
+// import { Loader } from '@/components/ui/loader';
 import { CLUSTER_STYLES } from '@/assets/clusterStyles';
 
 export interface CompanyProps {
@@ -53,7 +53,7 @@ export default function Main() {
 
 const {
   data: companies = [],
-  isFetching,
+  // isFetching,
 } = useQuery<CompanyProps[], Error>({
   queryKey: ['companyList', center.lat, center.lng, zoom],
   queryFn: async () => {
@@ -62,15 +62,15 @@ const {
       params: { latitude: center.lat, longitude: center.lng, radius },
     });
     // const { data } = await axios.get('/mock/companies.json');  //🚨 목 데이터로 작업할 때만 켜기
-    console.log("🐳 api fetch: ", center.lat, " ", center.lng, " ", zoom)
+    // console.log("🐳 api fetch: ", center.lat, " ", center.lng, " ", zoom)
     return data.data.companies; 
   },
   placeholderData: (previous) => previous,
 });
 
-useEffect(()=>{
-  console.log("🐝 ", center.lat, " ", center.lng, " ", zoom)
-},[center, zoom])
+// useEffect(()=>{
+//   console.log("🐝 ", center.lat, " ", center.lng, " ", zoom)
+// },[center, zoom])
   
 
   useEffect(() => {
@@ -194,7 +194,7 @@ useEffect(()=>{
           }}
         />
       <div className="relative flex item-center justify-center w-full h-full top-16 pb-16">
-        {isFetching && <div className='absolute z-50 mt-72'><Loader/></div>}
+        {/* {isFetching && <div className='absolute z-50 mt-72'><Loader/></div>} */}
         {loaded && (
           <Map
             ref={mapRef}
