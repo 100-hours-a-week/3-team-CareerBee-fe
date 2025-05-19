@@ -19,7 +19,12 @@ import { PiCrosshairSimple } from "react-icons/pi";
 
 import {toast} from '@/hooks/useToast';
 
+import { useMapStore } from '@/store/map';
 import { KTB, RADIUS_BY_LEVEL, FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/data/map';
+
+import { useQuery } from '@tanstack/react-query';
+import { Loader } from '@/components/ui/loader';
+
 export interface CompanyProps {
   id: number;
   markerUrl: string;
@@ -52,36 +57,34 @@ export default function Main() {
 
   
   const [loaded, setLoaded] = useState(false);
-  const [companies, setCompanies] = useState<CompanyProps[]>([]);
+  // const [companies, setCompanies] = useState<CompanyProps[]>([]);
   
   const {
     openCardIndex,
     setOpenCardIndex
   } = useCompanyStore();
+  const { center, zoom } = useMapStore.getState();
 
   const { markerDisabledMap } = useMarkerStore();
 
   const mapRef = useRef<kakao.maps.Map | null>(null);
 
-  const fetchCompanies = async (
-    latitude: number,
-    longitude: number,
-    level: number) => {
-    const radius = RADIUS_BY_LEVEL[level] ?? 1000;
-    try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies`, {
-        params: {
-          latitude,
-          longitude,
-          radius,
-        },
-      });
-      setCompanies(data.data.companies);
-      // console.log(data.data.companies);
-    } catch (error) {
-      console.error('기업 리스트 조회 실패:', error);
-    }
-  };
+const {
+  data: companies = [],
+  isFetching,
+} = useQuery<CompanyProps[], Error>({
+  queryKey: ['companyList', center.lat, center.lng, zoom],
+  queryFn: async () => {
+    const radius = RADIUS_BY_LEVEL[zoom] ?? 1000;
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies`, {
+      params: { latitude: center.lat, longitude: center.lng, radius },
+    });
+    return data.data.companies;
+  },
+  // enabled: !isComingBackFromDetail,
+  placeholderData: (previous) => previous,
+});
+  
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -89,7 +92,7 @@ export default function Main() {
     script.async = true;
     script.onload = () => {
       window.kakao.maps.load(() => {
-        fetchCompanies(KTB.lat, KTB.lng, 3);
+        // fetchCompanies(KTB.lat, KTB.lng, 3);
         setTimeout(() => {
           setLoaded(true);
         }, 300); // 지도 초기화 후 이벤트 발생 시간보다 약간 뒤에 false로 설정
@@ -102,8 +105,13 @@ export default function Main() {
     const level = map.getLevel();
     const latlng = map.getCenter();
     setHighlightedCompanyId(null);
+    useMapStore.getState().setCenter({
+      lat: latlng.getLat(),
+      lng: latlng.getLng(),
+    });
+    useMapStore.getState().setZoom(level);
 
-    fetchCompanies(latlng.getLat(), latlng.getLng(), level);
+    // fetchCompanies(latlng.getLat(), latlng.getLng(), level);
   };
 
   const handleMoveToCurrentLocation = () => {
@@ -190,8 +198,13 @@ export default function Main() {
                 map.setLevel(3);
                 map.setCenter(newCenter);
 
+                useMapStore.getState().setCenter({
+                  lat: newCenter.getLat(),
+                  lng: newCenter.getLng(),
+                });
+                useMapStore.getState().setZoom(3);
                 setTimeout(() => {
-                  fetchCompanies(latitude, longitude, 3);
+                  // fetchCompanies(latitude, longitude, 3);
                 }, 300);
               }
             } catch (error) {
@@ -200,12 +213,13 @@ export default function Main() {
           }}
         />
       <div className="relative flex item-center justify-center w-full h-full top-16 pb-16">
+        {isFetching && <div className='absolute z-50 mt-72'><Loader/></div>}
         {loaded && (
           <Map
             ref={mapRef}
-            center={{ lat: KTB.lat, lng: KTB.lng }}
+            center={{ lat: center.lat , lng: center.lng }}
             className="w-full h-full pb-16"
-            level={3}
+            level={zoom}
             onZoomChanged={handleMapMove}
             onDragEnd={handleMapMove}
             onClick={() => setOpenCardIndex(null)} 
