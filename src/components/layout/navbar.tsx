@@ -2,6 +2,9 @@
 import { PiBookOpenTextLight, PiMedalMilitaryLight, PiMapTrifoldLight, PiShoppingCartSimpleLight, PiUserLight } from 'react-icons/pi';
 
 import { useAuthStore } from '@/store/auth';
+import { useUiStore } from '@/store/ui';
+import { useLocation } from 'react-router-dom';
+
 interface NavItem {
   id: string;
   title: string;
@@ -21,12 +24,27 @@ const getNavItems = (token: string | null): NavItem[] => [
 export const Navbar = () => {
   const token = useAuthStore.getState().token;
   const navItems = getNavItems(token);
+  const setMapPressedFromNavbar = useUiStore((state) => state.setMapPressedFromNavbar);
+  const location = useLocation();
+  const isCompanyDetailPage = location.pathname.startsWith('/company/');
 
+ console.log(isCompanyDetailPage)
   return (
     <div className="flex items-center justify-between px-8 h-16 w-full gap-2 bg-background">
       {navItems.map((item) => (
         <div className='flex flex-col gap-0.5 justify-center items-center [&_svg]:size-7'>
-          <a key={item.id} href={item.href}>
+          <a key={item.id} href={item.href}
+          onClick={(e)=>{
+            if(isCompanyDetailPage&& item.href === '/'){
+              console.log("map clicked")
+              e.preventDefault();
+              setMapPressedFromNavbar(true);
+              setTimeout(() => {
+                window.location.href = '/';
+                setMapPressedFromNavbar(false);
+              }, 400);
+            }
+          }}>
             {item.icon}
           </a>
           <div className='text-xs text-text-primary'>{item.title}</div>

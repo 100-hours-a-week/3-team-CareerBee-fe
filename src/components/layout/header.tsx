@@ -42,7 +42,7 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
         ) : null}
 
         <a
-          href="/"
+          // href="/"
           onClick={(e) => {
             if (isDown) {
               e.preventDefault();
@@ -54,7 +54,7 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
             }
           }}
         >
-          <img src={logo} alt="logo" className="h-8" />
+          <img src={logo} alt="logo" className="h-8 cursor-pointer" />
         </a>
       </div>
 

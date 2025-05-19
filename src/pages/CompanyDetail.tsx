@@ -92,6 +92,8 @@ export default function CompanyDetail() {
   const prevPath = prevPathStore((state) => state.previousPath);
 
   const backPressedFromHeader = useUiStore((state) => state.backPressedFromHeader);
+  const mapPressedFromNavbar = useUiStore((state) => state.mapPressedFromNavbar);
+  const exit=backPressedFromHeader || mapPressedFromNavbar;
   // useEffect(() => {
   //   console.log('2️⃣', backPressedFromHeader)
 
@@ -140,7 +142,7 @@ export default function CompanyDetail() {
   
   return (
     <AnimatePresence>
-    {!backPressedFromHeader &&
+    {!exit &&
     (<motion.div
       key={location.pathname}
       initial={{ y: '100vh', opacity: 0 }}
