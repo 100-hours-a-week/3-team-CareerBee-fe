@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from '@/components/layout/header';
 import { Navbar } from '@/components/layout/navbar';
 import { useAuthStore } from '@/store/auth';
+import { Toaster } from '@/components/ui/toaster';
 
 export default function MainLayout() {
   const location = useLocation();
@@ -26,16 +27,19 @@ export default function MainLayout() {
   };
 
   return (
-    <div
-      className="flex flex-col h-dvh fixed inset-0 max-w-[600px] w-full mx-auto bg-background shadow-sides"
-    > 
-      <Header type={headerType} hasNewNotification={hasNewNotification} point={point} />
-      <main className="flex flex-col flex-1 w-full overflow-auto"
-      >
-        <Outlet />
-      </main>
-      {showNavbar() ? <Navbar /> : null}
+    <>
+      <Toaster />
+      <div
+        className="flex flex-col h-dvh fixed inset-0 max-w-[600px] w-full mx-auto bg-background shadow-sides"
+        > 
+        <Header type={headerType} hasNewNotification={hasNewNotification} point={point} />
+        <main className="flex flex-col flex-1 w-full overflow-auto"
+        >
+          <Outlet />
+        </main>
+        {showNavbar() ? <Navbar /> : null}
 
-    </div>
+      </div>
+    </>
   );
 }

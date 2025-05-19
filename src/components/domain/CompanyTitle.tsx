@@ -2,8 +2,7 @@ import { PiBookmarkSimple, PiBookmarkSimpleFill, PiShare } from 'react-icons/pi'
 import {Toggle} from '@/components/ui/toggle';
 import {Button} from '@/components/ui/button';
 import {useState, useEffect} from 'react';
-import {useToast} from '@/hooks/useToast';
-import {Toaster} from "@/components/ui/toaster";
+import {toast} from '@/hooks/useToast';
 import { useToggleBookmarkMutation } from '@/hooks/useToggleBookmarkMutation';
 
 interface CompanyTitleProps{
@@ -25,7 +24,6 @@ export default function CompanyTitle({
     setIsBookmarked,
 }:CompanyTitleProps){
     const [count, setCount] = useState(wishCount);
-    const { toast } = useToast();
 
     useEffect(() => {
       setCount(wishCount);
@@ -44,7 +42,6 @@ export default function CompanyTitle({
     });
     return (
         <div className="flex items-center justify-end w-full px-2 text-2xl font-semibold">
-          <Toaster />
         {/* 왼쪽 영역 */}
         <div className="flex gap-2 mr-auto">
           <img
