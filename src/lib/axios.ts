@@ -12,10 +12,31 @@ export const instance = axios.create({
   withCredentials: true,
 });
 
+// POST 중복 요청 방지
+const pendingPosts = new Set<string>();
+
+instance.interceptors.request.use((config) => {
+  if (config.method === 'post') {
+    const key = config.url!;
+    if (pendingPosts.has(key)) {
+      return Promise.reject(new axios.Cancel(`중복 POST 메서드 제거: ${key}`));
+    }
+    pendingPosts.add(key);
+  }
+  return config;
+});
 
 instance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (response.config.method === 'post') {
+      pendingPosts.delete(response.config.url!);
+    }
+    return response;
+  },
   async (error) => {
+    if (error.config?.method === 'post') {
+      pendingPosts.delete(error.config.url!);
+    }
     const res = error.response;
     // console.log(res?.status);
     if (res?.status === 400 || res?.status === 401) {
@@ -40,9 +61,10 @@ instance.interceptors.response.use(
       else if (message?.match("만료된 토큰입니다.")) {
         console.log('🔑 토큰 만료됨');
         let retryCount = 0;
-        while (retryCount < 3) {
+        while (retryCount++ < 1) {
           try {
-            const refreshResponse = await axios.post(
+            // retryCount++;
+            const refreshResponse = await instance.post(
               `${import.meta.env.VITE_API_URL}/api/v1/auth/reissue`,
               null,
               { withCredentials: true }
@@ -58,11 +80,10 @@ instance.interceptors.response.use(
             return axios(originalRequest);
           } catch (err) {
             console.error("🔑 토큰 재발급 실패", err);
-            retryCount++;
+            // retryCount++;
             const axiosError = err as AxiosError;
             if (retryCount >= 3) {
               // 너무 많이 실패하면 로그아웃 처리
-              console.log(res)
               if (axiosError.status===500) {
                 // 네트워크 오류 (서버 응답 없음), 중복 토큰 존재
                 publishErrorToast("에러가 발생했습니다. 다시 시도해 주세요.");
