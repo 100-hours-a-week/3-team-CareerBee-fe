@@ -35,6 +35,7 @@ export default function MainLayout() {
         <Header type={headerType} hasNewNotification={hasNewNotification} point={point} />
         <main className="flex flex-col flex-1 w-full overflow-auto">
           <Outlet key={location.pathname} />
+
         </main>
         {showNavbar() ? <Navbar /> : null}
 
