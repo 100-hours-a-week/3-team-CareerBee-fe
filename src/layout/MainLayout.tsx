@@ -1,13 +1,21 @@
 import { Outlet, useLocation } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 import { Header } from '@/components/layout/header';
 import { Navbar } from '@/components/layout/navbar';
 import { useAuthStore } from '@/store/auth';
-import { AnimatePresence } from 'motion/react';
 import { Toaster } from '@/components/ui/toaster';
-import { AnimatePresence } from 'motion/react';
+import { prevPathStore } from '@/store/prevPath';
 
 export default function MainLayout() {
   const location = useLocation();
+  const prevPathRef = useRef<string | null>(null);
+  const setPreviousPath = prevPathStore((state) => state.setPreviousPath);
+
+  useEffect(() => {
+    setPreviousPath(prevPathRef.current ?? '/');
+    prevPathRef.current = location.pathname;
+  }, [location]);
+
   const token = useAuthStore((state) => state.token);
   
 
@@ -35,11 +43,9 @@ export default function MainLayout() {
         className="flex flex-col h-dvh fixed inset-0 max-w-[600px] w-full mx-auto bg-background shadow-sides"
       > 
         <Header type={headerType} hasNewNotification={hasNewNotification} point={point} />
-        <AnimatePresence mode="wait">
         <main className="flex flex-col flex-1 w-full overflow-auto">
-          <Outlet />
+          <Outlet key={location.pathname} />
         </main>
-        </AnimatePresence>
         {showNavbar() ? <Navbar /> : null}
 
       </div>
