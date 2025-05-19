@@ -5,8 +5,7 @@ import noImg from '@/assets/no-image.png';
 import companyCardBackground from '@/assets/company-card-background.png';
 import { useState, useEffect } from 'react';
 import { useToggleBookmarkMutation } from '@/hooks/useToggleBookmarkMutation';
-import {useToast} from '@/hooks/useToast';
-import {Toaster} from "@/components/ui/toaster";
+import {toast} from '@/hooks/useToast';
 import { useNavigate } from 'react-router-dom';
 
 interface CompanyCardProps {
@@ -37,7 +36,6 @@ export default function CompanyCard({
   setIsBookmarked,
 }: CompanyCardProps) {
   const [count, setCount] = useState(bookmarkCount);
-  const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -82,7 +80,6 @@ export default function CompanyCard({
       cursor: 'pointer'
     }}
     className="relative rounded-xl p-2 w-64 h-44 z-30 cursor-default">
-          <Toaster />
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-2">
         <p className="text-md font-bold hover:text-text-primary truncate break-all">
