@@ -3,8 +3,10 @@ import { Header } from '@/components/layout/header';
 import { Navbar } from '@/components/layout/navbar';
 import { useAuthStore } from '@/store/auth';
 import { Toaster } from '@/components/ui/toaster';
+import { useGlobalErrorToast } from '@/hooks/useGlobalErrorToast';
 
 export default function MainLayout() {
+  useGlobalErrorToast();
   const location = useLocation();
 
   const token = useAuthStore((state) => state.token);
