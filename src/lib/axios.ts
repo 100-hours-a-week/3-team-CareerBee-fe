@@ -105,6 +105,19 @@ instance.interceptors.response.use(
         }
       }
     }
+    else if(res?.status === 409){
+      const message = res?.data?.message;
+      if(message?.includes("리프레시 토큰")){
+        setTimeout(()=>{
+          publishErrorToast("로그아웃되었습니다. 다시 로그인 해주세요.");
+        },3000)
+          // toast({title: "로그아웃되었습니다. 다시 로그인 해주세요."});
+        console.log('🔑 로그아웃됨');
+        useAuthStore.getState().clearToken();
+        window.location.href = "/login";
+        return Promise.reject(error);
+      }
+    }
 
     return Promise.reject(error);
   }
