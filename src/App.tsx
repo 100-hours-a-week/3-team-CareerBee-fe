@@ -2,13 +2,10 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from '@/router';
 import { useEffect } from 'react';
 import { useAuthStore } from '@/store/auth';
-import { useGlobalErrorToast } from '@/hooks/useGlobalErrorToast';
-// import { useViewportHeight } from './hooks/useViewportHeight';
-// import { AnimatePresence } from 'motion/react';
+// import { useGlobalErrorToast } from '@/hooks/useGlobalErrorToast';
 
 function App() {
-  useGlobalErrorToast();
-  // useViewportHeight();
+  // useGlobalErrorToast();
   //토큰 복원
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -18,9 +15,7 @@ function App() {
   }, []);
 
   return (
-    // <AnimatePresence mode="wait">
       <RouterProvider router={router} />
-    // </AnimatePresence>
   );
 }
 
