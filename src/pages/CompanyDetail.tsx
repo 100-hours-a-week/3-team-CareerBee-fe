@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+// import { useParams, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { instance as axios } from '@/lib/axios';
 import CompanyTitle from '@/components/domain/CompanyTitle';
@@ -11,11 +11,15 @@ import RecruitTab from '@/components/domain/company/recruit'
 import IssueTab from '@/components/domain/company/issue'
 import BenefitTab from "@/components/domain/company/benefit";
 import TechstackTab from '@/components/domain/company/techstack'
-import { handleToggleBookmark as toggleBookmarkUtil } from '@/lib/toggleBookmark';
 
 import { useFetchBookmarkStatus } from "@/hooks/useFetchBookmarkStatus";
 import { useAuthStore } from '@/store/auth';
 import { Loader } from "@/components/ui/loader";
+
+import { motion } from 'motion/react'
+import { useParams, useLocation } from "react-router-dom";
+import { useUiStore } from '@/store/ui';
+import { AnimatePresence } from 'motion/react';
 
 export interface CompanyDetailResponse {
   company: Company;
@@ -76,12 +80,19 @@ export interface Recruitment {
 
 export default function CompanyDetail() {
   const { id } = useParams<{ id: string }>();
-  const [company, setCompany] = useState<Company | null>(null);
-  const [isBookmarked, setIsBookmarked] = useState<'true' | 'false' | 'disabled'>('false');
+  const location = useLocation();
+  const [company, setCompany] = useState<Company>();
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const token = useAuthStore((state) => state.token);
   // const [lastRecruitMonth] = useState<number | null>(10);
   
   const { bookmarkStatus } = useFetchBookmarkStatus();
+
+  const backPressedFromHeader = useUiStore((state) => state.backPressedFromHeader);
+  const mapPressedFromNavbar = useUiStore((state) => state.mapPressedFromNavbar);
+  const exit=backPressedFromHeader || mapPressedFromNavbar;
+
+  // 존재하지 않는 기업
   useEffect(() => {
     if (!id) {
       console.log("no id")
@@ -96,7 +107,7 @@ export default function CompanyDetail() {
         setCompany(data.data);
         // setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
         // console.log(data);
-        console.count('😈기업 상세 렌더링 횟수');
+        // console.count('😈기업 상세 렌더링 횟수');
         bookmarkStatus(Number(id), setIsBookmarked);
       })
       .catch((error) => {
@@ -108,11 +119,6 @@ export default function CompanyDetail() {
 
   }, [id, bookmarkStatus]);
 
-  const handleToggleBookmark = () => {
-    if (!token || isBookmarked==="disabled" || !company) return;
-    toggleBookmarkUtil(token, company.id, isBookmarked, setIsBookmarked);
-  };
-
   if (!company) return (
         <div className="flex flex-col gap-4 h-screen items-center justify-center text-lg font-semibold">
           <Loader/>
@@ -122,7 +128,18 @@ export default function CompanyDetail() {
         </div>
   );
 
+
+  
   return (
+    <AnimatePresence>
+    {!exit &&
+    (<motion.div
+      key={location.pathname}
+      initial={{ y: '100vh', opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: '100vh', opacity: 0 }}
+      transition={{ duration: 0.4, ease: 'easeInOut' }}
+    >
     <div className="flex flex-col grow">
         {company.recruitments && company.recruitments.length > 0 ? (
       <div className="overflow-hidden h-6 bg-secondary text-text-primary text-sm flex items-center">
@@ -169,21 +186,22 @@ export default function CompanyDetail() {
             name={company.name}
             wishCount={company.wishCount}
             isLoggedIn={!!token}
+            companyId={company.id}
             {...(token
               ? {
-                  onToggleBookmark: handleToggleBookmark,
                   isBookmarked: isBookmarked,
                 }
               : {
-                  isBookmarked: 'disabled',
+                  isBookmarked: false,
                 })}
+            setIsBookmarked={setIsBookmarked}
         />
       </div>
 
       {/* 기업 정보 */}
       <div className="flex flex-col px-4 gap-2 my-2">
         <div className="text-lg font-semibold">{company.title}</div>
-        <div className="flex gap-0.5 [&_svg]:size-5 text-primary">
+        <div className="flex gap-0.5 [&_svg]:size-5 text-primary ">
         {[...Array(5)].map((_, index) => {
           const full = Math.floor(company.rating);
           const decimal = company.rating - full;
@@ -197,7 +215,7 @@ export default function CompanyDetail() {
             return <PiStar key={index} />;
           }
         })}
-        <p className="ml-2 text-sm text-text-secondary">캐치 종합 점수 기준</p>
+          <p className="ml-2 text-xs text-text-secondary mt-auto">캐치 종합 점수 기준</p>
         </div>
         <div className="w-full text-center font-semibold">
           {`평균: ${
@@ -227,5 +245,7 @@ export default function CompanyDetail() {
           <TabsContent value="techStack"><TechstackTab techstacks={company.techStacks} /></TabsContent>
         )}</Tabs>
     </div>
+    </motion.div>)}
+    </AnimatePresence>
   );
 }

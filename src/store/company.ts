@@ -8,15 +8,15 @@ interface CompanyInfo {
   keywords: { content: string }[];
 }
 
-type BookmarkState = 'true' | 'false' | 'disabled';
+// type BookmarkState = 'true' | 'false' | 'disabled';
 
 interface CompanyStore {
   openCardIndex: number | null;
   setOpenCardIndex: (index: number | null) => void;
   companyInfo?: CompanyInfo;
   setCompanyInfo: (info: CompanyInfo) => void;
-  isBookmarked: BookmarkState;
-  setIsBookmarked: (state: BookmarkState) => void;
+  isBookmarked: boolean;
+  setIsBookmarked: (state: boolean) => void;
 }
 
 export const useCompanyStore = create<CompanyStore>((set) => ({
@@ -24,6 +24,6 @@ export const useCompanyStore = create<CompanyStore>((set) => ({
   setOpenCardIndex: (index) => set({ openCardIndex: index }),
   companyInfo: undefined,
   setCompanyInfo: (info) => set({ companyInfo: info }),
-  isBookmarked: 'disabled',
+  isBookmarked: false,
   setIsBookmarked: (state) => set({ isBookmarked: state }),
 }));

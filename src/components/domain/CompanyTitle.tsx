@@ -2,41 +2,52 @@ import { PiBookmarkSimple, PiBookmarkSimpleFill, PiShare } from 'react-icons/pi'
 import {Toggle} from '@/components/ui/toggle';
 import {Button} from '@/components/ui/button';
 import {useState, useEffect} from 'react';
-import {useToast} from '@/hooks/useToast';
-import {Toaster} from "@/components/ui/toaster";
+import {toast} from '@/hooks/useToast';
+import { useToggleBookmarkMutation } from '@/hooks/useToggleBookmarkMutation';
 
 interface CompanyTitleProps{
     logoUrl: string;
     name: string;
     wishCount: number;
     isLoggedIn: boolean;
-    onToggleBookmark?: () => void;
-    isBookmarked?: 'true' | 'false' | 'disabled';
+    companyId: number;
+    isBookmarked?: boolean;
+    setIsBookmarked: (val: boolean) => void;
 }
 export default function CompanyTitle({
     logoUrl,
     name,
     wishCount,
     isLoggedIn,
-    onToggleBookmark,
+    companyId,
     isBookmarked,
+    setIsBookmarked,
 }:CompanyTitleProps){
     const [count, setCount] = useState(wishCount);
-    const { toast } = useToast();
 
     useEffect(() => {
       setCount(wishCount);
     }, [wishCount]);
 
+    const handleToggleBookmark = useToggleBookmarkMutation({
+      companyId,
+      isBookmarked,
+      setIsBookmarked,
+      onSuccess: (next) => {
+        setCount(prev => next ? prev + 1 : prev - 1);
+      },
+      onError: () => {
+        toast({ title: '북마크 토글 실패' });
+      },
+    });
     return (
         <div className="flex items-center justify-end w-full px-2 text-2xl font-semibold">
-          <Toaster />
         {/* 왼쪽 영역 */}
         <div className="flex gap-2 mr-auto">
           <img
             src={logoUrl}
             alt={`${name} 로고`}
-            className="w-20 h-20 rounded-md object-contain border border-text-primary"
+            className="w-20 h-20 rounded-md object-contain border border-text-primary bg-white"
           />
           <div className="flex flex-col justify-end">
             <span>{name}</span>
@@ -61,18 +72,17 @@ export default function CompanyTitle({
                     variant="save"
                     size="xs"
                     label={
-                      isBookmarked === 'true' ? (
+                      isBookmarked === true ? (
                         <PiBookmarkSimpleFill className="text-primary" />
                       ) : (
                         <PiBookmarkSimple />
                       )
                     }
-                    pressed={isBookmarked === 'true'}
-                    onPressedChange={() => {
-                      if (onToggleBookmark) {
-                        onToggleBookmark();
-                        setCount(prev => isBookmarked === 'true' ? prev - 1 : prev + 1);
-                      }
+                    pressed={isBookmarked === true}
+                    onPressedChange={()=>{
+                        if (!handleToggleBookmark.isPending) {
+                          handleToggleBookmark.mutate();
+                        }         
                     }}
                 />
               ) : (

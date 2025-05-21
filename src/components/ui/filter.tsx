@@ -59,8 +59,10 @@ const FilterGroup = ({ filters, companies }: Props) => {
   };
 
   useEffect(() => {
+    if (companies.length === 0) return;
+
     let filtered = companies;
-  
+
     activeFilters.forEach((filterId) => {
       if (filterId === 'recruiting') {
         filtered = filtered.filter((c) => c.recruitingStatus === 'ongoing');
@@ -70,14 +72,14 @@ const FilterGroup = ({ filters, companies }: Props) => {
         filtered = filtered.filter((c) => c.businessType === filterId);
       }
     });
-  
+
     const disabledMap = companies.reduce((acc, company) => {
       acc[company.id] = !filtered.some((c) => c.id === company.id);
       return acc;
     }, {} as Record<number, boolean>);
-  
+
     setCompanyDisabledMap(disabledMap);
-  }, [activeFilters, companies, bookmarkedIds, setCompanyDisabledMap, filterTrigger]);
+  }, [activeFilters, companies, bookmarkedIds, filterTrigger]);
 
   // useMemo(() =>{
   //   let filtered = companies;

@@ -1,19 +1,21 @@
 import { useEffect } from 'react';
 import { instance as axios } from '@/lib/axios';
 import { useSearchStore } from '@/store/search';
+import { useDebounce } from './useDebounce'; 
 
 export function useFetchSuggestions() {
   const { search, setSuggestions } = useSearchStore();
+  const debouncedSearch = useDebounce(search, 100);
 
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (search.length < 1) {
+      if (debouncedSearch.length < 1) {
         setSuggestions([]);
         return;
       }
       try {
         const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies/search`, {
-          params: { keyword: search },
+          params: { keyword: debouncedSearch },
         });
         // console.log('🔍', data.data)
         const names = data.data.matchingCompanies.map(
@@ -29,5 +31,5 @@ export function useFetchSuggestions() {
     };
 
     fetchSuggestions();
-  }, [search, setSuggestions]);
+  }, [debouncedSearch, setSuggestions]);
 }
