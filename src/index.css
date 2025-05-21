@@ -1,4 +1,28 @@
 @import 'pretendard/dist/web/variable/pretendardvariable.css';
+
+/* 리아체 */
+@font-face {
+  font-family: 'RiaSans';
+  src: url('/fonts/ria-sans/RiaSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'RiaSans';
+  src: url('/fonts/ria-sans/RiaSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'RiaSans';
+  src: url('/fonts/ria-sans/RiaSans-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -145,8 +169,7 @@ button:focus-visible {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
 
-    --font-sans: 'Pretendard Variable', sans-serif;
-
+    --font-pretendard: 'Pretendard Variable', sans-serif;
   }
   /* .dark {
     --background: 0 0% 3.9%;
@@ -175,7 +198,7 @@ button:focus-visible {
     --chart-5: 340 75% 55%;
   } */
   html {
-    font-family: var(--font-sans);
+    font-family: var(--font-pretendard);
     background-color: var(--background);
     color: var(--text-primary);
   }
