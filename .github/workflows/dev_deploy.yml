@@ -1,11 +1,11 @@
-name: Deploy React Frontend to GCE (DEV)
+name: Deploy React Frontend to EC2 (DEV)
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ cicd/#139 ]
 
 jobs:
-  Deploy-DEV:
+  "Deploy-PROD":
     runs-on: ubuntu-latest
 
     env:
@@ -15,6 +15,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Decrypt env file
+        run: |
+          openssl enc -aes-256-cbc -d -pbkdf2 -in cicd-variables.sh.enc -out cicd-variables.sh -k "${{ secrets.DEV_APP_VARIABLES_ENC_PW }}"
+          chmod +x cicd-variables.sh
+
+      - name: Load selected env variables into GitHub Environment
+        run: |
+          source ./cicd-variables.sh
+
+          echo "SSH_KEY=$SSH_KEY" >> $GITHUB_ENV
+          echo "SSH_KEY_BASE64=$SSH_KEY_BASE64" >> $GITHUB_ENV
+          echo "AWS_SERVER_IP=$AWS_SERVER_IP" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $GITHUB_ENV
+          echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION" >> $GITHUB_ENV
+          echo "S3_BUCKET_INFRA=$S3_BUCKET_INFRA" >> $GITHUB_ENV
+          echo "VITE_KAKAOMAP_KEY=${VITE_KAKAOMAP_KEY}" >> $GITHUB_ENV
+          echo "VITE_API_URL=${VITE_API_URL}" >> $GITHUB_ENV
+
+      - name: Restore SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${SSH_KEY_BASE64}" | base64 --decode > "${SSH_KEY}"
+          chmod 600 "${SSH_KEY}"
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -22,54 +47,45 @@ jobs:
 
       - name: Install pnpm
         run: |
+          corepack enable
           corepack prepare pnpm@10.7.1 --activate
 
       - name: Install dependencies
-        run: |
-          corepack enable
-          pnpm install
-      
+        run: pnpm install
+
       - name: Create .env file
         run: |
-          echo "${{ secrets.ENV_FILE_CONTENTS }}" > .env
+          echo "VITE_KAKAOMAP_KEY=${VITE_KAKAOMAP_KEY}" > ~/dist/.env
+          echo "VITE_API_URL=${VITE_API_URL}" >> ~/dist/.env
 
       - name: Build React App
         run: pnpm build
-      
-      - name: Copy .env to dist folder
-        run: cp .env dist/
-      - name: Google Auth
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: "${{ secrets.GCP_SA_KEY }}"
-
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          version: 'latest'
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Set timestamp-based path (Asia/Seoul)
         run: |
           TIMESTAMP=$(TZ='Asia/Seoul' date +%Y-%m-%d_%H_%M_%S)
           echo "DEPLOY_PATH=${TIMESTAMP}_${COMMIT_HASH}" >> $GITHUB_ENV
 
-      - name: Upload build to GCS
-        run: |
-          echo "Uploading to: ${{ secrets.GCS_DEV_BUCKET_PATH }}/fe/$DEPLOY_PATH"
-          gcloud storage cp -r ./dist/* "${{ secrets.GCS_DEV_BUCKET_PATH }}/fe/$DEPLOY_PATH/"
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
 
-      - name: Setup SSH key
+      - name: Upload build to S3
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.GCE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.GCE_HOST }} >> ~/.ssh/known_hosts
+          echo "Uploading to: ${S3_BUCKET_INFRA}/fe/${DEPLOY_PATH}"
+          aws s3 cp ./dist "${S3_BUCKET_INFRA}/fe/${DEPLOY_PATH}/" --recursive
 
-      - name: Trigger remote deploy script on GCE
+      - name: Deploy to EC2 and restart Spring Boot
         run: |
-          ssh ${{ secrets.GCE_USER }}@${{ secrets.GCE_HOST }} "bash ~/release/deploy-fe.sh $DEPLOY_PATH"
+          ssh -i "${SSH_KEY}" -o StrictHostKeyChecking=no "ubuntu@${AWS_SERVER_IP}" <<EOF
+            set -e
 
+            sudo rm -rf /var/www/html/*
+            aws s3 cp "${S3_BUCKET_INFRA}/fe/${DEPLOY_PATH}/" /var/www/html/ --recursive
+            
       - name: Notify Discord on Success
         if: success()
         run: |
@@ -93,7 +109,7 @@ jobs:
                   "title": "✅ 개발 환경에 프론트 배포 성공",
                   "description": $desc,
                   "color": 65280,
-                  "footer": { "text": "GitHub Actions - DEV Deploy(FE)" },
+                  "footer": { "text": "GitHub Actions - PROD Deploy(FE)" },
                   "timestamp": $timestamp
                 }
               ]
@@ -127,7 +143,7 @@ jobs:
                   "title": "❌ 개발 환경에 프론트 배포 실패",
                   "description": $desc,
                   "color": 16711680,
-                  "footer": { "text": "GitHub Actions - DEV Deploy(FE)" },
+                  "footer": { "text": "GitHub Actions - PROD Deploy(FE)" },
                   "timestamp": $timestamp
                 }
               ]
