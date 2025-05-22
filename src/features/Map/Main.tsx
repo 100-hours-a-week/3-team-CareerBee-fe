@@ -2,16 +2,16 @@
 // 도메인 상에서 "지도 도메인"
 
 import { useState, useEffect, useRef } from 'react';
-import { SearchBar } from '@/components/domain/SearchBar';
-import { FilterGroup } from '@/components/ui/filter'
+import { SearchBar } from './components/SearchBar';
+import { FilterGroup } from '@/features/Map/components/filter'
 import { Map, MarkerClusterer, Polygon  } from 'react-kakao-maps-sdk';
-import MapOverlay from '@/components/domain/MapOverlay';
+import MapOverlay from './components/MapOverlay';
 import { useCompanyStore } from '@/store/company';
-import { useSearchStore } from '@/store/search';
-import { useMarkerStore } from '@/store/marker';
-import { useFetchSuggestions } from '@/hooks/useFetchSuggestions';
+import { useSearchStore } from '@/features/Map/store/search';
+import { useMarkerStore } from '@/features/Map/store/marker';
+import { useFetchSuggestions } from './hooks/useFetchSuggestions';
 
-import { instance as axios } from '@/lib/axios';
+import { instance as axios } from '@/features/Member/lib/axios';
 
 // import { useAuthStore  } from '@/store/auth';
 import { Button } from '@/components/ui/button';
@@ -19,12 +19,12 @@ import { PiCrosshairSimple } from "react-icons/pi";
 
 import {toast} from '@/hooks/useToast';
 
-import { useMapStore } from '@/store/map';
-import { RADIUS_BY_LEVEL, FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/data/map';
+import { useMapStore } from '@/features/Map/store/map';
+import { RADIUS_BY_LEVEL, FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/features/Map/assets/map';
 
 import { useQuery } from '@tanstack/react-query';
 // import { Loader } from '@/components/ui/loader';
-import { CLUSTER_STYLES } from '@/assets/clusterStyles';
+import { CLUSTER_STYLES } from '@/features/Map/assets/clusterStyles';
 
 export interface CompanyProps {
   id: number;

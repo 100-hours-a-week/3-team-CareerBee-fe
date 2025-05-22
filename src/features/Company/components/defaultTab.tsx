@@ -1,5 +1,5 @@
 import { PiMapPin, PiUsers, PiLink, PiMegaphone, PiBuildings, PiCurrencyCircleDollar, PiMoneyWavy } from "react-icons/pi";
-import { Company } from "@/pages/CompanyDetail";
+import { Company } from "@/features/Company/CompanyDetail";
 interface Props {
     company: Company;
 }

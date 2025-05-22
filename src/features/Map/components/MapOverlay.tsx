@@ -1,10 +1,10 @@
 import { MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
-import CompanyCard from '@/components/domain/CompanyCard';
+import CompanyCard from '@/features/Map/components/CompanyCard';
 import noImg from '@/assets/no-image.png';
 import { useCompanyStore } from '@/store/company';
-import { useAuthStore } from '@/store/auth';
-import { useFetchCompanyCard } from '@/hooks/useFetchCompanyCard';
-import { CompanyProps } from '@/pages/Main'
+import { useAuthStore } from '@/features/Member/store/auth';
+import { useFetchCompanyCard } from '@/features/Map/hooks/useFetchCompanyCard';
+import { CompanyProps } from '@/features/Map/Main'
 
 interface MapOverlayProps {
   company: CompanyProps;

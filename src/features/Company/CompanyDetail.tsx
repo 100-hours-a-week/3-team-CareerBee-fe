@@ -1,19 +1,19 @@
 // import { useParams, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { instance as axios } from '@/lib/axios';
-import CompanyTitle from '@/components/domain/CompanyTitle';
+import { instance as axios } from '@/features/Member/lib/axios';
+import CompanyTitle from '@/features/Company/components/CompanyTitle';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import noImg from '@/assets/no-image.png';
 import { PiStar, PiStarFill,PiStarHalfFill } from "react-icons/pi";
 
-import DefaultTab from '@/components/domain/company/defaultTab'
-import RecruitTab from '@/components/domain/company/recruit' 
-import IssueTab from '@/components/domain/company/issue'
-import BenefitTab from "@/components/domain/company/benefit";
-import TechstackTab from '@/components/domain/company/techstack'
+import DefaultTab from '@/features/Company/components/defaultTab'
+import RecruitTab from '@/features/Company/components/recruit' 
+import IssueTab from '@/features/Company/components/issue'
+import BenefitTab from "@/features/Company/components/benefit";
+import TechstackTab from '@/features/Company/components/techstack'
 
 import { useFetchBookmarkStatus } from "@/hooks/useFetchBookmarkStatus";
-import { useAuthStore } from '@/store/auth';
+import { useAuthStore } from '@/features/Member/store/auth';
 import { Loader } from "@/components/ui/loader";
 
 import { motion } from 'motion/react'

@@ -1,5 +1,5 @@
 import { PiBrowsers, PiTerminalWindow, PiRobot, PiCloud, PiMicrosoftTeamsLogo } from "react-icons/pi";
-import { TechStack } from "@/pages/CompanyDetail";
+import { TechStack } from "@/features/Company/CompanyDetail";
 
 interface Props {
   techstacks: TechStack[];

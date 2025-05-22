@@ -1,8 +1,8 @@
 import { Input } from '@/components/ui/input';
-import { SuggestionList } from '@/components/domain/SuggestionList';
+import { SuggestionList } from '@/features/Map/components/SuggestionList';
 import { PiMagnifyingGlass, PiX } from 'react-icons/pi';
-import { Button } from '../ui/button';
-import { CompanySuggestion } from '@/store/search';
+import { Button } from '@/components/ui/button';
+import { CompanySuggestion } from '@/features/Map/store/search';
 import { useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
