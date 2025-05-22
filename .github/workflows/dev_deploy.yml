@@ -55,12 +55,15 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "VITE_KAKAOMAP_KEY=${VITE_KAKAOMAP_KEY}" > ~/dist/.env
-          echo "VITE_API_URL=${VITE_API_URL}" >> ~/dist/.env
+          echo "VITE_KAKAOMAP_KEY=${VITE_KAKAOMAP_KEY}" > .env
+          echo "VITE_API_URL=${VITE_API_URL}" >> .env
 
       - name: Build React App
         run: pnpm build
 
+      - name: Copy .env to dist folder
+        run: cp .env dist/
+        
       - name: Set timestamp-based path (Asia/Seoul)
         run: |
           TIMESTAMP=$(TZ='Asia/Seoul' date +%Y-%m-%d_%H_%M_%S)
