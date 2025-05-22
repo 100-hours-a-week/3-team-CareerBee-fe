@@ -5,7 +5,7 @@ on:
     branches: [ cicd/#139 ]
 
 jobs:
-  "Deploy-PROD":
+  "Deploy-DEV":
     runs-on: ubuntu-latest
 
     env:
@@ -63,7 +63,7 @@ jobs:
 
       - name: Copy .env to dist folder
         run: cp .env dist/
-        
+
       - name: Set timestamp-based path (Asia/Seoul)
         run: |
           TIMESTAMP=$(TZ='Asia/Seoul' date +%Y-%m-%d_%H_%M_%S)
@@ -112,7 +112,7 @@ jobs:
                   "title": "✅ 개발 환경에 프론트 배포 성공",
                   "description": $desc,
                   "color": 65280,
-                  "footer": { "text": "GitHub Actions - PROD Deploy(FE)" },
+                  "footer": { "text": "GitHub Actions - DEV Deploy(FE)" },
                   "timestamp": $timestamp
                 }
               ]
@@ -146,7 +146,7 @@ jobs:
                   "title": "❌ 개발 환경에 프론트 배포 실패",
                   "description": $desc,
                   "color": 16711680,
-                  "footer": { "text": "GitHub Actions - PROD Deploy(FE)" },
+                  "footer": { "text": "GitHub Actions - DEV Deploy(FE)" },
                   "timestamp": $timestamp
                 }
               ]
