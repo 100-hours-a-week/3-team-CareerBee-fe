@@ -98,6 +98,6 @@ export const mockChart2: chartProps[] = [
     badgeImgUrl: 'https://test1.jpeg',
     elapsedTime: '04.24.123',
     solvedCount: 5,
-    value: 0,
+    value: 7,
   },
 ];
