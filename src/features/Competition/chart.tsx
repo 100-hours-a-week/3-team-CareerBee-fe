@@ -23,8 +23,9 @@ export default function BarChart() {
     const svg = d3
       .select(svgRef.current)
       .attr('viewBox', `0,0,${width},${height}`)
-      .attr("fill-opacity", 0.6);
-
+      .attr("fill-opacity", 0.6)
+      .attr("width", width)
+      .attr("height", height);
     // svg.selectAll("*").remove();
 
     const defs = svg.append("defs");
