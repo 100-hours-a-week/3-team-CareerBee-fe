@@ -12,7 +12,7 @@ import { useSearchStore } from '@/features/Map/store/search';
 import { useMarkerStore } from '@/features/Map/store/marker';
 import { useFetchSuggestions } from './hooks/useFetchSuggestions';
 
-import { instance as axios } from '@/features/Member/lib/axios';
+import { instance as axios } from '@/features/Member/utils/axios';
 
 // import { useAuthStore  } from '@/store/auth';
 import { Button } from '@/components/ui/button';
@@ -26,11 +26,11 @@ import {
   FILTERS,
   MAP_POLYGON_PATH,
   MAP_POLYGON_HOLE,
-} from '@/features/Map/assets/map';
+} from '@/features/Map/config/map';
 
 import { useQuery } from '@tanstack/react-query';
 // import { Loader } from '@/components/ui/loader';
-import { CLUSTER_STYLES } from '@/features/Map/assets/clusterStyles';
+import { CLUSTER_STYLES } from '@/features/Map/config/clusterStyles';
 
 export interface CompanyProps {
   id: number;

@@ -1,7 +1,7 @@
 import { PiBell, PiCoinsDuotone, PiCaretDown, PiCaretLeft } from 'react-icons/pi';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
-import logo from '@/assets/logo-with-text-2.png';
+import logo from '@/static/logo-with-text-2.png';
 import { useUiStore } from '@/store/ui';
 interface HeaderProps {
   type: 'main' | 'login' | 'down' | 'downLogin' | 'nav' | 'minimal';

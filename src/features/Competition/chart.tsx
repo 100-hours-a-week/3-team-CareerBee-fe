@@ -1,12 +1,20 @@
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { mockChart } from './chartdata';
-import { mockChart2 } from './chartdata2';
-import { chartProps } from './chartdata';
+import { mockChart } from './config/mock-chartdata';
+import { mockChart2 } from './config/mock-chartdata2';
 
 //목데이터
 let prev = mockChart;
 const mock = [mockChart, mockChart2];
+
+interface chartProps {
+  rank: number;
+  nickname: string;
+  profileImgUrl: string;
+  badgeImgUrl: string;
+  elapsedTime: string;
+  solvedCount: number;
+}
 
 const width = 440;
 const height = 500;
