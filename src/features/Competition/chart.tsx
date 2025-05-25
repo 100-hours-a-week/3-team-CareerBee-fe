@@ -15,17 +15,10 @@ const gap = 4;
 const transTime = 1000;
 
 const widthScale = (data: number) => {
-  if (data === 1) return 440;
-  if (data === 2) return 430;
-  if (data === 3) return 420;
-  return 410; // rank ≥ 4
+  return data === 1 ? 440 : data === 2 ? 430 : data === 3 ? 420 : 410;
 }
 const xScale = (data:number)=>{
-  if (data === 0) return width;
-  if (data === 1) return 0;
-  if (data === 2) return 10;
-  if (data === 3) return 20;
-  return 30; // rank ≥ 4
+  return data === 0 ? width : data === 1 ? 0 : data === 2 ? 10 : data === 3 ? 20 : 30;
 }
 const yScale = (data:number, paddingTop:number)=>{
   return (data-1)*barHeight+(data-1)*gap + paddingTop;
@@ -35,12 +28,13 @@ const exitTransition = <
   El extends SVGElement,
   ParentEl extends d3.BaseType = SVGGElement
 >(
-  sel: d3.Selection<El, chartProps, ParentEl, unknown>
+  sel: d3.Selection<El, chartProps, ParentEl, unknown>,
+  xPadding: number
 ) =>
   sel.transition()
     .duration(transTime/2)
     .ease(d3.easeLinear)
-    .attr('x', width)
+    .attr('x', xScale(0)+xPadding)
     .attr('width', 0)
     .remove();
 
@@ -115,7 +109,7 @@ export default function BarChart() {
                 .attr('x', (data) => xScale(data.rank))
                 .attr('width', (data) => widthScale(data.rank))
               ,
-            (exit) => exitTransition(exit)
+            (exit) => exitTransition(exit, 0)
           )
           data.forEach(d => {
             defs.append("clipPath")
@@ -126,12 +120,12 @@ export default function BarChart() {
         }
     }
 
-    const images = (svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>)=>{
-      let image = svg.append("g")
+    const background = (svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>)=>{
+      let background = svg.append("g")
           .selectAll<SVGImageElement, chartProps>("image");
 
       return (data: chartProps[]) => {
-        image = image.data(data, data=>data.nickname)
+        background = background.data(data, data=>data.nickname)
         .join(
           (enter) => enter.append("image")
             .attr("preserveAspectRatio", "none")
@@ -162,82 +156,31 @@ export default function BarChart() {
               .attr('x', (data) => xScale(data.rank))
               .attr('y', (data) => yScale(data.rank, 0))
             ,
-            (exit) => exitTransition(exit)
+            (exit) => exitTransition(exit, 0)
         )
       }
     }
 
-    const ranks = (svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>)=>{
-      let rank = svg.append("g")
-          .style("font", "bold 12px var(--font-pretendard)")
-          .attr("text-anchor", "end")
-          .selectAll<SVGTextElement, chartProps>("text");
-
-      return (data: chartProps[]) => {
-        const xPadding=20;
-        const yPaddingTop=(barHeight+gap*2)/2;
-        rank = rank.data(data,  data=>data.rank)
-        .join(
-          (enter) => enter.append("text")
-              .attr('y', (data)=>yScale(data.rank, yPaddingTop))
-              .attr('x', xScale(0)+xPadding)
-              .text(d => d.rank)
-              .transition()
-                .duration(transTime*2)
-                .attr('x', (data) => xScale(data.rank)+xPadding),
-          (update) => {
-            updateTransition(update, xPadding, yPaddingTop);
-            return update;
-          },
-          (exit) => exitTransition(exit)
-        )
-      }
-    }
-
-    const profileImg = (svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>)=>{
-      let profileImg = svg.append("g")
-          .selectAll<SVGImageElement, chartProps>("image");
-
-      return (data: chartProps[]) => {
-        const xPadding=32;
-        const yPaddingTop=4;
-        profileImg = profileImg.data(data, data=>data.nickname)
-        .join(
-          (enter) => enter.append("image")
-            .attr("preserveAspectRatio", "none")
-            .attr('y', (data)=>yScale(data.rank, yPaddingTop))
-            .attr('x', xScale(0)+xPadding)
-            .attr("width", 32)
-            .attr('height', 32)
-            .attr("href", d => d.profileImgUrl)
-            .transition()
-              .duration(transTime*2)
-              .attr('x', (data) => xScale(data.rank)+xPadding),
-          (update) => {
-            updateTransition(update, xPadding, yPaddingTop);
-            return update;
-          },
-          (exit) => exitTransition(exit)
-        )
-      }
-    }
-    
-    const badgeImg = (svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>)=>{
+    const imageElement = (
+      svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>,
+      xPadding: number,
+      yPaddingTop: number,
+      size: number,
+      elem: string
+    )=>{
       let badgeImg = svg.append("g")
           .selectAll<SVGImageElement, chartProps>("image");
 
       return (data: chartProps[]) => {
-        const xPadding=68;
-        const yPaddingTop=12;
-        badgeImg = badgeImg.data(data.filter(d => d.badgeImgUrl), d => d.nickname)
+        badgeImg = badgeImg.data(data.filter(d => d[elem as keyof chartProps]), d => d.nickname)
         .join(
           (enter) => enter.append("image")
             .attr("preserveAspectRatio", "none")
             .attr('y', (data)=>yScale(data.rank, yPaddingTop))
             .attr('x', xScale(0)+xPadding)
-            .attr("width", 16)
-            .attr('height', 16)
-            .attr("href", d => d.badgeImgUrl)
+            .attr("width", size)
+            .attr('height', size)
+            .attr("href", d => d[elem as keyof chartProps])
             .transition()
               .duration(transTime*2)
               .attr('x', (data) => xScale(data.rank)+xPadding),
@@ -245,26 +188,32 @@ export default function BarChart() {
             updateTransition(update, xPadding, yPaddingTop);
             return update;
           },
-          (exit) => exitTransition(exit)
+          (exit) => exitTransition(exit, xPadding)
         )
       }
     }
-    
-    const nickname = (svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>)=>{
-      let nickname = svg.append("g")
-          .style("font", "bold 12px var(--font-pretendard)")
+  
+    const textElement = (
+      svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>,
+      xPadding: number,
+      yPaddingTop: number,
+      elem: string,
+      fontWeight: string,
+      fontSize: string,
+      base: string = "nickname" 
+    )=>{
+      let textElement = svg.append("g")
+          .style("font", `${fontWeight} ${fontSize} var(--font-pretendard)`)
           .attr("text-anchor", "end")
           .selectAll<SVGTextElement, chartProps>("text");
 
       return (data: chartProps[]) => {
-        const xPadding=124;
-        const yPaddingTop=(barHeight+gap*2)/2;
-        nickname = nickname.data(data,  data=>data.nickname)
+        textElement = textElement.data(data,  data=>data[base as keyof chartProps])
         .join(
           (enter) => enter.append("text")
               .attr('y', (data)=>yScale(data.rank, yPaddingTop))
               .attr('x', xScale(0)+xPadding)
-              .text(d => d.nickname)
+              .text(d => d[elem as keyof chartProps])
               .transition()
                 .duration(transTime*2)
                 .attr('x', (data) => xScale(data.rank)+xPadding),
@@ -272,31 +221,37 @@ export default function BarChart() {
             updateTransition(update, xPadding, yPaddingTop);
             return update;
           },
-          (exit) => exitTransition(exit)
+          (exit) => exitTransition(exit, xPadding)
         )
       }
     }
 
     const updateBars = bars(svg);
-    const updateImages = images(svg);
-    const updateRanks = ranks(svg);
-    const updateProfileImg = profileImg(svg);
-    const updateBadgeImg = badgeImg(svg);
-    const updateNickname = nickname(svg);
+    const updateBackground = background(svg);
+    const updateRanks = textElement(svg, 20, (barHeight+gap*2)/2, "rank", "bold", "12px", "rank");
+    const updateProfileImg = imageElement(svg, 32, 4, 32, "profileImgUrl");
+    const updateBadgeImg = imageElement(svg, 68, 12, 16, "badgeImgUrl");
+    const updateNickname = textElement(svg, 124, (barHeight+gap*2)/2, "nickname", "bold", "12px");
+    const updateTime= textElement(svg, width-124, (barHeight+gap*2)/2, "elapsedTime", "400", "10px");
+    const updateSolved = textElement(svg, width-40, (barHeight+gap*2)/2, "solvedCount", "400", "10px");
     updateBars(mock[0]);
-    updateImages(mock[0]);
+    updateBackground(mock[0]);
     updateRanks(mock[0]);
     updateProfileImg(mock[0]);
     updateBadgeImg(mock[0]);
     updateNickname(mock[0]);
+    updateTime(mock[0]);
+    updateSolved(mock[0]);
     prev = mock[0]
     setTimeout(() => {
       updateBars(mock[1]);
-      updateImages(mock[1]);
+      updateBackground(mock[1]);
       updateRanks(mock[1]);
       updateProfileImg(mock[1]);
       updateBadgeImg(mock[1]);
       updateNickname(mock[1]);
+      updateTime(mock[1]);
+      updateSolved(mock[1]);
     }, 3000);
 
   }, []);
