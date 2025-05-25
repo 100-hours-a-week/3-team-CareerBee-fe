@@ -12,7 +12,7 @@ export default function MainLayout() {
   const token = useAuthStore((state) => state.token);
 
   const headerType = (() => {
-    if (location.pathname === '/login') return 'login';
+    if (location.pathname === '/login') return 'navLogin';
     if (location.pathname === '/' && !!token) return 'main';
     else if (location.pathname === '/') return 'login';
     if (location.pathname.startsWith('/company') && !!token) return 'down';

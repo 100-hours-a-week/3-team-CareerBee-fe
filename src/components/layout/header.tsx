@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from '@/static/logo-with-text-2.png';
 import { useUiStore } from '@/store/ui';
 interface HeaderProps {
-  type: 'main' | 'login' | 'down' | 'downLogin' | 'nav' | 'minimal';
+  type: 'main' | 'login' | 'down' | 'downLogin' | 'nav' | 'navLogin' | 'minimal';
   point?: number;
   hasNewNotification?: boolean;
 }
@@ -13,7 +13,7 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
   const navigate = useNavigate();
   const showUserAssets = type === 'main' || type === 'down' || type === 'nav';
   const isDown = type === 'down' || type === 'downLogin';
-  const isNav = type === 'nav' || type === 'minimal';
+  const isNav = type === 'nav' || type === 'minimal' || type === 'navLogin';
   const isMinimal = type === 'minimal';
 
   const setBackPressedFromHeader = useUiStore((state) => state.setBackPressedFromHeader);
