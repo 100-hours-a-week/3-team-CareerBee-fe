@@ -7,19 +7,46 @@ import tseslint from 'typescript-eslint';
 export default tseslint.config(
   { ignores: ['dist'] },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    extends: [
+      js.configs.recommended,
+      ...tseslint.configs.recommended,
+      'airbnb',
+      'airbnb-typescript',
+      'plugin:@typescript-eslint/recommended',
+      'plugin:react/recommended',
+      'plugin:react-hooks/recommended',
+      'plugin:prettier/recommended',
+    ],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+      parserOptions: {
+        project: './tsconfig.app.json',
+      },
     },
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      '@typescript-eslint': tseslint,
+      react: require('eslint-plugin-react'),
+      prettier: require('eslint-plugin-prettier'),
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      'no-console': 'warn',
+      'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
+      '@typescript-eslint/no-unused-vars': ['error'],
+      'prettier/prettier': ['error'],
+      'react/react-in-jsx-scope': 'off',
+      'import/prefer-default-export': 'off',
+      'react/jsx-props-no-spreading': 'off',
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
     },
   },
 );
