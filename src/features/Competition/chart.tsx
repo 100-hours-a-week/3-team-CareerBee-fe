@@ -30,6 +30,35 @@ const exitTransition = <
     .attr('width', 0)
     .remove();
 
+const updateTransition = <
+  El extends SVGElement,
+  ParentEl extends d3.BaseType = SVGGElement
+>(
+  sel: d3.Selection<El, chartProps, ParentEl, unknown>,
+  xPadding: number,
+  yPaddingTop: number
+) =>{
+  sel
+  .attr('x', (data) => {
+    const prevItem = prev.find(p => p.nickname === data.nickname);
+    const prevValue = prevItem ? prevItem.value : 0;
+    return xScale(prevValue)+xPadding;
+  })
+  .attr('y', (data) => {
+    const prevItem = prev.find(p => p.nickname === data.nickname);
+    const prevRank = prevItem ? prevItem.rank : data.rank;
+    return yScale(prevRank, yPaddingTop);
+  })
+  .transition()
+    .duration((data) => {
+    const prevItem = prev.find(p => p.nickname === data.nickname);
+    const double = prevItem ? 1 : 2;
+    return transTime*double;
+  })
+    .attr('y', (data) => yScale(data.rank, yPaddingTop))
+    .attr('x', (data) => xScale(data.value)+xPadding)
+}
+
 export default function BarChart() {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
@@ -48,7 +77,6 @@ export default function BarChart() {
         .selectAll<SVGRectElement, chartProps>("rect")
         
         return (data: chartProps[]) => {
-          const dataLength=data.length;
           const widthScale = d3.scaleLinear()
             .domain([0, d3.max(data, d => d.value)!])
             .range([0, width]);
@@ -91,7 +119,6 @@ export default function BarChart() {
           .selectAll<SVGImageElement, chartProps>("image");
 
       return (data: chartProps[]) => {
-        const dataLength=data.length;
         image = image.data(data, data=>data.nickname)
         .join(
           (enter) => enter.append("image")
@@ -135,55 +162,68 @@ export default function BarChart() {
           .selectAll<SVGTextElement, chartProps>("text");
 
       return (data: chartProps[]) => {
-        const dataLength=data.length;
-        const rankPadding=20;
+        const xPadding=20;
         const yPaddingTop=(barHeight+gap*2)/2;
         rank = rank.data(data,  data=>data.rank)
         .join(
           (enter) => enter.append("text")
               .attr('y', (data)=>yScale(data.rank, yPaddingTop))
-              .attr('x', xScale(0)+rankPadding)
+              .attr('x', xScale(0)+xPadding)
               .text(d => d.rank)
               .transition()
                 .duration(transTime*2)
-                .attr('x', (data) => xScale(data.value)+rankPadding),
-          update => update
-            .attr('x', (data) => {
-              const prevItem = prev.find(p => p.nickname === data.nickname);
-              const prevValue = prevItem ? prevItem.value : 0;
-              return xScale(prevValue)+rankPadding;
-            })
-            .attr('y', (data) => {
-              const prevItem = prev.find(p => p.nickname === data.nickname);
-              const prevRank = prevItem ? prevItem.rank : data.rank;
-              return yScale(prevRank, yPaddingTop);
-            })
-            .transition()
-              .duration((data) => {
-              const prevItem = prev.find(p => p.nickname === data.nickname);
-              const double = prevItem ? 1 : 2;
-              return transTime*double;
-            })
-              .attr('y', (data) => yScale(data.rank, yPaddingTop))
-              .attr('x', (data) => xScale(data.value)+rankPadding)
-            ,
+                .attr('x', (data) => xScale(data.value)+xPadding),
+          (update) => {
+            updateTransition(update, xPadding, yPaddingTop);
+            return update;
+          },
           (exit) => exitTransition(exit)
         )
       }
     }
 
+    const profileImg = (svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>)=>{
+      let profileImg = svg.append("g")
+          .selectAll<SVGImageElement, chartProps>("image");
+
+      return (data: chartProps[]) => {
+        const xPadding=32;
+        const yPaddingTop=4;
+        profileImg = profileImg.data(data, data=>data.nickname)
+        .join(
+          (enter) => enter.append("image")
+            .attr("preserveAspectRatio", "none")
+            .attr('y', (data)=>yScale(data.rank, yPaddingTop))
+            .attr('x', xScale(0)+xPadding)
+            .attr("width", 32)
+            .attr('height', 32)
+            .attr("href", d => d.profileImgUrl)
+            .transition()
+              .duration(transTime*2)
+              .attr('x', (data) => xScale(data.value)+xPadding),
+          (update) => {
+            updateTransition(update, xPadding, yPaddingTop);
+            return update;
+          },
+          (exit) => exitTransition(exit)
+        )
+      }
+    }
     
     const updateBars = bars(svg);
     const updateImages = images(svg);
     const updateRanks = ranks(svg);
+    const updateProfileImg = profileImg(svg);
     updateBars(mock[0]);
     updateImages(mock[0]);
     updateRanks(mock[0]);
+    updateProfileImg(mock[0]);
     prev = mock[0]
     setTimeout(() => {
       updateBars(mock[1]);
       updateImages(mock[1]);
       updateRanks(mock[1]);
+      updateProfileImg(mock[1]);
     }, 3000);
 
   }, []);

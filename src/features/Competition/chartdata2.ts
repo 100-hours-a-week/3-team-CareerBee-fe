@@ -21,7 +21,7 @@ export const mockChart2: chartProps[] = [
   {
     rank: 2,
     nickname: '신규유저',
-    profileImgUrl: 'https://test1.jpeg',
+    profileImgUrl: '/assets/no-profile.png',
     badgeImgUrl: 'https://test1.jpeg',
     elapsedTime: '03.24.123',
     solvedCount: 5,
