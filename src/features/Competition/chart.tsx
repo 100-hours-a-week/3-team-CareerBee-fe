@@ -44,13 +44,14 @@ const updateTransition = <
 >(
   sel: d3.Selection<El, chartProps, ParentEl, unknown>,
   xPadding: number,
-  yPaddingTop: number
+  yPaddingTop: number,
+  alignRight: boolean = false,
 ) =>{
   sel
   .attr('x', (data) => {
     const prevItem = prev.find(p => p.nickname === data.nickname);
     const prevValue = prevItem ? prevItem.rank : 0;
-    return xScale(prevValue)+xPadding;
+    return (alignRight ? 0 : xScale(prevValue))+xPadding;
   })
   .attr('y', (data) => {
     const prevItem = prev.find(p => p.nickname === data.nickname);
@@ -64,7 +65,7 @@ const updateTransition = <
     return transTime*double;
   })
     .attr('y', (data) => yScale(data.rank, yPaddingTop))
-    .attr('x', (data) => xScale(data.rank)+xPadding)
+    .attr('x', (data) => (alignRight ? 0 : xScale(data.rank))+xPadding)
 }
 
 
@@ -200,7 +201,9 @@ export default function BarChart() {
       elem: string,
       fontWeight: string,
       fontSize: string,
-      base: string = "nickname" 
+      base: string = "nickname",
+      alignRight: boolean = false,
+      isSolved: boolean = false,
     )=>{
       let textElement = svg.append("g")
           .style("font", `${fontWeight} ${fontSize} var(--font-pretendard)`)
@@ -213,12 +216,12 @@ export default function BarChart() {
           (enter) => enter.append("text")
               .attr('y', (data)=>yScale(data.rank, yPaddingTop))
               .attr('x', xScale(0)+xPadding)
-              .text(d => d[elem as keyof chartProps])
+              .text(d => d[elem as keyof chartProps] + (isSolved ? '/5' : ''))
               .transition()
                 .duration(transTime*2)
-                .attr('x', (data) => xScale(data.rank)+xPadding),
+                .attr('x', (data) => (alignRight ? 0 : xScale(data.rank)) + xPadding),
           (update) => {
-            updateTransition(update, xPadding, yPaddingTop);
+            updateTransition(update, xPadding, yPaddingTop, alignRight);
             return update;
           },
           (exit) => exitTransition(exit, xPadding)
@@ -232,8 +235,8 @@ export default function BarChart() {
     const updateProfileImg = imageElement(svg, 32, 4, 32, "profileImgUrl");
     const updateBadgeImg = imageElement(svg, 68, 12, 16, "badgeImgUrl");
     const updateNickname = textElement(svg, 124, (barHeight+gap*2)/2, "nickname", "bold", "12px");
-    const updateTime= textElement(svg, width-124, (barHeight+gap*2)/2, "elapsedTime", "400", "10px");
-    const updateSolved = textElement(svg, width-40, (barHeight+gap*2)/2, "solvedCount", "400", "10px");
+    const updateTime= textElement(svg, width-100, (barHeight+gap*2)/2, "elapsedTime", "400", "10px", undefined, true);
+    const updateSolved = textElement(svg, width-20, (barHeight+gap*2)/2, "solvedCount", "400", "10px", undefined, true, true);
     updateBars(mock[0]);
     updateBackground(mock[0]);
     updateRanks(mock[0]);
@@ -243,6 +246,8 @@ export default function BarChart() {
     updateTime(mock[0]);
     updateSolved(mock[0]);
     prev = mock[0]
+
+    // 목데이터
     setTimeout(() => {
       updateBars(mock[1]);
       updateBackground(mock[1]);
