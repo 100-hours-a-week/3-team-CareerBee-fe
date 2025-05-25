@@ -65,25 +65,10 @@ export default function BarChart() {
               .attr('ry', 8)
               .attr("id", d => `bar-${d.nickname}`)
               .transition()
-                .duration(transTime)
+                .duration(transTime*2)
                 .attr('x', (data) => xScale(data.value))
               ,
             (update) => update
-              // .attr('x', (data) => {
-              //   const prevItem = prev.find(p => p.nickname === data.nickname);
-              //   const prevValue = prevItem ? prevItem.value : 0;
-              //   return xScale(prevValue);
-              // })
-              // .attr('y', (data) => {
-              //   const prevItem = prev.find(p => p.nickname === data.nickname);
-              //   const prevRank = prevItem ? prevItem.rank : dataLength;
-              //   return (prevRank - 1) * barHeight + (prevRank - 1) * gap;
-              // })
-              .attr('width', (data) => {
-                  const prevItem = prev.find(p => p.nickname === data.nickname);
-                  const prevRank = prevItem ? prevItem.value : 0;
-                  return widthScale(prevRank)
-              })
               .transition()
                 .duration(transTime)
                 .attr('y', (data) => (data.rank-1)*barHeight+(data.rank-1)*gap)
@@ -123,20 +108,10 @@ export default function BarChart() {
               return "/assets/yellow-rank.svg"; // rank ≥ 4
             })
             .transition()
-              .duration(transTime)
+              .duration(transTime*2)
               .attr('x', (data) => xScale(data.value)),
           update => update
             .attr("preserveAspectRatio", "none")
-            // .attr('x', (data) => {
-            //   const prevItem = prev.find(p => p.nickname === data.nickname);
-            //   const prevValue = prevItem ? prevItem.value : 0;
-            //   return xScale(prevValue);
-            // })
-            // .attr('y', (data) => {
-            //   const prevItem = prev.find(p => p.nickname === data.nickname);
-            //   const prevRank = prevItem ? prevItem.rank : dataLength;
-            //   return yScale(prevRank, 0);
-            // })
             .attr("href", d => {
               if (d.rank === 1) return "/assets/red-rank.svg";
               if (d.rank === 2) return "/assets/green-rank.svg";
@@ -170,7 +145,7 @@ export default function BarChart() {
               .attr('x', xScale(0)+rankPadding)
               .text(d => d.rank)
               .transition()
-                .duration(transTime)
+                .duration(transTime*2)
                 .attr('x', (data) => xScale(data.value)+rankPadding),
           update => update
             .attr('x', (data) => {
@@ -184,7 +159,11 @@ export default function BarChart() {
               return yScale(prevRank, yPaddingTop);
             })
             .transition()
-              .duration(transTime)
+              .duration((data) => {
+              const prevItem = prev.find(p => p.nickname === data.nickname);
+              const double = prevItem ? 1 : 2;
+              return transTime*double;
+            })
               .attr('y', (data) => yScale(data.rank, yPaddingTop))
               .attr('x', (data) => xScale(data.value)+rankPadding)
             ,
