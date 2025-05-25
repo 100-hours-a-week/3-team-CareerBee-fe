@@ -17,7 +17,7 @@ interface chartProps {
 }
 
 const width = 440;
-const height = 500;
+const height = 436;
 const barHeight = 40;
 const gap = 4;
 const transTime = 1000;
