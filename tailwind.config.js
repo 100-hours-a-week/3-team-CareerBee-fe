@@ -11,7 +11,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-sans)'],
+        pretendard: ['var(--font-pretendard)'],
+        ria: ['"RiaSans"', 'sans-serif'],
       },
       borderRadius: {
         xl: 'calc(var(--radius) + 4px)',
