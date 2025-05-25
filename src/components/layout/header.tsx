@@ -24,11 +24,11 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
       <div className="flex items-center gap-2">
         {isNav ? (
           <button onClick={() => navigate(-1)} style={{ padding: 'inherit' }}>
-          <PiCaretLeft className="w-7 h-7 " />
+            <PiCaretLeft className="w-7 h-7 " />
           </button>
         ) : isDown ? (
           <button
-            onClick={() => { 
+            onClick={() => {
               setBackPressedFromHeader(true);
               setTimeout(() => {
                 navigate(-1);

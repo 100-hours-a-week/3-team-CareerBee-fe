@@ -10,8 +10,8 @@ export interface CompanySuggestion {
 interface SearchState {
   search: string;
   suggestions: CompanySuggestion[];
-  setSearch: (value: string) => void;
-  setSuggestions: (suggestions: CompanySuggestion[]) => void;
+  setSearch: (_value: string) => void;
+  setSuggestions: (_suggestions: CompanySuggestion[]) => void;
 }
 
 export const useSearchStore = create<SearchState>((set) => ({

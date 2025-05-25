@@ -26,9 +26,8 @@ export const mockChart: chartProps[] = [
     elapsedTime: '04.24.123',
     solvedCount: 5,
     value: 95,
-
   },
-    {
+  {
     rank: 3,
     nickname: '김춘식3',
     profileImgUrl: '/assets/no-profile.png',
@@ -37,7 +36,7 @@ export const mockChart: chartProps[] = [
     solvedCount: 5,
     value: 50,
   },
-      {
+  {
     rank: 4,
     nickname: '김춘식4',
     profileImgUrl: '/assets/no-profile.png',
@@ -46,7 +45,7 @@ export const mockChart: chartProps[] = [
     solvedCount: 5,
     value: 40,
   },
-        {
+  {
     rank: 5,
     nickname: '김춘식5',
     profileImgUrl: '/assets/no-profile.png',
@@ -55,7 +54,7 @@ export const mockChart: chartProps[] = [
     solvedCount: 5,
     value: 20,
   },
-          {
+  {
     rank: 6,
     nickname: '김춘식6',
     profileImgUrl: '/assets/no-profile.png',
@@ -64,7 +63,7 @@ export const mockChart: chartProps[] = [
     solvedCount: 5,
     value: 15,
   },
-          {
+  {
     rank: 7,
     nickname: '김춘식7',
     profileImgUrl: '/assets/no-profile.png',
@@ -73,7 +72,7 @@ export const mockChart: chartProps[] = [
     solvedCount: 5,
     value: 10,
   },
-          {
+  {
     rank: 8,
     nickname: '김춘식8',
     profileImgUrl: '/assets/no-profile.png',
@@ -82,7 +81,7 @@ export const mockChart: chartProps[] = [
     solvedCount: 5,
     value: 8,
   },
-          {
+  {
     rank: 9,
     nickname: '김춘식9',
     profileImgUrl: '/assets/no-profile.png',
@@ -91,7 +90,7 @@ export const mockChart: chartProps[] = [
     solvedCount: 5,
     value: 7,
   },
-          {
+  {
     rank: 10,
     nickname: '김춘식10',
     profileImgUrl: '/assets/no-profile.png',

@@ -6,6 +6,7 @@ import { CompanySuggestion } from '@/features/Map/store/search';
 import { useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
+import React from 'react';
 
 export function SearchBar({
   suggestions = [],
@@ -15,10 +16,10 @@ export function SearchBar({
   ...props
 }: React.ComponentProps<typeof Input> & {
   suggestions?: CompanySuggestion[];
-  onSuggestionSelect?: (value: CompanySuggestion) => void;
+  onSuggestionSelect?: (_value: CompanySuggestion) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const showList = value && suggestions.length > 0; 
+  const showList = value && suggestions.length > 0;
   const [selectedIndex, setSelectedIndex] = useState<number>(-2);
 
   const clearInput = () => {
@@ -28,17 +29,17 @@ export function SearchBar({
     } as React.ChangeEvent<HTMLInputElement>;
     onChange?.(syntheticEvent);
   };
-useEffect(() => {
-  if (value === '') {
-    setSelectedIndex(-2);
-  }
-}, [value]);
+  useEffect(() => {
+    if (value === '') {
+      setSelectedIndex(-2);
+    }
+  }, [value]);
   return (
     <div className="absolute w-full z-50 px-4 py-2">
       <div
         className={cn(
           'overflow-hidden transition-all duration-300 border bg-white shadow rounded-3xl',
-          showList ? 'max-h-[400px]' : 'max-h-[56px]'
+          showList ? 'max-h-[400px]' : 'max-h-[56px]',
         )}
       >
         <div className="relative">
@@ -64,9 +65,7 @@ useEffect(() => {
 
               if (e.key === 'ArrowUp') {
                 e.preventDefault();
-                setSelectedIndex((prev) =>
-                  prev <= 0 ? suggestions.length - 1 : prev - 1
-                );
+                setSelectedIndex((prev) => (prev <= 0 ? suggestions.length - 1 : prev - 1));
               }
 
               if (e.key === 'Enter' && selectedIndex >= 0) {

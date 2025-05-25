@@ -21,7 +21,7 @@ const toggleVariants = cva(
           data-[state=on]:fill-primary,`,
       },
       size: {
-        xs: 'h-6 px-1 min-w-6', 
+        xs: 'h-6 px-1 min-w-6',
         sm: 'h-8 px-1.5 min-w-8',
         md: 'h-9 px-2 min-w-9',
         lg: 'h-10 px-2.5 min-w-10',

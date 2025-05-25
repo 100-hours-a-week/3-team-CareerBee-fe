@@ -6,9 +6,9 @@ export const handleToggleBookmark = async (
   token: string,
   companyId: number,
   isBookmarked: boolean,
-  setIsBookmarked: (value: boolean) => void
+  setIsBookmarked: (_value: boolean) => void,
 ) => {
-    if (import.meta.env.VITE_USE_MOCK === 'true') {
+  if (import.meta.env.VITE_USE_MOCK === 'true') {
     console.warn('[mock] toggleBookmark 작동 중');
 
     return new Promise<boolean>((resolve) => {

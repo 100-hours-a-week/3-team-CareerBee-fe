@@ -1,38 +1,39 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
-import tseslint from 'typescript-eslint';
+const js = require('@eslint/js');
+const globals = require('globals');
+const reactHooks = require('eslint-plugin-react-hooks');
+const reactRefresh = require('eslint-plugin-react-refresh');
+const react = require('eslint-plugin-react');
+const prettier = require('eslint-plugin-prettier');
+const tseslint = require('typescript-eslint');
 
-export default tseslint.config(
-  { ignores: ['dist'] },
+module.exports = [
   {
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-      'airbnb',
-      'airbnb-typescript',
-      'plugin:@typescript-eslint/recommended',
-      'plugin:react/recommended',
-      'plugin:react-hooks/recommended',
-      'plugin:prettier/recommended',
-    ],
+    ignores: ['dist'],
+  },
+  js.configs.recommended,
+  {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+      parser: tseslint.parser,
       parserOptions: {
-        project: './tsconfig.app.json',
+        ecmaFeatures: {
+          jsx: true,
+        },
+        project: './tsconfig.json',
+        sourceType: 'module',
       },
     },
     plugins: {
+      '@typescript-eslint': tseslint.plugin,
+      react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      '@typescript-eslint': tseslint,
-      react: require('eslint-plugin-react'),
-      prettier: require('eslint-plugin-prettier'),
+      prettier,
     },
     rules: {
+      ...tseslint.configs.recommendedTypeChecked[0].rules,
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'no-console': 'warn',
@@ -42,6 +43,7 @@ export default tseslint.config(
       'react/react-in-jsx-scope': 'off',
       'import/prefer-default-export': 'off',
       'react/jsx-props-no-spreading': 'off',
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     },
     settings: {
       react: {
@@ -49,4 +51,4 @@ export default tseslint.config(
       },
     },
   },
-);
+];

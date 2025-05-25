@@ -20,7 +20,7 @@ export const CLUSTER_STYLES = [
     textAlign: 'center',
     lineHeight: '45px',
     fontSize: '14px',
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
     boxShadow: '0 0 6px 4px rgba(93, 162, 113, 0.3)',
   },
   {

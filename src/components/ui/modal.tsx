@@ -60,15 +60,15 @@ const AlertDialogContent = React.forwardRef<
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
 
 const AlertDialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('flex flex-col space-y-2 text-center w-full sm:text-left', className)} {...props} />
+  <div
+    className={cn('flex flex-col space-y-2 text-center w-full sm:text-left', className)}
+    {...props}
+  />
 );
 AlertDialogHeader.displayName = 'AlertDialogHeader';
 
 const AlertDialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn('flex flex-row m-auto gap-4', className)}
-    {...props}
-  />
+  <div className={cn('flex flex-row m-auto gap-4', className)} {...props} />
 );
 AlertDialogFooter.displayName = 'AlertDialogFooter';
 
@@ -100,11 +100,7 @@ const AlertDialogAction = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Action>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
 >(({ className, ...props }, ref) => (
-  <AlertDialogPrimitive.Action
-    ref={ref}
-    className={cn(buttonVariants(), className)}
-    {...props}
-  />
+  <AlertDialogPrimitive.Action ref={ref} className={cn(buttonVariants(), className)} {...props} />
 ));
 AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName;
 
@@ -133,7 +129,7 @@ interface ModalProps {
   cancelText?: string;
   actionText?: string;
   cancelButton?: boolean;
-  onAction: ()=>void;
+  onAction: () => void;
 }
 
 export const Modal = ({
@@ -151,7 +147,8 @@ export const Modal = ({
       <AlertDialogTrigger asChild>
         {React.cloneElement(trigger as React.ReactElement, {
           ref: triggerRef,
-        })}</AlertDialogTrigger>
+        })}
+      </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <div className="flex items-center justify-center">
@@ -169,7 +166,11 @@ export const Modal = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           {cancelText ? <AlertDialogCancel className="w-28">{cancelText}</AlertDialogCancel> : null}
-          {actionText ? <AlertDialogAction className="w-28" onClick={onAction}>{actionText}</AlertDialogAction> : null}
+          {actionText ? (
+            <AlertDialogAction className="w-28" onClick={onAction}>
+              {actionText}
+            </AlertDialogAction>
+          ) : null}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

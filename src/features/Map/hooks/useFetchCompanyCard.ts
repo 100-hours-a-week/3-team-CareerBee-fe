@@ -5,12 +5,7 @@ import { instance as axios } from '@/features/Member/lib/axios';
 import { useFetchBookmarkStatus } from '@/hooks/useFetchBookmarkStatus';
 
 export function useFetchCompanyCard(companyId: number) {
-  const {
-    openCardIndex,
-    setOpenCardIndex,
-    setCompanyInfo,
-    setIsBookmarked,
-  } = useCompanyStore();
+  const { openCardIndex, setOpenCardIndex, setCompanyInfo, setIsBookmarked } = useCompanyStore();
   const token = useAuthStore((state) => state.token);
   const { bookmarkStatus } = useFetchBookmarkStatus();
 
@@ -19,7 +14,9 @@ export function useFetchCompanyCard(companyId: number) {
     setOpenCardIndex(newIndex);
 
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${companyId}/summary`);
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/v1/companies/${companyId}/summary`,
+      );
       setCompanyInfo(data.data);
       // console.log("🎀 기업 간단 정보 조회 성공 ", useCompanyStore.getState().companyInfo);
 
@@ -28,14 +25,21 @@ export function useFetchCompanyCard(companyId: number) {
 
         await bookmarkStatus(companyId);
         // console.log("🎀 저장 여부 조회 성공!!")
-
       } else {
         setIsBookmarked(false);
       }
     } catch (e) {
       console.error('기업 간단 정보 조회 실패: ', e);
     }
-  }, [openCardIndex, companyId, setOpenCardIndex, setCompanyInfo, setIsBookmarked, token, bookmarkStatus]);
+  }, [
+    openCardIndex,
+    companyId,
+    setOpenCardIndex,
+    setCompanyInfo,
+    setIsBookmarked,
+    token,
+    bookmarkStatus,
+  ]);
 
   return { fetchCompanyDetail };
 }

@@ -1,10 +1,11 @@
 // 지도 기반의 검색 페이지. 메인 페이지이자 진입 페이지.
 // 도메인 상에서 "지도 도메인"
+/* global kakao */
 
 import { useState, useEffect, useRef } from 'react';
 import { SearchBar } from './components/SearchBar';
-import { FilterGroup } from '@/features/Map/components/filter'
-import { Map, MarkerClusterer, Polygon  } from 'react-kakao-maps-sdk';
+import { FilterGroup } from '@/features/Map/components/filter';
+import { Map, MarkerClusterer, Polygon } from 'react-kakao-maps-sdk';
 import MapOverlay from './components/MapOverlay';
 import { useCompanyStore } from '@/store/company';
 import { useSearchStore } from '@/features/Map/store/search';
@@ -15,12 +16,17 @@ import { instance as axios } from '@/features/Member/lib/axios';
 
 // import { useAuthStore  } from '@/store/auth';
 import { Button } from '@/components/ui/button';
-import { PiCrosshairSimple } from "react-icons/pi";
+import { PiCrosshairSimple } from 'react-icons/pi';
 
-import {toast} from '@/hooks/useToast';
+import { toast } from '@/hooks/useToast';
 
 import { useMapStore } from '@/features/Map/store/map';
-import { RADIUS_BY_LEVEL, FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/features/Map/assets/map';
+import {
+  RADIUS_BY_LEVEL,
+  FILTERS,
+  MAP_POLYGON_PATH,
+  MAP_POLYGON_HOLE,
+} from '@/features/Map/assets/map';
 
 import { useQuery } from '@tanstack/react-query';
 // import { Loader } from '@/components/ui/loader';
@@ -40,10 +46,10 @@ export interface CompanyProps {
 export default function Main() {
   const { search, setSearch, suggestions } = useSearchStore();
   useFetchSuggestions();
-  
+
   const [loaded, setLoaded] = useState(false);
   // const [companies, setCompanies] = useState<CompanyProps[]>([]);
-  
+
   const { openCardIndex, setOpenCardIndex } = useCompanyStore();
   const { center, zoom, setCenter, setZoom } = useMapStore();
 
@@ -51,27 +57,26 @@ export default function Main() {
 
   const mapRef = useRef<kakao.maps.Map | null>(null);
 
-const {
-  data: companies = [],
-  // isFetching,
-} = useQuery<CompanyProps[], Error>({
-  queryKey: ['companyList', center.lat, center.lng, zoom],
-  queryFn: async () => {
-    const radius = RADIUS_BY_LEVEL[zoom] ?? 1000;
-    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies`, {
-      params: { latitude: center.lat, longitude: center.lng, radius },
-    });
-    // const { data } = await axios.get('/mock/companies.json');  //🚨 목 데이터로 작업할 때만 켜기
-    // console.log("🐳 api fetch: ", center.lat, " ", center.lng, " ", zoom)
-    return data.data.companies; 
-  },
-  placeholderData: (previous) => previous,
-});
+  const {
+    data: companies = [],
+    // isFetching,
+  } = useQuery<CompanyProps[], Error>({
+    queryKey: ['companyList', center.lat, center.lng, zoom],
+    queryFn: async () => {
+      const radius = RADIUS_BY_LEVEL[zoom] ?? 1000;
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies`, {
+        params: { latitude: center.lat, longitude: center.lng, radius },
+      });
+      // const { data } = await axios.get('/mock/companies.json');  //🚨 목 데이터로 작업할 때만 켜기
+      // console.log("🐳 api fetch: ", center.lat, " ", center.lng, " ", zoom)
+      return data.data.companies;
+    },
+    placeholderData: (previous) => previous,
+  });
 
-// useEffect(()=>{
-//   console.log("🐝 ", center.lat, " ", center.lng, " ", zoom)
-// },[center, zoom])
-  
+  // useEffect(()=>{
+  //   console.log("🐝 ", center.lat, " ", center.lng, " ", zoom)
+  // },[center, zoom])
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -100,7 +105,7 @@ const {
 
   const handleMoveToCurrentLocation = () => {
     if (!mapRef.current) return;
-  
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
@@ -114,12 +119,12 @@ const {
         }, 300);
       },
       (error) => {
-         if (error.code === error.PERMISSION_DENIED) {
-          toast({title: `위치 권한이 차단되어 있어요.\n브라우저 설정에서 권한을 허용해주세요.`});
+        if (error.code === error.PERMISSION_DENIED) {
+          toast({ title: `위치 권한이 차단되어 있어요.\n브라우저 설정에서 권한을 허용해주세요.` });
         } else {
-          toast({title: '위치 정보를 가져올 수 없습니다.'});
+          toast({ title: '위치 정보를 가져올 수 없습니다.' });
         }
-      }
+      },
     );
   };
 
@@ -132,23 +137,21 @@ const {
   const onCreate = (_target: kakao.maps.MarkerClusterer) => {
     const map = mapRef.current;
     if (!map) return;
-  
+
     const clusterer = _target as unknown as {
       _clusters: SafeCluster[];
     };
-  
+
     clusterer._clusters.forEach((cluster) => {
       const markers = cluster._markers ?? [];
-  
+
       // 실제 마커만 필터링(실제 마커: u, 기업 간단 카드: I)
-      const realMarkers = markers.filter(
-        (marker) => marker.constructor.name !== 'I'
-      );
-  
-      if (realMarkers.length === markers.length-1 && cluster._clusterMarker) {
+      const realMarkers = markers.filter((marker) => marker.constructor.name !== 'I');
+
+      if (realMarkers.length === markers.length - 1 && cluster._clusterMarker) {
         // 1. 클러스터 마커 숨기기
         cluster._clusterMarker.setVisible(false);
-  
+
         // 2. 내부 마커 직접 지도에 표시
         markers.forEach((marker) => {
           marker.setMap(map);
@@ -161,49 +164,51 @@ const {
 
   return (
     <>
-        <SearchBar
-          placeholder="검색어를 입력하세요."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          suggestions={suggestions}
-          onSuggestionSelect={async (suggestion) => {
-            try {
-              // console.log('🔎', suggestion)
-              const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${suggestion.id}/locations`);
-              const { latitude, longitude } = res.data.data.locationInfo;
+      <SearchBar
+        placeholder="검색어를 입력하세요."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        suggestions={suggestions}
+        onSuggestionSelect={async (suggestion) => {
+          try {
+            // console.log('🔎', suggestion)
+            const res = await axios.get(
+              `${import.meta.env.VITE_API_URL}/api/v1/companies/${suggestion.id}/locations`,
+            );
+            const { latitude, longitude } = res.data.data.locationInfo;
 
-              // console.log('🔎', latitude, ' ', longitude)
-              // setSearch(suggestion.name);
-              setHighlightedCompanyId(suggestion.id);
+            // console.log('🔎', latitude, ' ', longitude)
+            // setSearch(suggestion.name);
+            setHighlightedCompanyId(suggestion.id);
 
-              const map = mapRef.current;
-              if (map) {
-                const newCenter = new window.kakao.maps.LatLng(latitude, longitude);
-                map.setLevel(3);
-                map.setCenter(newCenter);
+            const map = mapRef.current;
+            if (map) {
+              const newCenter = new window.kakao.maps.LatLng(latitude, longitude);
+              map.setLevel(3);
+              map.setCenter(newCenter);
 
-                setCenter({
-                  lat: newCenter.getLat(),
-                  lng: newCenter.getLng(),
-                });
-                setZoom(3);
-              }
-            } catch (error) {
-              console.error('❌ 기업 위치 정보 조회 실패', error);
+              setCenter({
+                lat: newCenter.getLat(),
+                lng: newCenter.getLng(),
+              });
+              setZoom(3);
             }
-          }}
-        />
+          } catch (error) {
+            console.error('❌ 기업 위치 정보 조회 실패', error);
+          }
+        }}
+      />
       <div className="relative flex item-center justify-center w-full h-full top-16 pb-16">
         {/* {isFetching && <div className='absolute z-50 mt-72'><Loader/></div>} */}
         {loaded && (
           <Map
             ref={mapRef}
-            center={{ lat: center.lat , lng: center.lng }}
+            center={{ lat: center.lat, lng: center.lng }}
             className="w-full h-full pb-16"
             level={zoom}
             onZoomChanged={handleMapMove}
             onDragEnd={handleMapMove}
-            onClick={() => setOpenCardIndex(null)} 
+            onClick={() => setOpenCardIndex(null)}
           >
             <MarkerClusterer
               averageCenter={true}
@@ -213,16 +218,16 @@ const {
               calculator={[10, 30, 50, 100]}
               styles={CLUSTER_STYLES}
             >
-            {companies.map((company, index) => (
-              <MapOverlay
-                key={company.id}
-                company={company}
-                index={index}
-                isOpen={openCardIndex === company.id}
-                disabled={markerDisabledMap[company.id] ?? false}
-                isHighlighted={highlightedCompanyId === company.id}
-              />
-            ))}
+              {companies.map((company, index) => (
+                <MapOverlay
+                  key={company.id}
+                  company={company}
+                  index={index}
+                  isOpen={openCardIndex === company.id}
+                  disabled={markerDisabledMap[company.id] ?? false}
+                  isHighlighted={highlightedCompanyId === company.id}
+                />
+              ))}
             </MarkerClusterer>
             <Polygon
               path={[MAP_POLYGON_PATH, MAP_POLYGON_HOLE]}
@@ -246,12 +251,12 @@ const {
         <div className="absolute bottom-[88px] left-3 z-40 [&_svg]:size-8">
           <div>
             <Button
-              label={<PiCrosshairSimple/>}
+              label={<PiCrosshairSimple />}
               variant="icon"
-              className='bg-white rounded-full w-12 h-12 m-0 p-2 shadow-md'
+              className="bg-white rounded-full w-12 h-12 m-0 p-2 shadow-md"
               onClick={handleMoveToCurrentLocation}
-              />
-              </div>
+            />
+          </div>
         </div>
       </div>
     </>

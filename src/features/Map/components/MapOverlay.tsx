@@ -4,7 +4,7 @@ import noImg from '@/assets/no-image.png';
 import { useCompanyStore } from '@/store/company';
 import { useAuthStore } from '@/features/Member/store/auth';
 import { useFetchCompanyCard } from '@/features/Map/hooks/useFetchCompanyCard';
-import { CompanyProps } from '@/features/Map/Main'
+import { CompanyProps } from '@/features/Map/Main';
 
 interface MapOverlayProps {
   company: CompanyProps;
@@ -14,18 +14,8 @@ interface MapOverlayProps {
   isHighlighted: boolean;
 }
 
-export default function MapOverlay({
-  company,
-  isOpen,
-  disabled,
-  isHighlighted,
-}: MapOverlayProps) {
-  const {
-    companyInfo,
-    setOpenCardIndex,
-    isBookmarked,
-    setIsBookmarked,
-  } = useCompanyStore();
+export default function MapOverlay({ company, isOpen, disabled, isHighlighted }: MapOverlayProps) {
+  const { companyInfo, setOpenCardIndex, isBookmarked, setIsBookmarked } = useCompanyStore();
   const token = useAuthStore((state) => state.token);
 
   const position = {
@@ -35,25 +25,30 @@ export default function MapOverlay({
 
   const { fetchCompanyDetail } = useFetchCompanyCard(company.id);
 
-
   // if(isOpen)
   //   console.log("🟢 companyInfo:", companyInfo);
   return (
     <>
-      {!disabled &&
-          <MapMarker
-            position={position}
-            image={{
-              src: company.markerUrl ?? noImg,
-              size: isHighlighted ? { width: 44, height: 60 } : { width: 37, height: 50 },
-            }}
-            clickable={true}
-            onClick={fetchCompanyDetail}
-            zIndex={isHighlighted ? 2 : 1}
-          />
-      }
+      {!disabled && (
+        <MapMarker
+          position={position}
+          image={{
+            src: company.markerUrl ?? noImg,
+            size: isHighlighted ? { width: 44, height: 60 } : { width: 37, height: 50 },
+          }}
+          clickable={true}
+          onClick={fetchCompanyDetail}
+          zIndex={isHighlighted ? 2 : 1}
+        />
+      )}
       {isOpen && companyInfo && (
-        <CustomOverlayMap xAnchor={0.5} yAnchor={1.22} position={position} clickable={true} zIndex={30}>
+        <CustomOverlayMap
+          xAnchor={0.5}
+          yAnchor={1.22}
+          position={position}
+          clickable={true}
+          zIndex={30}
+        >
           <CompanyCard
             companyId={companyInfo.id}
             companyName={companyInfo.name}
@@ -69,7 +64,7 @@ export default function MapOverlay({
               : {
                   isBookmarked: false,
                 })}
-            setIsBookmarked= {setIsBookmarked}
+            setIsBookmarked={setIsBookmarked}
           />
         </CustomOverlayMap>
       )}

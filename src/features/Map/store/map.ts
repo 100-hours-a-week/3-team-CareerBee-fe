@@ -6,8 +6,8 @@ type LatLng = { lat: number; lng: number };
 interface MapStore {
   center: LatLng;
   zoom: number;
-  setCenter: (center: LatLng) => void;
-  setZoom: (zoom: number) => void;
+  setCenter: (_center: LatLng) => void;
+  setZoom: (_zoom: number) => void;
 }
 
 export const useMapStore = create<MapStore>()(
@@ -20,6 +20,6 @@ export const useMapStore = create<MapStore>()(
     }),
     {
       name: 'map-storage', // localStorage 키
-    }
-  )
+    },
+  ),
 );

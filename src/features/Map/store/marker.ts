@@ -13,7 +13,7 @@ export interface markerProps {
 
 interface MarkerStore {
   markerDisabledMap: Record<number, boolean>;
-  setCompanyDisabledMap: (map: Record<number, boolean>) => void;
+  setCompanyDisabledMap: (_map: Record<number, boolean>) => void;
 }
 
 export const useMarkerStore = create<MarkerStore>((set) => ({
