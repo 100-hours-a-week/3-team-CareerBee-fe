@@ -14,8 +14,22 @@ const barHeight = 40;
 const gap = 4;
 const transTime = 1000;
 
-const xScale = d3.scaleLinear([100, 0], [0, width])
-const yScale = (data:number, paddingTop:number)=>{return (data-1)*barHeight+(data-1)*gap + paddingTop}
+const widthScale = (data: number) => {
+  if (data === 1) return 440;
+  if (data === 2) return 430;
+  if (data === 3) return 420;
+  return 410; // rank ≥ 4
+}
+const xScale = (data:number)=>{
+  if (data === 0) return width;
+  if (data === 1) return 0;
+  if (data === 2) return 10;
+  if (data === 3) return 20;
+  return 30; // rank ≥ 4
+}
+const yScale = (data:number, paddingTop:number)=>{
+  return (data-1)*barHeight+(data-1)*gap + paddingTop;
+}
 
 const exitTransition = <
   El extends SVGElement,
@@ -41,7 +55,7 @@ const updateTransition = <
   sel
   .attr('x', (data) => {
     const prevItem = prev.find(p => p.nickname === data.nickname);
-    const prevValue = prevItem ? prevItem.value : 0;
+    const prevValue = prevItem ? prevItem.rank : 0;
     return xScale(prevValue)+xPadding;
   })
   .attr('y', (data) => {
@@ -56,8 +70,9 @@ const updateTransition = <
     return transTime*double;
   })
     .attr('y', (data) => yScale(data.rank, yPaddingTop))
-    .attr('x', (data) => xScale(data.value)+xPadding)
+    .attr('x', (data) => xScale(data.rank)+xPadding)
 }
+
 
 export default function BarChart() {
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -77,31 +92,28 @@ export default function BarChart() {
         .selectAll<SVGRectElement, chartProps>("rect")
         
         return (data: chartProps[]) => {
-          const widthScale = d3.scaleLinear()
-            .domain([0, d3.max(data, d => d.value)!])
-            .range([0, width]);
         bar = bar.data(data, data=>data.nickname)
           .join(
             (enter) => enter.append("rect")
               .attr("id", d => `bar-${d.rank}`)
               .attr('fill', 'transparent')
-              .attr('y', (data)=>(data.rank-1)*barHeight+(data.rank-1)*gap)
+              .attr('y', (data)=>yScale(data.rank, 0))
               .attr('x', width)
-              .attr("width", (data)=>widthScale(data.value))
+              .attr("width", (data)=>widthScale(data.rank))
               .attr('height', barHeight)
               .attr('rx', 8)
               .attr('ry', 8)
               .attr("id", d => `bar-${d.nickname}`)
               .transition()
                 .duration(transTime*2)
-                .attr('x', (data) => xScale(data.value))
+                .attr('x', (data) => xScale(data.rank))
               ,
             (update) => update
               .transition()
                 .duration(transTime)
-                .attr('y', (data) => (data.rank-1)*barHeight+(data.rank-1)*gap)
-                .attr('x', (data) => xScale(data.value))
-                .attr('width', (data) => widthScale(data.value))
+                .attr('y', (data)=>yScale(data.rank, 0))
+                .attr('x', (data) => xScale(data.rank))
+                .attr('width', (data) => widthScale(data.rank))
               ,
             (exit) => exitTransition(exit)
           )
@@ -124,8 +136,8 @@ export default function BarChart() {
           (enter) => enter.append("image")
             .attr("preserveAspectRatio", "none")
             .attr("clip-path", d => `url(#clip-bar-${d.nickname})`)
-            .attr('y', (data)=>yScale(data.rank, 0))
             .attr('x', width)
+            .attr('y', (data)=>yScale(data.rank, 0))
             .attr("width", width)
             .attr('height', barHeight)
             .attr("href", d => {
@@ -136,7 +148,7 @@ export default function BarChart() {
             })
             .transition()
               .duration(transTime*2)
-              .attr('x', (data) => xScale(data.value)),
+              .attr('x', (data) => xScale(data.rank)),
           update => update
             .attr("preserveAspectRatio", "none")
             .attr("href", d => {
@@ -147,8 +159,8 @@ export default function BarChart() {
             })
             .transition()
               .duration(transTime)
+              .attr('x', (data) => xScale(data.rank))
               .attr('y', (data) => yScale(data.rank, 0))
-              .attr('x', (data) => xScale(data.value))
             ,
             (exit) => exitTransition(exit)
         )
@@ -172,7 +184,7 @@ export default function BarChart() {
               .text(d => d.rank)
               .transition()
                 .duration(transTime*2)
-                .attr('x', (data) => xScale(data.value)+xPadding),
+                .attr('x', (data) => xScale(data.rank)+xPadding),
           (update) => {
             updateTransition(update, xPadding, yPaddingTop);
             return update;
@@ -200,7 +212,7 @@ export default function BarChart() {
             .attr("href", d => d.profileImgUrl)
             .transition()
               .duration(transTime*2)
-              .attr('x', (data) => xScale(data.value)+xPadding),
+              .attr('x', (data) => xScale(data.rank)+xPadding),
           (update) => {
             updateTransition(update, xPadding, yPaddingTop);
             return update;
@@ -210,20 +222,81 @@ export default function BarChart() {
       }
     }
     
+    const badgeImg = (svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>)=>{
+      let badgeImg = svg.append("g")
+          .selectAll<SVGImageElement, chartProps>("image");
+
+      return (data: chartProps[]) => {
+        const xPadding=68;
+        const yPaddingTop=12;
+        badgeImg = badgeImg.data(data.filter(d => d.badgeImgUrl), d => d.nickname)
+        .join(
+          (enter) => enter.append("image")
+            .attr("preserveAspectRatio", "none")
+            .attr('y', (data)=>yScale(data.rank, yPaddingTop))
+            .attr('x', xScale(0)+xPadding)
+            .attr("width", 16)
+            .attr('height', 16)
+            .attr("href", d => d.badgeImgUrl)
+            .transition()
+              .duration(transTime*2)
+              .attr('x', (data) => xScale(data.rank)+xPadding),
+          (update) => {
+            updateTransition(update, xPadding, yPaddingTop);
+            return update;
+          },
+          (exit) => exitTransition(exit)
+        )
+      }
+    }
+    
+    const nickname = (svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>)=>{
+      let nickname = svg.append("g")
+          .style("font", "bold 12px var(--font-pretendard)")
+          .attr("text-anchor", "end")
+          .selectAll<SVGTextElement, chartProps>("text");
+
+      return (data: chartProps[]) => {
+        const xPadding=124;
+        const yPaddingTop=(barHeight+gap*2)/2;
+        nickname = nickname.data(data,  data=>data.nickname)
+        .join(
+          (enter) => enter.append("text")
+              .attr('y', (data)=>yScale(data.rank, yPaddingTop))
+              .attr('x', xScale(0)+xPadding)
+              .text(d => d.nickname)
+              .transition()
+                .duration(transTime*2)
+                .attr('x', (data) => xScale(data.rank)+xPadding),
+          (update) => {
+            updateTransition(update, xPadding, yPaddingTop);
+            return update;
+          },
+          (exit) => exitTransition(exit)
+        )
+      }
+    }
+
     const updateBars = bars(svg);
     const updateImages = images(svg);
     const updateRanks = ranks(svg);
     const updateProfileImg = profileImg(svg);
+    const updateBadgeImg = badgeImg(svg);
+    const updateNickname = nickname(svg);
     updateBars(mock[0]);
     updateImages(mock[0]);
     updateRanks(mock[0]);
     updateProfileImg(mock[0]);
+    updateBadgeImg(mock[0]);
+    updateNickname(mock[0]);
     prev = mock[0]
     setTimeout(() => {
       updateBars(mock[1]);
       updateImages(mock[1]);
       updateRanks(mock[1]);
       updateProfileImg(mock[1]);
+      updateBadgeImg(mock[1]);
+      updateNickname(mock[1]);
     }, 3000);
 
   }, []);
