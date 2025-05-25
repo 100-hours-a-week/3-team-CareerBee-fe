@@ -19,6 +19,8 @@ export default function MainLayout() {
     else if (location.pathname.startsWith('/company')) return 'downLogin';
     if (location.pathname.startsWith('/notification')) return 'nav';
     if (location.pathname.startsWith('/my')) return 'nav';
+    if (location.pathname === '/competition' && !!token) return 'main';
+    else if (location.pathname === '/competition') return 'login';
     return 'minimal';
   })();
   const point = Number(localStorage.getItem('userPoint')) || 0;
