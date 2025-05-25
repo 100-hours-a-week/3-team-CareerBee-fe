@@ -1,5 +1,12 @@
 // import { PiBookOpenText, PiMedalMilitary, PiMapTrifold, PiShoppingCartSimple, PiUser } from 'react-icons/pi';
-import { PiBookOpenTextLight, PiMedalMilitaryLight, PiMapTrifoldLight, PiShoppingCartSimpleLight, PiUserLight } from 'react-icons/pi';
+import React from 'react';
+import {
+  PiBookOpenTextLight,
+  PiMedalMilitaryLight,
+  PiMapTrifoldLight,
+  PiShoppingCartSimpleLight,
+  PiUserLight,
+} from 'react-icons/pi';
 
 import { useAuthStore } from '@/features/Member/store/auth';
 import { useUiStore } from '@/store/ui';
@@ -12,13 +19,47 @@ interface NavItem {
   icon: React.ReactNode;
 }
 const getNavItems = (token: string | null): NavItem[] => [
-  { id: 'Interview', title: '면접 대비', href: '/interview', icon: <PiBookOpenTextLight className="iconSize-default" /> },
-  { id: 'Ranking',title: '대회', href: '/competition', icon: <PiMedalMilitaryLight className="iconSize-default" /> },
-  { id: 'Home', title: '지도', href: '/', icon: <PiMapTrifoldLight className="iconSize-default" /> },
-  { id: 'Store', title: '상점', href: '/store', icon: <PiShoppingCartSimpleLight className="iconSize-default" /> },
+  {
+    id: 'Interview',
+    title: '면접 대비',
+    href: '/interview',
+    icon: <PiBookOpenTextLight className="iconSize-default" />,
+  },
+  {
+    id: 'Ranking',
+    title: '대회',
+    href: '/competition',
+    icon: <PiMedalMilitaryLight className="iconSize-default" />,
+  },
+  {
+    id: 'Home',
+    title: '지도',
+    href: '/',
+    icon: <PiMapTrifoldLight className="iconSize-default" />,
+  },
+  {
+    id: 'Store',
+    title: '상점',
+    href: '/store',
+    icon: <PiShoppingCartSimpleLight className="iconSize-default" />,
+  },
   ...(token
-    ? [{ id: 'My Page', title: '마이페이지', href: '/my', icon: <PiUserLight className="iconSize-default" /> }]
-    : [{ id: 'Login Required', title: '마이페이지', href: '/login-required', icon: <PiUserLight className="iconSize-default" /> }]),
+    ? [
+        {
+          id: 'My Page',
+          title: '마이페이지',
+          href: '/my',
+          icon: <PiUserLight className="iconSize-default" />,
+        },
+      ]
+    : [
+        {
+          id: 'Login Required',
+          title: '마이페이지',
+          href: '/login-required',
+          icon: <PiUserLight className="iconSize-default" />,
+        },
+      ]),
 ];
 
 export const Navbar = () => {
@@ -31,22 +72,25 @@ export const Navbar = () => {
   return (
     <div className="flex items-center justify-between px-8 h-16 w-full gap-2 bg-background">
       {navItems.map((item) => (
-        <div className='flex flex-col gap-0.5 justify-center items-center [&_svg]:size-7'>
-          <a key={item.id} href={item.href}
-          onClick={(e)=>{
-            if(isCompanyDetailPage&& item.href === '/'){
-              console.log("map clicked")
-              e.preventDefault();
-              setMapPressedFromNavbar(true);
-              setTimeout(() => {
-                window.location.href = '/';
-                setMapPressedFromNavbar(false);
-              }, 400);
-            }
-          }}>
+        <div className="flex flex-col gap-0.5 justify-center items-center [&_svg]:size-7">
+          <a
+            key={item.id}
+            href={item.href}
+            onClick={(e) => {
+              if (isCompanyDetailPage && item.href === '/') {
+                console.log('map clicked');
+                e.preventDefault();
+                setMapPressedFromNavbar(true);
+                setTimeout(() => {
+                  window.location.href = '/';
+                  setMapPressedFromNavbar(false);
+                }, 400);
+              }
+            }}
+          >
             {item.icon}
           </a>
-          <div className='text-xs text-text-primary'>{item.title}</div>
+          <div className="text-xs text-text-primary">{item.title}</div>
         </div>
       ))}
     </div>

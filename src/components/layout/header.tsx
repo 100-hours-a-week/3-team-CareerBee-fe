@@ -1,7 +1,7 @@
 import { PiBell, PiCoinsDuotone, PiCaretDown, PiCaretLeft } from 'react-icons/pi';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
-import logo from '@/assets/logo-with-text-2.png';
+import logo from '@/static/logo-with-text-2.png';
 import { useUiStore } from '@/store/ui';
 interface HeaderProps {
   type: 'main' | 'login' | 'down' | 'downLogin' | 'nav' | 'minimal';
@@ -24,11 +24,11 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
       <div className="flex items-center gap-2">
         {isNav ? (
           <button onClick={() => navigate(-1)} style={{ padding: 'inherit' }}>
-          <PiCaretLeft className="w-7 h-7 " />
+            <PiCaretLeft className="w-7 h-7 " />
           </button>
         ) : isDown ? (
           <button
-            onClick={() => { 
+            onClick={() => {
               setBackPressedFromHeader(true);
               setTimeout(() => {
                 navigate(-1);

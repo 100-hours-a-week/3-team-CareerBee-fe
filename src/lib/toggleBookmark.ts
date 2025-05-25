@@ -1,14 +1,14 @@
 //특정 회사의 저장 여부 get & 저장하면 post 날리기
 
-import { instance as axios } from '@/features/Member/lib/axios';
+import { instance as axios } from '@/features/Member/utils/axios';
 
 export const handleToggleBookmark = async (
   token: string,
   companyId: number,
   isBookmarked: boolean,
-  setIsBookmarked: (value: boolean) => void
+  setIsBookmarked: (_value: boolean) => void,
 ) => {
-    if (import.meta.env.VITE_USE_MOCK === 'true') {
+  if (import.meta.env.VITE_USE_MOCK === 'true') {
     console.warn('[mock] toggleBookmark 작동 중');
 
     return new Promise<boolean>((resolve) => {

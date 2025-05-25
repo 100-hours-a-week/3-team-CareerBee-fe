@@ -1,5 +1,5 @@
-import { instance as axios } from '@/features/Member/lib/axios';
-import { useAuthStore } from "@/features/Member/store/auth";
+import { instance as axios } from '@/features/Member/utils/axios';
+import { useAuthStore } from '@/features/Member/store/auth';
 
 export const logout = async () => {
   const token = useAuthStore.getState().token;
@@ -13,9 +13,8 @@ export const logout = async () => {
     });
 
     useAuthStore.getState().clearToken?.();
-    window.location.href = "/";
+    window.location.href = '/';
   } catch (error) {
-    console.error("로그아웃 실패:", error);
-    
+    console.error('로그아웃 실패:', error);
   }
-}
+};

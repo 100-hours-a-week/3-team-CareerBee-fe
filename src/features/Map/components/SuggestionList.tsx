@@ -8,8 +8,8 @@ export function SuggestionList({
   selectedIndex,
   // isClosing = false,
 }: {
-  filteredSuggestions: { id: number; name: string; }[];
-  onSuggestionSelect?: (value: { id: number; name: string;}) => void;
+  filteredSuggestions: { id: number; name: string }[];
+  onSuggestionSelect?: (_value: { id: number; name: string }) => void;
   onClose?: () => void;
   isClosing?: boolean;
   selectedIndex: number;

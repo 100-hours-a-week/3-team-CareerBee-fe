@@ -1,6 +1,6 @@
 import { useAuthStore } from '@/features/Member/store/auth';
 import { useCompanyStore } from '@/store/company';
-import { instance as axios } from '@/features/Member/lib/axios';
+import { instance as axios } from '@/features/Member/utils/axios';
 import { useCallback } from 'react';
 
 export function useFetchBookmarkStatus() {
@@ -8,32 +8,30 @@ export function useFetchBookmarkStatus() {
   const { setIsBookmarked } = useCompanyStore();
 
   const bookmarkStatus = useCallback(
-    async (
-    companyId: number,
-    setter?: (value: boolean) => void
-  ) => {
-    if (!token) {
-      if (setter) setter(false);
-      else setIsBookmarked(false);
-      return;
-    }
+    async (companyId: number, setter?: (_value: boolean) => void) => {
+      if (!token) {
+        if (setter) setter(false);
+        else setIsBookmarked(false);
+        return;
+      }
 
-    try {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/v1/members/wish-companies/${companyId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      
-      // console.log("🎀 저장 여부 조회 성공!", value)
-      if (setter) setter(data.data.isWish);
-      else setIsBookmarked(data.data.isWish);
-    } catch (err) {
-      console.error('관심기업 여부 조회 실패:', err);
-    }
-  },[token, setIsBookmarked]
-);
+      try {
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/v1/members/wish-companies/${companyId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
+
+        // console.log("🎀 저장 여부 조회 성공!", value)
+        if (setter) setter(data.data.isWish);
+        else setIsBookmarked(data.data.isWish);
+      } catch (err) {
+        console.error('관심기업 여부 조회 실패:', err);
+      }
+    },
+    [token, setIsBookmarked],
+  );
 
   return { bookmarkStatus };
 }

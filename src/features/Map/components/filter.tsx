@@ -1,11 +1,11 @@
 import { Toggle } from '@/components/ui/toggle';
-import { instance as axios } from '@/features/Member/lib/axios';
+import { instance as axios } from '@/features/Member/utils/axios';
 import { useState, useEffect } from 'react';
 import { CompanyProps } from '@/features/Map/Main';
 import { useMarkerStore } from '@/features/Map/store/marker';
 import { useAuthStore } from '@/features/Member/store/auth';
 
-const CATEGORY_FILTERS = ["PLATFORM", "SI", "COMMERCE", "GAME", "TELECOM", "SECURITY", "FINANCE"];
+const CATEGORY_FILTERS = ['PLATFORM', 'SI', 'COMMERCE', 'GAME', 'TELECOM', 'SECURITY', 'FINANCE'];
 
 interface FilterProps {
   id: string;
@@ -15,7 +15,10 @@ interface Props {
   filters: FilterProps[];
   companies: CompanyProps[];
 }
-const fetchBookmarkedIds = async (setBookmarkedIds: (ids: number[]) => void, triggerFilterUpdate: () => void) => {
+const fetchBookmarkedIds = async (
+  setBookmarkedIds: (_ids: number[]) => void,
+  triggerFilterUpdate: () => void,
+) => {
   // console.log('🚀 fetchBookmarkedIds called'); // ✅ 여기에 로그 넣기
   const token = useAuthStore.getState().token;
   if (!token) return;
@@ -27,7 +30,7 @@ const fetchBookmarkedIds = async (setBookmarkedIds: (ids: number[]) => void, tri
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     // console.log(res.data.data.wishCompanies);
     setBookmarkedIds(res.data.data.wishCompanies);
@@ -41,7 +44,7 @@ const FilterGroup = ({ filters, companies }: Props) => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const setCompanyDisabledMap = useMarkerStore((state) => state.setCompanyDisabledMap);
   const [bookmarkedIds, setBookmarkedIds] = useState<number[]>([]);
-  const [filterTrigger, setFilterTrigger] = useState(0); 
+  const [filterTrigger, setFilterTrigger] = useState(0);
 
   const toggleFilter = (id: string) => {
     setActiveFilters((prev) => {
@@ -73,10 +76,13 @@ const FilterGroup = ({ filters, companies }: Props) => {
       }
     });
 
-    const disabledMap = companies.reduce((acc, company) => {
-      acc[company.id] = !filtered.some((c) => c.id === company.id);
-      return acc;
-    }, {} as Record<number, boolean>);
+    const disabledMap = companies.reduce(
+      (acc, company) => {
+        acc[company.id] = !filtered.some((c) => c.id === company.id);
+        return acc;
+      },
+      {} as Record<number, boolean>,
+    );
 
     setCompanyDisabledMap(disabledMap);
   }, [activeFilters, companies, bookmarkedIds, filterTrigger]);
@@ -85,7 +91,7 @@ const FilterGroup = ({ filters, companies }: Props) => {
   //   let filtered = companies;
   // // const filtered = useMemo(() => {
   // //   let result = companies;
-  
+
   //   activeFilters.forEach((filterId) => {
   //     if (filterId === 'recruiting') {
   //       filtered=filtered.filter((c)=>c.recruitingStatus === 'ongoing');
@@ -98,16 +104,16 @@ const FilterGroup = ({ filters, companies }: Props) => {
   //       // result = result.filter((c) => c.businessType === filterId);
   //     }
   //   });
-  
+
   // //   return result;
   // // }, [activeFilters, companies, bookmarkedIds]);
-  
+
   // // useEffect(() => {
   //   const disabledMap = companies.reduce((acc, company) => {
   //     acc[company.id] = !filtered.some((c) => c.id === company.id);
   //     return acc;
   //   }, {} as Record<number, boolean>);
-  
+
   //   setCompanyDisabledMap(disabledMap);
   //   return filtered;
   // }, [activeFilters, companies, setCompanyDisabledMap, bookmarkedIds]);
@@ -116,31 +122,32 @@ const FilterGroup = ({ filters, companies }: Props) => {
   return (
     <div className="w-full px-4 py-2 overflow-x-auto scrollbar-hide group-hover:scrollbar-default">
       {/* <div className="overflow-x-auto"> */}
-        <div className="flex items-center gap-2 w-max whitespace-nowrap">
-          {filters.map(({ id, label }) => (
-            <Toggle
-              key={id}
-              variant="pill"
-              label={label}
-              pressed={activeFilters.includes(id)}
-              onPressedChange={() => {
-                toggleFilter(id);
+      <div className="flex items-center gap-2 w-max whitespace-nowrap">
+        {filters.map(({ id, label }) => (
+          <Toggle
+            key={id}
+            variant="pill"
+            label={label}
+            pressed={activeFilters.includes(id)}
+            onPressedChange={() => {
+              toggleFilter(id);
 
-                if (id === 'recruiting') {
-                  // const recruiting = companies.filter((c) => c.recruitingStatus === 'ongoing');
-                  // console.log('Recruiting companies:', recruiting);
-                } else if (id === 'bookmark') {
-                  fetchBookmarkedIds(setBookmarkedIds, () => {setFilterTrigger((v) => v + 1);});
-                } else {
-                  // const filtered = companies.filter((c) => c.businessType === id);
-                  // console.log(`Filtered by category (${id}):`, filtered);
-                }
-              }}
-              className="shadow-md px-4 py-1 min-w-[72px] text-sm rounded-full border border-border/50 bg-white text-gray-800 whitespace-nowrap"
-            >
-            </Toggle>
-          ))}
-        </div>
+              if (id === 'recruiting') {
+                // const recruiting = companies.filter((c) => c.recruitingStatus === 'ongoing');
+                // console.log('Recruiting companies:', recruiting);
+              } else if (id === 'bookmark') {
+                fetchBookmarkedIds(setBookmarkedIds, () => {
+                  setFilterTrigger((v) => v + 1);
+                });
+              } else {
+                // const filtered = companies.filter((c) => c.businessType === id);
+                // console.log(`Filtered by category (${id}):`, filtered);
+              }
+            }}
+            className="shadow-md px-4 py-1 min-w-[72px] text-sm rounded-full border border-border/50 bg-white text-gray-800 whitespace-nowrap"
+          ></Toggle>
+        ))}
+      </div>
       {/* </div> */}
     </div>
   );

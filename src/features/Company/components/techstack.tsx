@@ -1,5 +1,12 @@
-import { PiBrowsers, PiTerminalWindow, PiRobot, PiCloud, PiMicrosoftTeamsLogo } from "react-icons/pi";
-import { TechStack } from "@/features/Company/CompanyDetail";
+import {
+  PiBrowsers,
+  PiTerminalWindow,
+  PiRobot,
+  PiCloud,
+  PiMicrosoftTeamsLogo,
+} from 'react-icons/pi';
+import { TechStack } from '@/features/Company/CompanyDetail';
+import React from 'react';
 
 interface Props {
   techstacks: TechStack[];
@@ -13,11 +20,11 @@ export default function TechstackTab({ techstacks }: Props) {
   }, {});
 
   const techStackType: Record<string, { icon: React.ReactNode; label: string }> = {
-    FRONTEND: { icon: <PiBrowsers />, label: "프론트엔드" },
-    BACKEND: { icon: <PiTerminalWindow />, label: "백엔드" },
-    AI: { icon: <PiRobot />, label: "AI" },
-    DEVOPS: { icon: <PiCloud />, label: "클라우드(DevOps)" },
-    COMMUNICATION: { icon: <PiMicrosoftTeamsLogo />, label: "협업 툴" },
+    FRONTEND: { icon: <PiBrowsers />, label: '프론트엔드' },
+    BACKEND: { icon: <PiTerminalWindow />, label: '백엔드' },
+    AI: { icon: <PiRobot />, label: 'AI' },
+    DEVOPS: { icon: <PiCloud />, label: '클라우드(DevOps)' },
+    COMMUNICATION: { icon: <PiMicrosoftTeamsLogo />, label: '협업 툴' },
   };
 
   return (
@@ -34,11 +41,7 @@ export default function TechstackTab({ techstacks }: Props) {
                   key={techstack.id}
                   className="flex items-center border rounded-md border-border/30 py-1 px-2 gap-1 bg-white"
                 >
-                  <img
-                    src={techstack.imgUrl}
-                    alt={techstack.name}
-                    className="w-5 h-5"
-                  />
+                  <img src={techstack.imgUrl} alt={techstack.name} className="w-5 h-5" />
                   <p className="text-sm">{techstack.name}</p>
                 </div>
               ))

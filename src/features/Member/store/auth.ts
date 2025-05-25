@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 
 interface AuthState {
   token: string | null;
-  setToken: (token: string) => void;
+  setToken: (_token: string) => void;
   clearToken: () => void;
 }
 
@@ -18,7 +18,8 @@ export const useAuthStore = create<AuthState>()(
         localStorage.removeItem('hasNewAlarm');
         set({ token: null });
         window.location.reload();
-    }}),
+      },
+    }),
     {
       name: 'auth-storage', // localStorage 키 이름
     },

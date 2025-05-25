@@ -22,7 +22,7 @@ export const router = createBrowserRouter([
       { path: 'login', element: <Login /> },
       { path: 'login-required', element: <LoginRequired /> },
       { path: 'oauth/callback/kakao', element: <OAuthCallback /> },
-      { path: 'competition', element: <Ranking />},
+      { path: 'competition', element: <Ranking /> },
       { path: '*', element: <ToBeContinued /> },
     ],
   },

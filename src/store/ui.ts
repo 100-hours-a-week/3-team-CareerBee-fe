@@ -2,9 +2,9 @@ import { create } from 'zustand';
 
 interface UiState {
   backPressedFromHeader: boolean;
-  setBackPressedFromHeader: (pressed: boolean) => void;
+  setBackPressedFromHeader: (_pressed: boolean) => void;
   mapPressedFromNavbar: boolean;
-  setMapPressedFromNavbar: (pressed: boolean) => void;
+  setMapPressedFromNavbar: (_pressed: boolean) => void;
 }
 
 export const useUiStore = create<UiState>((set) => ({
@@ -12,5 +12,4 @@ export const useUiStore = create<UiState>((set) => ({
   setBackPressedFromHeader: (pressed) => set({ backPressedFromHeader: pressed }),
   mapPressedFromNavbar: false,
   setMapPressedFromNavbar: (pressed) => set({ mapPressedFromNavbar: pressed }),
-
 }));

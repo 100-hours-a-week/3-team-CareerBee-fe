@@ -10,7 +10,7 @@ export default function MainLayout() {
   const location = useLocation();
 
   const token = useAuthStore((state) => state.token);
-  
+
   const headerType = (() => {
     if (location.pathname === '/login') return 'login';
     if (location.pathname === '/' && !!token) return 'main';
@@ -31,16 +31,12 @@ export default function MainLayout() {
   return (
     <>
       <Toaster />
-      <div
-        className="flex flex-col h-dvh fixed inset-0 max-w-[600px] w-full mx-auto bg-background shadow-sides"
-      > 
+      <div className="flex flex-col h-dvh fixed inset-0 max-w-[600px] w-full mx-auto bg-background shadow-sides">
         <Header type={headerType} hasNewNotification={hasNewNotification} point={point} />
         <main className="flex flex-col flex-1 w-full overflow-auto">
           <Outlet key={location.pathname} />
-
         </main>
         {showNavbar() ? <Navbar /> : null}
-
       </div>
     </>
   );

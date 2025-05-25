@@ -12,11 +12,11 @@ interface CompanyInfo {
 
 interface CompanyStore {
   openCardIndex: number | null;
-  setOpenCardIndex: (index: number | null) => void;
+  setOpenCardIndex: (_index: number | null) => void;
   companyInfo?: CompanyInfo;
-  setCompanyInfo: (info: CompanyInfo) => void;
+  setCompanyInfo: (_info: CompanyInfo) => void;
   isBookmarked: boolean;
-  setIsBookmarked: (state: boolean) => void;
+  setIsBookmarked: (_state: boolean) => void;
 }
 
 export const useCompanyStore = create<CompanyStore>((set) => ({

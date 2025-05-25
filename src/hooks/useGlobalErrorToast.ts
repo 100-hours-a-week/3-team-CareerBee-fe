@@ -5,10 +5,10 @@ import { toast } from '@/hooks/useToast';
 export const useGlobalErrorToast = () => {
   useEffect(() => {
     const unsubscribe = subscribeErrorToast((msg) => {
-      toast({title: msg});
+      toast({ title: msg });
     });
     return () => {
-        unsubscribe();
+      unsubscribe();
     };
   }, []);
 };
