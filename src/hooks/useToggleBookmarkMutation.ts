@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { instance as axios } from '@/features/Member/lib/axios';
+import { instance as axios } from '@/features/Member/utils/axios';
 import { useAuthStore } from '@/features/Member/store/auth';
 
 export const useToggleBookmarkMutation = ({

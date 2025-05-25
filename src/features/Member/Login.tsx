@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { instance as axios } from '@/features/Member/lib/axios';
+import { instance as axios } from '@/features/Member/utils/axios';
 
 export default function Login() {
   const handleLogin = async () => {

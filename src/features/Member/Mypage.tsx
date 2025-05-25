@@ -1,12 +1,12 @@
 // import axios from "axios";
-import { instance as axios } from '@/features/Member/lib/axios';
+import { instance as axios } from '@/features/Member/utils/axios';
 
 import { useAuthStore } from '@/features/Member/store/auth';
 import { Button } from '@/components/ui/button';
 import noProfile from '/assets/no-profile.png';
 import { Modal } from '@/components/ui/modal';
 import { useState, useEffect } from 'react';
-import { logout } from '@/features/Member/lib/logout';
+import { logout } from '@/features/Member/utils/logout';
 
 export default function Mypage() {
   const token = useAuthStore((state) => state.token);

@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { useAuthStore } from '@/features/Member/store/auth';
 import { publishErrorToast } from '@/lib/errorEvents';
-import { logout } from '@/features/Member/lib/logout';
+import { logout } from '@/features/Member/utils/logout';
 
 export const instance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL, // .env

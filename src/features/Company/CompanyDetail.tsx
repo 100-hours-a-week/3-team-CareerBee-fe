@@ -1,9 +1,9 @@
 // import { useParams, useLocation } from "react-router-dom";
 import { useEffect, useState } from 'react';
-import { instance as axios } from '@/features/Member/lib/axios';
+import { instance as axios } from '@/features/Member/utils/axios';
 import CompanyTitle from '@/features/Company/components/CompanyTitle';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import noImg from '@/assets/no-image.png';
+import noImg from '@/static/no-image.png';
 import { PiStar, PiStarFill, PiStarHalfFill } from 'react-icons/pi';
 
 import DefaultTab from '@/features/Company/components/defaultTab';
