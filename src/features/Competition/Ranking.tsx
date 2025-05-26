@@ -1,17 +1,32 @@
+import { useState } from 'react';
 import BarChart from '@/features/Competition/chart';
 import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '../Member/store/auth';
+import { cn } from '@/lib/utils';
 
 export default function Ranking() {
   const token = useAuthStore((state) => state.token);
+  const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
 
   return (
     <div className="py-5">
       <div className="flex justify-between items-center px-6">
-        <PiCaretLeft className="w-7 h-7" />
-        <div className="font-ria font-bold text-[2rem]">오늘의 TOP10</div>
-        <PiCaretRight className="w-7 h-7" />
+        <PiCaretLeft
+          className={cn('w-7 h-7 cursor-pointer', rankingView === 'daily' && 'invisible')}
+          onClick={() => setRankingView((prev) => (prev === 'weekly' ? 'daily' : 'weekly'))}
+        />
+        <div className="font-ria font-bold text-[2rem]">
+          {rankingView === 'daily'
+            ? '오늘의 TOP10'
+            : rankingView === 'weekly'
+              ? '주간 TOP10'
+              : '월간 TOP10'}
+        </div>
+        <PiCaretRight
+          className={cn('w-7 h-7 cursor-pointer', rankingView === 'monthly' && 'invisible')}
+          onClick={() => setRankingView((prev) => (prev === 'daily' ? 'weekly' : 'monthly'))}
+        />
       </div>
       <div className="flex flex-col justify-center items-center mt-6">
         <>
@@ -38,7 +53,9 @@ export default function Ranking() {
             {!token ? (
               <div className="flex text-text-secondary text-sm">
                 <div>회원만 참여할 수 있어요. &nbsp;</div>
-                <a href="/login"> 로그인하러가기</a>
+                <a href="/login" className="underline">
+                  로그인하러가기
+                </a>
               </div>
             ) : (
               <>
