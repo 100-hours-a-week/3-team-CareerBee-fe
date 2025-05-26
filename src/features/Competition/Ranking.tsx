@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'motion/react';
 import DailyBarChart from '@/features/Competition/dailyChart';
 import WeeklyBarChart from '@/features/Competition/weeklyChart';
 import MonthlyBarChart from '@/features/Competition/monthlyChart';
@@ -7,29 +8,36 @@ import { Button } from '@/components/ui/button';
 import { useAuthStore } from '../Member/store/auth';
 import { cn } from '@/lib/utils';
 
+const rankCardStyles = {
+  green: { bgImage: 'week-green-rank.svg', height: '120px', marginTop: 'mt-5' },
+  red: { bgImage: 'week-red-rank.svg', height: '128px', marginTop: 'mt-6' },
+  blue: { bgImage: 'week-blue-rank.svg', height: '104px', marginTop: 'mt-[1.125rem]' },
+};
+
 const RankCard = ({
-  bgImage,
-  height,
-  marginTop,
+  styleKey,
+  nickname,
 }: {
-  bgImage: string;
-  height: string;
-  marginTop: string;
-}) => (
-  <div className={`w-1/3 h-[${height}] px-0.5`}>
-    <div
-      className={`h-full bg-[url('/assets/${bgImage}')] bg-no-repeat bg-[length:100%_100%] rounded-lg justify-between pt-2 pb-2`}
-    >
-      <img src="/assets/no-profile.png" className={`w-8 h-8 mx-auto ${marginTop}`} />
-      <div className="flex items-center justify-center mx-auto">
-        <img src="/assets/default.svg" className="w-4 h-4 mr-1" />
-        <div>김춘식1</div>
+  styleKey: keyof typeof rankCardStyles;
+  nickname: string;
+}) => {
+  const { bgImage, height, marginTop } = rankCardStyles[styleKey];
+  return (
+    <div className={`w-1/3 h-[${height}] px-0.5`}>
+      <div
+        className={`h-full bg-[url('/assets/${bgImage}')] bg-no-repeat bg-[length:100%_100%] rounded-lg justify-between pt-2 pb-2`}
+      >
+        <img src="/assets/no-profile.png" className={`w-8 h-8 mx-auto ${marginTop}`} />
+        <div className="flex items-center justify-center mx-auto">
+          <img src="/assets/default.svg" className="w-4 h-4 mr-1" />
+          <div>{nickname}</div>
+        </div>
+        <div className="text-[0.625rem] text-center">03.24.123</div>
+        <div className="text-[0.625rem] text-center">5/5</div>
       </div>
-      <div className="text-[0.625rem] text-center">03.24.123</div>
-      <div className="text-[0.625rem] text-center">5/5</div>
     </div>
-  </div>
-);
+  );
+};
 
 export default function Ranking() {
   const token = useAuthStore((state) => state.token);
@@ -59,24 +67,45 @@ export default function Ranking() {
           <div className="flex mx-auto">
             {rankingView === 'daily' ? (
               <DailyBarChart></DailyBarChart>
-            ) : rankingView === 'weekly' ? (
-              <div className="flex-col text-xs ">
-                <div className="flex w-[440px] px-1 h-[128px] items-end mb-1">
-                  <RankCard bgImage="week-green-rank.svg" height="120px" marginTop="mt-5" />
-                  <RankCard bgImage="week-red-rank.svg" height="128px" marginTop="mt-6" />
-                  <RankCard bgImage="week-blue-rank.svg" height="104px" marginTop="mt-[1.125rem]" />
-                </div>
-                <WeeklyBarChart></WeeklyBarChart>
-              </div>
             ) : (
-              <div className="flex-col text-xs ">
-                <div className="flex w-[440px] px-1 h-[128px] items-end mb-1">
-                  <RankCard bgImage="week-green-rank.svg" height="120px" marginTop="mt-5" />
-                  <RankCard bgImage="week-red-rank.svg" height="128px" marginTop="mt-6" />
-                  <RankCard bgImage="week-blue-rank.svg" height="104px" marginTop="mt-[1.125rem]" />
-                </div>
-                <MonthlyBarChart></MonthlyBarChart>
-              </div>
+              <>
+                {rankingView === 'weekly' && (
+                  <div className="flex-col">
+                    <motion.div
+                      key="weekly"
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 1 }}
+                      className="flex-col text-xs"
+                    >
+                      <div className="flex w-[440px] h-[128px] items-end mb-1">
+                        <RankCard styleKey="green" nickname="김춘식1" />
+                        <RankCard styleKey="red" nickname="김춘식1" />
+                        <RankCard styleKey="blue" nickname="김춘식1" />
+                      </div>
+                    </motion.div>
+                    <WeeklyBarChart />
+                  </div>
+                )}
+                {rankingView === 'monthly' && (
+                  <div className="flex-col">
+                    <motion.div
+                      key="monthly"
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 1 }}
+                      className="flex-col text-xs"
+                    >
+                      <div className="flex w-[440px] h-[128px] items-end mb-1">
+                        <RankCard styleKey="green" nickname="김춘식1" />
+                        <RankCard styleKey="red" nickname="김춘식3" />
+                        <RankCard styleKey="blue" nickname="김춘식1" />
+                      </div>
+                    </motion.div>
+                    <MonthlyBarChart />
+                  </div>
+                )}
+              </>
             )}
           </div>
           {/* 내 랭킹 */}
