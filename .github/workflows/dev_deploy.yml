@@ -24,6 +24,15 @@ jobs:
         run: |
           source ./cicd-variables.sh
 
+          echo "::add-mask::$SSH_KEY"
+          echo "::add-mask::$SSH_KEY_BASE64"
+          echo "::add-mask::$AWS_SERVER_IP"
+          echo "::add-mask::$AWS_ACCESS_KEY_ID"
+          echo "::add-mask::$AWS_SECRET_ACCESS_KEY"
+          echo "::add-mask::$S3_BUCKET_INFRA"
+          echo "::add-mask::$VITE_KAKAOMAP_KEY"
+          echo "::add-mask::$VITE_API_URL"
+
           echo "SSH_KEY=$SSH_KEY" >> $GITHUB_ENV
           echo "SSH_KEY_BASE64=$SSH_KEY_BASE64" >> $GITHUB_ENV
           echo "AWS_SERVER_IP=$AWS_SERVER_IP" >> $GITHUB_ENV
