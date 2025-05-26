@@ -1,10 +1,35 @@
 import { useState } from 'react';
 import DailyBarChart from '@/features/Competition/dailyChart';
 import WeeklyBarChart from '@/features/Competition/weeklyChart';
+import MonthlyBarChart from '@/features/Competition/monthlyChart';
 import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '../Member/store/auth';
 import { cn } from '@/lib/utils';
+
+const RankCard = ({
+  bgImage,
+  height,
+  marginTop,
+}: {
+  bgImage: string;
+  height: string;
+  marginTop: string;
+}) => (
+  <div className={`w-1/3 h-[${height}] px-0.5`}>
+    <div
+      className={`h-full bg-[url('/assets/${bgImage}')] bg-no-repeat bg-[length:100%_100%] rounded-lg justify-between pt-2 pb-2`}
+    >
+      <img src="/assets/no-profile.png" className={`w-8 h-8 mx-auto ${marginTop}`} />
+      <div className="flex items-center justify-center mx-auto">
+        <img src="/assets/default.svg" className="w-4 h-4 mr-1" />
+        <div>김춘식1</div>
+      </div>
+      <div className="text-[0.625rem] text-center">03.24.123</div>
+      <div className="text-[0.625rem] text-center">5/5</div>
+    </div>
+  </div>
+);
 
 export default function Ranking() {
   const token = useAuthStore((state) => state.token);
@@ -34,47 +59,23 @@ export default function Ranking() {
           <div className="flex mx-auto">
             {rankingView === 'daily' ? (
               <DailyBarChart></DailyBarChart>
+            ) : rankingView === 'weekly' ? (
+              <div className="flex-col text-xs ">
+                <div className="flex w-[440px] px-1 h-[128px] items-end mb-1">
+                  <RankCard bgImage="week-green-rank.svg" height="120px" marginTop="mt-5" />
+                  <RankCard bgImage="week-red-rank.svg" height="128px" marginTop="mt-6" />
+                  <RankCard bgImage="week-blue-rank.svg" height="104px" marginTop="mt-[1.125rem]" />
+                </div>
+                <WeeklyBarChart></WeeklyBarChart>
+              </div>
             ) : (
               <div className="flex-col text-xs ">
                 <div className="flex w-[440px] px-1 h-[128px] items-end mb-1">
-                  <div className="w-1/3 h-[120px] pr-0.5">
-                    <div className=" h-full bg-[url('/assets/week-green-rank.svg')] bg-no-repeat bg-[length:100%_100%] rounded-lg justify-between py-2">
-                      <img src="/assets/no-profile.png" className="w-8 h-8 mx-auto mt-5"></img>
-                      <div className="flex items-center justify-center mx-auto">
-                        <img src="/assets/default.svg" className="w-4 h-4 mr-1"></img>
-                        <div>김춘식1</div>
-                      </div>
-                      <div className="text-[0.625rem] text-center">03.24.123</div>
-                      <div className="text-[0.625rem] text-center">5/5</div>
-                    </div>
-                  </div>
-                  <div className="w-1/3 h-[128px] px-0.5">
-                    <div className=" h-full bg-[url('/assets/week-red-rank.svg')] bg-no-repeat bg-[length:100%_100%] rounded-lg justify-between pt-2 pb-2">
-                      <img src="/assets/no-profile.png" className="w-8 h-8 mx-auto mt-6"></img>
-                      <div className="flex items-center justify-center mx-auto">
-                        <img src="/assets/default.svg" className="w-4 h-4 mr-1"></img>
-                        <div>김춘식1</div>
-                      </div>
-                      <div className="text-[0.625rem] text-center">03.24.123</div>
-                      <div className="text-[0.625rem] text-center">5/5</div>
-                    </div>
-                  </div>
-                  <div className="w-1/3 h-[104px] pl-0.5">
-                    <div className=" h-full bg-[url('/assets/week-blue-rank.svg')] bg-no-repeat bg-[length:100%_100%] rounded-lg justify-between pt-2 pb-2">
-                      <img
-                        src="/assets/no-profile.png"
-                        className="w-8 h-8 mx-auto mt-[1.125rem]"
-                      ></img>
-                      <div className="flex items-center justify-center mx-auto">
-                        <img src="/assets/default.svg" className="w-4 h-4 mr-1"></img>
-                        <div>김춘식1</div>
-                      </div>
-                      <div className="text-[0.625rem] text-center">03.24.123</div>
-                      <div className="text-[0.625rem] text-center">5/5</div>
-                    </div>
-                  </div>
+                  <RankCard bgImage="week-green-rank.svg" height="120px" marginTop="mt-5" />
+                  <RankCard bgImage="week-red-rank.svg" height="128px" marginTop="mt-6" />
+                  <RankCard bgImage="week-blue-rank.svg" height="104px" marginTop="mt-[1.125rem]" />
                 </div>
-                <WeeklyBarChart></WeeklyBarChart>
+                <MonthlyBarChart></MonthlyBarChart>
               </div>
             )}
           </div>
