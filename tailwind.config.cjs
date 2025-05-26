@@ -68,8 +68,8 @@ module.exports = {
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))',
         },
-        error: 'var(--error)',
-        success: 'var(--success)',
+        error: 'hsl(var(--error))',
+        success: 'hsl(var(--success))',
       },
       boxShadow: {
         sides: '4px 0 8px -4px rgba(0,0,0,0.1), -4px 0 8px -4px rgba(0,0,0,0.1)',
@@ -117,10 +117,7 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    require('tailwindcss-animate'),
-    require('@tailwindcss/line-clamp')
-  ],
+  plugins: [require('tailwindcss-animate'), require('@tailwindcss/line-clamp')],
   screens: {
     sm: '640px',
     md: '768px',
