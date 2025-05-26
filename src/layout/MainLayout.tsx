@@ -12,13 +12,15 @@ export default function MainLayout() {
   const token = useAuthStore((state) => state.token);
 
   const headerType = (() => {
-    if (location.pathname === '/login') return 'login';
+    if (location.pathname === '/login') return 'navLogin';
     if (location.pathname === '/' && !!token) return 'main';
     else if (location.pathname === '/') return 'login';
     if (location.pathname.startsWith('/company') && !!token) return 'down';
     else if (location.pathname.startsWith('/company')) return 'downLogin';
     if (location.pathname.startsWith('/notification')) return 'nav';
     if (location.pathname.startsWith('/my')) return 'nav';
+    if (location.pathname === '/competition' && !!token) return 'main';
+    else if (location.pathname === '/competition') return 'login';
     return 'minimal';
   })();
   const point = Number(localStorage.getItem('userPoint')) || 0;
