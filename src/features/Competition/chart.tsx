@@ -218,7 +218,7 @@ export default function BarChart() {
       let textElement = svg
         .append('g')
         .style('font', `${fontWeight} ${fontSize} var(--font-pretendard)`)
-        .attr('text-anchor', 'end')
+        .attr('text-anchor', 'start')
         .selectAll<SVGTextElement, chartProps>('text');
 
       return (data: chartProps[]) => {
@@ -247,18 +247,18 @@ export default function BarChart() {
     const updateBackground = background(svg);
     const updateRanks = textElement(
       svg,
-      20,
+      16,
       (barHeight + gap * 2) / 2,
       'rank',
       'bold',
       '12px',
       'rank',
     );
-    const updateProfileImg = imageElement(svg, 32, 4, 32, 'profileImgUrl');
-    const updateBadgeImg = imageElement(svg, 68, 12, 16, 'badgeImgUrl');
+    const updateProfileImg = imageElement(svg, 40, 4, 32, 'profileImgUrl');
+    const updateBadgeImg = imageElement(svg, 76, 12, 16, 'badgeImgUrl');
     const updateNickname = textElement(
       svg,
-      124,
+      96,
       (barHeight + gap * 2) / 2,
       'nickname',
       'bold',
@@ -266,7 +266,7 @@ export default function BarChart() {
     );
     const updateTime = textElement(
       svg,
-      width - 100,
+      width - 116,
       (barHeight + gap * 2) / 2,
       'elapsedTime',
       '400',
@@ -276,7 +276,7 @@ export default function BarChart() {
     );
     const updateSolved = textElement(
       svg,
-      width - 20,
+      width - 36,
       (barHeight + gap * 2) / 2,
       'solvedCount',
       '400',
