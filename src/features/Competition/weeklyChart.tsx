@@ -4,8 +4,8 @@ import { mockChart } from './config/mock-chartdata';
 import { mockChart2 } from './config/mock-chartdata2';
 
 //목데이터
-let prev = mockChart;
-const mock = [mockChart, mockChart2];
+let prev = mockChart.slice(3, 10);
+const mock = [mockChart.slice(3, 10), mockChart2.slice(3, 10)];
 
 interface chartProps {
   rank: number;
@@ -17,19 +17,19 @@ interface chartProps {
 }
 
 const width = 440;
-const height = 436;
+const height = 304;
 const barHeight = 40;
 const gap = 4;
 const transTime = 1000;
 
-const widthScale = (data: number) => {
-  return data === 1 ? 440 : data === 2 ? 430 : data === 3 ? 420 : 410;
+const widthScale = () => {
+  return 440;
 };
 const xScale = (data: number) => {
-  return data === 0 ? width : data === 1 ? 0 : data === 2 ? 10 : data === 3 ? 20 : 30;
+  return data === 0 ? width : 0;
 };
 const yScale = (data: number, paddingTop: number) => {
-  return (data - 1) * barHeight + (data - 1) * gap + paddingTop;
+  return (data - 3 - 1) * barHeight + (data - 3 - 1) * gap + paddingTop;
 };
 
 const exitTransition = <El extends SVGElement, ParentEl extends d3.BaseType = SVGGElement>(
@@ -97,7 +97,7 @@ export default function BarChart() {
                 .attr('fill', 'transparent')
                 .attr('y', (data) => yScale(data.rank, 0))
                 .attr('x', width)
-                .attr('width', (data) => widthScale(data.rank))
+                .attr('width', widthScale())
                 .attr('height', barHeight)
                 .attr('rx', 8)
                 .attr('ry', 8)
@@ -111,7 +111,7 @@ export default function BarChart() {
                 .duration(transTime)
                 .attr('y', (data) => yScale(data.rank, 0))
                 .attr('x', (data) => xScale(data.rank))
-                .attr('width', (data) => widthScale(data.rank)),
+                .attr('width', widthScale()),
             (exit) => exitTransition(exit, 0),
           );
         data.forEach((d) => {
@@ -296,18 +296,6 @@ export default function BarChart() {
     updateTime(mock[0]);
     updateSolved(mock[0]);
     prev = mock[0];
-
-    // 목데이터
-    setTimeout(() => {
-      updateBars(mock[1]);
-      updateBackground(mock[1]);
-      updateRanks(mock[1]);
-      updateProfileImg(mock[1]);
-      updateBadgeImg(mock[1]);
-      updateNickname(mock[1]);
-      updateTime(mock[1]);
-      updateSolved(mock[1]);
-    }, 3000);
   }, []);
 
   return (

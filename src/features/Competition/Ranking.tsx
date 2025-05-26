@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import BarChart from '@/features/Competition/chart';
+import DailyBarChart from '@/features/Competition/dailyChart';
+import WeeklyBarChart from '@/features/Competition/weeklyChart';
 import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '../Member/store/auth';
@@ -31,14 +32,59 @@ export default function Ranking() {
       <div className="flex flex-col justify-center items-center mt-6">
         <>
           <div className="flex mx-auto">
-            <BarChart></BarChart>
+            {rankingView === 'daily' ? (
+              <DailyBarChart></DailyBarChart>
+            ) : (
+              <div className="flex-col text-xs ">
+                <div className="flex w-[440px] px-1 h-[128px] items-end mb-1">
+                  <div className="w-1/3 h-[120px] pr-0.5">
+                    <div className=" h-full bg-[url('/assets/week-green-rank.svg')] bg-no-repeat bg-[length:100%_100%] rounded-lg justify-between py-2">
+                      <img src="/assets/no-profile.png" className="w-8 h-8 mx-auto mt-5"></img>
+                      <div className="flex items-center justify-center mx-auto">
+                        <img src="/assets/default.svg" className="w-4 h-4 mr-1"></img>
+                        <div>김춘식1</div>
+                      </div>
+                      <div className="text-[0.625rem] text-center">03.24.123</div>
+                      <div className="text-[0.625rem] text-center">5/5</div>
+                    </div>
+                  </div>
+                  <div className="w-1/3 h-[128px] px-0.5">
+                    <div className=" h-full bg-[url('/assets/week-red-rank.svg')] bg-no-repeat bg-[length:100%_100%] rounded-lg justify-between pt-2 pb-2">
+                      <img src="/assets/no-profile.png" className="w-8 h-8 mx-auto mt-6"></img>
+                      <div className="flex items-center justify-center mx-auto">
+                        <img src="/assets/default.svg" className="w-4 h-4 mr-1"></img>
+                        <div>김춘식1</div>
+                      </div>
+                      <div className="text-[0.625rem] text-center">03.24.123</div>
+                      <div className="text-[0.625rem] text-center">5/5</div>
+                    </div>
+                  </div>
+                  <div className="w-1/3 h-[104px] pl-0.5">
+                    <div className=" h-full bg-[url('/assets/week-blue-rank.svg')] bg-no-repeat bg-[length:100%_100%] rounded-lg justify-between pt-2 pb-2">
+                      <img
+                        src="/assets/no-profile.png"
+                        className="w-8 h-8 mx-auto mt-[1.125rem]"
+                      ></img>
+                      <div className="flex items-center justify-center mx-auto">
+                        <img src="/assets/default.svg" className="w-4 h-4 mr-1"></img>
+                        <div>김춘식1</div>
+                      </div>
+                      <div className="text-[0.625rem] text-center">03.24.123</div>
+                      <div className="text-[0.625rem] text-center">5/5</div>
+                    </div>
+                  </div>
+                </div>
+                <WeeklyBarChart></WeeklyBarChart>
+              </div>
+            )}
           </div>
+          {/* 내 랭킹 */}
           <div className="mb-1 text-sm font-bold tracking-tighter">. . .</div>
           <div className="w-[440px] h-[40px] rounded-md flex bg-[url('/assets/red-rank.svg')] bg-contain text-xs flex items-center px-2">
             <div className="pl-2 pr-3 font-bold">1</div>
             <img src="/assets/no-profile.png" className="w-8 h-8 mx-1.5"></img>
             <img src="/assets/default.svg" className="w-4 h-4 mr-1"></img>
-            <div className="font-bold mr-auto">김춘식1</div>
+            <div className="mr-auto">김춘식1</div>
             <div className="text-[0.625rem] pr-6">03.24.123</div>
             <div className="text-[0.625rem] px-3">5/5</div>
           </div>
