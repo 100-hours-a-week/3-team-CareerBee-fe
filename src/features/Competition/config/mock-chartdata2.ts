@@ -57,7 +57,7 @@ export const mockChart2: chartProps[] = [
   {
     rank: 6,
     nickname: '김춘식5',
-    profileImgUrl: 'https://test1.jpeg',
+    profileImgUrl: '/assets/default.svg',
     badgeImgUrl: 'https://test1.jpeg',
     elapsedTime: '04.24.123',
     solvedCount: 5,

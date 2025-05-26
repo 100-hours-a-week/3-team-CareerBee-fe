@@ -196,6 +196,7 @@ export default function BarChart() {
                 .duration(transTime * 2)
                 .attr('x', (data) => xScale(data.rank) + xPadding),
             (update) => {
+              update.attr('href', (d) => d[elem as keyof chartProps]);
               updateTransition(update, xPadding, yPaddingTop);
               return update;
             },
@@ -235,6 +236,7 @@ export default function BarChart() {
                 .duration(transTime * 2)
                 .attr('x', (data) => (alignRight ? 0 : xScale(data.rank)) + xPadding),
             (update) => {
+              update.text((d) => d[elem as keyof chartProps] + (isSolved ? '/5' : ''));
               updateTransition(update, xPadding, yPaddingTop, alignRight);
               return update;
             },
