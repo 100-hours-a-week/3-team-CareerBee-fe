@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { mockChart } from './config/mock-chartdata';
-import { mockChart2 } from './config/mock-chartdata2';
+import { mockChart } from '@/features/Competition/config/mock-chartdata';
+import { mockChart2 } from '@/features/Competition/config/mock-chartdata2';
 
 //목데이터
 let prev = mockChart;
