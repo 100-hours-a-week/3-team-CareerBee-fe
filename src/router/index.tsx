@@ -10,6 +10,7 @@ import MainLayout from '@/layout/MainLayout';
 import NotFound from '@/pages/NotFound';
 import OAuthCallback from '@/features/Member/OAuthCallback';
 import Ranking from '@/features/Competition/Ranking';
+import Competition from '@/features/Competition/Competition';
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
       { path: 'login-required', element: <LoginRequired /> },
       { path: 'oauth/callback/kakao', element: <OAuthCallback /> },
       { path: 'competition', element: <Ranking /> },
+      { path: 'competition/entry', element: <Competition /> },
       { path: '*', element: <ToBeContinued /> },
     ],
   },

@@ -124,6 +124,13 @@ export default function Ranking() {
           <Button
             label="00 : 00 : 00"
             variant="secondary"
+            onClick={() => {
+              if (!token) {
+                window.location.href = '/login';
+                return;
+              }
+              window.location.href = '/competition/entry';
+            }}
             className="w-64 h-12 text-2xl flex mx-auto rounded-xl font-normal"
           />
           <div className="flex-col items-center m-2">
