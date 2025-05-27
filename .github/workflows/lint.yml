@@ -26,7 +26,7 @@ jobs:
 
 
       - name: 📦 Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: 🔍 Run ESLint
         run: npx eslint . --ext .js,.jsx,.ts,.tsx
