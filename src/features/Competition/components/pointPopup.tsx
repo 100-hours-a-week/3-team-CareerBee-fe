@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 export default function PointPopup({ points }: { points: number }) {
   return (
@@ -8,7 +9,13 @@ export default function PointPopup({ points }: { points: number }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: 'easeInOut' }}
       >
-        <div className="bg-white mt-auto w-full rounded-t-xl h-60 flex flex-col items-center py-8">
+        <div className=" bg-white mt-auto w-full rounded-t-xl h-60 flex flex-col items-center py-8">
+          <DotLottieReact
+            src="/animation/confetti.lottie"
+            loop
+            autoplay
+            className="absolute bottom-16 h-72 z-50"
+          />
           <img src="/assets/point.svg" alt="포인트" className="h-32 mb-4" />
           <p className="text-md text-text-primary">{points}포인트를 얻었어요!</p>
         </div>
