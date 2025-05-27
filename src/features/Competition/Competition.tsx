@@ -45,7 +45,7 @@ export default function Competition() {
       </div>
       <div className="flex justify-between items-stretch mt-2 max-w-[552px] min-w-[352px] w-full h-full">
         <img src={MoveLeft} alt="뒤로가기" className="h-16 my-auto" />
-        <div className="flex flex-col justify-between items-center max-w-[24rem] mx-auto min-h-[36rem] h-full">
+        <div className="flex flex-col justify-between items-center max-w-[25rem] mx-auto min-h-[36rem] h-full">
           <Tabs defaultValue="1" className="mb-auto w-full">
             <TabsList>
               <TabsTrigger value="1" variant="pill" isSolved={isSolved(0)} isCorrect={undefined}>
