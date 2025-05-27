@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const answers = [
@@ -15,10 +16,16 @@ const answers = [
 
 type QuestionProps = {
   value: string;
+  showExplanation: boolean;
   selectedValue: string;
-  onChange: (_val: string) => void;
+  onChange: (_value: string) => void;
 };
-export default function Question({ value, selectedValue, onChange }: QuestionProps) {
+export default function Question({
+  value,
+  showExplanation,
+  selectedValue,
+  onChange,
+}: QuestionProps) {
   return (
     <div className="flex-col max-h-[36rem] overflow-auto">
       <>
@@ -53,6 +60,11 @@ export default function Question({ value, selectedValue, onChange }: QuestionPro
             </div>
           ))}
         </RadioGroup>
+      </>
+      <>
+        {showExplanation && (
+          <div className="mt-8">맨 뒤로 이동하여 대기하는건 RR (라운드로빈)입니다.</div>
+        )}
       </>
     </div>
   );

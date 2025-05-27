@@ -8,10 +8,14 @@ import MoveRight from '@/features/Competition/image/caret-right.svg';
 export default function Competition() {
   // TODO: 대회 남은 시간으로 바꾸기
   const [timeLeft, setTimeLeft] = useState(60000);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
+        if (isSubmitted) {
+          return prev;
+        }
         if (prev <= 0) {
           clearInterval(interval);
           return 0;
@@ -20,7 +24,7 @@ export default function Competition() {
       });
     }, 10);
     return () => clearInterval(interval);
-  });
+  }, [isSubmitted]);
 
   const formatTime = (time: number) => {
     const minutes = String(Math.floor(time / 6000)).padStart(2, '0');
@@ -30,7 +34,7 @@ export default function Competition() {
   };
 
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>(['', '', '', '', '']);
-
+  const notAnswered = selectedAnswers.every((answer) => answer !== '');
   const isSolved = (index: number) => selectedAnswers[index] !== '';
   return (
     <div className="flex flex-col justify-start items-center px-6 pt-8 min-h-[calc(100dvh-3.5rem)]">
@@ -69,6 +73,7 @@ export default function Competition() {
                   next[0] = val;
                   setSelectedAnswers(next);
                 }}
+                showExplanation={isSubmitted}
               />
             </TabsContent>
             <TabsContent value="2" className="grow px-0">
@@ -80,6 +85,7 @@ export default function Competition() {
                   next[1] = val;
                   setSelectedAnswers(next);
                 }}
+                showExplanation={isSubmitted}
               />
             </TabsContent>
             <TabsContent value="3" className="grow px-0">
@@ -91,6 +97,7 @@ export default function Competition() {
                   next[2] = val;
                   setSelectedAnswers(next);
                 }}
+                showExplanation={isSubmitted}
               />
             </TabsContent>
             <TabsContent value="4" className="grow px-0">
@@ -102,6 +109,7 @@ export default function Competition() {
                   next[3] = val;
                   setSelectedAnswers(next);
                 }}
+                showExplanation={isSubmitted}
               />
             </TabsContent>
             <TabsContent value="5" className="grow px-0">
@@ -113,10 +121,20 @@ export default function Competition() {
                   next[4] = val;
                   setSelectedAnswers(next);
                 }}
+                showExplanation={isSubmitted}
               />
             </TabsContent>
           </Tabs>
-          <Button variant="secondary" label="제출하기" fullWidth={true} className="mt-4"></Button>
+          <Button
+            variant="primary"
+            label={isSubmitted ? '랭킹보러가기' : '제출하기'}
+            fullWidth={true}
+            disabled={!notAnswered}
+            className="mt-4"
+            onClick={() => {
+              setIsSubmitted(true);
+            }}
+          ></Button>
           <div className="h-12" />
         </div>
         <img src={MoveRight} alt="뒤로가기" className="h-16 my-auto" />
