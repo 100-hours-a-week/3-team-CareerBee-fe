@@ -1,0 +1,35 @@
+name: Lint & Format Check
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🧰 Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+          
+      - name: 🧪 Install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.7.1 --activate
+
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🔍 Run ESLint
+        run: npx eslint . --ext .js,.jsx,.ts,.tsx
+
+      - name: 🎨 Run Prettier check
+        run: npx prettier "**/*.{js,jsx,ts,tsx}" --check
