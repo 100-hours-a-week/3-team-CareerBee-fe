@@ -11,6 +11,7 @@ import NotFound from '@/pages/NotFound';
 import OAuthCallback from '@/features/Member/auth/OAuthCallback';
 import Ranking from '@/features/Competition/Ranking';
 import Competition from '@/features/Competition/Competition';
+import Notification from '@/features/Member/notification/Notification';
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
       { path: 'oauth/callback/kakao', element: <OAuthCallback /> },
       { path: 'competition', element: <Ranking /> },
       { path: 'competition/entry', element: <Competition /> },
+      { path: 'notification', element: <Notification /> },
       { path: '*', element: <ToBeContinued /> },
     ],
   },
