@@ -50,87 +50,33 @@ export default function Competition() {
         <div className="flex flex-col justify-between items-center max-w-[25rem] mx-auto min-h-[36rem] h-full">
           <Tabs defaultValue="1" className="mb-auto w-full">
             <TabsList>
-              <TabsTrigger value="1" variant="pill" isSolved={isSolved(0)} isCorrect={isCorrect(0)}>
-                1
-              </TabsTrigger>
-              <TabsTrigger value="2" variant="pill" isSolved={isSolved(1)} isCorrect={isCorrect(1)}>
-                2
-              </TabsTrigger>
-              <TabsTrigger value="3" variant="pill" isSolved={isSolved(2)} isCorrect={isCorrect(2)}>
-                3
-              </TabsTrigger>
-              <TabsTrigger value="4" variant="pill" isSolved={isSolved(3)} isCorrect={isCorrect(3)}>
-                4
-              </TabsTrigger>
-              <TabsTrigger value="5" variant="pill" isSolved={isSolved(4)} isCorrect={isCorrect(4)}>
-                5
-              </TabsTrigger>
+              {[1, 2, 3, 4, 5].map((num, index) => (
+                <TabsTrigger
+                  key={num}
+                  value={String(num)}
+                  variant="pill"
+                  isSolved={isSolved(index)}
+                  isCorrect={isCorrect(index)}
+                >
+                  {num}
+                </TabsTrigger>
+              ))}
             </TabsList>
-            <TabsContent value="1" className="grow px-0">
-              <Question
-                value="1"
-                selectedValue={selectedAnswers[0]}
-                onChange={(val: string) => {
-                  const next = [...selectedAnswers];
-                  next[0] = val;
-                  setSelectedAnswers(next);
-                }}
-                showExplanation={isSubmitted}
-                answer="radio1"
-              />
-            </TabsContent>
-            <TabsContent value="2" className="grow px-0">
-              <Question
-                value="2"
-                selectedValue={selectedAnswers[1]}
-                onChange={(val: string) => {
-                  const next = [...selectedAnswers];
-                  next[1] = val;
-                  setSelectedAnswers(next);
-                }}
-                showExplanation={isSubmitted}
-                answer="radio1"
-              />
-            </TabsContent>
-            <TabsContent value="3" className="grow px-0">
-              <Question
-                value="3"
-                selectedValue={selectedAnswers[2]}
-                onChange={(val: string) => {
-                  const next = [...selectedAnswers];
-                  next[2] = val;
-                  setSelectedAnswers(next);
-                }}
-                showExplanation={isSubmitted}
-                answer="radio1"
-              />
-            </TabsContent>
-            <TabsContent value="4" className="grow px-0">
-              <Question
-                value="4"
-                selectedValue={selectedAnswers[3]}
-                onChange={(val: string) => {
-                  const next = [...selectedAnswers];
-                  next[3] = val;
-                  setSelectedAnswers(next);
-                }}
-                showExplanation={isSubmitted}
-                answer="radio1"
-              />
-            </TabsContent>
-            <TabsContent value="5" className="grow px-0">
-              <Question
-                value="5"
-                selectedValue={selectedAnswers[4]}
-                onChange={(val: string) => {
-                  const next = [...selectedAnswers];
-                  next[4] = val;
-                  setSelectedAnswers(next);
-                }}
-                showExplanation={isSubmitted}
-                answer="radio1"
-              />
-            </TabsContent>
+            {[1, 2, 3, 4, 5].map((num, index) => (
+              <TabsContent key={num} value={String(num)} className="grow px-0">
+                <Question
+                  value={String(num)}
+                  selectedValue={selectedAnswers[index]}
+                  onChange={(val: string) => {
+                    const next = [...selectedAnswers];
+                    next[index] = val;
+                    setSelectedAnswers(next);
+                  }}
+                  showExplanation={isSubmitted}
+                  answer="radio1"
+                />
+              </TabsContent>
+            ))}
           </Tabs>
           <Button
             variant="primary"
