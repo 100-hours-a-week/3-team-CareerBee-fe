@@ -10,7 +10,7 @@ const answers = [
 
 export default function Question({ value }: { value: string }) {
   return (
-    <div className="flex-col items-center justify-center h-full">
+    <div className="flex-col items-center justify-center h-[25.5rem] overflow-auto">
       <>
         <div className="flex font-bold py-4">
           <div>0{value}.</div>
