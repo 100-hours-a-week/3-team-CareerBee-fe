@@ -4,11 +4,13 @@ import { Button } from '@/components/ui/button';
 import Question from './components/question';
 import MoveLeft from '@/features/Competition/image/caret-left.svg';
 import MoveRight from '@/features/Competition/image/caret-right.svg';
+import PointPopup from '@/features/Competition/components/pointPopup';
 
 export default function Competition() {
   // TODO: 대회 남은 시간으로 바꾸기
   const [timeLeft, setTimeLeft] = useState(60000);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showPointResult, setShowPointResult] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -85,13 +87,21 @@ export default function Competition() {
             disabled={!notAnswered}
             className="mt-4"
             onClick={() => {
-              setIsSubmitted(true);
+              if (isSubmitted) {
+                setShowPointResult(true);
+                setTimeout(() => {
+                  window.location.href = '/competition';
+                }, 5000);
+              } else {
+                setIsSubmitted(true);
+              }
             }}
           ></Button>
           <div className="h-12" />
         </div>
         <img src={MoveRight} alt="뒤로가기" className="h-16 my-auto" />
       </div>
+      {showPointResult && <PointPopup points={5} />}
     </div>
   );
 }
