@@ -30,14 +30,16 @@ export default function Competition() {
   };
 
   return (
-    <div className="flex flex-col justify-start items-center px-6 py-8 ">
-      <div className="w-[330px] mx-auto font-medium text-5xl px-8 mb-16">
-        {formatTime(timeLeft)}
+    <div className="flex flex-col justify-start items-center px-6 pt-8 pb-12 min-h-[calc(100dvh-3.5rem)]">
+      <div className="flex h-full min-h-[48px] max-h-[96px]">
+        <div className="w-[20rem] mx-auto font-medium text-5xl px-8 mb-auto">
+          {formatTime(timeLeft)}
+        </div>
       </div>
-      <div className="flex justify-between items-center space-x-16">
-        <img src={MoveLeft} alt="뒤로가기" className="h-18" />
-        <div className="flex-col justify-between items-center w-full">
-          <Tabs defaultValue="1" className="grow mb-16 w-full">
+      <div className="flex justify-between items-stretch mt-2 max-w-[552px] min-w-[352px] w-full h-full">
+        <img src={MoveLeft} alt="뒤로가기" className="h-16 my-auto" />
+        <div className="flex flex-col justify-between items-center max-w-[24rem] mx-auto min-h-[36rem] h-full">
+          <Tabs defaultValue="1" className="mb-auto w-full">
             <TabsList>
               <TabsTrigger value="1" variant="pill" isSolved={false} isCorrect={undefined}>
                 1
@@ -55,25 +57,25 @@ export default function Competition() {
                 5
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="1" className="grow">
+            <TabsContent value="1" className="grow px-0">
               <Question value="1" />
             </TabsContent>
-            <TabsContent value="2" className="grow">
+            <TabsContent value="2" className="grow px-0">
               <Question value="2" />
             </TabsContent>
-            <TabsContent value="3" className="grow">
+            <TabsContent value="3" className="grow px-0">
               <Question value="3" />
             </TabsContent>
-            <TabsContent value="4" className="grow">
+            <TabsContent value="4" className="grow px-0">
               <Question value="4" />
             </TabsContent>
-            <TabsContent value="5" className="grow">
+            <TabsContent value="5" className="grow px-0">
               <Question value="5" />
             </TabsContent>
           </Tabs>
-          <Button variant="secondary" label="제출하기" fullWidth={true}></Button>
+          <Button variant="secondary" label="제출하기" fullWidth={true} className="mt-4"></Button>
         </div>
-        <img src={MoveRight} alt="뒤로가기" className="h-18" />
+        <img src={MoveRight} alt="뒤로가기" className="h-16 my-auto" />
       </div>
     </div>
   );
