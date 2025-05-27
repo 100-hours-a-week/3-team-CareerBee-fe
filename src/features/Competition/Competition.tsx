@@ -30,7 +30,7 @@ export default function Competition() {
   };
 
   return (
-    <div className="flex flex-col justify-start items-center px-6 pt-8 pb-12 min-h-[calc(100dvh-3.5rem)]">
+    <div className="flex flex-col justify-start items-center px-6 pt-8 min-h-[calc(100dvh-3.5rem)]">
       <div className="flex h-full min-h-[48px] max-h-[96px]">
         <div className="w-[20rem] mx-auto font-medium text-5xl px-8 mb-auto">
           {formatTime(timeLeft)}
@@ -74,6 +74,7 @@ export default function Competition() {
             </TabsContent>
           </Tabs>
           <Button variant="secondary" label="제출하기" fullWidth={true} className="mt-4"></Button>
+          <div className="h-12" />
         </div>
         <img src={MoveRight} alt="뒤로가기" className="h-16 my-auto" />
       </div>
