@@ -20,8 +20,8 @@ TabsList.displayName = TabsPrimitive.List.displayName;
 
 const TabsVariants = cva(
   `inline-flex items-center justify-center w-full
-  rounded-none whitespace-nowrap px-4 py-2 bg-background
-  text-base font-medium ring-offset-background transition-all 
+  rounded-none whitespace-nowrap bg-background
+  text-base ring-offset-background transition-all 
   focus-visible:outline-none 
   focus-visible:ring-2 
   focus-visible:ring-ring 
@@ -31,7 +31,7 @@ const TabsVariants = cva(
   {
     variants: {
       variant: {
-        company: `relative top-0 text-text-primary 
+        company: `relative top-0 text-text-primary px-4 py-2 
         data-[state=active]:font-semibold
         data-[state=active]:after:bg-primary 
         data-[state=active]:bg-secondary/80 
@@ -43,6 +43,15 @@ const TabsVariants = cva(
         after:w-full 
         after:bg-secondary 
         `,
+        pill: `
+          text-text-primary text-sm px-4 py-1 
+          bg-white
+          rounded-none 
+          first:rounded-tl-xl 
+          last:rounded-tr-xl
+          border border-primary
+          data-[state=active]:border-secondary
+        `,
       },
     },
     defaultVariants: {
@@ -53,12 +62,19 @@ const TabsVariants = cva(
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & {
-    variant?: 'company' | null | undefined;
+    variant?: 'company' | 'pill' | null | undefined;
+    isSolved?: boolean | null | undefined;
+    isCorrect?: boolean | null | undefined;
   }
->(({ className, variant, ...props }, ref) => (
+>(({ className, variant, isSolved, isCorrect, ...props }, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}
-    className={cn(TabsVariants({ variant }), className)}
+    className={cn(
+      TabsVariants({ variant }),
+      className,
+      isSolved === undefined ? '' : isSolved ? 'bg-primary' : '',
+      isCorrect === undefined ? '' : isCorrect ? 'bg-primary' : 'bg-error',
+    )}
     {...props}
   />
 ));

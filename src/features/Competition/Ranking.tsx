@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import DailyBarChart from '@/features/Competition/dailyChart';
-import WeeklyBarChart from '@/features/Competition/weeklyChart';
-import MonthlyBarChart from '@/features/Competition/monthlyChart';
+import DailyBarChart from '@/features/Competition/utils/dailyChart';
+import WeeklyBarChart from '@/features/Competition/utils/weeklyChart';
+import MonthlyBarChart from '@/features/Competition/utils/monthlyChart';
 import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '../Member/store/auth';
@@ -25,7 +25,8 @@ const RankCard = ({
   return (
     <div className={`w-1/3 h-[${height}] px-0.5`}>
       <div
-        className={`h-full bg-[url('/assets/${bgImage}')] bg-no-repeat bg-[length:100%_100%] rounded-lg justify-between pt-2 pb-2`}
+        className={`h-full bg-no-repeat bg-[length:100%_100%] rounded-lg justify-between pt-2 pb-2`}
+        style={{ backgroundImage: `url(/assets/${bgImage})` }}
       >
         <img src="/assets/no-profile.png" className={`w-8 h-8 mx-auto ${marginTop}`} />
         <div className="flex items-center justify-center mx-auto">
@@ -123,6 +124,13 @@ export default function Ranking() {
           <Button
             label="00 : 00 : 00"
             variant="secondary"
+            onClick={() => {
+              if (!token) {
+                window.location.href = '/login';
+                return;
+              }
+              window.location.href = '/competition/entry';
+            }}
             className="w-64 h-12 text-2xl flex mx-auto rounded-xl font-normal"
           />
           <div className="flex-col items-center m-2">
