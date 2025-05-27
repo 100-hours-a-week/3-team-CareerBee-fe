@@ -33,7 +33,11 @@ export default function Mypage() {
     <>
       <div className="flex flex-col grow">
         <div className="flex h-fit px-8 py-4 gap-4 border border-transparent border-b-border/30">
-          <img src={noProfile} className="bg-white rounded-full w-16 h-16 object-fill"></img>
+          <img
+            src={noProfile}
+            className="bg-white rounded-full w-16 h-16 object-fill"
+            alt="프로필 이미지"
+          ></img>
           <div className="flex flex-col my-auto text-text-primary gap-1">
             <div className="text-xl my-auto font-bold">{nickname}</div>
             <div className="text-sm">포인트 0</div>
