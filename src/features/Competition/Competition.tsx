@@ -74,6 +74,7 @@ export default function Competition() {
                   setSelectedAnswers(next);
                 }}
                 showExplanation={isSubmitted}
+                answer="radio1"
               />
             </TabsContent>
             <TabsContent value="2" className="grow px-0">
@@ -86,6 +87,7 @@ export default function Competition() {
                   setSelectedAnswers(next);
                 }}
                 showExplanation={isSubmitted}
+                answer="radio1"
               />
             </TabsContent>
             <TabsContent value="3" className="grow px-0">
@@ -98,6 +100,7 @@ export default function Competition() {
                   setSelectedAnswers(next);
                 }}
                 showExplanation={isSubmitted}
+                answer="radio1"
               />
             </TabsContent>
             <TabsContent value="4" className="grow px-0">
@@ -110,6 +113,7 @@ export default function Competition() {
                   setSelectedAnswers(next);
                 }}
                 showExplanation={isSubmitted}
+                answer="radio1"
               />
             </TabsContent>
             <TabsContent value="5" className="grow px-0">
@@ -122,6 +126,7 @@ export default function Competition() {
                   setSelectedAnswers(next);
                 }}
                 showExplanation={isSubmitted}
+                answer="radio1"
               />
             </TabsContent>
           </Tabs>

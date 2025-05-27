@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+
+import { cn } from '@/lib/utils';
 
 const answers = [
   {
@@ -19,12 +20,14 @@ type QuestionProps = {
   showExplanation: boolean;
   selectedValue: string;
   onChange: (_value: string) => void;
+  answer: string;
 };
 export default function Question({
   value,
   showExplanation,
   selectedValue,
   onChange,
+  answer,
 }: QuestionProps) {
   return (
     <div className="flex-col max-h-[36rem] overflow-auto">
@@ -50,11 +53,26 @@ export default function Question({
           className="flex flex-col space-y-6"
           value={selectedValue}
           onValueChange={onChange}
+          disabled={showExplanation}
         >
           {answers.map((option) => (
             <div key={option.id} className="flex items-center space-x-2 p-1">
-              <RadioGroupItem value={option.value} id={option.id} className="min-h-5 min-w-5" />
-              <label htmlFor={option.id} className="cursor-pointer">
+              <RadioGroupItem
+                value={option.value}
+                id={option.id}
+                isAnswer={answer === option.value && showExplanation}
+                falseAnswer={
+                  selectedValue === option.value && answer !== selectedValue && showExplanation
+                }
+                trueAnswer={
+                  selectedValue === option.value && answer === selectedValue && showExplanation
+                }
+                className="min-h-5 min-w-5"
+              />
+              <label
+                htmlFor={option.id}
+                className={cn(`cursor-pointer`, showExplanation && 'cursor-default')}
+              >
                 {option.label}
               </label>
             </div>
