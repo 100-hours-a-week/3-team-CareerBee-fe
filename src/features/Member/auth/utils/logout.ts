@@ -1,5 +1,5 @@
-import { instance as axios } from '@/features/Member/utils/axios';
-import { useAuthStore } from '@/features/Member/store/auth';
+import { instance as axios } from '@/features/Member/auth/utils/axios';
+import { useAuthStore } from '@/features/Member/auth/store/auth';
 
 export const logout = async () => {
   const token = useAuthStore.getState().token;

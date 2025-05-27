@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { instance as axios } from '@/features/Member/utils/axios';
+import { instance as axios } from '@/features/Member/auth/utils/axios';
 import { useSearchStore } from '@/features/Map/store/search';
 import { useDebounce } from '@/hooks/useDebounce';
 

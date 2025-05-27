@@ -5,7 +5,7 @@ import WeeklyBarChart from '@/features/Competition/utils/weeklyChart';
 import MonthlyBarChart from '@/features/Competition/utils/monthlyChart';
 import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
 import { Button } from '@/components/ui/button';
-import { useAuthStore } from '../Member/store/auth';
+import { useAuthStore } from '../Member/auth/store/auth';
 import { cn } from '@/lib/utils';
 
 const rankCardStyles = {

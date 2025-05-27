@@ -8,7 +8,7 @@ import {
   PiUserLight,
 } from 'react-icons/pi';
 
-import { useAuthStore } from '@/features/Member/store/auth';
+import { useAuthStore } from '@/features/Member/auth/store/auth';
 import { useUiStore } from '@/store/ui';
 import { useLocation } from 'react-router-dom';
 

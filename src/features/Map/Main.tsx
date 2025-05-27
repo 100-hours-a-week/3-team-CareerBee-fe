@@ -12,7 +12,7 @@ import { useSearchStore } from '@/features/Map/store/search';
 import { useMarkerStore } from '@/features/Map/store/marker';
 import { useFetchSuggestions } from './hooks/useFetchSuggestions';
 
-import { instance as axios } from '@/features/Member/utils/axios';
+import { instance as axios } from '@/features/Member/auth/utils/axios';
 
 // import { useAuthStore  } from '@/store/auth';
 import { Button } from '@/components/ui/button';

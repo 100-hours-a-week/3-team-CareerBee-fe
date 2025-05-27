@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Loader } from '@/components/ui/loader';
-import { useAuthStore } from '@/features/Member/store/auth';
-import { instance as axios } from '@/features/Member/utils/axios';
+import { useAuthStore } from '@/features/Member/auth/store/auth';
+import { instance as axios } from '@/features/Member/auth/utils/axios';
 
 export default function OAuthCallback() {
   const setToken = useAuthStore((state) => state.setToken);

@@ -1,7 +1,7 @@
 import { RouterProvider } from 'react-router-dom';
 import { router } from '@/router';
 import { useEffect } from 'react';
-import { useAuthStore } from '@/features/Member/store/auth';
+import { useAuthStore } from '@/features/Member/auth/store/auth';
 // import { useGlobalErrorToast } from '@/hooks/useGlobalErrorToast';
 // import { useViewportHeight } from './hooks/useViewportHeight';
 // import { AnimatePresence } from 'motion/react';

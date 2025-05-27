@@ -1,6 +1,6 @@
 //특정 회사의 저장 여부 get & 저장하면 post 날리기
 
-import { instance as axios } from '@/features/Member/utils/axios';
+import { instance as axios } from '@/features/Member/auth/utils/axios';
 
 export const handleToggleBookmark = async (
   token: string,
