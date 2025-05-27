@@ -19,7 +19,6 @@ const fetchBookmarkedIds = async (
   setBookmarkedIds: (_ids: number[]) => void,
   triggerFilterUpdate: () => void,
 ) => {
-  // console.log('🚀 fetchBookmarkedIds called'); // ✅ 여기에 로그 넣기
   const token = useAuthStore.getState().token;
   if (!token) return;
 
@@ -32,7 +31,6 @@ const fetchBookmarkedIds = async (
         },
       },
     );
-    // console.log(res.data.data.wishCompanies);
     setBookmarkedIds(res.data.data.wishCompanies);
     triggerFilterUpdate();
   } catch (err) {

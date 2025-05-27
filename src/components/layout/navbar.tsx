@@ -78,7 +78,6 @@ export const Navbar = () => {
             href={item.href}
             onClick={(e) => {
               if (isCompanyDetailPage && item.href === '/') {
-                console.log('map clicked');
                 e.preventDefault();
                 setMapPressedFromNavbar(true);
                 setTimeout(() => {

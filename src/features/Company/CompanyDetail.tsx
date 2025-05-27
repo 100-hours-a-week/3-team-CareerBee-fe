@@ -92,10 +92,6 @@ export default function CompanyDetail() {
 
   // 존재하지 않는 기업
   useEffect(() => {
-    if (!id) {
-      console.log('no id');
-      return;
-    }
     const fetchCompanyDetail = () => {
       axios
         .get(`${import.meta.env.VITE_API_URL}/api/v1/companies/${id}`)
