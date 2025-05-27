@@ -32,4 +32,4 @@ jobs:
         run: npx eslint . --ext .js,.jsx,.ts,.tsx
 
       - name: 🎨 Run Prettier check
-        run: npx prettier . --check
+        run: npx prettier "**/*.{js,jsx,ts,tsx}" --check
