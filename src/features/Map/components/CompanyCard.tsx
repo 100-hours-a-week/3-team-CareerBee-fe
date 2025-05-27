@@ -68,6 +68,7 @@ export default function CompanyCard({
 
   return (
     <div
+      role="button"
       onClick={handleClickAnywhere}
       style={{
         backgroundImage: `url(${companyCardBackground})`,
