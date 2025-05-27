@@ -73,7 +73,7 @@ const TabsTrigger = React.forwardRef<
       TabsVariants({ variant }),
       className,
       isSolved === undefined ? '' : isSolved ? 'bg-primary border-white' : '',
-      isCorrect === undefined ? '' : isCorrect ? 'bg-primary' : 'bg-error',
+      isCorrect === undefined ? '' : isCorrect ? 'bg-primary' : 'bg-error text-white',
     )}
     {...props}
   />

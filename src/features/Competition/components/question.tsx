@@ -32,7 +32,7 @@ export default function Question({
 }: QuestionProps) {
   return (
     <div className="relative">
-      <div className="flex-col overflow-y-auto overflow-x-visible max-h-[36rem] px-3">
+      <div className="flex-col overflow-y-auto overflow-x-visible max-h-[35rem] px-3">
         <div className="sticky flex items-start left-[-0.5rem] z-10">
           <img
             src={showExplanation && answer === selectedValue ? Correct : Incorrect}

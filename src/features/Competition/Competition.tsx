@@ -36,6 +36,8 @@ export default function Competition() {
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>(['', '', '', '', '']);
   const notAnswered = selectedAnswers.every((answer) => answer !== '');
   const isSolved = (index: number) => selectedAnswers[index] !== '';
+  const isCorrect = (index: number) =>
+    isSubmitted ? selectedAnswers[index] === 'radio1' : undefined;
   return (
     <div className="flex flex-col justify-start items-center px-6 pt-8 min-h-[calc(100dvh-3.5rem)]">
       <div className="flex h-full min-h-[48px] max-h-[96px]">
@@ -48,19 +50,19 @@ export default function Competition() {
         <div className="flex flex-col justify-between items-center max-w-[25rem] mx-auto min-h-[36rem] h-full">
           <Tabs defaultValue="1" className="mb-auto w-full">
             <TabsList>
-              <TabsTrigger value="1" variant="pill" isSolved={isSolved(0)} isCorrect={undefined}>
+              <TabsTrigger value="1" variant="pill" isSolved={isSolved(0)} isCorrect={isCorrect(0)}>
                 1
               </TabsTrigger>
-              <TabsTrigger value="2" variant="pill" isSolved={isSolved(1)} isCorrect={undefined}>
+              <TabsTrigger value="2" variant="pill" isSolved={isSolved(1)} isCorrect={isCorrect(1)}>
                 2
               </TabsTrigger>
-              <TabsTrigger value="3" variant="pill" isSolved={isSolved(2)} isCorrect={undefined}>
+              <TabsTrigger value="3" variant="pill" isSolved={isSolved(2)} isCorrect={isCorrect(2)}>
                 3
               </TabsTrigger>
-              <TabsTrigger value="4" variant="pill" isSolved={isSolved(3)} isCorrect={undefined}>
+              <TabsTrigger value="4" variant="pill" isSolved={isSolved(3)} isCorrect={isCorrect(3)}>
                 4
               </TabsTrigger>
-              <TabsTrigger value="5" variant="pill" isSolved={isSolved(4)} isCorrect={undefined}>
+              <TabsTrigger value="5" variant="pill" isSolved={isSolved(4)} isCorrect={isCorrect(4)}>
                 5
               </TabsTrigger>
             </TabsList>
