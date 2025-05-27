@@ -10,11 +10,17 @@ const RadioGroup = React.forwardRef<
   return <RadioGroupPrimitive.Root className={cn('grid', className)} {...props} ref={ref} />;
 });
 RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
+interface RadioGroupItemProps
+  extends React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> {
+  falseAnswer?: boolean; //정답 못 맞춤
+  trueAnswer?: boolean; //정답 맞춤
+  isAnswer?: boolean; //실제 답
+}
 
 const RadioGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
->(({ className, ...props }, ref) => {
+  RadioGroupItemProps
+>(({ className, falseAnswer, trueAnswer, isAnswer, ...props }, ref) => {
   return (
     <RadioGroupPrimitive.Item
       ref={ref}
@@ -28,13 +34,24 @@ const RadioGroupItem = React.forwardRef<
            focus-visible:ring-offset-2
            data-[state=checked]:border-primary
         `,
+        isAnswer && 'border-primary',
+        falseAnswer && '!border-text-secondary',
+        trueAnswer && 'border-primary',
         className,
       )}
       {...props}
     >
       <RadioGroupPrimitive.Indicator className="absolute w-4 h-4 flex items-center justify-center pointer-events-none">
-        <div className="h-[0.625rem] w-[0.625rem] rounded-full bg-primary" />
+        <div
+          className={cn(
+            `h-[0.625rem] w-[0.625rem] rounded-full bg-primary`,
+            isAnswer && 'bg-primary',
+            falseAnswer && 'bg-text-secondary',
+            trueAnswer && 'bg-primary',
+          )}
+        />
       </RadioGroupPrimitive.Indicator>
+      {isAnswer && <div className="h-[0.625rem] w-[0.625rem] rounded-full bg-primary"></div>}
     </RadioGroupPrimitive.Item>
   );
 });
