@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
+import { Button } from '@/components/ui/button';
+import Question from './components/question';
 
 export default function Competition() {
+  // TODO: 대회 남은 시간으로 바꾸기
   const [timeLeft, setTimeLeft] = useState(60000);
 
   useEffect(() => {
@@ -27,9 +29,11 @@ export default function Competition() {
 
   return (
     <div className="flex-col justify-center items-center px-6 py-8">
-      <div className="font-medium text-5xl px-8 mb-14">{formatTime(timeLeft)}</div>
-      <div className="flex justify-between items-center w-full">
-        <Tabs defaultValue="1" className="grow mt-4 w-full">
+      <div className="w-[330px] mx-auto font-medium text-5xl px-8 mb-14 ">
+        {formatTime(timeLeft)}
+      </div>
+      <div className="flex-col justify-between items-center w-full">
+        <Tabs defaultValue="1" className="grow mb-14 w-full">
           <TabsList>
             <TabsTrigger value="1" variant="pill" isSolved={false} isCorrect={undefined}>
               1
@@ -48,18 +52,22 @@ export default function Competition() {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="1" className="grow">
-            <div className="flex-col items-center justify-center h-full">
-              <>
-                <div className="flex font-bold py-4">
-                  <div>01.</div>
-                  <div className="pl-3">CPU 스케줄링을 고르시오.</div>
-                </div>
-                <div className="w-full">타임 슬라이스(Time Slice)를 일정하게 설정하고 각 프로세스가 정해진 시간 동안 CPU를 사용한 뒤에는 큐의 맨 뒤로 이동하여 대기하도록 하는 선점형 스케줄링 알고리즘은 무엇인지 고르세요</div>
-              </>
-              <></>
-            </div>
+            <Question value="1" />
+          </TabsContent>
+          <TabsContent value="2" className="grow">
+            <Question value="2" />
+          </TabsContent>
+          <TabsContent value="3" className="grow">
+            <Question value="3" />
+          </TabsContent>
+          <TabsContent value="4" className="grow">
+            <Question value="4" />
+          </TabsContent>
+          <TabsContent value="5" className="grow">
+            <Question value="5" />
           </TabsContent>
         </Tabs>
+        <Button variant="secondary" label="제출하기" fullWidth={true}></Button>
       </div>
     </div>
   );
