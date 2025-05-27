@@ -33,13 +33,15 @@ export default function Question({
   return (
     <div className="relative">
       <div className="flex-col overflow-y-auto overflow-x-visible max-h-[35rem] px-3">
-        <div className="sticky flex items-start left-[-0.5rem] z-10">
-          <img
-            src={showExplanation && answer === selectedValue ? Correct : Incorrect}
-            className="absolute left-[-0.5rem] h-20"
-            alt={showExplanation && answer === selectedValue ? '정답' : '오답'}
-          />
-        </div>
+        {showExplanation ? (
+          <div className="sticky flex items-start left-[-0.5rem] z-10">
+            <img
+              src={answer === selectedValue ? Correct : Incorrect}
+              className="absolute left-[-0.5rem] h-20"
+              alt={answer === selectedValue ? '정답' : '오답'}
+            />
+          </div>
+        ) : null}
         <div className="relative">
           <div className="flex font-bold py-4">
             <div>0{value}.</div>
