@@ -20,7 +20,7 @@ export default function Competition() {
       });
     }, 10);
     return () => clearInterval(interval);
-  }, []);
+  });
 
   const formatTime = (time: number) => {
     const minutes = String(Math.floor(time / 6000)).padStart(2, '0');
@@ -29,6 +29,9 @@ export default function Competition() {
     return `${minutes} : ${seconds} : ${hundredths}`;
   };
 
+  const [selectedAnswers, setSelectedAnswers] = useState<string[]>(['', '', '', '', '']);
+
+  const isSolved = (index: number) => selectedAnswers[index] !== '';
   return (
     <div className="flex flex-col justify-start items-center px-6 pt-8 min-h-[calc(100dvh-3.5rem)]">
       <div className="flex h-full min-h-[48px] max-h-[96px]">
@@ -41,36 +44,76 @@ export default function Competition() {
         <div className="flex flex-col justify-between items-center max-w-[24rem] mx-auto min-h-[36rem] h-full">
           <Tabs defaultValue="1" className="mb-auto w-full">
             <TabsList>
-              <TabsTrigger value="1" variant="pill" isSolved={false} isCorrect={undefined}>
+              <TabsTrigger value="1" variant="pill" isSolved={isSolved(0)} isCorrect={undefined}>
                 1
               </TabsTrigger>
-              <TabsTrigger value="2" variant="pill" isSolved={false} isCorrect={undefined}>
+              <TabsTrigger value="2" variant="pill" isSolved={isSolved(1)} isCorrect={undefined}>
                 2
               </TabsTrigger>
-              <TabsTrigger value="3" variant="pill" isSolved={false} isCorrect={undefined}>
+              <TabsTrigger value="3" variant="pill" isSolved={isSolved(2)} isCorrect={undefined}>
                 3
               </TabsTrigger>
-              <TabsTrigger value="4" variant="pill" isSolved={false} isCorrect={undefined}>
+              <TabsTrigger value="4" variant="pill" isSolved={isSolved(3)} isCorrect={undefined}>
                 4
               </TabsTrigger>
-              <TabsTrigger value="5" variant="pill" isSolved={false} isCorrect={undefined}>
+              <TabsTrigger value="5" variant="pill" isSolved={isSolved(4)} isCorrect={undefined}>
                 5
               </TabsTrigger>
             </TabsList>
             <TabsContent value="1" className="grow px-0">
-              <Question value="1" />
+              <Question
+                value="1"
+                selectedValue={selectedAnswers[0]}
+                onChange={(val: string) => {
+                  const next = [...selectedAnswers];
+                  next[0] = val;
+                  setSelectedAnswers(next);
+                }}
+              />
             </TabsContent>
             <TabsContent value="2" className="grow px-0">
-              <Question value="2" />
+              <Question
+                value="2"
+                selectedValue={selectedAnswers[1]}
+                onChange={(val: string) => {
+                  const next = [...selectedAnswers];
+                  next[1] = val;
+                  setSelectedAnswers(next);
+                }}
+              />
             </TabsContent>
             <TabsContent value="3" className="grow px-0">
-              <Question value="3" />
+              <Question
+                value="3"
+                selectedValue={selectedAnswers[2]}
+                onChange={(val: string) => {
+                  const next = [...selectedAnswers];
+                  next[2] = val;
+                  setSelectedAnswers(next);
+                }}
+              />
             </TabsContent>
             <TabsContent value="4" className="grow px-0">
-              <Question value="4" />
+              <Question
+                value="4"
+                selectedValue={selectedAnswers[3]}
+                onChange={(val: string) => {
+                  const next = [...selectedAnswers];
+                  next[3] = val;
+                  setSelectedAnswers(next);
+                }}
+              />
             </TabsContent>
             <TabsContent value="5" className="grow px-0">
-              <Question value="5" />
+              <Question
+                value="5"
+                selectedValue={selectedAnswers[4]}
+                onChange={(val: string) => {
+                  const next = [...selectedAnswers];
+                  next[4] = val;
+                  setSelectedAnswers(next);
+                }}
+              />
             </TabsContent>
           </Tabs>
           <Button variant="secondary" label="제출하기" fullWidth={true} className="mt-4"></Button>

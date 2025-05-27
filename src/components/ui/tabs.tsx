@@ -49,7 +49,7 @@ const TabsVariants = cva(
           rounded-none 
           first:rounded-tl-xl 
           last:rounded-tr-xl
-          border border-primary
+          border-2 border-primary
           data-[state=active]:border-secondary
         `,
       },
@@ -72,7 +72,7 @@ const TabsTrigger = React.forwardRef<
     className={cn(
       TabsVariants({ variant }),
       className,
-      isSolved === undefined ? '' : isSolved ? 'bg-primary' : '',
+      isSolved === undefined ? '' : isSolved ? 'bg-primary border-white' : '',
       isCorrect === undefined ? '' : isCorrect ? 'bg-primary' : 'bg-error',
     )}
     {...props}

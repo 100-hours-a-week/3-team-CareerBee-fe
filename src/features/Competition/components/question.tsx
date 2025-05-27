@@ -13,7 +13,12 @@ const answers = [
   { id: 'radio5', value: 'radio5', label: 'Option Five' },
 ];
 
-export default function Question({ value }: { value: string }) {
+type QuestionProps = {
+  value: string;
+  selectedValue: string;
+  onChange: (_val: string) => void;
+};
+export default function Question({ value, selectedValue, onChange }: QuestionProps) {
   return (
     <div className="flex-col max-h-[36rem] overflow-auto">
       <>
@@ -33,7 +38,12 @@ export default function Question({ value }: { value: string }) {
         </div>
       </>
       <>
-        <RadioGroup className="flex flex-col space-y-6">
+        <RadioGroup
+          defaultValue={selectedValue}
+          className="flex flex-col space-y-6"
+          value={selectedValue}
+          onValueChange={onChange}
+        >
           {answers.map((option) => (
             <div key={option.id} className="flex items-center space-x-2 p-1">
               <RadioGroupItem value={option.value} id={option.id} className="min-h-5 min-w-5" />
