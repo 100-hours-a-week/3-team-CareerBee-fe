@@ -2,7 +2,7 @@ import { MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import CompanyCard from '@/features/Map/components/CompanyCard';
 import noImg from '@/static/no-image.png';
 import { useCompanyStore } from '@/store/company';
-import { useAuthStore } from '@/features/Member/store/auth';
+import { useAuthStore } from '@/features/Member/auth/store/auth';
 import { useFetchCompanyCard } from '@/features/Map/hooks/useFetchCompanyCard';
 import { CompanyProps } from '@/features/Map/Main';
 

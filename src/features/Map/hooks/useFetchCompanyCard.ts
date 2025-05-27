@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useCompanyStore } from '@/store/company';
-import { useAuthStore } from '@/features/Member/store/auth';
-import { instance as axios } from '@/features/Member/utils/axios';
+import { useAuthStore } from '@/features/Member/auth/store/auth';
+import { instance as axios } from '@/features/Member/auth/utils/axios';
 import { useFetchBookmarkStatus } from '@/hooks/useFetchBookmarkStatus';
 
 export function useFetchCompanyCard(companyId: number) {

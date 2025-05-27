@@ -1,6 +1,6 @@
 // import { useParams, useLocation } from "react-router-dom";
 import { useEffect, useState } from 'react';
-import { instance as axios } from '@/features/Member/utils/axios';
+import { instance as axios } from '@/features/Member/auth/utils/axios';
 import CompanyTitle from '@/features/Company/components/CompanyTitle';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import noImg from '@/static/no-image.png';
@@ -13,7 +13,7 @@ import BenefitTab from '@/features/Company/components/benefit';
 import TechstackTab from '@/features/Company/components/techstack';
 
 import { useFetchBookmarkStatus } from '@/hooks/useFetchBookmarkStatus';
-import { useAuthStore } from '@/features/Member/store/auth';
+import { useAuthStore } from '@/features/Member/auth/store/auth';
 import { Loader } from '@/components/ui/loader';
 
 import { motion } from 'motion/react';
