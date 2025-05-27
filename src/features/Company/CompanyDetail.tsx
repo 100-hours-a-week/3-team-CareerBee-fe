@@ -21,31 +21,6 @@ import { useParams, useLocation } from 'react-router-dom';
 import { useUiStore } from '@/store/ui';
 import { AnimatePresence } from 'motion/react';
 
-export interface CompanyDetailResponse {
-  company: Company;
-}
-
-export interface Company {
-  id: number;
-  name: string;
-  title: string;
-  logoUrl: string;
-  recentIssue: string;
-  companyType: 'ENTERPRISE' | 'MID_SIZED' | 'SME';
-  recruitingStatus: string;
-  address: string;
-  employeeCount: number;
-  homepageUrl: string;
-  description: string;
-  wishCount: number;
-  rating: number;
-  financials: Financials;
-  photos: CompanyPhoto[];
-  benefits: CompanyBenefit[];
-  techStacks: TechStack[];
-  recruitments: Recruitment[];
-}
-
 export interface Financials {
   annualSalary: number;
   startingSalary: number;
@@ -69,13 +44,36 @@ export interface TechStack {
   type: 'BACKEND' | 'FRONTEND' | 'AI' | 'DEVOPS' | 'COMMUNICATION';
   imgUrl: string;
 }
-
 export interface Recruitment {
   id: number;
   url: string;
   title: string;
   startDate: string;
   endDate: string;
+}
+export interface Company {
+  id: number;
+  name: string;
+  title: string;
+  logoUrl: string;
+  recentIssue: string;
+  companyType: 'ENTERPRISE' | 'MID_SIZED' | 'SME';
+  recruitingStatus: string;
+  address: string;
+  employeeCount: number;
+  homepageUrl: string;
+  description: string;
+  wishCount: number;
+  rating: number;
+  financials: Financials;
+  photos: CompanyPhoto[];
+  benefits: CompanyBenefit[];
+  techStacks: TechStack[];
+  recruitments: Recruitment[];
+}
+
+export interface CompanyDetailResponse {
+  company: Company;
 }
 
 export default function CompanyDetail() {
