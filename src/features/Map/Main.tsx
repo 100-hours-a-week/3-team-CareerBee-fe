@@ -56,6 +56,7 @@ export default function Main() {
   const { markerDisabledMap } = useMarkerStore();
 
   const mapRef = useRef<kakao.maps.Map | null>(null);
+  const [highlightedCompanyId, setHighlightedCompanyId] = useState<number | null>(null);
 
   const {
     data: companies = [],
@@ -159,8 +160,6 @@ export default function Main() {
       }
     });
   };
-
-  const [highlightedCompanyId, setHighlightedCompanyId] = useState<number | null>(null);
 
   return (
     <>

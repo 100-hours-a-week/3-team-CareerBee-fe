@@ -5,6 +5,8 @@ const reactRefresh = require('eslint-plugin-react-refresh');
 const react = require('eslint-plugin-react');
 const prettier = require('eslint-plugin-prettier');
 const tseslint = require('typescript-eslint');
+const jsxA11y = require('eslint-plugin-jsx-a11y');
+const eslintImport = require('eslint-plugin-import');
 
 module.exports = [
   {
@@ -31,6 +33,8 @@ module.exports = [
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       prettier,
+      'jsx-a11y': jsxA11y,
+      'import': eslintImport,
     },
     rules: {
       ...tseslint.configs.recommendedTypeChecked[0].rules,
@@ -38,12 +42,17 @@ module.exports = [
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'no-console': 'warn',
       'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
-      '@typescript-eslint/no-unused-vars': ['error'],
       'prettier/prettier': ['error'],
       'react/react-in-jsx-scope': 'off',
       'import/prefer-default-export': 'off',
       'react/jsx-props-no-spreading': 'off',
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      'import/no-extraneous-dependencies': ['error'],
+      'jsx-a11y/alt-text': 'warn',
+      'jsx-a11y/anchor-is-valid': 'warn',
+      'jsx-a11y/no-static-element-interactions': 'warn',
+      'no-use-before-define': ['error', { functions: false, classes: true, variables: true }],
+      'react/destructuring-assignment': ['warn', 'always'],
     },
     settings: {
       react: {
