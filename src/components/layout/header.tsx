@@ -52,7 +52,7 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
           </button>
         ) : null}
 
-        <button onClick={handleLogoClick} className="cursor-pointer">
+        <button onClick={handleLogoClick} className="cursor-pointer px-0">
           <img src={logo} alt="logo" className="h-8" />
         </button>
       </div>
