@@ -1,9 +1,9 @@
 import { Toggle } from '@/components/ui/toggle';
-import { instance as axios } from '@/features/Member/auth/utils/axios';
 import { useState, useEffect, useRef } from 'react';
 import { CompanyProps } from '@/features/Map/Main';
 import { useMarkerStore } from '@/features/Map/store/marker';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
+import fetchBookmarkedIds from '@/features/Map/util/fetchBookmarkedIds';
 
 const CATEGORY_FILTERS = ['PLATFORM', 'SI', 'COMMERCE', 'GAME', 'TELECOM', 'SECURITY', 'FINANCE'];
 
@@ -15,25 +15,8 @@ interface Props {
   filters: FilterProps[];
   companies: CompanyProps[];
 }
-const fetchBookmarkedIds = async (setBookmarkedIds: (_ids: number[]) => void) => {
-  const token = useAuthStore.getState().token;
-  if (!token) return;
 
-  try {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/v1/members/wish-companies/id-list`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-
-    setBookmarkedIds(res.data.data.wishCompanies);
-  } catch (err) {
-    console.error('Failed to fetch bookmarked companies', err);
-  }
-};
+const isCategoryFilter = (id: string) => CATEGORY_FILTERS.includes(id);
 
 const FilterGroup = ({ filters, companies }: Props) => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
@@ -42,8 +25,6 @@ const FilterGroup = ({ filters, companies }: Props) => {
 
   //현재 적용되는 필터들 리턴함
   const handleFilterChange = async (id: string) => {
-    const isCategoryFilter = (id: string) => CATEGORY_FILTERS.includes(id);
-
     if (isCategoryFilter(id)) {
       setActiveFilters((prev) => {
         const nonCategory = prev.filter((f) => !isCategoryFilter(f));
@@ -53,7 +34,15 @@ const FilterGroup = ({ filters, companies }: Props) => {
     }
 
     if (id === 'bookmark') {
-      await fetchBookmarkedIds(setBookmarkedIds);
+      const token = useAuthStore.getState().token;
+      if (token) {
+        try {
+          const ids = await fetchBookmarkedIds(token);
+          setBookmarkedIds(ids);
+        } catch (error) {
+          console.error('Failed to fetch bookmarked companies', error);
+        }
+      }
     }
 
     if (id === 'bookmark' || id === 'recruiting') {
@@ -105,9 +94,7 @@ const FilterGroup = ({ filters, companies }: Props) => {
             variant="pill"
             label={label}
             pressed={activeFilters.includes(id)}
-            onPressedChange={() => {
-              handleFilterChange(id);
-            }}
+            onPressedChange={() => handleFilterChange(id)}
             className="shadow-md px-4 py-1 min-w-[72px] text-sm rounded-full border border-border/50 bg-white text-gray-800 whitespace-nowrap"
           ></Toggle>
         ))}
