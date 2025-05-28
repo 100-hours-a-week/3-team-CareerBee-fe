@@ -37,7 +37,7 @@ export default function Notify({ title, description, time }: NotifyProps) {
         </div>
         <div className="flex text-left text-text-secondary">{time}</div>
       </div>
-      <div className="w-full text-sm">{description}</div>
+      <div className="pl-5 w-full text-sm">{description}</div>
     </div>
   );
 }
