@@ -1,6 +1,6 @@
 import { Toggle } from '@/components/ui/toggle';
 import { instance as axios } from '@/features/Member/auth/utils/axios';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { CompanyProps } from '@/features/Map/Main';
 import { useMarkerStore } from '@/features/Map/store/marker';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
@@ -37,41 +37,55 @@ const fetchBookmarkedIds = async (setBookmarkedIds: (_ids: number[]) => void) =>
 
 const FilterGroup = ({ filters, companies }: Props) => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
-  const setCompanyDisabledMap = useMarkerStore((state) => state.setCompanyDisabledMap);
   const [bookmarkedIds, setBookmarkedIds] = useState<number[]>([]);
-  const stableSetCompanyDisabledMap = useCallback(setCompanyDisabledMap, [setCompanyDisabledMap]);
+  const setCompanyDisabledMap = useMarkerStore((state) => state.setCompanyDisabledMap);
 
   //현재 적용되는 필터들 리턴함
   const handleFilterChange = async (id: string) => {
     const isCategoryFilter = (id: string) => CATEGORY_FILTERS.includes(id);
+
     if (isCategoryFilter(id)) {
       setActiveFilters((prev) => {
         const nonCategory = prev.filter((f) => !isCategoryFilter(f));
-        return prev.includes(id) ? nonCategory : [...nonCategory, id]; //이전 액티브 필터 목록 중 카테고리 필터 제외
+        return prev.includes(id) ? nonCategory : [...nonCategory, id];
       });
-    } else if (id === 'bookmark') {
+      return;
+    }
+
+    if (id === 'bookmark') {
       await fetchBookmarkedIds(setBookmarkedIds);
-      setActiveFilters((prev) =>
-        prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id],
-      );
-    } else if (id === 'recruiting') {
+    }
+
+    if (id === 'bookmark' || id === 'recruiting') {
       setActiveFilters((prev) =>
         prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id],
       );
     }
   };
 
+  const companiesRef = useRef(companies);
+  const bookmarkedIdsRef = useRef(bookmarkedIds);
+
+  // useEffect보다 먼저 최신값 동기화
   useEffect(() => {
-    const filteredCompanies = companies.filter((company) => {
+    companiesRef.current = companies;
+  }, [companies]);
+
+  useEffect(() => {
+    bookmarkedIdsRef.current = bookmarkedIds;
+  }, [bookmarkedIds]);
+
+  useEffect(() => {
+    const filteredCompanies = companiesRef.current.filter((company) => {
       return activeFilters.every((filterId) => {
-        if (filterId === 'recruiting') return company.recruitingStatus === 'ONGOING';
-        if (filterId === 'bookmark') return bookmarkedIds.includes(company.id);
         if (CATEGORY_FILTERS.includes(filterId)) return company.businessType === filterId;
+        if (filterId === 'bookmark') return bookmarkedIdsRef.current.includes(company.id);
+        if (filterId === 'recruiting') return company.recruitingStatus === 'ONGOING';
         return true;
       });
     });
 
-    const disabledMap = companies.reduce(
+    const disabledMap = companiesRef.current.reduce(
       (acc, company) => {
         acc[company.id] = !filteredCompanies.some((c) => c.id === company.id);
         return acc;
@@ -79,8 +93,8 @@ const FilterGroup = ({ filters, companies }: Props) => {
       {} as Record<number, boolean>,
     );
 
-    stableSetCompanyDisabledMap(disabledMap);
-  }, [JSON.stringify(activeFilters), JSON.stringify(bookmarkedIds), JSON.stringify(companies)]);
+    setCompanyDisabledMap(disabledMap);
+  }, [activeFilters, setCompanyDisabledMap]);
 
   return (
     <div className="w-full px-4 py-2 overflow-x-auto scrollbar-hide group-hover:scrollbar-default">
