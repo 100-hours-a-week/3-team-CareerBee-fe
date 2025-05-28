@@ -53,7 +53,8 @@ export default function Main() {
   const { openCardIndex, setOpenCardIndex } = useCompanyStore();
   const { center, zoom, setCenter, setZoom } = useMapStore();
 
-  const { markerDisabledMap } = useMarkerStore();
+  // const { companyDisabledMap } = useMarkerStore();
+  const companyDisabledMap = useMarkerStore((state) => state.companyDisabledMap);
 
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const [highlightedCompanyId, setHighlightedCompanyId] = useState<number | null>(null);
@@ -198,7 +199,6 @@ export default function Main() {
         }}
       />
       <div className="relative flex item-center justify-center w-full h-full top-16 pb-16">
-        {/* {isFetching && <div className='absolute z-50 mt-72'><Loader/></div>} */}
         {loaded && (
           <Map
             ref={mapRef}
@@ -223,7 +223,7 @@ export default function Main() {
                   company={company}
                   index={index}
                   isOpen={openCardIndex === company.id}
-                  disabled={markerDisabledMap[company.id] ?? false}
+                  disabled={companyDisabledMap[company.id] ?? false}
                   isHighlighted={highlightedCompanyId === company.id}
                 />
               ))}
