@@ -8,19 +8,19 @@ export const handleToggleBookmark = async (
   isBookmarked: boolean,
   setIsBookmarked: (_value: boolean) => void,
 ) => {
-  if (import.meta.env.VITE_USE_MOCK === 'true') {
-    console.warn('[mock] toggleBookmark 작동 중');
+  // if (import.meta.env.VITE_USE_MOCK === 'true') {
+  //   console.warn('[mock] toggleBookmark 작동 중');
 
-    return new Promise<boolean>((resolve) => {
-      setTimeout(() => {
-        const next = !isBookmarked;
-        setIsBookmarked(next);
-        resolve(next);
-        // console.log('🎀', next);
-        // return next;
-      }, 300);
-    });
-  }
+  //   return new Promise<boolean>((resolve) => {
+  //     setTimeout(() => {
+  //       const next = !isBookmarked;
+  //       setIsBookmarked(next);
+  //       resolve(next);
+  //       // console.log('🎀', next);
+  //       // return next;
+  //     }, 300);
+  //   });
+  // }
 
   if (!token) return;
 
@@ -42,7 +42,6 @@ export const handleToggleBookmark = async (
     }
   } catch (error) {
     console.error('관심기업 토글 실패:', error);
-    // throw error;
     return null;
   }
 };

@@ -28,9 +28,13 @@ const RankCard = ({
         className={`h-full bg-no-repeat bg-[length:100%_100%] rounded-lg justify-between pt-2 pb-2`}
         style={{ backgroundImage: `url(/assets/${bgImage})` }}
       >
-        <img src="/assets/no-profile.png" className={`w-8 h-8 mx-auto ${marginTop}`} />
+        <img
+          src="/assets/no-profile.png"
+          className={`w-8 h-8 mx-auto ${marginTop}`}
+          alt="프로필 이미지"
+        />
         <div className="flex items-center justify-center mx-auto">
-          <img src="/assets/default.svg" className="w-4 h-4 mr-1" />
+          <img src="/assets/default.svg" className="w-4 h-4 mr-1" alt="뱃지 이미지" />
           <div>{nickname}</div>
         </div>
         <div className="text-[0.625rem] text-center">03.24.123</div>
@@ -113,8 +117,8 @@ export default function Ranking() {
           <div className="mb-1 text-sm font-bold tracking-tighter">. . .</div>
           <div className="w-[440px] h-[40px] rounded-md flex bg-[url('/assets/red-rank.svg')] bg-contain text-xs flex items-center px-2">
             <div className="pl-2 pr-3 font-bold">1</div>
-            <img src="/assets/no-profile.png" className="w-8 h-8 mx-1.5"></img>
-            <img src="/assets/default.svg" className="w-4 h-4 mr-1"></img>
+            <img src="/assets/no-profile.png" className="w-8 h-8 mx-1.5" alt="프로필 이미지"></img>
+            <img src="/assets/default.svg" className="w-4 h-4 mr-1" alt="뱃지 이미지"></img>
             <div className="mr-auto">김춘식1</div>
             <div className="text-[0.625rem] pr-6">03.24.123</div>
             <div className="text-[0.625rem] px-3">5/5</div>
