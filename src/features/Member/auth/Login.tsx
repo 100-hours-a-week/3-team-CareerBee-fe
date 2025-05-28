@@ -1,22 +1,7 @@
 import { Button } from '@/components/ui/button';
-import { instance as axios } from '@/features/Member/utils/axios';
+import handleLogin from '@/features/Member/auth/utils/kakaoLogin';
 
 export default function Login() {
-  const handleLogin = async () => {
-    try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/auth/oauth`, {
-        params: { type: 'KAKAO' },
-      });
-      const loginUrl = res.data.data.loginUrl;
-      if (loginUrl) {
-        // console.log(loginUrl)
-        window.location.href = loginUrl;
-      }
-    } catch (error) {
-      console.error('로그인 URL 요청 실패:', error);
-      alert('로그인에 실패했습니다. 다시 시도해주세요.');
-    }
-  };
   return (
     <div className="flex flex-col items-center justify-center my-auto px-16 gap-4">
       <h1 className="text-center text-2xl font-bold ">

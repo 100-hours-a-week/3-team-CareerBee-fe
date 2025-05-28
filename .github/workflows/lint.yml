@@ -24,12 +24,26 @@ jobs:
           corepack enable
           corepack prepare pnpm@10.7.1 --activate
 
-
       - name: 📦 Install dependencies
         run: pnpm install
 
+      - name: 🔍 Get changed JS/TS files
+        id: diff
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '\.(js|jsx|ts|tsx)$' || true)
+          echo "CHANGED_FILES=$CHANGED" >> $GITHUB_ENV
+
+      - name: ❗ Skip if no JS/TS files changed
+        if: env.CHANGED_FILES == ''
+        run: echo "No JS/TS files changed. Skipping lint/format checks."
+
       - name: 🔍 Run ESLint
-        run: npx eslint . --ext .js,.jsx,.ts,.tsx
+        if: env.CHANGED_FILES != ''
+        run: |
+          echo "$CHANGED_FILES" | xargs npx eslint
 
       - name: 🎨 Run Prettier check
-        run: npx prettier "**/*.{js,jsx,ts,tsx}" --check
+        if: env.CHANGED_FILES != ''
+        run: |
+          echo "$CHANGED_FILES" | xargs npx prettier --check
