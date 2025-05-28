@@ -18,6 +18,17 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
 
   const setBackPressedFromHeader = useUiStore((state) => state.setBackPressedFromHeader);
 
+  const handleLogoClick = () => {
+    if (isDown) {
+      setBackPressedFromHeader(true);
+      setTimeout(() => {
+        navigate(-1);
+        setBackPressedFromHeader(false);
+      }, 400);
+    } else {
+      navigate('/'); // 메인 페이지로 이동
+    }
+  };
   return (
     <header className={cn('flex items-center justify-between px-4 h-14 w-full')}>
       {/* 왼쪽 영역 */}
@@ -41,20 +52,9 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
           </button>
         ) : null}
 
-        <a
-          onClick={(e) => {
-            if (isDown) {
-              e.preventDefault();
-              setBackPressedFromHeader(true);
-              setTimeout(() => {
-                navigate(-1);
-                setBackPressedFromHeader(false);
-              }, 400);
-            }
-          }}
-        >
-          <img src={logo} alt="logo" className="h-8 cursor-pointer" />
-        </a>
+        <button onClick={handleLogoClick} className="cursor-pointer">
+          <img src={logo} alt="logo" className="h-8" />
+        </button>
       </div>
 
       {/* 오른쪽 영역 */}
