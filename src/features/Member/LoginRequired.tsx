@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import handleLogin from '@/features/Member/utils/kakaoLogin';
+import handleLogin from '@/features/Member/auth/utils/kakaoLogin';
 
 export default function LoginRequired() {
   return (
