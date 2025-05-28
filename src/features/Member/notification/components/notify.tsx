@@ -13,10 +13,8 @@ interface NotifyProps {
 const iconMap: Record<string, string> = {
   '공채 알림': recruite,
   'CS 대회': competition,
-  // eslint-disable-next-line prettier/prettier
-  '진척도': growth,
-  // eslint-disable-next-line prettier/prettier
-  '포인트': point,
+  진척도: growth,
+  포인트: point,
 };
 
 export default function Notify({ title, description, time }: NotifyProps) {

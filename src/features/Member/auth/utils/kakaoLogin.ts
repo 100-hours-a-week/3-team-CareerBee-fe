@@ -1,4 +1,4 @@
-import { instance as axios } from '@/features/Member/utils/axios';
+import { instance as axios } from '@/features/Member/auth/utils/axios';
 
 const handleLogin = async () => {
   try {

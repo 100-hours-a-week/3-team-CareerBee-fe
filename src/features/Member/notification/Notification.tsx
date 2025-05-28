@@ -20,7 +20,7 @@ export default function Notification() {
             time="오후 4시 4분"
           />
           <Notify
-            title="CS 대회"
+            title="진척도"
             description="김춘식님이 오늘의 CS 대회에서 1위를 달성했어요!"
             time="오후 4시 4분"
           />
