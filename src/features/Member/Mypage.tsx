@@ -62,7 +62,14 @@ export default function Mypage() {
               <div className="text-sm">{pointAmount}</div>
             </div>
           </div>
-          <Button label="내 이력 조회" variant="primary" className="text-sm rounded-xl px-6" />
+          <Button
+            label="내 이력 조회"
+            variant="primary"
+            className="text-sm rounded-xl px-6"
+            onClick={() => {
+              window.location.href = '/resume/upload';
+            }}
+          />
         </div>
         <div className="flex flex-col w-full items-center justify-center px-6 py-3 gap-2 border border-transparent border-b-border/30">
           <div className="text-base font-bold w-full items-start">관심 기업</div>
