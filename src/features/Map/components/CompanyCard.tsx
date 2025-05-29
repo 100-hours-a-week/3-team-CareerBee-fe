@@ -119,9 +119,13 @@ export default function CompanyCard({
         {/* 이미지 */}
         <div className="w-[108px] h-[108px] rounded-md flex items-center justify-center overflow-hidden mr-auto">
           <img
-            src={imageUrl ? imageUrl : noImg}
+            src={imageUrl || noImg}
             alt={companyName}
             className="w-full h-full object-cover rounded-md"
+            onError={(e) => {
+              e.currentTarget.onerror = null; // prevent infinite loop
+              e.currentTarget.src = noImg;
+            }}
           />
         </div>
 
