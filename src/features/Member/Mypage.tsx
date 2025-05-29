@@ -93,7 +93,9 @@ export default function Mypage() {
       </div>
 
       <Modal
-        trigger={<Button label="로그아웃" size="sm" variant="link" className="mx-16 mb-8" />}
+        trigger={
+          <Button label="로그아웃" size="sm" variant="link" className="mx-16 mb-8 underline" />
+        }
         title="로그아웃 하시겠어요?"
         description={
           <>
