@@ -1,4 +1,3 @@
-// import axios from "axios";
 import { instance as axios } from '@/features/Member/auth/utils/axios';
 
 import { useAuthStore } from '@/features/Member/auth/store/auth';
@@ -7,10 +6,15 @@ import noProfile from '/assets/no-profile.png';
 import { Modal } from '@/components/ui/modal';
 import { useState, useEffect } from 'react';
 import { logout } from '@/features/Member/auth/utils/logout';
+import point from '@/features/Member/notification/image/point.png';
+import CompanyCard from '@/features/Map/components/CompanyCard';
+import { useCompanyStore } from '@/store/company';
 
 export default function Mypage() {
   const token = useAuthStore((state) => state.token);
   const [nickname, setNickname] = useState<string>('닉네임');
+  const pointAmount = localStorage.getItem('point') || '0';
+  const { setIsBookmarked } = useCompanyStore();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -32,20 +36,36 @@ export default function Mypage() {
   return (
     <>
       <div className="flex flex-col grow">
-        <div className="flex h-fit px-8 py-4 gap-4 border border-transparent border-b-border/30">
+        <div className="flex items-center h-fit px-6 py-4 gap-4 border border-transparent border-b-border/30">
           <img
             src={noProfile}
             className="bg-white rounded-full w-16 h-16 object-fill"
             alt="프로필 이미지"
           ></img>
-          <div className="flex flex-col my-auto text-text-primary gap-1">
+          <div className="flex flex-col my-auto mr-auto text-text-primary gap-1">
             <div className="text-xl my-auto font-bold">{nickname}</div>
-            <div className="text-sm">포인트 0</div>
+            <div className="flex gap-1 items-center">
+              <img src={point} className="w-4 h-4 inline-block" alt="포인트 아이콘" />
+              <div className="text-sm">{pointAmount}</div>
+            </div>
+          </div>
+          <Button label="내 이력 조회" variant="primary" className="text-sm rounded-xl px-6" />
+        </div>
+        <div className="flex flex-col w-full items-center justify-center px-6 py-3 gap-2 border border-transparent border-b-border/30">
+          <div className="text-base font-bold w-full items-start">관심 기업</div>
+          <div className="flex items-start justify-start w-full gap-2 ">
+            <CompanyCard
+              companyId={1}
+              companyName="샘플 기업"
+              bookmarkCount={10}
+              tags={['IT', '개발', '스타트업']}
+              imageUrl="https://via.placeholder.com/150"
+              isCompanyCardList={true}
+              isLoggedIn={!!token}
+              setIsBookmarked={setIsBookmarked}
+            />
           </div>
         </div>
-        <p className="w-full flex items-center justify-center text-xl font-black text-border pt-2">
-          . . .
-        </p>
       </div>
 
       <Modal

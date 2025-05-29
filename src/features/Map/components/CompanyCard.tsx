@@ -8,6 +8,7 @@ import { useToggleBookmarkMutation } from '@/hooks/useToggleBookmarkMutation';
 import { toast } from '@/hooks/useToast';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
+import cn from 'clsx';
 
 interface CompanyCardProps {
   companyId: number;
@@ -15,12 +16,13 @@ interface CompanyCardProps {
   bookmarkCount: number;
   tags: string[];
   imageUrl?: string | null;
-  onClose: () => void;
+  noBackgroundImg?: boolean;
+  onClose?: () => void;
   isLoggedIn: boolean;
-
   onToggleBookmark?: () => Promise<boolean>;
   isBookmarked?: boolean;
   setIsBookmarked: (_val: boolean) => void;
+  isCompanyCardList?: boolean;
 }
 
 export default function CompanyCard({
@@ -29,11 +31,12 @@ export default function CompanyCard({
   bookmarkCount,
   tags,
   imageUrl,
+  noBackgroundImg = false,
   onClose,
-  // onToggleBookmark,
   isLoggedIn,
   isBookmarked,
   setIsBookmarked,
+  isCompanyCardList = false,
 }: CompanyCardProps) {
   const [count, setCount] = useState(bookmarkCount);
   const navigate = useNavigate();
@@ -70,15 +73,11 @@ export default function CompanyCard({
     <div
       role="button"
       onClick={handleClickAnywhere}
-      style={{
-        backgroundImage: `url(${companyCardBackground})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-        width: '256px',
-        height: '176px',
-        cursor: 'pointer',
-      }}
-      className="relative rounded-xl p-2 w-64 h-44 z-30 cursor-default"
+      className={cn(
+        'relative rounded-xl p-2 w-64 h-44 z-30 cursor-default bg-no-repeat bg-cover',
+        isCompanyCardList ? 'bg-white border border-border' : '',
+      )}
+      style={!isCompanyCardList ? { backgroundImage: `url(${companyCardBackground})` } : {}}
     >
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-2">
@@ -108,7 +107,11 @@ export default function CompanyCard({
             <PiBookmarkSimple />
           )}
           <span className="text-sm mr-1">{count}</span>
-          <Button variant="icon" label={<PiX />} onClick={onClose} className="p-0 h-full" />
+          {isCompanyCardList ? (
+            <></>
+          ) : (
+            <Button variant="icon" label={<PiX />} onClick={onClose} className="p-0 h-full" />
+          )}
         </div>
       </div>
 
