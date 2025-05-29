@@ -1,14 +1,16 @@
-import { instance as axios } from '@/features/Member/auth/utils/axios';
-
-import { useAuthStore } from '@/features/Member/auth/store/auth';
-import { Button } from '@/components/ui/button';
-import noProfile from '/assets/no-profile.png';
-import { Modal } from '@/components/ui/modal';
 import { useState, useEffect } from 'react';
-import { logout } from '@/features/Member/auth/utils/logout';
-import point from '@/features/Member/notification/image/point.png';
-import CompanyCard from '@/features/Map/components/CompanyCard';
+
+import { instance as axios } from '@/features/Member/auth/utils/axios';
+import { useAuthStore } from '@/features/Member/auth/store/auth';
 import { useCompanyStore } from '@/store/company';
+
+import { Button } from '@/components/ui/button';
+import { Modal } from '@/components/ui/modal';
+import { logout } from '@/features/Member/auth/utils/logout';
+import CompanyCard from '@/features/Map/components/CompanyCard';
+
+import noProfile from '/assets/no-profile.png';
+import point from '@/features/Member/notification/image/point.png';
 
 export default function Mypage() {
   const token = useAuthStore((state) => state.token);
@@ -53,17 +55,21 @@ export default function Mypage() {
         </div>
         <div className="flex flex-col w-full items-center justify-center px-6 py-3 gap-2 border border-transparent border-b-border/30">
           <div className="text-base font-bold w-full items-start">관심 기업</div>
-          <div className="flex items-start justify-start w-full gap-2 ">
-            <CompanyCard
-              companyId={1}
-              companyName="샘플 기업"
-              bookmarkCount={10}
-              tags={['IT', '개발', '스타트업']}
-              imageUrl="https://via.placeholder.com/150"
-              isCompanyCardList={true}
-              isLoggedIn={!!token}
-              setIsBookmarked={setIsBookmarked}
-            />
+          <div className="flex items-start justify-start w-full overflow-x-auto gap-2 pb-1">
+            {[...Array(3)].map(() => {
+              return (
+                <CompanyCard
+                  companyId={1}
+                  companyName="샘플 기업"
+                  bookmarkCount={10}
+                  tags={['IT', '개발', '스타트업']}
+                  imageUrl="https://via.placeholder.com/150"
+                  isCompanyCardList={true}
+                  isLoggedIn={!!token}
+                  setIsBookmarked={setIsBookmarked}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
