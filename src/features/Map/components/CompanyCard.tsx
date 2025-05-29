@@ -16,7 +16,6 @@ interface CompanyCardProps {
   bookmarkCount: number;
   tags: string[];
   imageUrl?: string | null;
-  noBackgroundImg?: boolean;
   onClose?: () => void;
   isLoggedIn: boolean;
   onToggleBookmark?: () => Promise<boolean>;
@@ -31,7 +30,6 @@ export default function CompanyCard({
   bookmarkCount,
   tags,
   imageUrl,
-  noBackgroundImg = false,
   onClose,
   isLoggedIn,
   isBookmarked,
@@ -123,7 +121,7 @@ export default function CompanyCard({
             alt={companyName}
             className="w-full h-full object-cover rounded-md"
             onError={(e) => {
-              e.currentTarget.onerror = null; // prevent infinite loop
+              e.currentTarget.onerror = null;
               e.currentTarget.src = noImg;
             }}
           />
