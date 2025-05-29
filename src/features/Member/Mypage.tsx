@@ -11,6 +11,7 @@ import CompanyCard from '@/features/Map/components/CompanyCard';
 
 import noProfile from '/assets/no-profile.png';
 import point from '@/features/Member/notification/image/point.png';
+import { PiCaretRight } from 'react-icons/pi';
 
 export default function Mypage() {
   const token = useAuthStore((state) => state.token);
@@ -45,8 +46,18 @@ export default function Mypage() {
             alt="프로필 이미지"
           ></img>
           <div className="flex flex-col my-auto mr-auto text-text-primary gap-1">
-            <div className="text-xl my-auto font-bold">{nickname}</div>
-            <div className="flex gap-1 items-center">
+            <div className="flex items-center gap-1 [&_svg]:size-5">
+              <div className="text-xl my-auto font-bold">{nickname}</div>
+              <Button
+                variant="icon"
+                label={<PiCaretRight className="text-text-secondary" />}
+                className="p-0 m-0 h-full"
+                onClick={() => {
+                  window.location.href = '/my/account';
+                }}
+              />
+            </div>
+            <div className="flex items-center gap-1">
               <img src={point} className="w-4 h-4 inline-block" alt="포인트 아이콘" />
               <div className="text-sm">{pointAmount}</div>
             </div>
