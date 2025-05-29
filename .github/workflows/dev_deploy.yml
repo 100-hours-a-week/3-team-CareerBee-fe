@@ -87,10 +87,9 @@ jobs:
 
       - name: Upload build to S3
         run: |
-          echo "Uploading to: ${S3_BUCKET_INFRA}/fe/${DEPLOY_PATH}"
           aws s3 cp ./dist "${S3_BUCKET_INFRA}/fe/${DEPLOY_PATH}/" --recursive
 
-      - name: Deploy to EC2 and restart Spring Boot
+      - name: Deploy to EC2
         run: |
           ssh -i "${SSH_KEY}" -o StrictHostKeyChecking=no "ubuntu@${AWS_SERVER_IP}" <<EOF
             set -e
@@ -98,6 +97,33 @@ jobs:
             sudo rm -rf /var/www/html/*
             aws s3 cp "${S3_BUCKET_INFRA}/fe/${DEPLOY_PATH}/" /var/www/html/ --recursive
             
+      - name: Health check and rollback if needed
+        run: |
+          set -e
+          for i in $(seq 1 5); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://dev.careerbee.co.kr/")
+            if [ "\$STATUS" == "200" ]; then
+              break
+            fi
+          done
+
+          if [ "\$STATUS" != "200" ]; then
+            LATEST_VALID_BACKUP=$(aws s3 ls "${S3_BUCKET_INFRA}/fe/" | awk '{print $2}' | grep -v "^${DEPLOY_PATH}/$" | sort | tail -n 1 | sed 's#/$##')
+            if [ -z "$LATEST_VALID_BACKUP" ]; then
+              exit 1
+            fi
+
+            ssh -i "${SSH_KEY}" -o StrictHostKeyChecking=no "ubuntu@${AWS_SERVER_IP}" <<EOF
+              set -e
+              sudo rm -rf /var/www/html
+              aws s3 cp "${S3_BUCKET_INFRA}/fe/${LATEST_VALID_BACKUP}/" /var/www/html/ --recursive
+            EOF
+            
+            aws s3 rm "${S3_BUCKET_INFRA}/fe/${DEPLOY_PATH}/" --recursive
+
+            exit 1
+          fi
+
       - name: Notify Discord on Success
         if: success()
         run: |
