@@ -29,18 +29,27 @@ export default function MapOverlay({ company, isOpen, disabled, isHighlighted }:
   //   console.log("🟢 companyInfo:", companyInfo);
   return (
     <>
-      {!disabled && (
-        <MapMarker
-          position={position}
-          image={{
-            src: company.markerUrl ?? noImg,
-            size: isHighlighted ? { width: 44, height: 60 } : { width: 37, height: 50 },
-          }}
-          clickable={true}
-          onClick={fetchCompanyDetail}
-          zIndex={isHighlighted ? 2 : 1}
-        />
-      )}
+      {/* {!disabled && ( */}
+      <MapMarker
+        position={position}
+        image={{
+          src: company.markerUrl ?? noImg,
+          size: isHighlighted ? { width: 44, height: 60 } : { width: 37, height: 50 },
+        }}
+        clickable={true}
+        onClick={fetchCompanyDetail}
+        zIndex={isHighlighted ? 2 : 1}
+        onCreate={(marker) => {
+          try {
+            if (marker && typeof marker.setVisible === 'function') {
+              marker.setVisible(!disabled);
+            }
+          } catch (error) {
+            console.error('Error in marker onCreate:', error);
+          }
+        }}
+      />
+      {/* )} */}
       {isOpen && companyInfo && (
         <CustomOverlayMap
           xAnchor={0.5}
