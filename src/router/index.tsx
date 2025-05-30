@@ -12,6 +12,7 @@ import OAuthCallback from '@/features/Member/auth/OAuthCallback';
 import Ranking from '@/features/Competition/Ranking';
 import Competition from '@/features/Competition/Competition';
 import Notification from '@/features/Member/notification/Notification';
+import Account from '@/features/Member/Account';
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +28,7 @@ export const router = createBrowserRouter([
       { path: 'competition', element: <Ranking /> },
       { path: 'competition/entry', element: <Competition /> },
       { path: 'notification', element: <Notification /> },
+      { path: 'my/account', element: <Account /> },
       { path: '*', element: <ToBeContinued /> },
     ],
   },
