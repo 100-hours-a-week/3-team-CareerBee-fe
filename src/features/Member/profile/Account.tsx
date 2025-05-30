@@ -1,7 +1,8 @@
-import noProfile from '/assets/no-profile.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import imageUpdate from '@/features/Member/image/image-update.png';
+
+import noProfile from '/assets/no-profile.png';
+import imageUpdate from '@/features/Member/profile/image/image-update.png';
 
 export default function Account() {
   return (

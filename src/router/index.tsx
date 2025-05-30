@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import Main from '@/features/Map/Main';
 import CompanyDetail from '@/features/Company/CompanyDetail';
-import Mypage from '@/features/Member/Mypage';
+import Mypage from '@/features/Member/profile/Mypage';
 import Login from '@/features/Member/auth/Login';
 import LoginRequired from '@/features/Member/auth/LoginRequired';
 import ToBeContinued from '@/pages/ToBeContinued';
@@ -12,7 +12,7 @@ import OAuthCallback from '@/features/Member/auth/OAuthCallback';
 import Ranking from '@/features/Competition/Ranking';
 import Competition from '@/features/Competition/Competition';
 import Notification from '@/features/Member/notification/Notification';
-import Account from '@/features/Member/Account';
+import Account from '@/features/Member/profile/Account';
 
 export const router = createBrowserRouter([
   {
