@@ -1,5 +1,7 @@
 import noProfile from '/assets/no-profile.png';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import imageUpdate from '@/features/Member/image/image-update.png';
 
 export default function Account() {
   return (
@@ -7,11 +9,39 @@ export default function Account() {
       <div className="flex flex-col px-16 pb-3 gap-2 border border-transparent border-b-border/30">
         <div className="text-base font-bold w-full items-start">회원 정보 관리</div>
         <div className="flex justify-center w-full ">
-          <img src={noProfile} alt="프로필 이미지" className="w-24 h-24"></img>
+          <div className="relative w-24 h-24">
+            <img src={noProfile} alt="프로필 이미지" className="w-24 h-24"></img>
+            <img
+              src={imageUpdate}
+              alt="이미지 업데이트"
+              className="absolute bottom-1 right-1 w-[1.3125rem] h-[1.3125rem]"
+            />
+          </div>
         </div>
         <div>
-          <p className="text-xs text-error">*변경 사항이 있다면 저장하기를 눌러주세요.</p>
-          <form></form>
+          <p className="flex w-full justify-end text-xs text-error">
+            *변경 사항이 있다면 저장하기를 눌러주세요.
+          </p>
+          <form>
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1">
+                <div>닉네임</div>
+                <Input className="px-3 py-1" value={'로그인'} />
+              </div>
+              <div className="flex flex-col gap-1">
+                <div>이메일</div>
+                <Input className="px-3 py-1" value={'이메일'} />
+              </div>
+            </div>
+            <div className="flex w-full justify-end mt-6">
+              <Button
+                variant={'primary'}
+                label="저장하기"
+                className="px-6 py-2 rounded-xl"
+                disabled={true}
+              />
+            </div>
+          </form>
         </div>
       </div>
       <div className="flex flex-col px-16 py-3 gap-2 border border-transparent border-b-border/30">
