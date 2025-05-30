@@ -12,11 +12,11 @@ export interface markerProps {
 }
 
 interface MarkerStore {
-  markerDisabledMap: Record<number, boolean>;
+  companyDisabledMap: Record<number, boolean>;
   setCompanyDisabledMap: (_map: Record<number, boolean>) => void;
 }
 
 export const useMarkerStore = create<MarkerStore>((set) => ({
-  markerDisabledMap: {},
-  setCompanyDisabledMap: (map) => set({ markerDisabledMap: map }),
+  companyDisabledMap: {},
+  setCompanyDisabledMap: (map) => set({ companyDisabledMap: map }),
 }));

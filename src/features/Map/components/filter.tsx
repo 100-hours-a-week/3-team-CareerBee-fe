@@ -1,9 +1,9 @@
 import { Toggle } from '@/components/ui/toggle';
-import { instance as axios } from '@/features/Member/auth/utils/axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { CompanyProps } from '@/features/Map/Main';
 import { useMarkerStore } from '@/features/Map/store/marker';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
+import fetchBookmarkedIds from '@/features/Map/util/fetchBookmarkedIds';
 
 const CATEGORY_FILTERS = ['PLATFORM', 'SI', 'COMMERCE', 'GAME', 'TELECOM', 'SECURITY', 'FINANCE'];
 
@@ -15,111 +15,78 @@ interface Props {
   filters: FilterProps[];
   companies: CompanyProps[];
 }
-const fetchBookmarkedIds = async (
-  setBookmarkedIds: (_ids: number[]) => void,
-  triggerFilterUpdate: () => void,
-) => {
-  const token = useAuthStore.getState().token;
-  if (!token) return;
 
-  try {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/v1/members/wish-companies/id-list`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    setBookmarkedIds(res.data.data.wishCompanies);
-    triggerFilterUpdate();
-  } catch (err) {
-    console.error('Failed to fetch bookmarked companies', err);
-  }
-};
+const isCategoryFilter = (id: string) => CATEGORY_FILTERS.includes(id);
 
 const FilterGroup = ({ filters, companies }: Props) => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
-  const setCompanyDisabledMap = useMarkerStore((state) => state.setCompanyDisabledMap);
   const [bookmarkedIds, setBookmarkedIds] = useState<number[]>([]);
-  const [filterTrigger, setFilterTrigger] = useState(0);
+  const setCompanyDisabledMap = useMarkerStore((state) => state.setCompanyDisabledMap);
 
-  const toggleFilter = (id: string) => {
-    setActiveFilters((prev) => {
-      if (CATEGORY_FILTERS.includes(id)) {
-        const others = prev.filter((f) => !CATEGORY_FILTERS.includes(f));
-        return prev.includes(id) ? others : [...others, id];
-      }
-      return prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id];
-    });
-    if (id === 'bookmark') {
-      fetchBookmarkedIds(setBookmarkedIds, () => {
-        setFilterTrigger((v) => v + 1);
+  //현재 적용되는 필터들 리턴함
+  const handleFilterChange = async (id: string) => {
+    if (isCategoryFilter(id)) {
+      setActiveFilters((prev) => {
+        const nonCategory = prev.filter((f) => !isCategoryFilter(f));
+        return prev.includes(id) ? nonCategory : [...nonCategory, id];
       });
+      return;
+    }
+
+    if (id === 'bookmark') {
+      const token = useAuthStore.getState().token;
+      if (token) {
+        try {
+          const ids = await fetchBookmarkedIds(token);
+          setBookmarkedIds(ids);
+        } catch (error) {
+          console.error('Failed to fetch bookmarked companies', error);
+        }
+      }
+    }
+
+    if (id === 'bookmark' || id === 'recruiting') {
+      setActiveFilters((prev) =>
+        prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id],
+      );
     }
   };
 
+  const companiesRef = useRef(companies);
+  const bookmarkedIdsRef = useRef(bookmarkedIds);
+
+  // useEffect보다 먼저 최신값 동기화
   useEffect(() => {
-    if (companies.length === 0) return;
+    companiesRef.current = companies;
+  }, [companies]);
 
-    let filtered = companies;
+  useEffect(() => {
+    bookmarkedIdsRef.current = bookmarkedIds;
+  }, [bookmarkedIds]);
 
-    activeFilters.forEach((filterId) => {
-      if (filterId === 'recruiting') {
-        filtered = filtered.filter((c) => c.recruitingStatus === 'ongoing');
-      } else if (filterId === 'bookmark') {
-        filtered = filtered.filter((c) => bookmarkedIds.includes(c.id));
-      } else if (CATEGORY_FILTERS.includes(filterId)) {
-        filtered = filtered.filter((c) => c.businessType === filterId);
-      }
+  useEffect(() => {
+    const filteredCompanies = companiesRef.current.filter((company) => {
+      return activeFilters.every((filterId) => {
+        if (CATEGORY_FILTERS.includes(filterId)) return company.businessType === filterId;
+        if (filterId === 'bookmark') return bookmarkedIdsRef.current.includes(company.id);
+        if (filterId === 'recruiting') return company.recruitingStatus === 'ONGOING';
+        return true;
+      });
     });
 
-    const disabledMap = companies.reduce(
+    const disabledMap = companiesRef.current.reduce(
       (acc, company) => {
-        acc[company.id] = !filtered.some((c) => c.id === company.id);
+        acc[company.id] = !filteredCompanies.some((c) => c.id === company.id);
         return acc;
       },
       {} as Record<number, boolean>,
     );
 
     setCompanyDisabledMap(disabledMap);
-  }, [activeFilters, companies, bookmarkedIds, filterTrigger]);
-
-  // useMemo(() =>{
-  //   let filtered = companies;
-  // // const filtered = useMemo(() => {
-  // //   let result = companies;
-
-  //   activeFilters.forEach((filterId) => {
-  //     if (filterId === 'recruiting') {
-  //       filtered=filtered.filter((c)=>c.recruitingStatus === 'ongoing');
-  //       // result = result.filter((c) => c.recruitingStatus === 'ongoing');
-  //     } else if (filterId === 'bookmark') {
-  //       filtered = filtered.filter((c) => bookmarkedIds.includes(c.id));
-  //       // result = result.filter((c) => bookmarkedIds.includes(c.id));
-  //     } else if (CATEGORY_FILTERS.includes(filterId)) {
-  //       filtered = filtered.filter((c) => c.businessType === filterId);
-  //       // result = result.filter((c) => c.businessType === filterId);
-  //     }
-  //   });
-
-  // //   return result;
-  // // }, [activeFilters, companies, bookmarkedIds]);
-
-  // // useEffect(() => {
-  //   const disabledMap = companies.reduce((acc, company) => {
-  //     acc[company.id] = !filtered.some((c) => c.id === company.id);
-  //     return acc;
-  //   }, {} as Record<number, boolean>);
-
-  //   setCompanyDisabledMap(disabledMap);
-  //   return filtered;
-  // }, [activeFilters, companies, setCompanyDisabledMap, bookmarkedIds]);
-  // // }, [filtered, companies, setCompanyDisabledMap]);
+  }, [activeFilters, setCompanyDisabledMap]);
 
   return (
     <div className="w-full px-4 py-2 overflow-x-auto scrollbar-hide group-hover:scrollbar-default">
-      {/* <div className="overflow-x-auto"> */}
       <div className="flex items-center gap-2 w-max whitespace-nowrap">
         {filters.map(({ id, label }) => (
           <Toggle
@@ -127,26 +94,11 @@ const FilterGroup = ({ filters, companies }: Props) => {
             variant="pill"
             label={label}
             pressed={activeFilters.includes(id)}
-            onPressedChange={() => {
-              toggleFilter(id);
-
-              if (id === 'recruiting') {
-                // const recruiting = companies.filter((c) => c.recruitingStatus === 'ongoing');
-                // console.log('Recruiting companies:', recruiting);
-              } else if (id === 'bookmark') {
-                fetchBookmarkedIds(setBookmarkedIds, () => {
-                  setFilterTrigger((v) => v + 1);
-                });
-              } else {
-                // const filtered = companies.filter((c) => c.businessType === id);
-                // console.log(`Filtered by category (${id}):`, filtered);
-              }
-            }}
+            onPressedChange={() => handleFilterChange(id)}
             className="shadow-md px-4 py-1 min-w-[72px] text-sm rounded-full border border-border/50 bg-white text-gray-800 whitespace-nowrap"
           ></Toggle>
         ))}
       </div>
-      {/* </div> */}
     </div>
   );
 };
