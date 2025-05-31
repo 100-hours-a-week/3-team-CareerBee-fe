@@ -109,6 +109,9 @@ export default function Account() {
             size="sm"
             variant="link"
             className="underline pl-3 py-2"
+            onClick={() => {
+              window.location.href = '/my/account/quit';
+            }}
           ></Button>
         </div>
       </div>
