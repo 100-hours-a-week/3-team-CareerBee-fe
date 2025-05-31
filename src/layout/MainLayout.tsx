@@ -27,6 +27,7 @@ export default function MainLayout() {
   const hasNewNotification = localStorage.getItem('hasNewAlarm') === 'true';
   const showNavbar = () => {
     if (location.pathname.startsWith('/competition/entry')) return false;
+    if (location.pathname.startsWith('/my/')) return false;
     return true;
   };
 
