@@ -14,6 +14,7 @@ import Competition from '@/features/Competition/Competition';
 import Notification from '@/features/Member/notification/Notification';
 import Account from '@/features/Member/profile/Account';
 import Quit from '@/features/Member/profile/Quit';
+import Developers from '@/features/Member/service/developers';
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
       { path: 'notification', element: <Notification /> },
       { path: 'my/account', element: <Account /> },
       { path: 'my/account/quit', element: <Quit /> },
+      { path: 'service/developers', element: <Developers /> },
       { path: '*', element: <ToBeContinued /> },
     ],
   },
