@@ -13,6 +13,7 @@ import Ranking from '@/features/Competition/Ranking';
 import Competition from '@/features/Competition/Competition';
 import Notification from '@/features/Member/notification/Notification';
 import Account from '@/features/Member/profile/Account';
+import Quit from '@/features/Member/profile/Quit';
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
       { path: 'competition/entry', element: <Competition /> },
       { path: 'notification', element: <Notification /> },
       { path: 'my/account', element: <Account /> },
+      { path: 'my/account/quit', element: <Quit /> },
       { path: '*', element: <ToBeContinued /> },
     ],
   },
