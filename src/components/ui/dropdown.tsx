@@ -14,11 +14,12 @@ export interface itemProps {
 interface dropdownProps {
   placeholder: string;
   items: itemProps[];
+  onChange?: (_value: string) => void;
 }
 
-export default function Dropdown({ placeholder, items }: dropdownProps) {
+export default function Dropdown({ placeholder, items, onChange }: dropdownProps) {
   return (
-    <Select>
+    <Select onValueChange={onChange}>
       <SelectTrigger>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
