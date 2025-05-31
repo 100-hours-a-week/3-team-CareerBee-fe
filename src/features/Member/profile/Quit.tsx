@@ -19,7 +19,7 @@ export default function Quit() {
         <img src="/assets/logo.png" className="w-28" alt="커리어비 로고" />
       </div>
       <div className=" flex flex-col gap-1 text-sm font-medium">
-        <p className="text-center">그동안 함께해 주셔서 감사합니다.🙇</p>
+        <p className="text-center">그동안 커리어비와 함께해 주셔서 감사합니다.🙇</p>
         <p className="text-center">
           마지막으로 탈퇴 사유를 알려주시면, 더 나은 서비스로 보답하겠습니다.
         </p>
