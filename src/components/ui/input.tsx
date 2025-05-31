@@ -6,7 +6,7 @@ import { cva } from 'class-variance-authority';
 const SearchVariants = cva(`flex w-full placeholder:text-text-secondary text-base`, {
   variants: {
     variant: {
-      default: `border h-9 rounded-md border-input 
+      default: `border h-9 rounded-lg border-input 
         bg-transparent px-3 py-1
         file:border-0 file:bg-transparent 
         file:text-sm file:font-medium 

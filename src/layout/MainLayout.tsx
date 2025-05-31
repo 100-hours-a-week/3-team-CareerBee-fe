@@ -27,6 +27,7 @@ export default function MainLayout() {
   const hasNewNotification = localStorage.getItem('hasNewAlarm') === 'true';
   const showNavbar = () => {
     if (location.pathname.startsWith('/competition/entry')) return false;
+    if (location.pathname.startsWith('/my/')) return false;
     return true;
   };
 
@@ -35,7 +36,7 @@ export default function MainLayout() {
       <Toaster />
       <div className="flex flex-col h-dvh fixed inset-0 max-w-[600px] w-full mx-auto bg-background shadow-sides">
         <Header type={headerType} hasNewNotification={hasNewNotification} point={point} />
-        <main className="flex flex-col flex-1 w-full overflow-auto">
+        <main className="flex flex-col flex-1 w-full h-[calc(100dvh-120px)] overflow-auto">
           <Outlet key={location.pathname} />
         </main>
         {showNavbar() ? <Navbar /> : null}
