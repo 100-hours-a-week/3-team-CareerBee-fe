@@ -27,7 +27,7 @@ export default function Account() {
     event.preventDefault();
     // 서버로 데이터를 보내는 로직
     setIsDirty(false);
-    toast({ title: '저장 완료', variant: 'success', duration: 500000 });
+    toast({ title: '저장 완료', variant: 'success' });
   };
 
   return (
