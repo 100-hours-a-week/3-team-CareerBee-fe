@@ -1,12 +1,35 @@
 import Footer from './components/footer';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+
+import { toast } from '@/hooks/useToast';
 
 import noProfile from '/assets/no-profile.png';
 import imageUpdate from '@/features/Member/profile/image/image-update.png';
 
+import { useState, useEffect } from 'react';
+import React from 'react';
+
 export default function Account() {
+  const originalNickname = '회원 닉네임';
+  const originalEmail = '회원 이메일';
+
+  const [nickname, setNickname] = useState(originalNickname);
+  const [email, setEmail] = useState(originalEmail);
+  const [isDirty, setIsDirty] = useState(false);
+
+  // 값이 바뀌면 isDirty를 true로 변경
+  useEffect(() => {
+    setIsDirty(nickname !== originalNickname || email !== originalEmail);
+  }, [nickname, email]);
+
+  const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // 서버로 데이터를 보내는 로직
+    setIsDirty(false);
+    toast({ title: '저장 완료', variant: 'success', duration: 500000 });
+  };
+
   return (
     <div className="flex flex-col h-full">
       <div className="py-3 w-full mb-auto">
@@ -26,23 +49,36 @@ export default function Account() {
             <p className="flex w-full justify-end text-xs text-error">
               *변경 사항이 있다면 저장하기를 눌러주세요.
             </p>
-            <form>
+            <form onSubmit={submitForm}>
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-1">
                   <div>닉네임</div>
-                  <Input className="px-3 py-1" value={'로그인'} />
+                  <Input
+                    className="px-3 py-1"
+                    value={nickname}
+                    onChange={(e) => {
+                      setNickname(e.target.value);
+                    }}
+                  />
                 </div>
                 <div className="flex flex-col gap-1">
                   <div>이메일</div>
-                  <Input className="px-3 py-1" value={'이메일'} />
+                  <Input
+                    className="px-3 py-1"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                  />
                 </div>
               </div>
               <div className="flex w-full justify-end mt-6">
                 <Button
+                  type="submit"
                   variant={'primary'}
                   label="저장하기"
                   className="px-6 py-2 rounded-xl"
-                  disabled={true}
+                  disabled={!isDirty}
                 />
               </div>
             </form>

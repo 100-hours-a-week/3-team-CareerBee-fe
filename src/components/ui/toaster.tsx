@@ -7,7 +7,7 @@ export function Toaster() {
 
   return (
     <ToastProvider>
-      {toasts.map(function ({ id, title, action, duration = 2500, ...props }) {
+      {toasts.map(function ({ id, title, action, duration = 2500000, ...props }) {
         return (
           <Toast key={id} {...props} className="flex flex-col" duration={duration}>
             {title && <ToastTitle>{title}</ToastTitle>}
