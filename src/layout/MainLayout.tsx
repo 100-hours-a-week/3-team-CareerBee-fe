@@ -19,6 +19,8 @@ export default function MainLayout() {
     else if (location.pathname.startsWith('/company')) return 'downLogin';
     if (location.pathname.startsWith('/notification')) return 'nav';
     if (location.pathname.startsWith('/my')) return 'nav';
+    if (location.pathname.startsWith('/service')) return 'nav';
+    if (location.pathname.startsWith('/resume')) return 'nav';
     if (location.pathname === '/competition' && !!token) return 'main';
     else if (location.pathname === '/competition') return 'login';
     return 'minimal';
@@ -26,8 +28,13 @@ export default function MainLayout() {
   const point = Number(localStorage.getItem('userPoint')) || 0;
   const hasNewNotification = localStorage.getItem('hasNewAlarm') === 'true';
   const showNavbar = () => {
-    if (location.pathname.startsWith('/competition/entry')) return false;
-    if (location.pathname.startsWith('/my/')) return false;
+    if (
+      location.pathname.startsWith('/competition/entry') ||
+      location.pathname.startsWith('/my/') ||
+      location.pathname.startsWith('/service') ||
+      location.pathname.startsWith('/resume')
+    )
+      return false;
     return true;
   };
 
