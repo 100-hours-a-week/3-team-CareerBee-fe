@@ -83,6 +83,18 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* spinner 제거 (크롬/엣지/사파리) */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* spinner 제거 (파이어폭스) */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
