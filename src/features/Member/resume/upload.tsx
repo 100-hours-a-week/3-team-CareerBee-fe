@@ -11,6 +11,7 @@ export default function Upload() {
     watch,
     formState: { errors },
     control,
+    setError,
   } = useForm<{ resume: FileList | undefined }>({
     defaultValues: {
       resume: undefined,
@@ -77,17 +78,26 @@ export default function Upload() {
                     accept=".pdf"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
-                      field.onChange(e.target.files);
+                      try {
+                        field.onChange(e.target.files);
 
-                      if (
-                        file &&
-                        file.type === 'application/pdf' &&
-                        file.size <= 10 * 1024 * 1024
-                      ) {
-                        const url = URL.createObjectURL(file);
-                        setFileUrl(url);
-                      } else {
+                        if (
+                          file &&
+                          file.type === 'application/pdf' &&
+                          file.size <= 10 * 1024 * 1024
+                        ) {
+                          const url = URL.createObjectURL(file);
+                          setFileUrl(url);
+                        } else {
+                          setFileUrl(null);
+                        }
+                      } catch (err) {
                         setFileUrl(null);
+                        field.onChange(undefined);
+                        setError('resume', {
+                          type: 'manual',
+                          message: '파일 업로드에 실패했습니다. 다시 시도해주세요.',
+                        });
                       }
                     }}
                     className="hidden"
