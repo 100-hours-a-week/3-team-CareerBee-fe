@@ -1,9 +1,9 @@
-import { Textarea } from '@/components/ui/textarea';
 import Dropdown from '@/components/ui/dropdown';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Button } from '@/components/ui/button';
 import NumberForm from '@/features/Member/resume/components/numberForm';
 import TextForm from '@/features/Member/resume/components/textForm';
+import LongTextForm from '@/features/Member/resume/components/longtextForm';
 
 import { cn } from '@/lib/utils';
 import { useForm, Controller } from 'react-hook-form';
@@ -184,21 +184,17 @@ export default function UploadResume() {
           />
 
           {/* 기타 어필 */}
-          <div className="flex flex-col w-full gap-1">
-            <div className="text-sm flex w-full">
-              <p className=" font-medium mr-auto">기타 어필</p>
-              <p title="helper-text" className="font-medium text-error">
-                *helper text
-              </p>
-            </div>
-            <Textarea
-              maxLength={100}
-              placeholder="TOPCIT, 수상이력, 기술 스터디, 대회 참가 이력..."
-              onChange={(e) => {
-                // setNickname(e.target.value);
-              }}
-            />
-          </div>
+          <LongTextForm
+            title="기타 어필"
+            controllerName="appeal"
+            rules={{
+              required: '입력을 확인해주세요. (최대 100자)',
+              maxLength: [100, '입력을 확인해주세요. (최대 100자)'],
+            }}
+            placeholder="TOPCIT, 수상이력, 기술 스터디, 대회 참가 이력..."
+            control={control}
+            errors={errors.appeal}
+          />
         </div>
         <div className="flex w-full justify-center mt-10">
           <Button type="submit" disabled={!isReady} label="저장" className="rounded-lg w-44" />
