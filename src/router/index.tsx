@@ -34,7 +34,7 @@ export const router = createBrowserRouter([
       { path: 'my/account', element: <Account /> },
       { path: 'my/account/quit', element: <Quit /> },
       { path: 'service/developers', element: <Developers /> },
-      { path: 'resume/upload', element: <UploadResume /> },
+      { path: 'resume/form', element: <UploadResume /> },
       { path: '*', element: <ToBeContinued /> },
     ],
   },
