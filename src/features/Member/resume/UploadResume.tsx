@@ -1,9 +1,9 @@
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Dropdown from '@/components/ui/dropdown';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Button } from '@/components/ui/button';
 import NumberForm from '@/features/Member/resume/components/numberForm';
+import TextForm from '@/features/Member/resume/components/textForm';
 
 import { cn } from '@/lib/utils';
 import { useForm, Controller } from 'react-hook-form';
@@ -155,6 +155,7 @@ export default function UploadResume() {
             <br />
             가장 최근 경력을 기준으로 기입해주세요!
           </p>
+
           {/* 근무 기간 */}
           <NumberForm
             title="근무 기간"
@@ -170,21 +171,17 @@ export default function UploadResume() {
           />
 
           {/* 직무 */}
-          <div className="flex flex-col w-full gap-1">
-            <div className="text-sm flex w-full">
-              <p className=" font-medium mr-auto">직무</p>
-              <p title="helper-text" className="font-medium text-error">
-                *helper text
-              </p>
-            </div>
-            <Input
-              variant="resume"
-              placeholder="담당 직무를 입력해주세요."
-              onChange={(e) => {
-                // setNickname(e.target.value);
-              }}
-            />
-          </div>
+          <TextForm
+            title="직무"
+            controllerName="role"
+            rules={{
+              required: '입력을 확인해주세요. (최대 25자)',
+              maxLength: [25, '입력을 확인해주세요. (최대 25자)'],
+            }}
+            placeholder="담당 직무를 입력해주세요."
+            control={control}
+            errors={errors.role}
+          />
 
           {/* 기타 어필 */}
           <div className="flex flex-col w-full gap-1">

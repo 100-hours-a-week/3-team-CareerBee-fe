@@ -14,19 +14,18 @@ interface ResumeFormValues {
 }
 interface rulesProps {
   required: string;
-  min: [number, string];
-  max: [number, string];
+  maxLength: [number, string];
 }
 interface formProps {
   title: string;
-  controllerName: 'cert' | 'project' | 'workPeriod';
+  controllerName: 'role';
   rules: rulesProps;
   placeholder: string;
   control: Control<ResumeFormValues>;
   errors?: FieldError;
 }
 
-export default function NumberForm({
+export default function TextForm({
   title,
   controllerName,
   rules,
@@ -45,33 +44,10 @@ export default function NumberForm({
         name={controllerName}
         rules={{
           required: rules.required,
-          min: { value: rules.min[0], message: rules.min[1] },
-          max: { value: rules.max[0], message: rules.max[1] },
+          maxLength: { value: rules.maxLength[0], message: rules.maxLength[1] },
         }}
         render={({ field }) => {
-          return (
-            <Input
-              {...field}
-              type="number"
-              step="1"
-              inputMode="numeric"
-              variant="resume"
-              placeholder={placeholder}
-              onKeyDown={(e) => {
-                if (e.key === '.' || e.key === 'e' || e.key === '-' || e.key === '+') {
-                  e.preventDefault();
-                }
-              }}
-              onBlur={(e) => {
-                const value = Number(e.target.value);
-                if (value < rules.min[0] || value > rules.max[0]) {
-                  field.onChange('');
-                } else {
-                  field.onChange(e);
-                }
-              }}
-            />
-          );
+          return <Input {...field} type="text" variant="resume" placeholder={placeholder} />;
         }}
       />
     </div>
