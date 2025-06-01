@@ -32,7 +32,10 @@ export default function Upload() {
             className="w-full h-72 border border-border rounded-lg flex items-center justify-center bg-[#EFEFF0] cursor-pointer"
           >
             {fileUrl ? (
-              <iframe src={fileUrl} className="w-full h-full" />
+              <iframe
+                src={`${fileUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                className="w-full h-full rounded-lg"
+              />
             ) : (
               <img src={fileUpload} alt="upload" className="h-8 w-8 opacity-60" />
             )}
