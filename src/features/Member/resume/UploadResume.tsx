@@ -5,6 +5,8 @@ import NumberForm from '@/features/Member/resume/components/numberForm';
 import TextForm from '@/features/Member/resume/components/textForm';
 import LongTextForm from '@/features/Member/resume/components/longtextForm';
 
+import BeeImage from '@/features/Member/resume/image/bee.png';
+import BeehiveImage from '@/features/Member/resume/image/beehive.png';
 import { cn } from '@/lib/utils';
 import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
@@ -224,6 +226,39 @@ export default function UploadResume() {
               />
             </>
           )}
+        </div>
+        {/* 진척도 Progress Bar */}
+        <div className="w-full mt-10 relative">
+          <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
+            <div
+              className="h-3 bg-primary transition-all duration-1000 rounded-full"
+              style={{
+                width: `${(Object.values(watchedValues).filter(Boolean).length / 5) * 100}%`,
+              }}
+            />
+          </div>
+          {/* Bee icon */}
+          <img
+            src={BeeImage}
+            alt="bee"
+            className="absolute top-[-1.75rem]"
+            style={{
+              left: `calc(${
+                Object.values(watchedValues).filter(Boolean).length === 5
+                  ? 92
+                  : (Object.values(watchedValues).filter(Boolean).length / 5) * 100
+              }% - 12px)`,
+              transition: 'left 1s ease',
+              height: '24px',
+            }}
+          />
+          {/* Hive icon */}
+          <img
+            src={BeehiveImage}
+            alt="hive"
+            className="absolute top-[-1.75rem] right-0"
+            style={{ height: '24px' }}
+          />
         </div>
         <div className="flex w-full justify-center mt-10">
           <Button type="submit" disabled={!isReady} label="저장" className="rounded-lg w-44" />
