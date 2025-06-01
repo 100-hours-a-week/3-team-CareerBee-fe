@@ -2,7 +2,20 @@ import { Button } from '@/components/ui/button';
 
 import fileUpload from '@/features/Member/Resume/image/file-arrow-up-light.svg';
 
+import { useState } from 'react';
+import React from 'react';
+
 export default function Upload() {
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type === 'application/pdf') {
+      const url = URL.createObjectURL(file);
+      setFileUrl(url);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col gap-8 py-3 px-16 w-full">
@@ -18,8 +31,18 @@ export default function Upload() {
             htmlFor="resume-upload"
             className="w-full h-72 border border-border rounded-lg flex items-center justify-center bg-[#EFEFF0] cursor-pointer"
           >
-            <img src={fileUpload} alt="upload" className="h-8 w-8 opacity-60" />
-            <input type="file" id="resume-upload" accept=".pdf" className="hidden" />
+            {fileUrl ? (
+              <iframe src={fileUrl} className="w-full h-full" />
+            ) : (
+              <img src={fileUpload} alt="upload" className="h-8 w-8 opacity-60" />
+            )}
+            <input
+              type="file"
+              id="resume-upload"
+              accept=".pdf"
+              onChange={handleFileChange}
+              className="hidden"
+            />
           </label>
           <p className="text-xs text-error font-medium w-full text-start">
             *pdf 파일만 추가 가능합니다.
