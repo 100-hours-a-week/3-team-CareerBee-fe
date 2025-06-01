@@ -3,9 +3,9 @@ import { Textarea } from '@/components/ui/textarea';
 import Dropdown from '@/components/ui/dropdown';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Button } from '@/components/ui/button';
+import NumberForm from '@/features/Member/resume/components/numberForm';
 
 import { cn } from '@/lib/utils';
-
 import { useForm, Controller } from 'react-hook-form';
 
 export default function UploadResume() {
@@ -21,11 +21,14 @@ export default function UploadResume() {
       cert: '',
       project: '',
       major: '',
+      workPeriod: '',
+      role: '',
+      appeal: '',
     },
     mode: 'onChange',
   });
 
-  const watchedValues = watch();
+  const watchedValues = watch(['job', 'tier', 'cert', 'project', 'major']);
   const isReady = Object.values(watchedValues).every((v) => v !== '');
 
   const submitForm = () => {
@@ -85,92 +88,32 @@ export default function UploadResume() {
           </div>
 
           {/* IT 자격증 개수 */}
-          <div className="flex flex-col w-full gap-1">
-            <div className="text-sm flex w-full">
-              <p className=" font-medium mr-auto">프로젝트 개수*</p>
-              {errors.cert && (
-                <p className="text-xs text-error font-medium">{errors.cert.message}</p>
-              )}
-            </div>
-            <Controller
-              control={control}
-              name="cert"
-              rules={{
-                required: '0~50 사이의 숫자를 입력해주세요.',
-                min: { value: 0, message: '0 이상 입력해주세요.' },
-                max: { value: 50, message: '50 이하까지만 입력 가능합니다.' },
-              }}
-              render={({ field }) => {
-                return (
-                  <Input
-                    {...field}
-                    type="number"
-                    step="1"
-                    inputMode="numeric"
-                    variant="resume"
-                    placeholder="숫자를 입력해주세요."
-                    onKeyDown={(e) => {
-                      if (e.key === '.' || e.key === 'e' || e.key === '-' || e.key === '+') {
-                        e.preventDefault();
-                      }
-                    }}
-                    onBlur={(e) => {
-                      const value = Number(e.target.value);
-                      if (value < 0 || value > 50) {
-                        field.onChange('');
-                      } else {
-                        field.onChange(e);
-                      }
-                    }}
-                  />
-                );
-              }}
-            />
-          </div>
+          <NumberForm
+            title="IT 자격증 개수*"
+            controllerName="cert"
+            rules={{
+              required: '0~50 사이의 숫자를 입력해주세요.',
+              min: [0, '0 이상 입력해주세요.'],
+              max: [50, '50 이하까지만 입력 가능합니다.'],
+            }}
+            placeholder="숫자를 입력해주세요."
+            control={control}
+            errors={errors.cert}
+          />
 
           {/* 프로젝트 개수 */}
-          <div className="flex flex-col w-full gap-1">
-            <div className="text-sm flex w-full">
-              <p className=" font-medium mr-auto">프로젝트 개수*</p>
-              {errors.project && (
-                <p className="text-xs text-error font-medium">{errors.project.message}</p>
-              )}
-            </div>
-            <Controller
-              control={control}
-              name="project"
-              rules={{
-                required: '0~10 사이의 숫자를 입력해주세요.',
-                min: { value: 0, message: '0 이상 입력해주세요.' },
-                max: { value: 10, message: '10 이하까지만 입력 가능합니다.' },
-              }}
-              render={({ field }) => {
-                return (
-                  <Input
-                    {...field}
-                    type="number"
-                    step="1"
-                    inputMode="numeric"
-                    variant="resume"
-                    placeholder="이력서에 추가할 프로젝트 개수를 입력해주세요."
-                    onKeyDown={(e) => {
-                      if (e.key === '.' || e.key === 'e' || e.key === '-' || e.key === '+') {
-                        e.preventDefault();
-                      }
-                    }}
-                    onBlur={(e) => {
-                      const value = Number(e.target.value);
-                      if (value < 0 || value > 10) {
-                        field.onChange('');
-                      } else {
-                        field.onChange(e);
-                      }
-                    }}
-                  />
-                );
-              }}
-            />
-          </div>
+          <NumberForm
+            title="프로젝트 개수*"
+            controllerName="project"
+            rules={{
+              required: '0~10 사이의 숫자를 입력해주세요.',
+              min: [0, '0 이상 입력해주세요.'],
+              max: [10, '10 이하까지만 입력 가능합니다.'],
+            }}
+            placeholder="이력서에 추가할 프로젝트 개수를 입력해주세요."
+            control={control}
+            errors={errors.project}
+          />
 
           {/* 전공자/비전공자 */}
           <div className="flex flex-col w-full gap-1">
@@ -213,21 +156,18 @@ export default function UploadResume() {
             가장 최근 경력을 기준으로 기입해주세요!
           </p>
           {/* 근무 기간 */}
-          <div className="flex flex-col w-full gap-1">
-            <div className="text-sm flex w-full">
-              <p className=" font-medium mr-auto">근무 기간</p>
-              <p title="helper-text" className="font-medium text-error">
-                *helper text
-              </p>
-            </div>
-            <Input
-              variant="resume"
-              placeholder="월 단위로 입력해주세요."
-              onChange={(e) => {
-                // setNickname(e.target.value);
-              }}
-            />
-          </div>
+          <NumberForm
+            title="근무 기간"
+            controllerName="workPeriod"
+            rules={{
+              required: '1~999 사이의 숫자를 입력해주세요.',
+              min: [1, '1 이상 입력해주세요.'],
+              max: [999, '999 이하까지만 입력 가능합니다.'],
+            }}
+            placeholder="월 단위로 입력해주세요."
+            control={control}
+            errors={errors.workPeriod}
+          />
 
           {/* 직무 */}
           <div className="flex flex-col w-full gap-1">
@@ -249,7 +189,7 @@ export default function UploadResume() {
           {/* 기타 어필 */}
           <div className="flex flex-col w-full gap-1">
             <div className="text-sm flex w-full">
-              <p className=" font-medium mr-auto">직무</p>
+              <p className=" font-medium mr-auto">기타 어필</p>
               <p title="helper-text" className="font-medium text-error">
                 *helper text
               </p>
