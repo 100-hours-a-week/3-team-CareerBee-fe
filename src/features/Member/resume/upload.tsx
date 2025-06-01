@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 
-import fileUpload from '@/features/Member/Resume/image/file-arrow-up-light.svg';
+import fileUpload from '@/features/Member/resume/image/file-arrow-up-light.svg';
 
 import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';

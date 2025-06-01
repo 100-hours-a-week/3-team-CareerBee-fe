@@ -15,8 +15,8 @@ import Notification from '@/features/Member/notification/Notification';
 import Account from '@/features/Member/profile/Account';
 import Quit from '@/features/Member/profile/Quit';
 import Developers from '@/features/Member/service/developers';
-import ResumeForm from '@/features/Member/Resume/resumeForm';
-import Upload from '@/features/Member/Resume/upload';
+import ResumeForm from '@/features/Member/resume/resumeForm';
+import Upload from '@/features/Member/resume/upload';
 
 export const router = createBrowserRouter([
   {

@@ -1,9 +1,9 @@
 import Dropdown from '@/components/ui/dropdown';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Button } from '@/components/ui/button';
-import NumberForm from '@/features/Member/Resume/components/numberForm';
-import TextForm from '@/features/Member/Resume/components/textForm';
-import LongTextForm from '@/features/Member/Resume/components/longtextForm';
+import NumberForm from '@/features/Member/resume/components/numberForm';
+import TextForm from '@/features/Member/resume/components/textForm';
+import LongTextForm from '@/features/Member/resume/components/longtextForm';
 
 import BeeImage from '@/features/Member/resume/image/bee.png';
 import BeehiveImage from '@/features/Member/resume/image/beehive.png';
