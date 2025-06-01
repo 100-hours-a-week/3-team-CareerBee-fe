@@ -6,22 +6,29 @@ import { Button } from '@/components/ui/button';
 
 import { cn } from '@/lib/utils';
 
-import { useEffect, useState } from 'react';
-import React from 'react';
+import { useForm, Controller } from 'react-hook-form';
 
 export default function UploadResume() {
-  const [answers, setAnswers] = useState({
-    job: false,
-    tier: false,
-    cert: false,
-    project: false,
-    major: false,
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      job: '',
+      tier: '',
+      cert: '',
+      project: '',
+      major: '',
+    },
+    mode: 'onChange',
   });
 
-  const isReady = Object.values(answers).every(Boolean);
+  const watchedValues = watch();
+  const isReady = Object.values(watchedValues).every((v) => v !== '');
 
-  const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const submitForm = () => {
     window.location.href = '/resume/view';
   };
 
@@ -33,55 +40,91 @@ export default function UploadResume() {
         </div>
         <p className="text-xs text-text-secondary">해당 정보는 참고용입니다.</p>
       </div>
-      <form onSubmit={submitForm}>
+      <form onSubmit={handleSubmit(submitForm)}>
         <div className="flex flex-col gap-2 w-full">
           {/* 선호 직무 */}
           <div className="flex flex-col w-full gap-1">
             <p className="text-sm font-medium">선호 직무*</p>
-            <Dropdown
-              placeholder="선호 직무"
-              items={[
-                { label: '프론트엔드', value: 'FE' },
-                { label: '백엔드', value: 'BE' },
-                { label: 'AI', value: 'AI' },
-                { label: '클라우드(DevOps)', value: 'CLOUD' },
-              ]}
-              onChange={() => setAnswers((prev) => ({ ...prev, job: true }))}
+            <Controller
+              control={control}
+              name="job"
+              render={({ field }) => (
+                <Dropdown
+                  {...field}
+                  placeholder="선호 직무"
+                  items={[
+                    { label: '프론트엔드', value: 'FE' },
+                    { label: '백엔드', value: 'BE' },
+                    { label: 'AI', value: 'AI' },
+                    { label: '클라우드(DevOps)', value: 'CLOUD' },
+                  ]}
+                />
+              )}
             />
           </div>
 
           {/* 백준 티어 */}
           <div className="flex flex-col w-full gap-1">
             <p className="text-sm font-medium">백준 티어*</p>
-            <Dropdown
-              placeholder="백준 티어"
-              items={[
-                { label: '프론트엔드', value: 'FE' },
-                { label: '백엔드', value: 'BE' },
-                { label: 'AI', value: 'AI' },
-                { label: '클라우드(DevOps)', value: 'CLOUD' },
-              ]}
-              onChange={() => setAnswers((prev) => ({ ...prev, tier: true }))}
+            <Controller
+              control={control}
+              name="tier"
+              render={({ field }) => (
+                <Dropdown
+                  {...field}
+                  placeholder="백준 티어"
+                  items={[
+                    { label: '프론트엔드', value: 'FE' },
+                    { label: '백엔드', value: 'BE' },
+                    { label: 'AI', value: 'AI' },
+                    { label: '클라우드(DevOps)', value: 'CLOUD' },
+                  ]}
+                />
+              )}
             />
           </div>
 
           {/* IT 자격증 개수 */}
           <div className="flex flex-col w-full gap-1">
             <div className="text-sm flex w-full">
-              <p className=" font-medium mr-auto">IT 자격증 개수*</p>
-              <p title="helper-text" className="font-medium text-error">
-                *helper text
-              </p>
+              <p className=" font-medium mr-auto">프로젝트 개수*</p>
+              {errors.cert && (
+                <p className="text-xs text-error font-medium">{errors.cert.message}</p>
+              )}
             </div>
-            <Input
-              variant="resume"
-              placeholder="숫자를 입력해주세요."
-              onChange={(e) =>
-                setAnswers((prev) => ({
-                  ...prev,
-                  cert: Boolean(e.target.value),
-                }))
-              }
+            <Controller
+              control={control}
+              name="cert"
+              rules={{
+                required: '0~50 사이의 숫자를 입력해주세요.',
+                min: { value: 0, message: '0 이상 입력해주세요.' },
+                max: { value: 50, message: '50 이하까지만 입력 가능합니다.' },
+              }}
+              render={({ field }) => {
+                return (
+                  <Input
+                    {...field}
+                    type="number"
+                    step="1"
+                    inputMode="numeric"
+                    variant="resume"
+                    placeholder="숫자를 입력해주세요."
+                    onKeyDown={(e) => {
+                      if (e.key === '.' || e.key === 'e' || e.key === '-' || e.key === '+') {
+                        e.preventDefault();
+                      }
+                    }}
+                    onBlur={(e) => {
+                      const value = Number(e.target.value);
+                      if (value < 0 || value > 50) {
+                        field.onChange('');
+                      } else {
+                        field.onChange(e);
+                      }
+                    }}
+                  />
+                );
+              }}
             />
           </div>
 
@@ -89,19 +132,43 @@ export default function UploadResume() {
           <div className="flex flex-col w-full gap-1">
             <div className="text-sm flex w-full">
               <p className=" font-medium mr-auto">프로젝트 개수*</p>
-              <p title="helper-text" className="font-medium text-error">
-                *helper text
-              </p>
+              {errors.project && (
+                <p className="text-xs text-error font-medium">{errors.project.message}</p>
+              )}
             </div>
-            <Input
-              variant="resume"
-              placeholder="이력서에 추가할 프로젝트 개수를 입력해주세요."
-              onChange={(e) =>
-                setAnswers((prev) => ({
-                  ...prev,
-                  project: Boolean(e.target.value),
-                }))
-              }
+            <Controller
+              control={control}
+              name="project"
+              rules={{
+                required: '0~10 사이의 숫자를 입력해주세요.',
+                min: { value: 0, message: '0 이상 입력해주세요.' },
+                max: { value: 10, message: '10 이하까지만 입력 가능합니다.' },
+              }}
+              render={({ field }) => {
+                return (
+                  <Input
+                    {...field}
+                    type="number"
+                    step="1"
+                    inputMode="numeric"
+                    variant="resume"
+                    placeholder="이력서에 추가할 프로젝트 개수를 입력해주세요."
+                    onKeyDown={(e) => {
+                      if (e.key === '.' || e.key === 'e' || e.key === '-' || e.key === '+') {
+                        e.preventDefault();
+                      }
+                    }}
+                    onBlur={(e) => {
+                      const value = Number(e.target.value);
+                      if (value < 0 || value > 10) {
+                        field.onChange('');
+                      } else {
+                        field.onChange(e);
+                      }
+                    }}
+                  />
+                );
+              }}
             />
           </div>
 
@@ -110,23 +177,34 @@ export default function UploadResume() {
             <div className="text-sm flex w-full">
               <p className=" font-medium mr-auto">전공자/비전공자*</p>
             </div>
-            <RadioGroup
-              className="flex space-x-6"
-              onValueChange={() => setAnswers((prev) => ({ ...prev, major: true }))}
-            >
-              <div key={1} className="flex items-center space-x-2 p-1">
-                <RadioGroupItem value={'major'} id={'major'} className="min-h-5 min-w-5" />
-                <label htmlFor={'major'} className={cn(`cursor-pointer`)}>
-                  전공자
-                </label>
-              </div>
-              <div key={1} className="flex items-center space-x-2 p-1">
-                <RadioGroupItem value={'nonMajor'} id={'nonMajor'} className="min-h-5 min-w-5" />
-                <label htmlFor={'nonMajor'} className={cn(`cursor-pointer`)}>
-                  비전공자
-                </label>
-              </div>
-            </RadioGroup>
+            <Controller
+              control={control}
+              name="major"
+              render={({ field }) => (
+                <RadioGroup
+                  className="flex space-x-6"
+                  onValueChange={field.onChange}
+                  value={field.value}
+                >
+                  <div className="flex items-center space-x-2 p-1">
+                    <RadioGroupItem value={'major'} id={'major'} className="min-h-5 min-w-5" />
+                    <label htmlFor={'major'} className={cn(`cursor-pointer`)}>
+                      전공자
+                    </label>
+                  </div>
+                  <div className="flex items-center space-x-2 p-1">
+                    <RadioGroupItem
+                      value={'nonMajor'}
+                      id={'nonMajor'}
+                      className="min-h-5 min-w-5"
+                    />
+                    <label htmlFor={'nonMajor'} className={cn(`cursor-pointer`)}>
+                      비전공자
+                    </label>
+                  </div>
+                </RadioGroup>
+              )}
+            />
           </div>
 
           <p className="text-xs font-medium">
