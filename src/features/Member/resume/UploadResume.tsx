@@ -1,6 +1,9 @@
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Dropdown from '@/components/ui/dropdown';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+
+import { cn } from '@/lib/utils';
 
 export default function UploadResume() {
   return (
@@ -75,6 +78,27 @@ export default function UploadResume() {
                 // setNickname(e.target.value);
               }}
             />
+          </div>
+
+          {/* 전공자/비전공자 */}
+          <div className="flex flex-col w-full gap-1">
+            <div className="text-sm flex w-full">
+              <p className=" font-medium mr-auto">전공자/비전공자*</p>
+            </div>
+            <RadioGroup defaultValue={'major'} className="flex space-x-6">
+              <div key={1} className="flex items-center space-x-2 p-1">
+                <RadioGroupItem value={'major'} id={'major'} className="min-h-5 min-w-5" />
+                <label htmlFor={'major'} className={cn(`cursor-pointer`)}>
+                  전공자
+                </label>
+              </div>
+              <div key={1} className="flex items-center space-x-2 p-1">
+                <RadioGroupItem value={'nonMajor'} id={'nonMajor'} className="min-h-5 min-w-5" />
+                <label htmlFor={'nonMajor'} className={cn(`cursor-pointer`)}>
+                  비전공자
+                </label>
+              </div>
+            </RadioGroup>
           </div>
 
           {/* 근무 기간 */}
