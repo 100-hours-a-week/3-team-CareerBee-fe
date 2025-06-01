@@ -2,18 +2,33 @@ import { Button } from '@/components/ui/button';
 
 import fileUpload from '@/features/Member/Resume/image/file-arrow-up-light.svg';
 
-import { useState } from 'react';
-import React from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { useState, useEffect } from 'react';
 
 export default function Upload() {
-  const [fileUrl, setFileUrl] = useState<string | null>(null);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.type === 'application/pdf') {
-      const url = URL.createObjectURL(file);
-      setFileUrl(url);
+  const {
+    handleSubmit,
+    watch,
+    formState: { errors },
+    control,
+  } = useForm<{ resume: FileList | undefined }>({
+    defaultValues: {
+      resume: undefined,
+    },
+  });
+  const [isReady, setIsReady] = useState(false);
+  useEffect(() => {
+    const file = watch('resume')?.[0];
+    if (file) {
+      setIsReady(true);
+    } else {
+      setIsReady(false);
     }
+  }, [watch('resume')]);
+
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const submitForm = () => {
+    window.location.href = '/resume/form';
   };
 
   return (
@@ -26,45 +41,80 @@ export default function Upload() {
             <p>이력서를 업로드하면, 더 정밀한 분석 결과를 받아볼 수 있어요.</p>
           </div>
         </div>
-        <div className="flex flex-col w-full items-center gap-2 px-[5.5rem]">
-          <label
-            htmlFor="resume-upload"
-            className="w-full h-72 border border-border rounded-lg flex items-center justify-center bg-[#EFEFF0] cursor-pointer"
-          >
-            {fileUrl ? (
-              <iframe
-                src={`${fileUrl}#toolbar=0&navpanes=0&scrollbar=0`}
-                className="w-full h-full rounded-lg"
+        <form onSubmit={handleSubmit(submitForm)}>
+          <div className="flex flex-col w-full items-center gap-2">
+            <label
+              htmlFor="resume-upload"
+              className="w-64 h-80 border border-border rounded-lg flex items-center justify-center bg-[#EFEFF0] cursor-pointer"
+            >
+              {fileUrl ? (
+                <iframe
+                  src={`${fileUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                  className="w-full h-full rounded-lg"
+                />
+              ) : (
+                <img src={fileUpload} alt="이력서 업로드" className="h-8 w-8 opacity-60" />
+              )}
+              <Controller
+                name="resume"
+                control={control}
+                defaultValue={undefined}
+                rules={{
+                  required: 'PDF 파일을 업로드해주세요.',
+                  validate: {
+                    isPdf: (value) =>
+                      value?.[0]?.type === 'application/pdf' || 'PDF 파일만 업로드할 수 있습니다.',
+                    isSizeValid: (value) =>
+                      !value?.[0] ||
+                      value[0].size <= 10 * 1024 * 1024 ||
+                      '최대 10MB까지 업로드할 수 있습니다.',
+                  },
+                }}
+                render={({ field }) => (
+                  <input
+                    type="file"
+                    id="resume-upload"
+                    accept=".pdf"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      field.onChange(e.target.files);
+
+                      if (
+                        file &&
+                        file.type === 'application/pdf' &&
+                        file.size <= 10 * 1024 * 1024
+                      ) {
+                        const url = URL.createObjectURL(file);
+                        setFileUrl(url);
+                      } else {
+                        setFileUrl(null);
+                      }
+                    }}
+                    className="hidden"
+                  />
+                )}
               />
-            ) : (
-              <img src={fileUpload} alt="upload" className="h-8 w-8 opacity-60" />
-            )}
-            <input
-              type="file"
-              id="resume-upload"
-              accept=".pdf"
-              onChange={handleFileChange}
-              className="hidden"
+            </label>
+            <p className="text-xs text-error font-medium w-64 text-start">
+              {errors.resume?.message?.toString() || 'PDF 파일만 업로드할 수 있습니다.'}
+            </p>
+          </div>
+          <div className="flex gap-16 pt-12 w-full justify-center">
+            <Button
+              label="건너뛰기"
+              variant="secondary"
+              className="w-40"
+              onClick={() => (window.location.href = '/my')}
             />
-          </label>
-          <p className="text-xs text-error font-medium w-full text-start">
-            *pdf 파일만 추가 가능합니다.
-          </p>
-        </div>
-        <div className="flex gap-16 w-full justify-center">
-          <Button
-            label="건너뛰기"
-            variant="secondary"
-            className="w-40"
-            onClick={() => (window.location.href = '/my')}
-          />
-          <Button
-            label="완료"
-            variant="primary"
-            className="w-40"
-            onClick={() => (window.location.href = '/resume/form')}
-          />
-        </div>
+            <Button
+              type="submit"
+              disabled={!isReady}
+              label="완료"
+              variant="primary"
+              className="w-40"
+            />
+          </div>
+        </form>
       </div>
     </>
   );
