@@ -10,16 +10,20 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 
 export default function UploadResume() {
-  const [answering, setAnswering] = useState(0);
-  const [isReady, setIsReady] = useState(answering >= 5);
+  const [answers, setAnswers] = useState({
+    job: false,
+    tier: false,
+    cert: false,
+    project: false,
+    major: false,
+  });
+
+  const isReady = Object.values(answers).every(Boolean);
 
   const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     window.location.href = '/resume/view';
   };
-  useEffect(() => {
-    setIsReady(answering >= 5);
-  }, [answering]);
 
   return (
     <div className="flex flex-col py-3 px-16 w-full mb-auto gap-4">
@@ -42,7 +46,7 @@ export default function UploadResume() {
                 { label: 'AI', value: 'AI' },
                 { label: '클라우드(DevOps)', value: 'CLOUD' },
               ]}
-              onChange={() => setAnswering(answering + 1)}
+              onChange={() => setAnswers((prev) => ({ ...prev, job: true }))}
             />
           </div>
 
@@ -57,7 +61,7 @@ export default function UploadResume() {
                 { label: 'AI', value: 'AI' },
                 { label: '클라우드(DevOps)', value: 'CLOUD' },
               ]}
-              onChange={() => setAnswering(answering + 1)}
+              onChange={() => setAnswers((prev) => ({ ...prev, tier: true }))}
             />
           </div>
 
@@ -72,7 +76,12 @@ export default function UploadResume() {
             <Input
               variant="resume"
               placeholder="숫자를 입력해주세요."
-              onChange={() => setAnswering(answering + 1)}
+              onChange={(e) =>
+                setAnswers((prev) => ({
+                  ...prev,
+                  cert: Boolean(e.target.value),
+                }))
+              }
             />
           </div>
 
@@ -87,7 +96,12 @@ export default function UploadResume() {
             <Input
               variant="resume"
               placeholder="이력서에 추가할 프로젝트 개수를 입력해주세요."
-              onChange={() => setAnswering(answering + 1)}
+              onChange={(e) =>
+                setAnswers((prev) => ({
+                  ...prev,
+                  project: Boolean(e.target.value),
+                }))
+              }
             />
           </div>
 
@@ -96,7 +110,10 @@ export default function UploadResume() {
             <div className="text-sm flex w-full">
               <p className=" font-medium mr-auto">전공자/비전공자*</p>
             </div>
-            <RadioGroup className="flex space-x-6" onChange={() => setAnswering(answering + 1)}>
+            <RadioGroup
+              className="flex space-x-6"
+              onValueChange={() => setAnswers((prev) => ({ ...prev, major: true }))}
+            >
               <div key={1} className="flex items-center space-x-2 p-1">
                 <RadioGroupItem value={'major'} id={'major'} className="min-h-5 min-w-5" />
                 <label htmlFor={'major'} className={cn(`cursor-pointer`)}>
