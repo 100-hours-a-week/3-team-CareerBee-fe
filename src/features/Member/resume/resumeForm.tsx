@@ -1,9 +1,9 @@
 import Dropdown from '@/components/ui/dropdown';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Button } from '@/components/ui/button';
-import NumberForm from '@/features/Member/resume/components/numberForm';
-import TextForm from '@/features/Member/resume/components/textForm';
-import LongTextForm from '@/features/Member/resume/components/longtextForm';
+import NumberForm from '@/features/Member/Resume/components/numberForm';
+import TextForm from '@/features/Member/Resume/components/textForm';
+import LongTextForm from '@/features/Member/Resume/components/longtextForm';
 
 import BeeImage from '@/features/Member/resume/image/bee.png';
 import BeehiveImage from '@/features/Member/resume/image/beehive.png';
@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 
-export default function UploadResume() {
+export default function ResumeForm() {
   const {
     control,
     handleSubmit,

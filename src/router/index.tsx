@@ -15,7 +15,7 @@ import Notification from '@/features/Member/notification/Notification';
 import Account from '@/features/Member/profile/Account';
 import Quit from '@/features/Member/profile/Quit';
 import Developers from '@/features/Member/service/developers';
-import UploadResume from '@/features/Member/resume/UploadResume';
+import ResumeForm from '@/features/Member/Resume/resumeForm';
 
 export const router = createBrowserRouter([
   {
@@ -34,7 +34,7 @@ export const router = createBrowserRouter([
       { path: 'my/account', element: <Account /> },
       { path: 'my/account/quit', element: <Quit /> },
       { path: 'service/developers', element: <Developers /> },
-      { path: 'resume/form', element: <UploadResume /> },
+      { path: 'resume/form', element: <ResumeForm /> },
       { path: '*', element: <ToBeContinued /> },
     ],
   },
