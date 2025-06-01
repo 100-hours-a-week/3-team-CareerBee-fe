@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textbox';
+import { Textarea } from '@/components/ui/textarea';
 import Dropdown from '@/components/ui/dropdown';
 
 export default function UploadResume() {
