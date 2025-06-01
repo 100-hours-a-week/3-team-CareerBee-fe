@@ -52,8 +52,18 @@ export default function Upload() {
           </p>
         </div>
         <div className="flex gap-16 w-full justify-center">
-          <Button label="건너뛰기" variant="secondary" className="w-40" />
-          <Button label="완료" variant="primary" className="w-40" />
+          <Button
+            label="건너뛰기"
+            variant="secondary"
+            className="w-40"
+            onClick={() => (window.location.href = '/my')}
+          />
+          <Button
+            label="완료"
+            variant="primary"
+            className="w-40"
+            onClick={() => (window.location.href = '/resume/form')}
+          />
         </div>
       </div>
     </>
