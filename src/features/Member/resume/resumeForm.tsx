@@ -51,7 +51,7 @@ export default function ResumeForm() {
   }, [watch()]);
 
   const submitForm = () => {
-    window.location.href = '/resume/view';
+    window.location.href = '/resume/download';
   };
 
   return (
