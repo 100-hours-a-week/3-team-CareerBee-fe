@@ -198,7 +198,7 @@ export default function Main() {
           }
         }}
       />
-      <div className="relative flex item-center justify-center w-full h-full top-16 pb-16">
+      <div className="relative flex item-center justify-center w-full h-[calc(100%-4rem)] top-16">
         {loaded && (
           <Map
             ref={mapRef}
