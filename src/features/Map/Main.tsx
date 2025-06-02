@@ -10,7 +10,6 @@ import MapOverlay from './components/MapOverlay';
 import { useCompanyStore } from '@/store/company';
 import { useSearchStore } from '@/features/Map/store/search';
 import { useMarkerStore } from '@/features/Map/store/marker';
-import { useFetchSuggestions } from './hooks/useFetchSuggestions';
 
 import { instance as axios } from '@/features/Member/auth/utils/axios';
 
@@ -43,7 +42,6 @@ export interface CompanyProps {
 
 export default function Main() {
   const { search, setSearch, suggestions } = useSearchStore();
-  useFetchSuggestions();
 
   const [loaded, setLoaded] = useState(false);
 
@@ -157,31 +155,8 @@ export default function Main() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         suggestions={suggestions}
-        onSuggestionSelect={async (suggestion) => {
-          try {
-            const res = await axios.get(
-              `${import.meta.env.VITE_API_URL}/api/v1/companies/${suggestion.id}/locations`,
-            );
-            const { latitude, longitude } = res.data.data.locationInfo;
-
-            setHighlightedCompanyId(suggestion.id);
-
-            const map = mapRef.current;
-            if (map) {
-              const newCenter = new window.kakao.maps.LatLng(latitude, longitude);
-              map.setLevel(3);
-              map.setCenter(newCenter);
-
-              setCenter({
-                lat: newCenter.getLat(),
-                lng: newCenter.getLng(),
-              });
-              setZoom(3);
-            }
-          } catch (error) {
-            console.error('❌ 기업 위치 정보 조회 실패', error);
-          }
-        }}
+        setHighlightedCompanyId={setHighlightedCompanyId}
+        mapRef={mapRef}
       />
       <div className="relative flex item-center justify-center w-full h-[calc(100%-4rem)] top-16">
         {loaded && (

@@ -1,25 +1,34 @@
+/* global kakao */
+
 import { Input } from '@/components/ui/input';
 import { SuggestionList } from '@/features/Map/components/SuggestionList';
-import { PiMagnifyingGlass, PiX } from 'react-icons/pi';
 import { Button } from '@/components/ui/button';
+
+import { PiMagnifyingGlass, PiX } from 'react-icons/pi';
 import { CompanySuggestion } from '@/features/Map/store/search';
-import { useRef } from 'react';
+import { useMapStore } from '@/features/Map/store/map';
+import { instance as axios } from '@/features/Member/auth/utils/axios';
+
+import { useFetchSuggestions } from '@/features/Map/hooks/useFetchSuggestions';
+
 import { cn } from '@/lib/utils';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import React from 'react';
 
 export function SearchBar({
   suggestions = [],
-  onSuggestionSelect,
   value,
   onChange,
+  setHighlightedCompanyId,
+  mapRef,
   ...props
 }: React.ComponentProps<typeof Input> & {
   suggestions?: CompanySuggestion[];
-  onSuggestionSelect?: (_value: CompanySuggestion) => void;
+  setHighlightedCompanyId: React.Dispatch<React.SetStateAction<number | null>>;
+  mapRef: React.MutableRefObject<kakao.maps.Map | null>;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const showList = value && suggestions.length > 0;
+  const [showList, setShowList] = useState(value && suggestions.length > 0);
   const [selectedIndex, setSelectedIndex] = useState<number>(-2);
 
   const clearInput = () => {
@@ -34,6 +43,36 @@ export function SearchBar({
       setSelectedIndex(-2);
     }
   }, [value]);
+
+  useFetchSuggestions();
+
+  const { setCenter, setZoom } = useMapStore();
+  const handleSuggestionSelect = async (suggestion: CompanySuggestion) => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/v1/companies/${suggestion.id}/locations`,
+      );
+      const { latitude, longitude } = res.data.data.locationInfo;
+
+      setHighlightedCompanyId(suggestion.id);
+
+      const map = mapRef.current;
+      if (map) {
+        const newCenter = new window.kakao.maps.LatLng(latitude, longitude);
+        map.setLevel(3);
+        map.setCenter(newCenter);
+
+        setCenter({
+          lat: newCenter.getLat(),
+          lng: newCenter.getLng(),
+        });
+        setZoom(3);
+      }
+    } catch (error) {
+      console.error('❌ 기업 위치 정보 조회 실패', error);
+    }
+  };
+
   return (
     <div className="absolute w-full z-50 px-4 py-2">
       <div
@@ -57,6 +96,9 @@ export function SearchBar({
             onChange={onChange}
             onKeyDown={(e) => {
               if (!suggestions.length) return;
+              else {
+                setShowList(true);
+              }
 
               if (e.key === 'ArrowDown') {
                 e.preventDefault();
@@ -70,7 +112,9 @@ export function SearchBar({
 
               if (e.key === 'Enter' && selectedIndex >= 0) {
                 e.preventDefault();
-                onSuggestionSelect?.(suggestions[selectedIndex]);
+                handleSuggestionSelect(suggestions[selectedIndex]);
+                setShowList(false);
+                clearInput();
               }
 
               if (e.key === 'Escape') {
@@ -92,7 +136,7 @@ export function SearchBar({
         {showList && (
           <SuggestionList
             filteredSuggestions={suggestions}
-            onSuggestionSelect={onSuggestionSelect}
+            onSuggestionSelect={handleSuggestionSelect}
             onClose={clearInput}
             selectedIndex={selectedIndex}
           />
