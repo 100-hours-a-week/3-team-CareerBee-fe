@@ -208,6 +208,7 @@ export default function Main() {
             onZoomChanged={handleMapMove}
             onDragEnd={handleMapMove}
             onClick={() => setOpenCardIndex(null)}
+            minLevel={8}
           >
             <MarkerClusterer
               averageCenter={true}
