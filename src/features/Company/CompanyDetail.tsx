@@ -1,11 +1,10 @@
-// import { useParams, useLocation } from "react-router-dom";
-import { useEffect, useState } from 'react';
-import { instance as axios } from '@/features/Member/auth/utils/axios';
-import CompanyTitle from '@/features/Company/components/CompanyTitle';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import noImg from '@/static/no-image.png';
 import { PiStar, PiStarFill, PiStarHalfFill } from 'react-icons/pi';
 
+import { Loader } from '@/components/ui/loader';
+import CompanyTitle from '@/features/Company/components/CompanyTitle';
+
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import DefaultTab from '@/features/Company/components/defaultTab';
 import RecruitTab from '@/features/Company/components/recruit';
 import IssueTab from '@/features/Company/components/issue';
@@ -13,14 +12,15 @@ import BenefitTab from '@/features/Company/components/benefit';
 import TechstackTab from '@/features/Company/components/techstack';
 
 import { useFetchBookmarkStatus } from '@/hooks/useFetchBookmarkStatus';
+import { instance as axios } from '@/features/Member/auth/utils/axios';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
-import { Loader } from '@/components/ui/loader';
+import { useUiStore } from '@/store/ui';
 
 import { motion } from 'motion/react';
-import { useParams, useLocation } from 'react-router-dom';
-import { useUiStore } from '@/store/ui';
 import { AnimatePresence } from 'motion/react';
+import { useParams, useLocation } from 'react-router-dom';
 
+import { useEffect, useState } from 'react';
 export interface Financials {
   annualSalary: number;
   startingSalary: number;
@@ -82,7 +82,6 @@ export default function CompanyDetail() {
   const [company, setCompany] = useState<Company>();
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const token = useAuthStore((state) => state.token);
-  // const [lastRecruitMonth] = useState<number | null>(10);
 
   const { bookmarkStatus } = useFetchBookmarkStatus();
 
@@ -100,8 +99,6 @@ export default function CompanyDetail() {
           const data = response.data;
           setCompany(data.data);
           // setCompany(data.data.company)  //🚨 목 데이터로 작업시에만 켜기!!!
-          // console.log(data);
-          // console.count('😈기업 상세 렌더링 횟수');
           bookmarkStatus(Number(id), setIsBookmarked);
         })
         .catch((error) => {
@@ -141,15 +138,6 @@ export default function CompanyDetail() {
                 </div>
               </div>
             ) : (
-              // <div className="flex min-w-max m-auto">
-              //   <span className="">
-              //     {company.name} 은/는 작년{" "}
-              //     <span className="font-bold">
-              //       {lastRecruitMonth ? `${lastRecruitMonth}월` : 'OO월'}
-              //     </span>
-              //     에 채용 시작했습니다.
-              //   </span>
-              // </div>
               <></>
             )}
 
