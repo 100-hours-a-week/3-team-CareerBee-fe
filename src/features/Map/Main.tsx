@@ -248,7 +248,7 @@ export default function Main() {
         </div>
 
         {/* 내 위치 찾기 버튼 */}
-        <div className="absolute bottom-[88px] left-3 z-40 [&_svg]:size-8">
+        <div className="absolute bottom-6 left-4 z-40 [&_svg]:size-8">
           <div>
             <Button
               label={<PiCrosshairSimple />}
