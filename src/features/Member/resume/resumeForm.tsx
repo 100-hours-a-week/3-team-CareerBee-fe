@@ -190,7 +190,6 @@ export default function ResumeForm() {
                 title="근무 기간"
                 controllerName="workPeriod"
                 rules={{
-                  required: '1~999 사이의 숫자를 입력해주세요.',
                   min: [1, '1 이상 입력해주세요.'],
                   max: [999, '999 이하까지만 입력 가능합니다.'],
                 }}
@@ -204,7 +203,6 @@ export default function ResumeForm() {
                 title="직무"
                 controllerName="role"
                 rules={{
-                  required: '입력을 확인해주세요. (최대 25자)',
                   maxLength: [25, '입력을 확인해주세요. (최대 25자)'],
                 }}
                 placeholder="담당 직무를 입력해주세요."
@@ -217,7 +215,6 @@ export default function ResumeForm() {
                 title="기타 어필"
                 controllerName="appeal"
                 rules={{
-                  required: '입력을 확인해주세요. (최대 100자)',
                   maxLength: [100, '입력을 확인해주세요. (최대 100자)'],
                 }}
                 placeholder="TOPCIT, 수상이력, 기술 스터디, 대회 참가 이력..."
