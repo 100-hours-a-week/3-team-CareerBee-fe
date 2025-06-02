@@ -13,7 +13,7 @@ interface ResumeFormValues {
   appeal: string;
 }
 interface rulesProps {
-  required: string;
+  required?: string;
   min: [number, string];
   max: [number, string];
 }
