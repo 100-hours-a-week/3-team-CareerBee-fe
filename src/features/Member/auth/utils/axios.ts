@@ -1,7 +1,8 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 import { publishErrorToast } from '@/lib/errorEvents';
-import { logout } from '@/features/Member/auth/utils/logout';
+
+import { retryWithRefreshedToken } from '@/features/Member/auth/utils/authManager';
 
 export const instance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL, // .env
@@ -38,74 +39,18 @@ instance.interceptors.response.use(
       pendingPosts.delete(error.config.url!);
     }
     const res = error.response;
-    if (res?.status === 400 || res?.status === 401) {
+    const message = res?.data?.message;
+
+    if (res?.status === 401 && message?.inclues('만료')) {
+      return retryWithRefreshedToken(error.config);
+    } else if (res?.status === 409 || res?.status === 404) {
       const message = res?.data?.message;
-      const status = res.data.httpStatusCode;
-      if (status === 404) {
-        const message = res?.data?.message;
-
-        // 1️⃣ 로그아웃 케이스
-        if (message?.includes('로그아웃')) {
-          error.code = 'LOGGED_OUT';
-          publishErrorToast('로그아웃되었습니다. 다시 로그인 해주세요.');
-          useAuthStore.getState().clearToken();
-          return Promise.reject(error);
-        }
-      }
-
-      // 2️⃣ 토큰 만료 케이스
-      else if (message?.match('만료된 토큰입니다.')) {
-        try {
-          const refreshResponse = await instance.post(
-            `${import.meta.env.VITE_API_URL}/api/v1/auth/reissue`,
-            null,
-            { withCredentials: true },
-          );
-          const newToken = refreshResponse.data.data.newAccessToken;
-          useAuthStore.getState().setToken(newToken);
-
-          const originalRequest = error.config;
-          originalRequest.headers.Authorization = `Bearer ${newToken}`;
-
-          return axios(originalRequest);
-        } catch (err) {
-          console.error('🔑 토큰 재발급 실패', err);
-          const axiosError = err as AxiosError;
-          if (axiosError.status === 500) {
-            // 네트워크 오류 (서버 응답 없음), 중복 토큰 존재
-            publishErrorToast('에러가 발생했습니다. 다시 시도해 주세요.');
-            useAuthStore.getState().clearToken();
-            window.location.href = '/login';
-            return Promise.reject(axiosError);
-          } else if (axiosError.status === 401 || axiosError.status === 403) {
-            // 재로그인 유도
-            publishErrorToast('에러가 발생했습니다. 다시 로그인해주세요 ㅠㅜ');
-            setTimeout(() => {
-              logout();
-              useAuthStore.getState().clearToken();
-              // window.location.href = "/login";
-            }, 3000);
-          }
-        }
-      }
-    } else if (res?.status === 409) {
-      const message = res?.data?.message;
-      if (message?.includes('리프레시 토큰')) {
-        setTimeout(() => {
-          publishErrorToast('로그아웃되었습니다. 다시 로그인 해주세요.');
-        }, 3000);
+      if (message?.includes('리프레시 토큰') || message?.includes('존재하지 않는 회원')) {
+        publishErrorToast('로그아웃되었습니다. 다시 로그인 해주세요.');
         useAuthStore.getState().clearToken();
-        window.location.href = '/login';
-        return Promise.reject(error);
-      }
-    } else if (res?.status === 404) {
-      const message = res?.data?.message;
-      if (message?.includes('존재하지 않는 회원')) {
         setTimeout(() => {
-          publishErrorToast('존재하지 않는 회원입니다. 다시 로그인 해주세요.');
+          window.location.href = '/login';
         }, 3000);
-        useAuthStore.getState().clearToken();
-        window.location.href = '/login';
         return Promise.reject(error);
       }
     }
