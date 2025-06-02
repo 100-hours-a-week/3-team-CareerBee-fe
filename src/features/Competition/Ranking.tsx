@@ -11,7 +11,7 @@ import { instance as axios } from '../Member/auth/utils/axios';
 
 import { cn } from '@/lib/utils';
 import { motion } from 'motion/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const rankCardStyles = {
   green: { bgImage: 'week-green-rank.svg', height: '120px', marginTop: 'mt-5' },
@@ -66,6 +66,36 @@ const enterCompetition = async (token: string | null) => {
 export default function Ranking() {
   const token = useAuthStore((state) => state.token);
   const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
+  const [enter, setEnter] = useState(false);
+
+  const checkParticipant = async (token: string | null) => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/competitions`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status === 200) {
+        setEnter(!res.data.isParticipant);
+      }
+    } catch (error: any) {
+      const status = error?.response?.status;
+      let message = '알 수 없는 오류가 발생했습니다.';
+      if (status === 400) {
+        message = '요청이 잘못되었습니다.';
+      } else if (status === 404) {
+        message = '찾을 수 없습니다.';
+      } else if (status === 409) {
+        message = '이미 처리된 요청입니다.';
+      } else if (status === 500) {
+        message = '내부 네트워크 오류입니다.';
+      }
+      toast({ title: message });
+    }
+  };
+  useEffect(() => {
+    checkParticipant(token);
+  }, [token]);
 
   return (
     <div className="py-5">
@@ -145,8 +175,9 @@ export default function Ranking() {
         </>
         <div className="my-4 mx-auto">
           <Button
-            label="00 : 00 : 00"
-            variant="secondary"
+            label={enter ? '대회 입장' : '이미 참여한 대회입니다.'}
+            variant="primary"
+            disabled={!enter}
             onClick={() => {
               if (!token) {
                 window.location.href = '/login';
