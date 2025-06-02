@@ -1,19 +1,23 @@
-import { useState } from 'react';
-import { motion } from 'motion/react';
+import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
+
+import { Button } from '@/components/ui/button';
 import DailyBarChart from '@/features/Competition/utils/dailyChart';
 import WeeklyBarChart from '@/features/Competition/utils/weeklyChart';
 import MonthlyBarChart from '@/features/Competition/utils/monthlyChart';
-import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
-import { Button } from '@/components/ui/button';
+
+import { toast } from '@/hooks/useToast';
 import { useAuthStore } from '../Member/auth/store/auth';
+import { instance as axios } from '../Member/auth/utils/axios';
+
 import { cn } from '@/lib/utils';
+import { motion } from 'motion/react';
+import { useState } from 'react';
 
 const rankCardStyles = {
   green: { bgImage: 'week-green-rank.svg', height: '120px', marginTop: 'mt-5' },
   red: { bgImage: 'week-red-rank.svg', height: '128px', marginTop: 'mt-6' },
   blue: { bgImage: 'week-blue-rank.svg', height: '104px', marginTop: 'mt-[1.125rem]' },
 };
-
 const RankCard = ({
   styleKey,
   nickname,
@@ -42,6 +46,21 @@ const RankCard = ({
       </div>
     </div>
   );
+};
+
+const enterCompetition = async (token: string | null) => {
+  try {
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/competitions`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (res.status === 204) {
+      window.location.href = '/competition/entry';
+    }
+  } catch {
+    toast({ title: '대회 참가에 실패했습니다.' });
+  }
 };
 
 export default function Ranking() {
@@ -133,7 +152,7 @@ export default function Ranking() {
                 window.location.href = '/login';
                 return;
               }
-              window.location.href = '/competition/entry';
+              enterCompetition(token);
             }}
             className="w-64 h-12 text-2xl flex mx-auto rounded-xl font-normal"
           />
