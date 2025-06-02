@@ -16,13 +16,13 @@ export async function retryWithRefreshedToken(config: AxiosRequestConfig) {
     config.headers.Authorization = `Bearer ${newToken}`;
     return axios(config);
   } catch (e) {
-    forceLogout('세션이 만료되었습니다. 다시 로그인 해주세요.');
+    forceLogout();
     return Promise.reject(e);
   }
 }
 
-export function forceLogout(message?: string) {
-  toast({ title: message ?? '로그아웃 되었습니다.' });
+export function forceLogout() {
+  toast({ title: '로그아웃 되었습니다.' });
   useAuthStore.getState().clearToken();
   setTimeout(() => {
     window.location.href = '/login';

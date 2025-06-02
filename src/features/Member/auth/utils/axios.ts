@@ -1,8 +1,6 @@
-import axios from 'axios';
-import { useAuthStore } from '@/features/Member/auth/store/auth';
-import { publishErrorToast } from '@/lib/errorEvents';
+import axios, { AxiosError } from 'axios';
 
-import { retryWithRefreshedToken } from '@/features/Member/auth/utils/authManager';
+import { retryWithRefreshedToken, forceLogout } from '@/features/Member/auth/utils/authManager';
 
 export const instance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL, // .env
@@ -15,6 +13,27 @@ export const instance = axios.create({
 
 // POST 중복 요청 방지
 const pendingPosts = new Set<string>();
+
+const clearPendingPost = (config?: any) => {
+  if (config?.method === 'post') {
+    pendingPosts.delete(config.url!);
+  }
+};
+
+const isTokenExpired = (res: AxiosError): boolean => {
+  const status = res.response?.status;
+  const data = res.response?.data as { message?: string };
+  return status === 401 && (data?.message?.includes('만료') ?? false);
+};
+
+const shouldForceLogout = (res: AxiosError): boolean => {
+  const status = res.response?.status;
+  const data = res.response?.data as { message?: string };
+  return (
+    [409, 404].includes(status as number) &&
+    ['리프레시 토큰', '존재하지 않는 회원'].some((msg) => data?.message?.includes(msg))
+  );
+};
 
 instance.interceptors.request.use((config) => {
   if (config.method === 'post') {
@@ -29,30 +48,17 @@ instance.interceptors.request.use((config) => {
 
 instance.interceptors.response.use(
   (response) => {
-    if (response.config.method === 'post') {
-      pendingPosts.delete(response.config.url!);
-    }
+    clearPendingPost(response.config);
     return response;
   },
   async (error) => {
-    if (error.config?.method === 'post') {
-      pendingPosts.delete(error.config.url!);
-    }
+    clearPendingPost(error.config);
     const res = error.response;
-    const message = res?.data?.message;
 
-    if (res?.status === 401 && message?.inclues('만료')) {
+    if (isTokenExpired(res)) {
       return retryWithRefreshedToken(error.config);
-    } else if (res?.status === 409 || res?.status === 404) {
-      const message = res?.data?.message;
-      if (message?.includes('리프레시 토큰') || message?.includes('존재하지 않는 회원')) {
-        publishErrorToast('로그아웃되었습니다. 다시 로그인 해주세요.');
-        useAuthStore.getState().clearToken();
-        setTimeout(() => {
-          window.location.href = '/login';
-        }, 3000);
-        return Promise.reject(error);
-      }
+    } else if (shouldForceLogout(res)) {
+      forceLogout();
     }
 
     return Promise.reject(error);
