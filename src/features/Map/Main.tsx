@@ -10,11 +10,9 @@ import MapOverlay from './components/MapOverlay';
 import { useCompanyStore } from '@/store/company';
 import { useSearchStore } from '@/features/Map/store/search';
 import { useMarkerStore } from '@/features/Map/store/marker';
-import { useFetchSuggestions } from './hooks/useFetchSuggestions';
 
 import { instance as axios } from '@/features/Member/auth/utils/axios';
 
-// import { useAuthStore  } from '@/store/auth';
 import { Button } from '@/components/ui/button';
 import { PiCrosshairSimple } from 'react-icons/pi';
 
@@ -29,7 +27,6 @@ import {
 } from '@/features/Map/config/map';
 
 import { useQuery } from '@tanstack/react-query';
-// import { Loader } from '@/components/ui/loader';
 import { CLUSTER_STYLES } from '@/features/Map/config/clusterStyles';
 
 export interface CompanyProps {
@@ -45,24 +42,18 @@ export interface CompanyProps {
 
 export default function Main() {
   const { search, setSearch, suggestions } = useSearchStore();
-  useFetchSuggestions();
 
   const [loaded, setLoaded] = useState(false);
-  // const [companies, setCompanies] = useState<CompanyProps[]>([]);
 
   const { openCardIndex, setOpenCardIndex } = useCompanyStore();
   const { center, zoom, setCenter, setZoom } = useMapStore();
 
-  // const { companyDisabledMap } = useMarkerStore();
   const companyDisabledMap = useMarkerStore((state) => state.companyDisabledMap);
 
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const [highlightedCompanyId, setHighlightedCompanyId] = useState<number | null>(null);
 
-  const {
-    data: companies = [],
-    // isFetching,
-  } = useQuery<CompanyProps[], Error>({
+  const { data: companies = [] } = useQuery<CompanyProps[], Error>({
     queryKey: ['companyList', center.lat, center.lng, zoom],
     queryFn: async () => {
       const radius = RADIUS_BY_LEVEL[zoom] ?? 1000;
@@ -70,15 +61,10 @@ export default function Main() {
         params: { latitude: center.lat, longitude: center.lng, radius },
       });
       // const { data } = await axios.get('/mock/companies.json');  //🚨 목 데이터로 작업할 때만 켜기
-      // console.log("🐳 api fetch: ", center.lat, " ", center.lng, " ", zoom)
       return data.data.companies;
     },
     placeholderData: (previous) => previous,
   });
-
-  // useEffect(()=>{
-  //   console.log("🐝 ", center.lat, " ", center.lng, " ", zoom)
-  // },[center, zoom])
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -169,36 +155,10 @@ export default function Main() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         suggestions={suggestions}
-        onSuggestionSelect={async (suggestion) => {
-          try {
-            // console.log('🔎', suggestion)
-            const res = await axios.get(
-              `${import.meta.env.VITE_API_URL}/api/v1/companies/${suggestion.id}/locations`,
-            );
-            const { latitude, longitude } = res.data.data.locationInfo;
-
-            // console.log('🔎', latitude, ' ', longitude)
-            // setSearch(suggestion.name);
-            setHighlightedCompanyId(suggestion.id);
-
-            const map = mapRef.current;
-            if (map) {
-              const newCenter = new window.kakao.maps.LatLng(latitude, longitude);
-              map.setLevel(3);
-              map.setCenter(newCenter);
-
-              setCenter({
-                lat: newCenter.getLat(),
-                lng: newCenter.getLng(),
-              });
-              setZoom(3);
-            }
-          } catch (error) {
-            console.error('❌ 기업 위치 정보 조회 실패', error);
-          }
-        }}
+        setHighlightedCompanyId={setHighlightedCompanyId}
+        mapRef={mapRef}
       />
-      <div className="relative flex item-center justify-center w-full h-full top-16 pb-16">
+      <div className="relative flex item-center justify-center w-full h-[calc(100%-4rem)] top-16">
         {loaded && (
           <Map
             ref={mapRef}
@@ -208,6 +168,7 @@ export default function Main() {
             onZoomChanged={handleMapMove}
             onDragEnd={handleMapMove}
             onClick={() => setOpenCardIndex(null)}
+            minLevel={8}
           >
             <MarkerClusterer
               averageCenter={true}
@@ -247,7 +208,7 @@ export default function Main() {
         </div>
 
         {/* 내 위치 찾기 버튼 */}
-        <div className="absolute bottom-[88px] left-3 z-40 [&_svg]:size-8">
+        <div className="absolute bottom-6 left-4 z-40 [&_svg]:size-8">
           <div>
             <Button
               label={<PiCrosshairSimple />}
