@@ -8,7 +8,7 @@ import MonthlyBarChart from '@/features/Competition/utils/monthlyChart';
 import { toast } from '@/hooks/useToast';
 import { useAuthStore } from '../Member/auth/store/auth';
 import { instance as axios } from '../Member/auth/utils/axios';
-import { safeGet, safePost } from '@/lib/request';
+import { safeGet } from '@/lib/request';
 
 import { cn } from '@/lib/utils';
 import { motion } from 'motion/react';
