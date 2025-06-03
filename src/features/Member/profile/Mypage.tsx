@@ -14,6 +14,7 @@ import point from '@/features/Member/notification/image/point.png';
 import { PiCaretRight } from 'react-icons/pi';
 
 export default function Mypage() {
+  //TODO: 닉네임이랑 포인트 저장하는 로직 리팩토링
   const token = useAuthStore((state) => state.token);
   const [nickname, setNickname] = useState<string>('닉네임');
   const pointAmount = localStorage.getItem('point') || '0';

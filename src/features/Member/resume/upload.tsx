@@ -114,7 +114,7 @@ export default function Upload() {
               label="건너뛰기"
               variant="secondary"
               className="w-40"
-              onClick={() => (window.location.href = '/my')}
+              onClick={() => (window.location.href = '/resume/form')}
             />
             <Button
               type="submit"
