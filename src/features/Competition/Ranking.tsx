@@ -185,7 +185,7 @@ export default function Ranking() {
               }
               enterCompetition(token);
             }}
-            className="w-64 h-12 text-2xl flex mx-auto rounded-xl font-normal"
+            className="w-64 h-12 text-xl flex mx-auto rounded-xl font-normal"
           />
           <div className="flex-col items-center m-2">
             {!token ? (
