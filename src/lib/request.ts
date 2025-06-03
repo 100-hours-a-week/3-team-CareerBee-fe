@@ -9,12 +9,19 @@ export const safeRequest = async <T = any>(config: AxiosRequestConfig): Promise<
     return res.data;
   } catch (error) {
     const status = (error as AxiosError)?.response?.status;
-    let message = '알 수 없는 오류가 발생했습니다.';
-    if (status === 400) message = '잘못된 요청입니다.';
-    else if (status === 404) message = '찾을 수 없습니다.';
-    else if (status === 409) message = '이미 처리된 요청입니다.';
-    else if (status === 500) message = '내부 네트워크 오류입니다.';
-    toast({ title: message });
+    if (status) {
+      if ([400, 404, 409, 500].includes(status)) {
+        const messages: Record<number, string> = {
+          400: '잘못된 요청입니다.',
+          404: '찾을 수 없습니다.',
+          409: '이미 처리된 요청입니다.',
+          500: '내부 네트워크 오류입니다.',
+        };
+        toast({ title: messages[status] });
+      } else {
+        console.error('🚨 Unhandled error:', error);
+      }
+    }
     return null;
   }
 };
