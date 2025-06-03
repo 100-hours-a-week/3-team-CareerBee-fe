@@ -8,7 +8,7 @@ import MonthlyBarChart from '@/features/Competition/utils/monthlyChart';
 import { toast } from '@/hooks/useToast';
 import { useAuthStore } from '../Member/auth/store/auth';
 import { instance as axios } from '../Member/auth/utils/axios';
-import { safeGet } from '@/lib/request';
+import { safeGet, safePost } from '@/lib/request';
 
 import { cn } from '@/lib/utils';
 import { motion } from 'motion/react';
@@ -65,12 +65,22 @@ const enterCompetition = async (token: string | null) => {
 };
 
 export default function Ranking() {
+  const [competitionId, setCompetitionId] = useState<number | null>(null);
+  useEffect(() => {
+    (async () => {
+      const res = await safeGet('/api/v1/competitions/ids');
+      if (res.status === 200) {
+        setCompetitionId(res.data.competitionId);
+      }
+    })();
+  }, []);
+
   const token = useAuthStore((state) => state.token);
   const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
   const [enter, setEnter] = useState(false);
 
   const joined = async () => {
-    const res = await safeGet('/api/v1/competitions', {
+    const res = await safeGet(`/api/v1/competitions/${competitionId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -81,8 +91,10 @@ export default function Ranking() {
   };
 
   useEffect(() => {
-    joined();
-  }, []);
+    if (competitionId != null) {
+      joined();
+    }
+  }, [competitionId]);
 
   return (
     <div className="py-5">
