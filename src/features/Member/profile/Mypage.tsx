@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { instance as axios } from '@/features/Member/auth/utils/axios';
+import { safeGet } from '@/lib/request';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 import { useCompanyStore } from '@/store/company';
 
@@ -20,20 +20,16 @@ export default function Mypage() {
   const { setIsBookmarked } = useCompanyStore();
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/members`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+    (async () => {
+      const res = await safeGet('/api/v1/members', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res) {
         setNickname(res.data.data.nickname);
-      } catch (err) {
-        console.error('유저 정보 조회 실패:', err);
       }
-    };
-
-    fetchUserInfo();
+    })();
   }, [token]);
 
   const companies = [...Array(0)];
