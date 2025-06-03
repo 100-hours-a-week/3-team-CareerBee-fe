@@ -3,6 +3,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { cva } from 'class-variance-authority';
 
 const Select = SelectPrimitive.Root;
 
@@ -10,26 +11,40 @@ const SelectGroup = SelectPrimitive.Group;
 
 const SelectValue = SelectPrimitive.Value;
 
+const SelectTriggerVariants = cva(
+  `flex h-10 w-full items-center justify-between whitespace-nowrap 
+    rounded-lg 
+    bg-transparent px-3 py-2 text-sm font-medium text-text-primary shadow-sm 
+    ring-offset-background 
+    data-[placeholder]:text-text-primary 
+    focus:outline-none 
+    disabled:cursor-not-allowed 
+    disabled:opacity-50 
+    [&>span]:line-clamp-1 leading-5`,
+  {
+    variants: {
+      variant: {
+        default: `
+          border border-border 
+          focus:ring-1
+          focus:ring-ring`,
+        doubleTrigger: `hover:bg-accent rounded-sm`,
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  },
+);
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
+    variant?: 'default' | 'doubleTrigger' | null | undefined;
+  }
+>(({ className, variant, children, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
-    className={cn(
-      `flex h-10 w-full items-center justify-between whitespace-nowrap 
-      rounded-lg border border-border 
-      bg-transparent px-3 py-2 text-sm font-medium text-text-primary shadow-sm 
-      ring-offset-background 
-      data-[placeholder]:text-text-primary 
-      focus:outline-none 
-      focus:ring-1
-      focus:ring-ring 
-      disabled:cursor-not-allowed 
-      disabled:opacity-50 
-      [&>span]:line-clamp-1 leading-5`,
-      className,
-    )}
+    className={cn(SelectTriggerVariants({ variant }), className)}
     {...props}
   >
     {children}
@@ -111,12 +126,19 @@ SelectContent.displayName = SelectPrimitive.Content.displayName;
 const SelectLabel = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
->(({ className, ...props }, ref) => (
-  <SelectPrimitive.Label
+>(({ className, onClick, ...props }, ref) => (
+  <div
+    role="button"
     ref={ref}
-    className={cn('px-2 py-1.5 text-sm font-semibold', className)}
-    {...props}
-  />
+    onClick={onClick}
+    className="flex w-full px-1 items-center justify-between hover:bg-accent cursor-pointer rounded-sm"
+  >
+    <SelectPrimitive.Label
+      className={cn('bg-transparent py-2 text-sm font-medium text-text-primary', className)}
+      {...props}
+    />
+    <ChevronDown className="h-4 w-4 opacity-50" />
+  </div>
 ));
 SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
@@ -137,7 +159,7 @@ const SelectItem = React.forwardRef<
     )}
     {...props}
   >
-    <SelectPrimitive.ItemText className="bg-#DFDFDF">{children}</SelectPrimitive.ItemText>
+    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
   </SelectPrimitive.Item>
 ));
 SelectItem.displayName = SelectPrimitive.Item.displayName;
