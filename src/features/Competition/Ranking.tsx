@@ -8,6 +8,7 @@ import MonthlyBarChart from '@/features/Competition/utils/monthlyChart';
 import { toast } from '@/hooks/useToast';
 import { useAuthStore } from '../Member/auth/store/auth';
 import { instance as axios } from '../Member/auth/utils/axios';
+import { safeGet } from '@/lib/request';
 
 import { cn } from '@/lib/utils';
 import { motion } from 'motion/react';
@@ -68,34 +69,20 @@ export default function Ranking() {
   const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
   const [enter, setEnter] = useState(false);
 
-  const checkParticipant = async (token: string | null) => {
-    try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/competitions`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.status === 200) {
-        setEnter(!res.data.isParticipant);
-      }
-    } catch (error: any) {
-      const status = error?.response?.status;
-      let message = '알 수 없는 오류가 발생했습니다.';
-      if (status === 400) {
-        message = '요청이 잘못되었습니다.';
-      } else if (status === 404) {
-        message = '찾을 수 없습니다.';
-      } else if (status === 409) {
-        message = '이미 처리된 요청입니다.';
-      } else if (status === 500) {
-        message = '내부 네트워크 오류입니다.';
-      }
-      toast({ title: message });
+  const joined = async () => {
+    const res = await safeGet('/api/v1/competitions', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (res.status === 200) {
+      setEnter(!res.data.isParticipant);
     }
   };
+
   useEffect(() => {
-    checkParticipant(token);
-  }, [token]);
+    joined();
+  }, []);
 
   return (
     <div className="py-5">
