@@ -3,7 +3,7 @@ import axios, { AxiosError } from 'axios';
 import { retryWithRefreshedToken, forceLogout } from '@/features/Member/auth/utils/authManager';
 
 export const instance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL, // .env
+  baseURL: import.meta.env.VITE_API_URL, // .env
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
