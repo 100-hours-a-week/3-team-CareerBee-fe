@@ -5,7 +5,7 @@ const handleLogin = async () => {
     params: { type: 'KAKAO' },
   });
   if (res) {
-    const loginUrl = res.data.data.loginUrl;
+    const loginUrl = res.data.loginUrl;
     if (loginUrl) {
       window.location.href = loginUrl;
     }
