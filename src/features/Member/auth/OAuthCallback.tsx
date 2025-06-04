@@ -16,7 +16,7 @@ export default function OAuthCallback() {
           authorizationCode: token,
         })
         .then((response) => {
-          const { accessToken, userInfo } = response.data;
+          const { accessToken, userInfo } = response.data.data;
           setToken(accessToken); // ✅ Zustand + persist로 저장됨
           localStorage.setItem('userPoint', userInfo.userPoint);
           localStorage.setItem('hasNewAlarm', userInfo.hasNewAlarm);
