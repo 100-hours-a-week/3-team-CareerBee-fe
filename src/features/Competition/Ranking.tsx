@@ -5,10 +5,8 @@ import DailyBarChart from '@/features/Competition/utils/dailyChart';
 import WeeklyBarChart from '@/features/Competition/utils/weeklyChart';
 import MonthlyBarChart from '@/features/Competition/utils/monthlyChart';
 
-import { toast } from '@/hooks/useToast';
 import { useAuthStore } from '../Member/auth/store/auth';
-import { instance as axios } from '../Member/auth/utils/axios';
-import { safeGet, safePost } from '@/lib/request';
+import { safeGet } from '@/lib/request';
 
 import { cn } from '@/lib/utils';
 import { motion } from 'motion/react';
@@ -49,21 +47,6 @@ const RankCard = ({
   );
 };
 
-const enterCompetition = async (token: string | null) => {
-  try {
-    const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/competitions`, null, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (res.status === 204) {
-      window.location.href = '/competition/entry';
-    }
-  } catch {
-    toast({ title: '대회 참가에 실패했습니다.' });
-  }
-};
-
 export default function Ranking() {
   const [competitionId, setCompetitionId] = useState<number | null>(null);
   useEffect(() => {
@@ -77,7 +60,7 @@ export default function Ranking() {
 
   const token = useAuthStore((state) => state.token);
   const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
-  const [enter, setEnter] = useState(false);
+  const [alreadyEntered, setAlreadyEntered] = useState(false);
 
   const joined = async () => {
     const res = await safeGet(`/api/v1/competitions/${competitionId}`, {
@@ -86,7 +69,7 @@ export default function Ranking() {
       },
     });
     if (res.status === 200) {
-      setEnter(!res.data.isParticipant);
+      setAlreadyEntered(res.data.isParticipant);
     }
   };
 
@@ -225,19 +208,18 @@ export default function Ranking() {
           <Button
             label={
               competitionTime
-                ? enter
-                  ? '대회 입장'
-                  : '이미 참여한 대회입니다.'
+                ? alreadyEntered
+                  ? '이미 참여한 대회입니다.'
+                  : '대회 입장'
                 : `${timeUntilStart}`
             }
             variant={competitionTime ? 'primary' : 'secondary'}
-            disabled={!competitionTime || !enter || !token}
+            disabled={!competitionTime || alreadyEntered || !token}
             onClick={() => {
               if (!token) {
                 window.location.href = '/login';
                 return;
               }
-              enterCompetition(token);
             }}
             className={`w-64 h-12 ${competitionTime ? 'text-xl text-text-primary ' : 'text-2xl disabled:opacity-100'} flex mx-auto rounded-xl font-normal`}
           />
