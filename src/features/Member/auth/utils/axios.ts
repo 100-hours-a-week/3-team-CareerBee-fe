@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 import { retryWithRefreshedToken, forceLogout } from '@/features/Member/auth/utils/authManager';
 
@@ -20,18 +20,18 @@ const clearPendingPost = (config?: any) => {
   }
 };
 
-const isTokenExpired = (res: AxiosError): boolean => {
-  const status = res.response?.status;
-  const data = res.response?.data as { message?: string };
-  return status === 401 && (data?.message?.includes('만료') ?? false);
+const isTokenExpired = (res: AxiosResponse): boolean => {
+  const status = res?.status;
+  const message = (res?.data as { message?: string })?.message;
+  return status === 401 && (message?.includes('만료') ?? false);
 };
 
-const shouldForceLogout = (res: AxiosError): boolean => {
-  const status = res.response?.status;
-  const data = res.response?.data as { message?: string };
+const shouldForceLogout = (res: AxiosResponse): boolean => {
+  const status = res?.status;
+  const message = (res?.data as { message?: string })?.message;
   return (
     [409, 404].includes(status as number) &&
-    ['리프레시 토큰', '존재하지 않는 회원'].some((msg) => data?.message?.includes(msg))
+    ['리프레시 토큰', '존재하지 않는 회원'].some((msg) => message?.includes(msg))
   );
 };
 

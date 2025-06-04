@@ -16,7 +16,6 @@ export const useAuthStore = create<AuthState>()(
         localStorage.removeItem('auth-storage');
         localStorage.removeItem('userPoint');
         localStorage.removeItem('hasNewAlarm');
-        set({ token: null });
         window.location.reload();
       },
     }),
@@ -25,5 +24,3 @@ export const useAuthStore = create<AuthState>()(
     },
   ),
 );
-
-// export const authStore = useAuthStore;

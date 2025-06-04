@@ -1,6 +1,7 @@
 import type { AxiosRequestConfig, AxiosError } from 'axios';
 import { instance as axios } from '@/features/Member/auth/utils/axios';
 import { toast } from '@/hooks/useToast';
+import { forceLogout } from '@/features/Member/auth/utils/authManager';
 
 // 공통 요청 핸들러
 export const safeRequest = async <T = any>(config: AxiosRequestConfig): Promise<T | null> => {
@@ -8,8 +9,10 @@ export const safeRequest = async <T = any>(config: AxiosRequestConfig): Promise<
     const authHeader = config.headers?.Authorization;
     if (authHeader && typeof authHeader === 'string') {
       const token = authHeader.split(' ')[1];
-      if (!token) {
+      if (token == 'null' || token == null) {
         console.warn('❗ 인증 토큰이 없는 상태에서 요청이 시도되었습니다.');
+        forceLogout();
+        window.location.href = '/login';
         return null;
       }
     }
