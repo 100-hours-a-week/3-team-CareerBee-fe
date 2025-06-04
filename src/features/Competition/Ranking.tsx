@@ -96,6 +96,37 @@ export default function Ranking() {
     }
   }, [competitionId]);
 
+  const [competitionTime, setCompetitionTime] = useState(false);
+  const [timeUntilStart, setTimeUntilStart] = useState('');
+
+  useEffect(() => {
+    const checkTime = () => {
+      const now = new Date();
+      const utcHours = now.getUTCHours();
+      const utcMinutes = now.getUTCMinutes();
+      const utcSeconds = now.getUTCSeconds();
+      const currentSeconds = utcHours * 3600 + utcMinutes * 60 + utcSeconds;
+      const startSeconds = (13 - 9) * 3600; // 13:00 KST = 04:00 UTC
+      const endSeconds = startSeconds + 10 * 60; // 13:10 KST
+
+      const isCompetitionTime = currentSeconds >= startSeconds && currentSeconds < endSeconds;
+      setCompetitionTime(isCompetitionTime);
+
+      const remainingSeconds = Math.max(currentSeconds - startSeconds, 0);
+      const hours = String(Math.floor(remainingSeconds / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((remainingSeconds % 3600) / 60)).padStart(2, '0');
+      const seconds = String(remainingSeconds % 60).padStart(2, '0');
+      setTimeUntilStart(`${hours}:${minutes}:${seconds}`);
+      // console.log(startSeconds, endSeconds);
+      // console.log(remainingSeconds, minutes, seconds, `${minutes}:${seconds}`);
+      // console.log(timeUntilStart);
+    };
+
+    checkTime();
+    const interval = setInterval(checkTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="py-5">
       <div className="flex justify-between items-center px-6">
@@ -161,6 +192,7 @@ export default function Ranking() {
               </>
             )}
           </div>
+
           {/* 내 랭킹 */}
           <div className="mb-1 text-sm font-bold tracking-tighter">. . .</div>
           <div className="w-[440px] h-[40px] rounded-md flex bg-[url('/assets/red-rank.svg')] bg-contain text-xs flex items-center px-2">
@@ -172,11 +204,19 @@ export default function Ranking() {
             <div className="text-[0.625rem] px-3">5/5</div>
           </div>
         </>
+
+        {/* 대회 입장 버튼 */}
         <div className="my-4 mx-auto">
           <Button
-            label={enter ? '대회 입장' : '이미 참여한 대회입니다.'}
+            label={
+              competitionTime
+                ? enter
+                  ? '대회 입장'
+                  : '이미 참여한 대회입니다.'
+                : `${timeUntilStart}`
+            }
             variant="primary"
-            disabled={!enter}
+            disabled={!enter && !token}
             onClick={() => {
               if (!token) {
                 window.location.href = '/login';
@@ -184,7 +224,7 @@ export default function Ranking() {
               }
               enterCompetition(token);
             }}
-            className="w-64 h-12 text-xl flex mx-auto rounded-xl font-normal"
+            className={`w-64 h-12 ${competitionTime ? 'text-xl' : 'text-2xl'} flex mx-auto rounded-xl font-normal`}
           />
           <div className="flex-col items-center m-2">
             {!token ? (
