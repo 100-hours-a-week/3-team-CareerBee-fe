@@ -201,15 +201,23 @@ export default function Ranking() {
           </div>
 
           {/* 내 랭킹 */}
-          <div className="mb-1 text-sm font-bold tracking-tighter">. . .</div>
-          <div className="w-[440px] h-[40px] rounded-md flex bg-[url('/assets/red-rank.svg')] bg-contain text-xs flex items-center px-2">
-            <div className="pl-2 pr-3 font-bold">1</div>
-            <img src="/assets/no-profile.png" className="w-8 h-8 mx-1.5" alt="프로필 이미지"></img>
-            <img src="/assets/default.svg" className="w-4 h-4 mr-1" alt="뱃지 이미지"></img>
-            <div className="mr-auto">김춘식1</div>
-            <div className="text-[0.625rem] pr-6">03.24.123</div>
-            <div className="text-[0.625rem] px-3">5/5</div>
-          </div>
+          {token && (
+            <>
+              <div className="mb-1 text-sm font-bold tracking-tighter">. . .</div>
+              <div className="w-[440px] h-[40px] rounded-md flex bg-[url('/assets/red-rank.svg')] bg-contain text-xs flex items-center px-2">
+                <div className="pl-2 pr-3 font-bold">1</div>
+                <img
+                  src="/assets/no-profile.png"
+                  className="w-8 h-8 mx-1.5"
+                  alt="프로필 이미지"
+                ></img>
+                <img src="/assets/default.svg" className="w-4 h-4 mr-1" alt="뱃지 이미지"></img>
+                <div className="mr-auto">김춘식1</div>
+                <div className="text-[0.625rem] pr-6">03.24.123</div>
+                <div className="text-[0.625rem] px-3">5/5</div>
+              </div>
+            </>
+          )}
         </>
 
         {/* 대회 입장 버튼 */}
@@ -222,8 +230,8 @@ export default function Ranking() {
                   : '이미 참여한 대회입니다.'
                 : `${timeUntilStart}`
             }
-            variant="primary"
-            disabled={!enter && !token}
+            variant={competitionTime ? 'primary' : 'secondary'}
+            disabled={!competitionTime || !enter || !token}
             onClick={() => {
               if (!token) {
                 window.location.href = '/login';
@@ -231,7 +239,7 @@ export default function Ranking() {
               }
               enterCompetition(token);
             }}
-            className={`w-64 h-12 ${competitionTime ? 'text-xl' : 'text-2xl'} flex mx-auto rounded-xl font-normal`}
+            className={`w-64 h-12 ${competitionTime ? 'text-xl text-text-primary ' : 'text-2xl disabled:opacity-100'} flex mx-auto rounded-xl font-normal`}
           />
           <div className="flex-col items-center m-2">
             {!token ? (
