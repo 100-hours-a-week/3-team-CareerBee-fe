@@ -20,7 +20,7 @@ export default function OAuthCallback() {
           authorizationCode: token,
         });
         if (res) {
-          setToken(res.data.data.accessToken); // ✅ Zustand + persist로 저장됨
+          setToken(res.data.accessToken); // ✅ Zustand + persist로 저장됨
           queryClient.removeQueries({ queryKey: ['userInfo'] });
           queryClient.invalidateQueries({ queryKey: ['userInfo'] });
           window.location.href = '/'; // ✅ 로그인 성공 후 홈으로 이동

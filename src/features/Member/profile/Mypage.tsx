@@ -16,10 +16,7 @@ import { PiCaretRight } from 'react-icons/pi';
 import { useQueryClient } from '@tanstack/react-query';
 
 export default function Mypage() {
-  //TODO: 닉네임이랑 포인트 저장하는 로직 리팩토링
   const token = useAuthStore((state) => state.token);
-  // const [nickname, setNickname] = useState<string>('닉네임');
-  // const pointAmount = localStorage.getItem('point') || '0';
 
   const { data: userInfo } = useUserInfo();
   const queryClient = useQueryClient();
@@ -36,7 +33,7 @@ export default function Mypage() {
       <div className="flex flex-col grow">
         <div className="flex items-center h-fit px-6 py-4 gap-4 border border-transparent border-b-border/30">
           <img
-            src={userInfo?.profileImage || noProfile}
+            src={userInfo?.profileUrl || noProfile}
             className="bg-white rounded-full w-16 h-16 object-fill"
             alt="프로필 이미지"
           ></img>

@@ -6,6 +6,6 @@ export const getUserInfo = async (token: string) => {
       Authorization: `Bearer ${token}`,
     },
   });
-
-  return res.data.data; // { nickname, hasNewNotification, point, profileImage, badgeImage, frameImage }
+  console.log('res', res);
+  return res.data; // { nickname, hasNewNotification, point, profileImage, badgeImage, frameImage }
 };
