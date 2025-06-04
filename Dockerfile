@@ -4,7 +4,7 @@ FROM node:22-alpine AS builder
 WORKDIR /frontend
 
 # 패키지 매니저와 락 파일 복사
-COPY package.json pnpm-lock.yaml .npmrc ./
+COPY package.json pnpm-lock.yaml ./
 
 # pnpm 설치
 RUN corepack enable && corepack prepare pnpm@10.7.1 --activate
@@ -16,9 +16,6 @@ RUN pnpm build
 
 # --- 2단계: 배포용 이미지 (Nginx) ---
 FROM nginx:1.28.0-alpine-slim
-
-# Nginx 기본 conf 대체 (원하면 커스터마이징 가능)
-COPY nginx.conf /etc/nginx/nginx.conf
 
 # 빌드된 정적 파일 복사
 COPY --from=builder /frontend/dist /usr/share/nginx/html
