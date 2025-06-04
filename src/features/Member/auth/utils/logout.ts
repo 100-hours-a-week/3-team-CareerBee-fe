@@ -1,5 +1,6 @@
 import { instance as axios } from '@/features/Member/auth/utils/axios';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
+import { queryClient } from '@/lib/react-query-client';
 
 export const logout = async () => {
   const token = useAuthStore.getState().token;
@@ -13,6 +14,7 @@ export const logout = async () => {
     });
 
     useAuthStore.getState().clearToken?.();
+    queryClient.removeQueries({ queryKey: ['userInfo'] });
     window.location.href = '/';
   } catch (error) {
     console.error('로그아웃 실패:', error);
