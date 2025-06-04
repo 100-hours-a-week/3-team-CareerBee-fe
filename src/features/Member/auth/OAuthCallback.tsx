@@ -1,30 +1,31 @@
-import { useEffect } from 'react';
 import { Loader } from '@/components/ui/loader';
+
 import { useAuthStore } from '@/features/Member/auth/store/auth';
-import { instance as axios } from '@/features/Member/auth/utils/axios';
+import { safePost } from '@/lib/request';
+
+import { useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 export default function OAuthCallback() {
   const setToken = useAuthStore((state) => state.setToken);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const url = new URL(window.location.href);
     const token = url.searchParams.get('code');
 
     if (token) {
-      axios
-        .post(`${import.meta.env.VITE_API_URL}/api/v1/auth/oauth/tokens/kakao`, {
+      (async () => {
+        const res = await safePost('/api/v1/auth/oauth/tokens/kakao', {
           authorizationCode: token,
-        })
-        .then((response) => {
-          const { accessToken, userInfo } = response.data.data;
-          setToken(accessToken); // ✅ Zustand + persist로 저장됨
-          localStorage.setItem('userPoint', userInfo.userPoint);
-          localStorage.setItem('hasNewAlarm', userInfo.hasNewAlarm);
-          window.location.href = '/'; // ✅ 로그인 성공 후 홈으로 이동
-        })
-        .catch((error) => {
-          console.error('Login failed:', error);
         });
+        if (res) {
+          setToken(res.data.accessToken); // ✅ Zustand + persist로 저장됨
+          queryClient.removeQueries({ queryKey: ['userInfo'] });
+          queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+          window.location.href = '/'; // ✅ 로그인 성공 후 홈으로 이동
+        }
+      })();
     } else {
       console.error('❌ No token found in URL');
       window.location.href = '/login'; // ❌ 토큰 없으면 로그인 페이지로

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
-import { safeGet } from '@/lib/request';
+import { useUserInfo } from '@/hooks/useUserInfo';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 import { useCompanyStore } from '@/store/company';
 
@@ -13,26 +13,19 @@ import noProfile from '/assets/no-profile.png';
 import point from '@/features/Member/notification/image/point.png';
 import { PiCaretRight } from 'react-icons/pi';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 export default function Mypage() {
-  //TODO: 닉네임이랑 포인트 저장하는 로직 리팩토링
   const token = useAuthStore((state) => state.token);
-  const [nickname, setNickname] = useState<string>('닉네임');
-  const pointAmount = localStorage.getItem('point') || '0';
-  const { setIsBookmarked } = useCompanyStore();
+
+  const { data: userInfo } = useUserInfo();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    (async () => {
-      const res = await safeGet('/api/v1/members', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res) {
-        setNickname(res.data.data.nickname);
-      }
-    })();
-  }, [token]);
+    queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+  }, []);
 
+  const { setIsBookmarked } = useCompanyStore();
   const companies = [...Array(0)];
 
   return (
@@ -40,13 +33,13 @@ export default function Mypage() {
       <div className="flex flex-col grow">
         <div className="flex items-center h-fit px-6 py-4 gap-4 border border-transparent border-b-border/30">
           <img
-            src={noProfile}
+            src={userInfo?.profileUrl || noProfile}
             className="bg-white rounded-full w-16 h-16 object-fill"
             alt="프로필 이미지"
           ></img>
           <div className="flex flex-col my-auto mr-auto text-text-primary gap-1">
             <div className="flex items-center gap-1 [&_svg]:size-5">
-              <div className="text-xl my-auto font-bold">{nickname}</div>
+              <div className="text-xl my-auto font-bold">{userInfo?.nickname || '닉네임'}</div>
               <Button
                 variant="icon"
                 label={<PiCaretRight className="text-text-secondary" />}
@@ -58,7 +51,7 @@ export default function Mypage() {
             </div>
             <div className="flex items-center gap-1">
               <img src={point} className="w-4 h-4 inline-block" alt="포인트 아이콘" />
-              <div className="text-sm">{pointAmount}</div>
+              <div className="text-sm">{userInfo?.point || 0}</div>
             </div>
           </div>
           <Button
