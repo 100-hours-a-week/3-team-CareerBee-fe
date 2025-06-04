@@ -106,20 +106,27 @@ export default function Ranking() {
       const utcMinutes = now.getUTCMinutes();
       const utcSeconds = now.getUTCSeconds();
       const currentSeconds = utcHours * 3600 + utcMinutes * 60 + utcSeconds;
-      const startSeconds = (13 - 9) * 3600; // 13:00 KST = 04:00 UTC
-      const endSeconds = startSeconds + 10 * 60; // 13:10 KST
 
-      const isCompetitionTime = currentSeconds >= startSeconds && currentSeconds < endSeconds;
-      setCompetitionTime(isCompetitionTime);
+      const KST_COMPETITION_HOUR = 13;
+      const KST_TO_UTC_OFFSET = 9;
 
-      const remainingSeconds = Math.max(currentSeconds - startSeconds, 0);
+      let startUTCSeconds = (KST_COMPETITION_HOUR - KST_TO_UTC_OFFSET) * 3600; // 13:00 KST = 04:00 UTC
+
+      if (currentSeconds >= startUTCSeconds + 10 * 60) {
+        startUTCSeconds += 24 * 3600; // 내일 13:00 KST (UTC 기준)
+      }
+
+      const remainingSeconds = startUTCSeconds - currentSeconds;
       const hours = String(Math.floor(remainingSeconds / 3600)).padStart(2, '0');
       const minutes = String(Math.floor((remainingSeconds % 3600) / 60)).padStart(2, '0');
       const seconds = String(remainingSeconds % 60).padStart(2, '0');
       setTimeUntilStart(`${hours}:${minutes}:${seconds}`);
-      // console.log(startSeconds, endSeconds);
-      // console.log(remainingSeconds, minutes, seconds, `${minutes}:${seconds}`);
-      // console.log(timeUntilStart);
+
+      const isCompetitionTime =
+        currentSeconds >= (KST_COMPETITION_HOUR - KST_TO_UTC_OFFSET) * 3600 &&
+        currentSeconds < (KST_COMPETITION_HOUR - KST_TO_UTC_OFFSET) * 3600 + 10 * 60;
+
+      setCompetitionTime(isCompetitionTime);
     };
 
     checkTime();
