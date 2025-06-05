@@ -11,6 +11,7 @@ import { safeGet } from '@/lib/request';
 import { cn } from '@/lib/utils';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
+import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 
 const rankCardStyles = {
   green: { bgImage: 'week-green-rank.svg', height: '120px', marginTop: 'mt-5' },
@@ -48,7 +49,7 @@ const RankCard = ({
 };
 
 export default function Ranking() {
-  const [competitionId, setCompetitionId] = useState<number | null>(null);
+  const { competitionId, setCompetitionId } = useCompetitionStore();
   useEffect(() => {
     (async () => {
       const res = await safeGet('/api/v1/competitions/ids');
@@ -56,7 +57,7 @@ export default function Ranking() {
         setCompetitionId(res.data.competitionId);
       }
     })();
-  }, []);
+  }, [setCompetitionId]);
 
   const token = useAuthStore((state) => state.token);
   const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
