@@ -148,6 +148,23 @@ export default function Competition() {
                 }, 5000);
               } else {
                 setIsSubmitted(true);
+                const correctCount = problems.filter(
+                  (_, index) => selectedAnswers[index] === problems[index].answer,
+                ).length;
+                (async () => {
+                  const res = await safePost(`/api/v1/competitions/${competitionId}/results`, {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                      solvedCount: correctCount,
+                      elapsedTime: 60000 - timeLeft,
+                    }),
+                  });
+                  if (res.status !== 200) {
+                    alert('제출에 실패했습니다.');
+                  }
+                })();
               }
             }}
           ></Button>
