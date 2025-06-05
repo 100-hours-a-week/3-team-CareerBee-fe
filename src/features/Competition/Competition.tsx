@@ -47,9 +47,9 @@ export default function Competition() {
           {formatTime(timeLeft)}
         </div>
       </div>
-      <div className="flex justify-between items-stretch mt-2 max-w-[552px] min-w-[352px] w-full h-full">
+      <div className="flex justify-between items-stretch mt-2 w-full h-full">
         <img src={MoveLeft} alt="뒤로가기" className="h-16 my-auto" />
-        <div className="flex flex-col justify-between items-center max-w-[25rem] mx-auto min-h-[36rem] h-full">
+        <div className="flex flex-col justify-between items-center w-[25rem] mx-auto min-h-[36rem] h-full">
           <Tabs defaultValue="1" className="mb-auto w-full">
             <TabsList>
               {[1, 2, 3, 4, 5].map((num, index) => (
@@ -65,7 +65,7 @@ export default function Competition() {
               ))}
             </TabsList>
             {[1, 2, 3, 4, 5].map((num, index) => (
-              <TabsContent key={num} value={String(num)} className="grow px-0">
+              <TabsContent key={num} value={String(num)} className="h-[31.25rem] px-0">
                 <Question
                   value={String(num)}
                   selectedValue={selectedAnswers[index]}
