@@ -55,18 +55,24 @@ export default function Competition() {
   };
 
   const [problems, setProblems] = useState<Problem[]>([]);
-  const competitionId = useCompetitionStore.getState().competitionId;
+  const competitionId =
+    import.meta.env.VITE_USE_MOCK === 'true' ? 1 : useCompetitionStore.getState().competitionId;
   const token = useAuthStore((state) => state.token);
-  // let problems: Problem[];
   useEffect(() => {
     (async () => {
-      const res = await safeGet(`/api/v1/competitions/${competitionId}/problems`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.status === 200) {
+      if (import.meta.env.VITE_USE_MOCK === 'true') {
+        const mock = await fetch('/mock/mock-problems.json');
+        const res = await mock.json();
         setProblems(res.data.problems);
+      } else {
+        const res = await safeGet(`/api/v1/competitions/${competitionId}/problems`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res.status === 200) {
+          setProblems(res.data.problems);
+        }
       }
     })();
   }, []);
@@ -89,7 +95,7 @@ export default function Competition() {
         <div className="flex flex-col justify-between items-center max-w-[25rem] mx-auto min-h-[36rem] h-full">
           <Tabs defaultValue="1" className="mb-auto w-full">
             <TabsList>
-              {problems.map((problem, index: number) => (
+              {problems.map((_problem, index: number) => (
                 <TabsTrigger
                   key={index}
                   value={String(index + 1)}

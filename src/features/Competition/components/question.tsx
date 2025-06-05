@@ -2,20 +2,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Correct from '@/features/Competition/image/correct.png';
 import Incorrect from '@/features/Competition/image/incorrect.png';
 import { cn } from '@/lib/utils';
-import { Choice, Problem } from '../Competition';
-
-const answers = [
-  {
-    id: 'radio1',
-    value: 'radio1',
-    label:
-      '타임 슬라이스(Time Slice)를 일정하게 설정하고 각 프로세스가 정해진 시간 동안 CPU를 이동하여 대기하도록 하는 선점형 스케줄링 알고리즘은 무엇인지',
-  },
-  { id: 'radio2', value: 'radio2', label: 'Option Two' },
-  { id: 'radio3', value: 'radio3', label: 'Option Three' },
-  { id: 'radio4', value: 'radio4', label: 'Option Four' },
-  { id: 'radio5', value: 'radio5', label: 'Option Five' },
-];
+import { Problem } from '../Competition';
 
 type QuestionProps = {
   value: string;
@@ -23,7 +10,6 @@ type QuestionProps = {
   selectedValue: number;
   onChange: (_value: string) => void;
   problem: Problem;
-  // answer: string;
 };
 export default function Question({
   value,
@@ -31,7 +17,6 @@ export default function Question({
   selectedValue,
   onChange,
   problem,
-  // answer,
 }: QuestionProps) {
   return (
     <div className="relative">
@@ -91,11 +76,7 @@ export default function Question({
             })}
           </RadioGroup>
         </>
-        <>
-          {showExplanation && (
-            <div className="mt-8">맨 뒤로 이동하여 대기하는건 RR (라운드로빈)입니다.</div>
-          )}
-        </>
+        <>{showExplanation && <div className="mt-8">{problem.solution}</div>}</>
       </div>
     </div>
   );
