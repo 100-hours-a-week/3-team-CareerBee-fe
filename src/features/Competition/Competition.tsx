@@ -12,6 +12,19 @@ import { useCompetitionStore } from '@/features/Competition/store/competitionSto
 
 import { useEffect, useState } from 'react';
 
+export interface Choice {
+  order: number;
+  content: string;
+}
+export interface Problem {
+  number: number;
+  title: string;
+  description: string;
+  solution: string;
+  answer: number;
+  choices: Choice[];
+}
+
 export default function Competition() {
   // TODO: 대회 남은 시간으로 바꾸기
   const [timeLeft, setTimeLeft] = useState(60000);
@@ -41,15 +54,10 @@ export default function Competition() {
     return `${minutes} : ${seconds} : ${hundredths}`;
   };
 
-  const [selectedAnswers, setSelectedAnswers] = useState<string[]>(['', '', '', '', '']);
-  const notAnswered = selectedAnswers.every((answer) => answer !== '');
-  const isSolved = (index: number) => selectedAnswers[index] !== '';
-  const isCorrect = (index: number) =>
-    isSubmitted ? selectedAnswers[index] === 'radio1' : undefined;
-
+  const [problems, setProblems] = useState<Problem[]>([]);
   const competitionId = useCompetitionStore.getState().competitionId;
   const token = useAuthStore((state) => state.token);
-
+  // let problems: Problem[];
   useEffect(() => {
     (async () => {
       const res = await safeGet(`/api/v1/competitions/${competitionId}/problems`, {
@@ -58,10 +66,16 @@ export default function Competition() {
         },
       });
       if (res.status === 200) {
-        const problems = res.data.problems;
+        setProblems(res.data.problems);
       }
     })();
   }, []);
+
+  const [selectedAnswers, setSelectedAnswers] = useState<number[]>([0, 0, 0, 0, 0]);
+  const notAnswered = selectedAnswers.every((answer) => answer !== 0);
+  const isSolved = (index: number) => selectedAnswers[index] !== 0;
+  const isCorrect = (index: number) =>
+    isSubmitted ? selectedAnswers[index] === problems[index].answer : undefined;
 
   return (
     <div className="flex flex-col justify-start items-center px-6 pt-8 min-h-[calc(100dvh-3.5rem)]">
@@ -75,30 +89,30 @@ export default function Competition() {
         <div className="flex flex-col justify-between items-center max-w-[25rem] mx-auto min-h-[36rem] h-full">
           <Tabs defaultValue="1" className="mb-auto w-full">
             <TabsList>
-              {[1, 2, 3, 4, 5].map((num, index) => (
+              {problems.map((problem, index: number) => (
                 <TabsTrigger
-                  key={num}
-                  value={String(num)}
+                  key={index}
+                  value={String(index + 1)}
                   variant="pill"
                   isSolved={isSolved(index)}
                   isCorrect={isCorrect(index)}
                 >
-                  {num}
+                  {index + 1}
                 </TabsTrigger>
               ))}
             </TabsList>
-            {[1, 2, 3, 4, 5].map((num, index) => (
-              <TabsContent key={num} value={String(num)} className="grow px-0">
+            {problems.map((problem, index: number) => (
+              <TabsContent key={index} value={String(index + 1)} className="grow px-0">
                 <Question
-                  value={String(num)}
+                  value={String(index + 1)}
                   selectedValue={selectedAnswers[index]}
                   onChange={(val: string) => {
                     const next = [...selectedAnswers];
-                    next[index] = val;
+                    next[index] = +val;
                     setSelectedAnswers(next);
                   }}
                   showExplanation={isSubmitted}
-                  answer="radio1"
+                  problem={problem}
                 />
               </TabsContent>
             ))}
