@@ -1,10 +1,16 @@
-import { useEffect, useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import Question from './components/question';
 import MoveLeft from '@/features/Competition/image/caret-left.svg';
 import MoveRight from '@/features/Competition/image/caret-right.svg';
 import PointPopup from '@/features/Competition/components/pointPopup';
+
+import { safeGet } from '@/lib/request';
+
+import { useAuthStore } from '../Member/auth/store/auth';
+import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
+
+import { useEffect, useState } from 'react';
 
 export default function Competition() {
   // TODO: 대회 남은 시간으로 바꾸기
@@ -40,6 +46,23 @@ export default function Competition() {
   const isSolved = (index: number) => selectedAnswers[index] !== '';
   const isCorrect = (index: number) =>
     isSubmitted ? selectedAnswers[index] === 'radio1' : undefined;
+
+  const competitionId = useCompetitionStore.getState().competitionId;
+  const token = useAuthStore((state) => state.token);
+
+  useEffect(() => {
+    (async () => {
+      const res = await safeGet(`/api/v1/competitions/${competitionId}/problems`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status === 200) {
+        const problems = res.data.problems;
+      }
+    })();
+  }, []);
+
   return (
     <div className="flex flex-col justify-start items-center px-6 pt-8 min-h-[calc(100dvh-3.5rem)]">
       <div className="flex h-full min-h-[48px] max-h-[96px]">
