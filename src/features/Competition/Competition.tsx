@@ -5,7 +5,7 @@ import MoveLeft from '@/features/Competition/image/caret-left.svg';
 import MoveRight from '@/features/Competition/image/caret-right.svg';
 import PointPopup from '@/features/Competition/components/pointPopup';
 
-import { safeGet } from '@/lib/request';
+import { safeGet, safePost } from '@/lib/request';
 
 import { useAuthStore } from '../Member/auth/store/auth';
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
@@ -73,6 +73,17 @@ export default function Competition() {
         if (res.status === 200) {
           setProblems(res.data.problems);
         }
+      }
+    })();
+
+    (async () => {
+      const res = await safePost(`/api/v1/competitions/${competitionId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status !== 204) {
+        alert('대회 참가에 실패했습니다.');
       }
     })();
   }, []);
