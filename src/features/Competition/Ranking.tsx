@@ -5,10 +5,8 @@ import DailyBarChart from '@/features/Competition/utils/dailyChart';
 import WeeklyBarChart from '@/features/Competition/utils/weeklyChart';
 import MonthlyBarChart from '@/features/Competition/utils/monthlyChart';
 
-import { toast } from '@/hooks/useToast';
 import { useAuthStore } from '../Member/auth/store/auth';
-import { instance as axios } from '../Member/auth/utils/axios';
-import { safeGet, safePost } from '@/lib/request';
+import { safeGet } from '@/lib/request';
 
 import { cn } from '@/lib/utils';
 import { motion } from 'motion/react';
@@ -49,21 +47,6 @@ const RankCard = ({
   );
 };
 
-const enterCompetition = async (token: string | null) => {
-  try {
-    const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/competitions`, null, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (res.status === 204) {
-      window.location.href = '/competition/entry';
-    }
-  } catch {
-    toast({ title: '대회 참가에 실패했습니다.' });
-  }
-};
-
 export default function Ranking() {
   const [competitionId, setCompetitionId] = useState<number | null>(null);
   useEffect(() => {
@@ -77,7 +60,7 @@ export default function Ranking() {
 
   const token = useAuthStore((state) => state.token);
   const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
-  const [enter, setEnter] = useState(false);
+  const [alreadyEntered, setAlreadyEntered] = useState(false);
 
   const joined = async () => {
     const res = await safeGet(`/api/v1/competitions/${competitionId}`, {
@@ -86,7 +69,7 @@ export default function Ranking() {
       },
     });
     if (res.status === 200) {
-      setEnter(!res.data.isParticipant);
+      setAlreadyEntered(res.data.isParticipant);
     }
   };
 
@@ -95,6 +78,44 @@ export default function Ranking() {
       joined();
     }
   }, [competitionId]);
+
+  const [competitionTime, setCompetitionTime] = useState(false);
+  const [timeUntilStart, setTimeUntilStart] = useState('');
+
+  useEffect(() => {
+    const checkTime = () => {
+      const now = new Date();
+      const utcHours = now.getUTCHours();
+      const utcMinutes = now.getUTCMinutes();
+      const utcSeconds = now.getUTCSeconds();
+      const currentSeconds = utcHours * 3600 + utcMinutes * 60 + utcSeconds;
+
+      const KST_COMPETITION_HOUR = 13;
+      const KST_TO_UTC_OFFSET = 9;
+
+      let startUTCSeconds = (KST_COMPETITION_HOUR - KST_TO_UTC_OFFSET) * 3600; // 13:00 KST = 04:00 UTC
+
+      if (currentSeconds >= startUTCSeconds + 10 * 60) {
+        startUTCSeconds += 24 * 3600; // 내일 13:00 KST (UTC 기준)
+      }
+
+      const remainingSeconds = startUTCSeconds - currentSeconds;
+      const hours = String(Math.floor(remainingSeconds / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((remainingSeconds % 3600) / 60)).padStart(2, '0');
+      const seconds = String(remainingSeconds % 60).padStart(2, '0');
+      setTimeUntilStart(`${hours}:${minutes}:${seconds}`);
+
+      const isCompetitionTime =
+        currentSeconds >= (KST_COMPETITION_HOUR - KST_TO_UTC_OFFSET) * 3600 &&
+        currentSeconds < (KST_COMPETITION_HOUR - KST_TO_UTC_OFFSET) * 3600 + 10 * 60;
+
+      setCompetitionTime(isCompetitionTime);
+    };
+
+    checkTime();
+    const interval = setInterval(checkTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="py-5">
@@ -161,30 +182,46 @@ export default function Ranking() {
               </>
             )}
           </div>
+
           {/* 내 랭킹 */}
-          <div className="mb-1 text-sm font-bold tracking-tighter">. . .</div>
-          <div className="w-[440px] h-[40px] rounded-md flex bg-[url('/assets/red-rank.svg')] bg-contain text-xs flex items-center px-2">
-            <div className="pl-2 pr-3 font-bold">1</div>
-            <img src="/assets/no-profile.png" className="w-8 h-8 mx-1.5" alt="프로필 이미지"></img>
-            <img src="/assets/default.svg" className="w-4 h-4 mr-1" alt="뱃지 이미지"></img>
-            <div className="mr-auto">김춘식1</div>
-            <div className="text-[0.625rem] pr-6">03.24.123</div>
-            <div className="text-[0.625rem] px-3">5/5</div>
-          </div>
+          {token && (
+            <>
+              <div className="mb-1 text-sm font-bold tracking-tighter">. . .</div>
+              <div className="w-[440px] h-[40px] rounded-md flex bg-[url('/assets/red-rank.svg')] bg-contain text-xs flex items-center px-2">
+                <div className="pl-2 pr-3 font-bold">1</div>
+                <img
+                  src="/assets/no-profile.png"
+                  className="w-8 h-8 mx-1.5"
+                  alt="프로필 이미지"
+                ></img>
+                <img src="/assets/default.svg" className="w-4 h-4 mr-1" alt="뱃지 이미지"></img>
+                <div className="mr-auto">김춘식1</div>
+                <div className="text-[0.625rem] pr-6">03.24.123</div>
+                <div className="text-[0.625rem] px-3">5/5</div>
+              </div>
+            </>
+          )}
         </>
+
+        {/* 대회 입장 버튼 */}
         <div className="my-4 mx-auto">
           <Button
-            label={enter ? '대회 입장' : '이미 참여한 대회입니다.'}
-            variant="primary"
-            disabled={!enter}
+            label={
+              competitionTime
+                ? alreadyEntered
+                  ? '이미 참여한 대회입니다.'
+                  : '대회 입장'
+                : `${timeUntilStart}`
+            }
+            variant={competitionTime ? 'primary' : 'secondary'}
+            disabled={!competitionTime || alreadyEntered || !token}
             onClick={() => {
               if (!token) {
                 window.location.href = '/login';
                 return;
               }
-              enterCompetition(token);
             }}
-            className="w-64 h-12 text-xl flex mx-auto rounded-xl font-normal"
+            className={`w-64 h-12 ${competitionTime ? 'text-xl text-text-primary ' : 'text-2xl disabled:opacity-100'} flex mx-auto rounded-xl font-normal`}
           />
           <div className="flex-col items-center m-2">
             {!token ? (

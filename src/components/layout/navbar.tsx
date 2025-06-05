@@ -72,9 +72,11 @@ export const Navbar = () => {
   return (
     <div className="flex items-center justify-between px-8 h-16 w-full gap-2 bg-background">
       {navItems.map((item) => (
-        <div className="flex flex-col gap-0.5 justify-center items-center [&_svg]:size-7">
+        <div
+          key={item.id}
+          className="flex flex-col gap-0.5 justify-center items-center [&_svg]:size-7"
+        >
           <a
-            key={item.id}
             href={item.href}
             onClick={(e) => {
               if (isCompanyDetailPage && item.href === '/') {
