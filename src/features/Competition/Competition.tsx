@@ -11,6 +11,7 @@ export default function Competition() {
   const [timeLeft, setTimeLeft] = useState(60000);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showPointResult, setShowPointResult] = useState(false);
+  const [currentTab, setCurrentTab] = useState(1);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -48,9 +49,22 @@ export default function Competition() {
         </div>
       </div>
       <div className="flex justify-between items-stretch mt-2 w-full h-full">
-        <img src={MoveLeft} alt="뒤로가기" className="h-16 my-auto" />
+        {currentTab > 1 ? (
+          <img
+            src={MoveLeft}
+            alt="이전 문제"
+            className="h-16 my-auto cursor-pointer"
+            onClick={() => setCurrentTab((prev) => Math.max(1, prev - 1))}
+          />
+        ) : (
+          <div className="h-16 w-8 my-auto"></div>
+        )}
         <div className="flex flex-col justify-between items-center w-[25rem] mx-auto min-h-[36rem] h-full">
-          <Tabs defaultValue="1" className="mb-auto w-full">
+          <Tabs
+            value={String(currentTab)}
+            onValueChange={(val) => setCurrentTab(Number(val))}
+            className="mb-auto w-full"
+          >
             <TabsList>
               {[1, 2, 3, 4, 5].map((num, index) => (
                 <TabsTrigger
@@ -99,7 +113,16 @@ export default function Competition() {
           ></Button>
           <div className="h-12" />
         </div>
-        <img src={MoveRight} alt="뒤로가기" className="h-16 my-auto" />
+        {currentTab < 5 ? (
+          <img
+            src={MoveRight}
+            alt="다음 문제"
+            className="h-16 my-auto cursor-pointer"
+            onClick={() => setCurrentTab((prev) => Math.min(5, prev + 1))}
+          />
+        ) : (
+          <div className="h-16 w-8 my-auto"></div>
+        )}
       </div>
       {showPointResult && <PointPopup points={5} />}
     </div>
