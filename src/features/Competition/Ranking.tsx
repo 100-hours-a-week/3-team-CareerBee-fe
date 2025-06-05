@@ -1,19 +1,24 @@
-import { useState } from 'react';
-import { motion } from 'motion/react';
+import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
+
+import { Button } from '@/components/ui/button';
 import DailyBarChart from '@/features/Competition/utils/dailyChart';
 import WeeklyBarChart from '@/features/Competition/utils/weeklyChart';
 import MonthlyBarChart from '@/features/Competition/utils/monthlyChart';
-import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
-import { Button } from '@/components/ui/button';
+
+import { toast } from '@/hooks/useToast';
 import { useAuthStore } from '../Member/auth/store/auth';
+import { instance as axios } from '../Member/auth/utils/axios';
+import { safeGet, safePost } from '@/lib/request';
+
 import { cn } from '@/lib/utils';
+import { motion } from 'motion/react';
+import { useEffect, useState } from 'react';
 
 const rankCardStyles = {
   green: { bgImage: 'week-green-rank.svg', height: '120px', marginTop: 'mt-5' },
   red: { bgImage: 'week-red-rank.svg', height: '128px', marginTop: 'mt-6' },
   blue: { bgImage: 'week-blue-rank.svg', height: '104px', marginTop: 'mt-[1.125rem]' },
 };
-
 const RankCard = ({
   styleKey,
   nickname,
@@ -44,9 +49,52 @@ const RankCard = ({
   );
 };
 
+const enterCompetition = async (token: string | null) => {
+  try {
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/competitions`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (res.status === 204) {
+      window.location.href = '/competition/entry';
+    }
+  } catch {
+    toast({ title: '대회 참가에 실패했습니다.' });
+  }
+};
+
 export default function Ranking() {
+  const [competitionId, setCompetitionId] = useState<number | null>(null);
+  useEffect(() => {
+    (async () => {
+      const res = await safeGet('/api/v1/competitions/ids');
+      if (res.status === 200) {
+        setCompetitionId(res.data.competitionId);
+      }
+    })();
+  }, []);
+
   const token = useAuthStore((state) => state.token);
   const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
+  const [enter, setEnter] = useState(false);
+
+  const joined = async () => {
+    const res = await safeGet(`/api/v1/competitions/${competitionId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (res.status === 200) {
+      setEnter(!res.data.isParticipant);
+    }
+  };
+
+  useEffect(() => {
+    if (competitionId != null) {
+      joined();
+    }
+  }, [competitionId]);
 
   return (
     <div className="py-5">
@@ -126,16 +174,17 @@ export default function Ranking() {
         </>
         <div className="my-4 mx-auto">
           <Button
-            label="00 : 00 : 00"
-            variant="secondary"
+            label={enter ? '대회 입장' : '이미 참여한 대회입니다.'}
+            variant="primary"
+            disabled={!enter}
             onClick={() => {
               if (!token) {
                 window.location.href = '/login';
                 return;
               }
-              window.location.href = '/competition/entry';
+              enterCompetition(token);
             }}
-            className="w-64 h-12 text-2xl flex mx-auto rounded-xl font-normal"
+            className="w-64 h-12 text-xl flex mx-auto rounded-xl font-normal"
           />
           <div className="flex-col items-center m-2">
             {!token ? (
