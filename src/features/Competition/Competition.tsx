@@ -1,15 +1,15 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { StateBasedModal } from '@/components/ui/modal';
 import Question from './components/question';
 import MoveLeft from '@/features/Competition/image/caret-left.svg';
 import MoveRight from '@/features/Competition/image/caret-right.svg';
 import PointPopup from '@/features/Competition/components/pointPopup';
 import Timer from '@/features/Competition/components/timer';
 
-import { safeGet, safePost } from '@/lib/request';
-
-import { useAuthStore } from '../Member/auth/store/auth';
-import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
+import { useCompetitionSubmit } from '@/features/Competition/hooks/useCompetitionSubmit';
+import { useCompetitionTimer } from '@/features/Competition/hooks/useCompetitionTimer';
+import { useCompetitionData } from '@/features/Competition/hooks/useCompetitionData';
 
 import { useEffect, useState } from 'react';
 
@@ -27,61 +27,17 @@ export interface Problem {
 }
 
 export default function Competition() {
-  // TODO: 대회 남은 시간으로 바꾸기
-  const [timeLeft, setTimeLeft] = useState(60000);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showPointResult, setShowPointResult] = useState(false);
   const [currentTab, setCurrentTab] = useState(1);
+  const [showTimeOverModal, setShowTimeOverModal] = useState(false);
 
+  const { timeLeft, setTimeLeft } = useCompetitionTimer(isSubmitted, setShowTimeOverModal);
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (isSubmitted) {
-          return prev;
-        }
-        if (prev <= 0) {
-          clearInterval(interval);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 10);
-    return () => clearInterval(interval);
-  }, [isSubmitted]);
+    if (isSubmitted === false && timeLeft <= 0) setShowTimeOverModal(true);
+  }, [timeLeft]);
 
-  const [problems, setProblems] = useState<Problem[]>([]);
-  const competitionId =
-    import.meta.env.VITE_USE_MOCK === 'true' ? 1 : useCompetitionStore.getState().competitionId;
-  const token = useAuthStore((state) => state.token);
-  useEffect(() => {
-    (async () => {
-      if (import.meta.env.VITE_USE_MOCK === 'true') {
-        const mock = await fetch('/mock/mock-problems.json');
-        const res = await mock.json();
-        setProblems(res.data.problems);
-      } else {
-        const res = await safeGet(`/api/v1/competitions/${competitionId}/problems`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (res.status === 200) {
-          setProblems(res.data.problems);
-        }
-      }
-    })();
-
-    (async () => {
-      const res = await safePost(`/api/v1/competitions/${competitionId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.status !== 204) {
-        alert('대회 참가에 실패했습니다.');
-      }
-    })();
-  }, []);
+  const { problems } = useCompetitionData();
 
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([0, 0, 0, 0, 0]);
   const notAnswered = selectedAnswers.every((answer) => answer !== 0);
@@ -89,14 +45,24 @@ export default function Competition() {
   const isCorrect = (index: number) =>
     isSubmitted ? selectedAnswers[index] === problems[index].answer : undefined;
 
+  const { handleSubmitClick } = useCompetitionSubmit({
+    problems,
+    selectedAnswers,
+    timeLeft,
+    setIsSubmitted,
+    setShowPointResult,
+  });
+
   return (
     <div className="flex flex-col justify-start items-center px-6 pt-8 min-h-[calc(100dvh-3.5rem)]">
+      {/* 타이머 */}
       <div className="flex h-full min-h-[48px] max-h-[96px]">
         <div className="w-[17rem] mx-auto font-medium text-5xl px-8 mb-auto">
           <Timer KST_DUE_TIME_MS={13 * 60 * 60 * 1000 + 10 * 60 * 1000} mode="msms"></Timer>
         </div>
       </div>
       <div className="flex justify-between items-stretch mt-2 w-full h-full">
+        {/* 이전 버튼 */}
         {currentTab > 1 ? (
           <img
             src={MoveLeft}
@@ -108,6 +74,7 @@ export default function Competition() {
           <div className="h-16 w-8 my-auto"></div>
         )}
         <div className="flex flex-col justify-between items-center w-[25rem] mx-auto min-h-[36rem] h-full">
+          {/* 문제 */}
           <Tabs
             value={String(currentTab)}
             onValueChange={(val) => setCurrentTab(Number(val))}
@@ -142,42 +109,18 @@ export default function Competition() {
               </TabsContent>
             ))}
           </Tabs>
+          {/* 제출 버튼 */}
           <Button
             variant="primary"
             label={isSubmitted ? '랭킹보러가기' : '제출하기'}
             fullWidth={true}
             disabled={!notAnswered}
             className="mt-4"
-            onClick={() => {
-              if (isSubmitted) {
-                setShowPointResult(true);
-                setTimeout(() => {
-                  window.location.href = '/competition';
-                }, 5000);
-              } else {
-                setIsSubmitted(true);
-                const correctCount = problems.filter(
-                  (_, index) => selectedAnswers[index] === problems[index].answer,
-                ).length;
-                (async () => {
-                  const res = await safePost(`/api/v1/competitions/${competitionId}/results`, {
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                      solvedCount: correctCount,
-                      elapsedTime: 60000 - timeLeft,
-                    }),
-                  });
-                  if (res.status !== 200) {
-                    alert('제출에 실패했습니다.');
-                  }
-                })();
-              }
-            }}
+            onClick={() => handleSubmitClick(isSubmitted)}
           ></Button>
           <div className="h-12" />
         </div>
+        {/* 다음 문제 */}
         {currentTab < 5 ? (
           <img
             src={MoveRight}
@@ -190,6 +133,17 @@ export default function Competition() {
         )}
       </div>
       {showPointResult && <PointPopup points={5} />}
+      <StateBasedModal
+        open={showTimeOverModal}
+        onOpenChange={setShowTimeOverModal}
+        title="대회가 종료되었어요."
+        description={<>곧 랭킹 페이지로 이동할게요.</>}
+        actionText="바로 이동하기"
+        cancelButton={false}
+        onAction={() => {
+          window.location.href = '/competition';
+        }}
+      />
     </div>
   );
 }

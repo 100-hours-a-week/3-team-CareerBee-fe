@@ -123,7 +123,9 @@ const AlertDialogCancel = React.forwardRef<
 AlertDialogCancel.displayName = AlertDialogPrimitive.Cancel.displayName;
 
 interface ModalProps {
-  trigger: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  trigger?: React.ReactNode;
   title: string;
   description: React.ReactNode;
   cancelText?: string;
@@ -149,6 +151,46 @@ export const Modal = ({
           ref: triggerRef,
         })}
       </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <div className="flex items-center justify-center">
+            <AlertDialogTitle>{title}</AlertDialogTitle>
+            {cancelButton ? (
+              <AlertDialogCancel
+                variant="transparent"
+                className="p-1 text-text-primary hover:text-foreground"
+              >
+                <PiX className="iconSize-default" />
+              </AlertDialogCancel>
+            ) : null}
+          </div>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          {cancelText ? <AlertDialogCancel className="w-28">{cancelText}</AlertDialogCancel> : null}
+          {actionText ? (
+            <AlertDialogAction className="w-28" onClick={onAction}>
+              {actionText}
+            </AlertDialogAction>
+          ) : null}
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+export const StateBasedModal = ({
+  open,
+  onOpenChange,
+  title,
+  description,
+  cancelText,
+  actionText,
+  cancelButton = false,
+  onAction,
+}: ModalProps) => {
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <div className="flex items-center justify-center">

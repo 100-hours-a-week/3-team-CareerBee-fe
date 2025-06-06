@@ -1,8 +1,13 @@
 import { PiBell, PiCaretDown, PiCaretLeft } from 'react-icons/pi';
-import { cn } from '@/lib/utils';
-import { useNavigate } from 'react-router-dom';
 import logo from '@/static/logo-with-text-2.png';
+
+import { StateBasedModal } from '@/components/ui/modal';
+
 import { useUiStore } from '@/store/ui';
+
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 interface HeaderProps {
   type: 'main' | 'login' | 'down' | 'downLogin' | 'nav' | 'navLogin' | 'minimal';
   point?: number;
@@ -11,6 +16,8 @@ interface HeaderProps {
 
 export const Header = ({ type = 'main', point = 0, hasNewNotification = false }: HeaderProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [showBackConfirmModal, setShowBackConfirmModal] = useState(false);
   const showUserAssets = type === 'main' || type === 'down' || type === 'nav';
   const isDown = type === 'down' || type === 'downLogin';
   const isNav = type === 'nav' || type === 'minimal' || type === 'navLogin';
@@ -34,9 +41,34 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
       {/* 왼쪽 영역 */}
       <div className="flex items-center gap-2">
         {isNav ? (
-          <button onClick={() => navigate(-1)} style={{ padding: 'inherit' }}>
-            <PiCaretLeft className="w-7 h-7 " />
-          </button>
+          <>
+            <button
+              onClick={() => {
+                if (location.pathname.startsWith('/competition/entry')) {
+                  setShowBackConfirmModal(true);
+                } else {
+                  navigate(-1);
+                }
+              }}
+              style={{ padding: 'inherit' }}
+            >
+              <PiCaretLeft className="w-7 h-7 " />
+            </button>
+            <StateBasedModal
+              open={showBackConfirmModal}
+              onOpenChange={setShowBackConfirmModal}
+              title="대회를 정말 종료할까요?"
+              description={
+                <>종료하면 지금까지 입력한 답변은 모두 삭제되고 다시 참여할 수 없어요.</>
+              }
+              actionText="종료하기"
+              cancelText="계속하기"
+              onAction={() => {
+                setShowBackConfirmModal(false);
+                navigate(-1);
+              }}
+            />
+          </>
         ) : isDown ? (
           <button
             onClick={() => {
