@@ -1,5 +1,4 @@
 import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
-import noProfile from '/assets/no-profile.png';
 
 import { Button } from '@/components/ui/button';
 import DailyBarChart from '@/features/Competition/utils/dailyChart';
@@ -7,11 +6,10 @@ import WeeklyBarChart from '@/features/Competition/utils/weeklyChart';
 import MonthlyBarChart from '@/features/Competition/utils/monthlyChart';
 import Timer from '@/features/Competition/components/timer';
 import RankCardList from './components/rankCardList';
+import MyRankCard from '@/features/Competition/components/myRankCard';
 
-import { useMyRanking } from '@/features/Competition/hooks/useMyRanking';
 import { useAuthStore } from '../Member/auth/store/auth';
 import { safeGet } from '@/lib/request';
-import { useUserInfo } from '@/hooks/useUserInfo';
 
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
@@ -61,9 +59,6 @@ export default function Ranking() {
     const isCompetitionTime = currentSeconds >= 4 * 3600 && currentSeconds < 4 * 3600 + 10 * 60;
     setCompetitionTime(isCompetitionTime);
   }, []);
-
-  const { myRanking } = useMyRanking();
-  const { data: userInfo } = useUserInfo();
 
   return (
     <div className="py-5">
@@ -116,41 +111,7 @@ export default function Ranking() {
           </div>
 
           {/* 내 랭킹 */}
-          {token && (
-            <>
-              <div className="mb-1 text-sm font-bold tracking-tighter">. . .</div>
-              <div className="w-[440px] h-[40px] rounded-md flex bg-[url('/assets/red-rank.svg')] bg-contain text-xs flex items-center px-2">
-                <div className="pl-2 pr-3 font-bold">
-                  {rankingView === 'daily'
-                    ? myRanking.daily?.rank
-                    : rankingView === 'weekly'
-                      ? myRanking.weekly?.rank
-                      : myRanking.monthly?.rank}
-                </div>
-                <img
-                  src={userInfo?.profileUrl || noProfile}
-                  className="w-8 h-8 mx-1.5"
-                  alt="프로필 이미지"
-                ></img>
-                <img src="/assets/default.svg" className="w-4 h-4 mr-1" alt="뱃지 이미지"></img>
-                <div className="mr-auto">{userInfo?.nickname || '닉네임'}</div>
-                <div className="text-[0.625rem] pr-6">
-                  {rankingView === 'daily'
-                    ? myRanking.daily?.elapsedTime
-                    : rankingView === 'weekly'
-                      ? myRanking.weekly?.continuous
-                      : myRanking.monthly?.continuous}
-                </div>
-                <div className="text-[0.625rem] px-3">
-                  {rankingView === 'daily'
-                    ? `${myRanking.daily?.solvedCount || 0} /5`
-                    : rankingView === 'weekly'
-                      ? `${myRanking.weekly?.correctRate}%`
-                      : `${myRanking.monthly?.correctRate}%`}
-                </div>
-              </div>
-            </>
-          )}
+          {token && <MyRankCard rankingView={rankingView} />}
         </>
 
         {/* 대회 입장 버튼 */}
