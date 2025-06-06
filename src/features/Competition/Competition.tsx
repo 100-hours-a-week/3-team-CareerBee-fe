@@ -1,5 +1,6 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { StateBasedModal } from '@/components/ui/modal';
 import Question from './components/question';
 import MoveLeft from '@/features/Competition/image/caret-left.svg';
 import MoveRight from '@/features/Competition/image/caret-right.svg';
@@ -28,10 +29,20 @@ export interface Problem {
 }
 
 export default function Competition() {
-  const [timeLeft, setTimeLeft] = useState(60000);
+  const getInitialTimeLeft = () => {
+    const now = new Date();
+    const dueTime = new Date();
+    dueTime.setHours(1, 12, 0, 0); //⏰ 대회 종료 시간
+    const offset = 9 * 60 * 60 * 1000;
+    const nowUtc = now.getTime() - offset;
+    const dueUtc = dueTime.getTime() - offset;
+    return Math.max(0, dueUtc - nowUtc);
+  };
+  const [timeLeft, setTimeLeft] = useState(getInitialTimeLeft());
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showPointResult, setShowPointResult] = useState(false);
   const [currentTab, setCurrentTab] = useState(1);
+  const [showTimeOverModal, setShowTimeOverModal] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -43,11 +54,15 @@ export default function Competition() {
           clearInterval(interval);
           return 0;
         }
-        return prev - 1;
+        return prev - 50;
       });
-    }, 10);
+    }, 50);
     return () => clearInterval(interval);
   }, [isSubmitted]);
+
+  useEffect(() => {
+    if (isSubmitted === false && timeLeft <= 0) setShowTimeOverModal(true);
+  }, [timeLeft]);
 
   const [problems, setProblems] = useState<Problem[]>([]);
   const competitionId =
@@ -96,7 +111,6 @@ export default function Competition() {
     timeLeft,
     setIsSubmitted,
     setShowPointResult,
-    // isSubmitted,
   });
 
   return (
@@ -174,6 +188,17 @@ export default function Competition() {
         )}
       </div>
       {showPointResult && <PointPopup points={5} />}
+      <StateBasedModal
+        open={showTimeOverModal}
+        onOpenChange={setShowTimeOverModal}
+        title="대회가 종료되었어요."
+        description={<>곧 랭킹 페이지로 이동할게요.</>}
+        actionText="바로 이동하기"
+        cancelButton={false}
+        onAction={() => {
+          window.location.href = '/competition';
+        }}
+      />
     </div>
   );
 }

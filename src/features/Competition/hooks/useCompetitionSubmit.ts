@@ -36,7 +36,6 @@ export function useCompetitionSubmit({
       const correctCount = problems.filter(
         (_, index) => selectedAnswers[index] === problems[index].answer,
       ).length;
-      //이걸 안함!
       const res = await safePost(`/api/v1/competitions/${competitionId}/results`, {
         headers: {
           Authorization: `Bearer ${token}`,
