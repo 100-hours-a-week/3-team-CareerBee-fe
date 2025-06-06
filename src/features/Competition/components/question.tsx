@@ -20,7 +20,7 @@ export default function Question({
 }: QuestionProps) {
   return (
     <div className="relative">
-      <div className="flex-col overflow-y-auto overflow-x-visible max-h-[35rem] px-3">
+      <div className="flex-col overflow-y-auto overflow-x-visible h-[31.25rem] px-3">
         {showExplanation ? (
           <div className="sticky flex items-start left-[-0.5rem] z-10">
             <img
