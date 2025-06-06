@@ -7,12 +7,9 @@ import MoveRight from '@/features/Competition/image/caret-right.svg';
 import PointPopup from '@/features/Competition/components/pointPopup';
 import Timer from '@/features/Competition/components/timer';
 
-import { safeGet } from '@/lib/request';
-
 import { useCompetitionSubmit } from '@/features/Competition/hooks/useCompetitionSubmit';
 import { useCompetitionTimer } from '@/features/Competition/hooks/useCompetitionTimer';
-import { useAuthStore } from '../Member/auth/store/auth';
-import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
+import { useCompetitionData } from '@/features/Competition/hooks/useCompetitionData';
 
 import { useEffect, useState } from 'react';
 
@@ -40,40 +37,7 @@ export default function Competition() {
     if (isSubmitted === false && timeLeft <= 0) setShowTimeOverModal(true);
   }, [timeLeft]);
 
-  const [problems, setProblems] = useState<Problem[]>([]);
-  const competitionId =
-    import.meta.env.VITE_USE_MOCK === 'true' ? 1 : useCompetitionStore.getState().competitionId;
-  const token = useAuthStore((state) => state.token);
-  useEffect(() => {
-    (async () => {
-      if (import.meta.env.VITE_USE_MOCK === 'true') {
-        const mock = await fetch('/mock/mock-problems.json');
-        const res = await mock.json();
-        setProblems(res.data.problems);
-      } else {
-        const res = await safeGet(`/api/v1/competitions/${competitionId}/problems`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (res.status === 200) {
-          setProblems(res.data.problems);
-        }
-      }
-    })();
-
-    (async () => {
-      const res = await fetch(`/api/v1/competitions/${competitionId}`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.status !== 204) {
-        alert('대회 참가에 실패했습니다.');
-      }
-    })();
-  }, []);
+  const { problems } = useCompetitionData();
 
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([0, 0, 0, 0, 0]);
   const notAnswered = selectedAnswers.every((answer) => answer !== 0);
@@ -91,12 +55,14 @@ export default function Competition() {
 
   return (
     <div className="flex flex-col justify-start items-center px-6 pt-8 min-h-[calc(100dvh-3.5rem)]">
+      {/* 타이머 */}
       <div className="flex h-full min-h-[48px] max-h-[96px]">
         <div className="w-[17rem] mx-auto font-medium text-5xl px-8 mb-auto">
           <Timer KST_DUE_TIME_MS={13 * 60 * 60 * 1000 + 10 * 60 * 1000} mode="msms"></Timer>
         </div>
       </div>
       <div className="flex justify-between items-stretch mt-2 w-full h-full">
+        {/* 이전 버튼 */}
         {currentTab > 1 ? (
           <img
             src={MoveLeft}
@@ -108,6 +74,7 @@ export default function Competition() {
           <div className="h-16 w-8 my-auto"></div>
         )}
         <div className="flex flex-col justify-between items-center w-[25rem] mx-auto min-h-[36rem] h-full">
+          {/* 문제 */}
           <Tabs
             value={String(currentTab)}
             onValueChange={(val) => setCurrentTab(Number(val))}
@@ -142,6 +109,7 @@ export default function Competition() {
               </TabsContent>
             ))}
           </Tabs>
+          {/* 제출 버튼 */}
           <Button
             variant="primary"
             label={isSubmitted ? '랭킹보러가기' : '제출하기'}
@@ -152,6 +120,7 @@ export default function Competition() {
           ></Button>
           <div className="h-12" />
         </div>
+        {/* 다음 문제 */}
         {currentTab < 5 ? (
           <img
             src={MoveRight}
