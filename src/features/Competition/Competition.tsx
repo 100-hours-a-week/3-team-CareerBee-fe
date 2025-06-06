@@ -6,8 +6,9 @@ import MoveRight from '@/features/Competition/image/caret-right.svg';
 import PointPopup from '@/features/Competition/components/pointPopup';
 import Timer from '@/features/Competition/components/timer';
 
-import { safeGet, safePost } from '@/lib/request';
+import { safeGet } from '@/lib/request';
 
+import { useCompetitionSubmit } from '@/features/Competition/hooks/useCompetitionSubmit';
 import { useAuthStore } from '../Member/auth/store/auth';
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 
@@ -27,7 +28,6 @@ export interface Problem {
 }
 
 export default function Competition() {
-  // TODO: 대회 남은 시간으로 바꾸기
   const [timeLeft, setTimeLeft] = useState(60000);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showPointResult, setShowPointResult] = useState(false);
@@ -72,7 +72,8 @@ export default function Competition() {
     })();
 
     (async () => {
-      const res = await safePost(`/api/v1/competitions/${competitionId}`, {
+      const res = await fetch(`/api/v1/competitions/${competitionId}`, {
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -88,6 +89,15 @@ export default function Competition() {
   const isSolved = (index: number) => selectedAnswers[index] !== 0;
   const isCorrect = (index: number) =>
     isSubmitted ? selectedAnswers[index] === problems[index].answer : undefined;
+
+  const { handleSubmitClick } = useCompetitionSubmit({
+    problems,
+    selectedAnswers,
+    timeLeft,
+    setIsSubmitted,
+    setShowPointResult,
+    // isSubmitted,
+  });
 
   return (
     <div className="flex flex-col justify-start items-center px-6 pt-8 min-h-[calc(100dvh-3.5rem)]">
@@ -148,33 +158,7 @@ export default function Competition() {
             fullWidth={true}
             disabled={!notAnswered}
             className="mt-4"
-            onClick={() => {
-              if (isSubmitted) {
-                setShowPointResult(true);
-                setTimeout(() => {
-                  window.location.href = '/competition';
-                }, 5000);
-              } else {
-                setIsSubmitted(true);
-                const correctCount = problems.filter(
-                  (_, index) => selectedAnswers[index] === problems[index].answer,
-                ).length;
-                (async () => {
-                  const res = await safePost(`/api/v1/competitions/${competitionId}/results`, {
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                      solvedCount: correctCount,
-                      elapsedTime: 60000 - timeLeft,
-                    }),
-                  });
-                  if (res.status !== 200) {
-                    alert('제출에 실패했습니다.');
-                  }
-                })();
-              }
-            }}
+            onClick={() => handleSubmitClick(isSubmitted)}
           ></Button>
           <div className="h-12" />
         </div>
