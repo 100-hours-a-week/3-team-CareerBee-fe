@@ -10,6 +10,7 @@ import Timer from '@/features/Competition/components/timer';
 import { safeGet } from '@/lib/request';
 
 import { useCompetitionSubmit } from '@/features/Competition/hooks/useCompetitionSubmit';
+import { useCompetitionTimer } from '@/features/Competition/hooks/useCompetitionTimer';
 import { useAuthStore } from '../Member/auth/store/auth';
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 
@@ -29,37 +30,12 @@ export interface Problem {
 }
 
 export default function Competition() {
-  const getInitialTimeLeft = () => {
-    const now = new Date();
-    const dueTime = new Date();
-    dueTime.setHours(1, 12, 0, 0); //⏰ 대회 종료 시간
-    const offset = 9 * 60 * 60 * 1000;
-    const nowUtc = now.getTime() - offset;
-    const dueUtc = dueTime.getTime() - offset;
-    return Math.max(0, dueUtc - nowUtc);
-  };
-  const [timeLeft, setTimeLeft] = useState(getInitialTimeLeft());
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showPointResult, setShowPointResult] = useState(false);
   const [currentTab, setCurrentTab] = useState(1);
   const [showTimeOverModal, setShowTimeOverModal] = useState(false);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (isSubmitted) {
-          return prev;
-        }
-        if (prev <= 0) {
-          clearInterval(interval);
-          return 0;
-        }
-        return prev - 50;
-      });
-    }, 50);
-    return () => clearInterval(interval);
-  }, [isSubmitted]);
-
+  const { timeLeft, setTimeLeft } = useCompetitionTimer(isSubmitted, setShowTimeOverModal);
   useEffect(() => {
     if (isSubmitted === false && timeLeft <= 0) setShowTimeOverModal(true);
   }, [timeLeft]);
