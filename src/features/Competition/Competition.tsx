@@ -1,10 +1,29 @@
-import { useEffect, useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import Question from './components/question';
 import MoveLeft from '@/features/Competition/image/caret-left.svg';
 import MoveRight from '@/features/Competition/image/caret-right.svg';
 import PointPopup from '@/features/Competition/components/pointPopup';
+
+import { safeGet, safePost } from '@/lib/request';
+
+import { useAuthStore } from '../Member/auth/store/auth';
+import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
+
+import { useEffect, useState } from 'react';
+
+export interface Choice {
+  order: number;
+  content: string;
+}
+export interface Problem {
+  number: number;
+  title: string;
+  description: string;
+  solution: string;
+  answer: number;
+  choices: Choice[];
+}
 
 export default function Competition() {
   // TODO: 대회 남은 시간으로 바꾸기
@@ -36,11 +55,46 @@ export default function Competition() {
     return `${minutes} : ${seconds} : ${hundredths}`;
   };
 
-  const [selectedAnswers, setSelectedAnswers] = useState<string[]>(['', '', '', '', '']);
-  const notAnswered = selectedAnswers.every((answer) => answer !== '');
-  const isSolved = (index: number) => selectedAnswers[index] !== '';
+  const [problems, setProblems] = useState<Problem[]>([]);
+  const competitionId =
+    import.meta.env.VITE_USE_MOCK === 'true' ? 1 : useCompetitionStore.getState().competitionId;
+  const token = useAuthStore((state) => state.token);
+  useEffect(() => {
+    (async () => {
+      if (import.meta.env.VITE_USE_MOCK === 'true') {
+        const mock = await fetch('/mock/mock-problems.json');
+        const res = await mock.json();
+        setProblems(res.data.problems);
+      } else {
+        const res = await safeGet(`/api/v1/competitions/${competitionId}/problems`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res.status === 200) {
+          setProblems(res.data.problems);
+        }
+      }
+    })();
+
+    (async () => {
+      const res = await safePost(`/api/v1/competitions/${competitionId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status !== 204) {
+        alert('대회 참가에 실패했습니다.');
+      }
+    })();
+  }, []);
+
+  const [selectedAnswers, setSelectedAnswers] = useState<number[]>([0, 0, 0, 0, 0]);
+  const notAnswered = selectedAnswers.every((answer) => answer !== 0);
+  const isSolved = (index: number) => selectedAnswers[index] !== 0;
   const isCorrect = (index: number) =>
-    isSubmitted ? selectedAnswers[index] === 'radio1' : undefined;
+    isSubmitted ? selectedAnswers[index] === problems[index].answer : undefined;
+
   return (
     <div className="flex flex-col justify-start items-center px-6 pt-8 min-h-[calc(100dvh-3.5rem)]">
       <div className="flex h-full min-h-[48px] max-h-[96px]">
@@ -66,30 +120,30 @@ export default function Competition() {
             className="mb-auto w-full"
           >
             <TabsList>
-              {[1, 2, 3, 4, 5].map((num, index) => (
+              {problems.map((_problem, index: number) => (
                 <TabsTrigger
-                  key={num}
-                  value={String(num)}
+                  key={index}
+                  value={String(index + 1)}
                   variant="pill"
                   isSolved={isSolved(index)}
                   isCorrect={isCorrect(index)}
                 >
-                  {num}
+                  {index + 1}
                 </TabsTrigger>
               ))}
             </TabsList>
-            {[1, 2, 3, 4, 5].map((num, index) => (
-              <TabsContent key={num} value={String(num)} className="h-[31.25rem] px-0">
+            {problems.map((problem, index: number) => (
+              <TabsContent key={index} value={String(index + 1)} className="grow px-0">
                 <Question
-                  value={String(num)}
+                  value={String(index + 1)}
                   selectedValue={selectedAnswers[index]}
                   onChange={(val: string) => {
                     const next = [...selectedAnswers];
-                    next[index] = val;
+                    next[index] = +val;
                     setSelectedAnswers(next);
                   }}
                   showExplanation={isSubmitted}
-                  answer="radio1"
+                  problem={problem}
                 />
               </TabsContent>
             ))}
@@ -108,6 +162,23 @@ export default function Competition() {
                 }, 5000);
               } else {
                 setIsSubmitted(true);
+                const correctCount = problems.filter(
+                  (_, index) => selectedAnswers[index] === problems[index].answer,
+                ).length;
+                (async () => {
+                  const res = await safePost(`/api/v1/competitions/${competitionId}/results`, {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                      solvedCount: correctCount,
+                      elapsedTime: 60000 - timeLeft,
+                    }),
+                  });
+                  if (res.status !== 200) {
+                    alert('제출에 실패했습니다.');
+                  }
+                })();
               }
             }}
           ></Button>
