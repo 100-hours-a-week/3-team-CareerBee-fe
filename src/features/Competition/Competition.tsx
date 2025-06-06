@@ -32,7 +32,7 @@ export default function Competition() {
   const [currentTab, setCurrentTab] = useState(1);
   const [showTimeOverModal, setShowTimeOverModal] = useState(false);
 
-  const { timeLeft, setTimeLeft } = useCompetitionTimer(isSubmitted, setShowTimeOverModal);
+  const { timeLeft } = useCompetitionTimer(isSubmitted, setShowTimeOverModal);
   useEffect(() => {
     if (isSubmitted === false && timeLeft <= 0) setShowTimeOverModal(true);
   }, [timeLeft]);
