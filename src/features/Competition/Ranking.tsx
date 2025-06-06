@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import DailyBarChart from '@/features/Competition/utils/dailyChart';
 import WeeklyBarChart from '@/features/Competition/utils/weeklyChart';
 import MonthlyBarChart from '@/features/Competition/utils/monthlyChart';
+import Timer from '@/features/Competition/components/timer';
 
 import { useAuthStore } from '../Member/auth/store/auth';
 import { safeGet } from '@/lib/request';
@@ -81,41 +82,18 @@ export default function Ranking() {
   }, [competitionId]);
 
   const [competitionTime, setCompetitionTime] = useState(false);
-  const [timeUntilStart, setTimeUntilStart] = useState('');
+  // const [timeUntilStart, setTimeUntilStart] = useState('');
 
   useEffect(() => {
-    const checkTime = () => {
-      const now = new Date();
-      const utcHours = now.getUTCHours();
-      const utcMinutes = now.getUTCMinutes();
-      const utcSeconds = now.getUTCSeconds();
-      const currentSeconds = utcHours * 3600 + utcMinutes * 60 + utcSeconds;
+    const now = new Date();
+    const utcHours = now.getUTCHours();
+    const utcMinutes = now.getUTCMinutes();
+    const utcSeconds = now.getUTCSeconds();
+    const currentSeconds = utcHours * 3600 + utcMinutes * 60 + utcSeconds;
 
-      const KST_COMPETITION_HOUR = 13;
-      const KST_TO_UTC_OFFSET = 9;
-
-      let startUTCSeconds = (KST_COMPETITION_HOUR - KST_TO_UTC_OFFSET) * 3600; // 13:00 KST = 04:00 UTC
-
-      if (currentSeconds >= startUTCSeconds + 10 * 60) {
-        startUTCSeconds += 24 * 3600; // 내일 13:00 KST (UTC 기준)
-      }
-
-      const remainingSeconds = startUTCSeconds - currentSeconds;
-      const hours = String(Math.floor(remainingSeconds / 3600)).padStart(2, '0');
-      const minutes = String(Math.floor((remainingSeconds % 3600) / 60)).padStart(2, '0');
-      const seconds = String(remainingSeconds % 60).padStart(2, '0');
-      setTimeUntilStart(`${hours}:${minutes}:${seconds}`);
-
-      const isCompetitionTime =
-        currentSeconds >= (KST_COMPETITION_HOUR - KST_TO_UTC_OFFSET) * 3600 &&
-        currentSeconds < (KST_COMPETITION_HOUR - KST_TO_UTC_OFFSET) * 3600 + 10 * 60;
-
-      setCompetitionTime(isCompetitionTime);
-    };
-
-    checkTime();
-    const interval = setInterval(checkTime, 1000);
-    return () => clearInterval(interval);
+    // 대회 운영 시간 여부
+    const isCompetitionTime = currentSeconds >= 4 * 3600 && currentSeconds < 4 * 3600 + 10 * 60;
+    setCompetitionTime(isCompetitionTime);
   }, []);
 
   return (
@@ -208,11 +186,15 @@ export default function Ranking() {
         <div className="my-4 mx-auto">
           <Button
             label={
-              competitionTime
-                ? alreadyEntered
-                  ? '이미 참여한 대회입니다.'
-                  : '대회 입장'
-                : `${timeUntilStart}`
+              competitionTime ? (
+                alreadyEntered ? (
+                  '이미 참여한 대회입니다.'
+                ) : (
+                  '대회 입장'
+                )
+              ) : (
+                <Timer KST_DUE_TIME_MS={13 * 60 * 60 * 1000} />
+              )
             }
             variant={competitionTime ? 'primary' : 'secondary'}
             disabled={!competitionTime || alreadyEntered || !token}
