@@ -5,49 +5,14 @@ import DailyBarChart from '@/features/Competition/utils/dailyChart';
 import WeeklyBarChart from '@/features/Competition/utils/weeklyChart';
 import MonthlyBarChart from '@/features/Competition/utils/monthlyChart';
 import Timer from '@/features/Competition/components/timer';
+import RankCardList from './components/rankCardList';
 
 import { useAuthStore } from '../Member/auth/store/auth';
 import { safeGet } from '@/lib/request';
 
 import { cn } from '@/lib/utils';
-import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
-
-const rankCardStyles = {
-  green: { bgImage: 'week-green-rank.svg', height: '120px', marginTop: 'mt-5' },
-  red: { bgImage: 'week-red-rank.svg', height: '128px', marginTop: 'mt-6' },
-  blue: { bgImage: 'week-blue-rank.svg', height: '104px', marginTop: 'mt-[1.125rem]' },
-};
-const RankCard = ({
-  styleKey,
-  nickname,
-}: {
-  styleKey: keyof typeof rankCardStyles;
-  nickname: string;
-}) => {
-  const { bgImage, height, marginTop } = rankCardStyles[styleKey];
-  return (
-    <div className={`w-1/3 h-[${height}] px-0.5`}>
-      <div
-        className={`h-full bg-no-repeat bg-[length:100%_100%] rounded-lg justify-between pt-2 pb-2`}
-        style={{ backgroundImage: `url(/assets/${bgImage})` }}
-      >
-        <img
-          src="/assets/no-profile.png"
-          className={`w-8 h-8 mx-auto ${marginTop}`}
-          alt="프로필 이미지"
-        />
-        <div className="flex items-center justify-center mx-auto">
-          <img src="/assets/default.svg" className="w-4 h-4 mr-1" alt="뱃지 이미지" />
-          <div>{nickname}</div>
-        </div>
-        <div className="text-[0.625rem] text-center">03.24.123</div>
-        <div className="text-[0.625rem] text-center">5/5</div>
-      </div>
-    </div>
-  );
-};
 
 export default function Ranking() {
   const { competitionId, setCompetitionId } = useCompetitionStore();
@@ -114,6 +79,8 @@ export default function Ranking() {
           onClick={() => setRankingView((prev) => (prev === 'daily' ? 'weekly' : 'monthly'))}
         />
       </div>
+
+      {/* 랭킹 */}
       <div className="flex flex-col justify-center items-center mt-6">
         <>
           <div className="flex mx-auto">
@@ -123,37 +90,19 @@ export default function Ranking() {
               <>
                 {rankingView === 'weekly' && (
                   <div className="flex-col">
-                    <motion.div
-                      key="weekly"
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 1 }}
-                      className="flex-col text-xs"
-                    >
-                      <div className="flex w-[440px] h-[128px] items-end mb-1">
-                        <RankCard styleKey="green" nickname="김춘식1" />
-                        <RankCard styleKey="red" nickname="김춘식1" />
-                        <RankCard styleKey="blue" nickname="김춘식1" />
-                      </div>
-                    </motion.div>
+                    <RankCardList
+                      styleKeys={['green', 'red', 'blue']}
+                      nicknames={['김춘식1', '김춘식2', '김춘식3']}
+                    />
                     <WeeklyBarChart />
                   </div>
                 )}
                 {rankingView === 'monthly' && (
                   <div className="flex-col">
-                    <motion.div
-                      key="monthly"
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 1 }}
-                      className="flex-col text-xs"
-                    >
-                      <div className="flex w-[440px] h-[128px] items-end mb-1">
-                        <RankCard styleKey="green" nickname="김춘식1" />
-                        <RankCard styleKey="red" nickname="김춘식3" />
-                        <RankCard styleKey="blue" nickname="김춘식1" />
-                      </div>
-                    </motion.div>
+                    <RankCardList
+                      styleKeys={['green', 'red', 'blue']}
+                      nicknames={['김춘식1', '김춘식2', '김춘식3']}
+                    />
                     <MonthlyBarChart />
                   </div>
                 )}
