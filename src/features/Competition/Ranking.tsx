@@ -82,7 +82,6 @@ export default function Ranking() {
   }, [competitionId]);
 
   const [competitionTime, setCompetitionTime] = useState(false);
-  // const [timeUntilStart, setTimeUntilStart] = useState('');
 
   useEffect(() => {
     const now = new Date();
