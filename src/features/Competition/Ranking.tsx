@@ -79,6 +79,8 @@ export default function Ranking() {
           onClick={() => setRankingView((prev) => (prev === 'daily' ? 'weekly' : 'monthly'))}
         />
       </div>
+
+      {/* 랭킹 */}
       <div className="flex flex-col justify-center items-center mt-6">
         <>
           <div className="flex mx-auto">
