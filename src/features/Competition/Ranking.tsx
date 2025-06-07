@@ -96,7 +96,7 @@ export default function Ranking() {
                       styleKeys={['green', 'red', 'blue']}
                       nicknames={['김춘식1', '김춘식2', '김춘식3']}
                     />
-                    <WeeklyBarChart />
+                    <MonthlyBarChart rankingData={topRankings.weekly} />
                   </div>
                 )}
                 {rankingView === 'monthly' && (
@@ -105,7 +105,7 @@ export default function Ranking() {
                       styleKeys={['green', 'red', 'blue']}
                       nicknames={['김춘식1', '김춘식2', '김춘식3']}
                     />
-                    <MonthlyBarChart />
+                    <MonthlyBarChart rankingData={topRankings.monthly} />
                   </div>
                 )}
               </>
