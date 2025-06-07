@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 
 import { useUserInfo } from '@/hooks/useUserInfo';
-import { useAuthStore } from '@/features/Member/auth/store/auth';
-import { useCompanyStore } from '@/store/company';
+// import { useAuthStore } from '@/features/Member/auth/store/auth';
+// import { useCompanyStore } from '@/store/company';
 
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
 import { logout } from '@/features/Member/auth/utils/logout';
-import CompanyCard from '@/features/Map/components/CompanyCard';
+import WishCompanyList from './components/wishCompanyList';
 
 import noProfile from '/assets/no-profile.png';
 import point from '@/features/Member/notification/image/point.png';
@@ -16,7 +16,7 @@ import { PiCaretRight } from 'react-icons/pi';
 import { useQueryClient } from '@tanstack/react-query';
 
 export default function Mypage() {
-  const token = useAuthStore((state) => state.token);
+  // const token = useAuthStore((state) => state.token);
 
   const { data: userInfo } = useUserInfo();
   const queryClient = useQueryClient();
@@ -25,8 +25,8 @@ export default function Mypage() {
     queryClient.invalidateQueries({ queryKey: ['userInfo'] });
   }, []);
 
-  const { setIsBookmarked } = useCompanyStore();
-  const companies = [...Array(0)];
+  // const { setIsBookmarked } = useCompanyStore();
+  // const companies = [...Array(0)];
 
   return (
     <>
@@ -63,29 +63,7 @@ export default function Mypage() {
             }}
           />
         </div>
-        <div className="flex flex-col w-full items-center justify-center px-6 py-3 gap-2 border border-transparent border-b-border/30">
-          <div className="text-base font-bold w-full items-start">관심 기업</div>
-          <div className="flex items-start justify-start w-full overflow-x-auto gap-2 pb-1">
-            {companies && companies.length > 0 ? (
-              companies.map(() => (
-                <CompanyCard
-                  companyId={1}
-                  companyName="샘플 기업"
-                  bookmarkCount={10}
-                  tags={['IT', '개발', '스타트업']}
-                  imageUrl="https://via.placeholder.com/150"
-                  isCompanyCardList={true}
-                  isLoggedIn={!!token}
-                  setIsBookmarked={setIsBookmarked}
-                />
-              ))
-            ) : (
-              <div className="flex justify-center text-sm text-text-secondary py-2 w-full">
-                지도에서 관심 기업을 추가해보세요!
-              </div>
-            )}
-          </div>
-        </div>
+        <WishCompanyList />
       </div>
 
       <Modal
