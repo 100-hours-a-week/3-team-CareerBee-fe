@@ -3,24 +3,65 @@ import CompanyCard from '@/features/Map/components/CompanyCard';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 import { useCompanyStore } from '@/store/company';
 
+import { safeGet } from '@/lib/request';
+
+import { useEffect, useState } from 'react';
+
+export interface WishCompany {
+  id: number;
+  name: string;
+  logoUrl: string;
+  keywords: {
+    content: string;
+  }[];
+  wishCount: number;
+}
+export interface WishCompanyListResponse {
+  wishCompanies: WishCompany[];
+  nextCursor: number;
+  hasNext: boolean;
+}
+
+const getWishCompanyList = async (token: string | null) => {
+  if (!token) return;
+  const res = await safeGet('/api/v1/members/wish-companies', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (res.status === 200) {
+    return res.data;
+  }
+};
+
 export default function WishCompanyList() {
   const token = useAuthStore((state) => state.token);
-
   const { setIsBookmarked } = useCompanyStore();
-  const companies = [...Array(0)];
+  const [companies, setCompanies] = useState<WishCompany[]>([]);
+  const [nextCursor, setNextCursor] = useState(0);
+  const [hasNext, setHasNext] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const data = await getWishCompanyList(token);
+      if (data) {
+        setCompanies(data.wishCompanies);
+        setNextCursor(data.nextCursor);
+        setHasNext(data.hasNext);
+      }
+    })();
+  }, [token]);
 
   return (
     <div className="flex flex-col w-full items-center justify-center px-6 py-3 gap-2 border border-transparent border-b-border/30">
       <div className="text-base font-bold w-full items-start">관심 기업</div>
       <div className="flex items-start justify-start w-full overflow-x-auto gap-2 pb-1">
         {companies && companies.length > 0 ? (
-          companies.map(() => (
+          companies.map((company: WishCompany) => (
             <CompanyCard
-              companyId={1}
-              companyName="샘플 기업"
-              bookmarkCount={10}
-              tags={['IT', '개발', '스타트업']}
-              imageUrl="https://via.placeholder.com/150"
+              companyId={company.id}
+              companyName={company.name}
+              bookmarkCount={company.wishCount}
+              tags={company.keywords.map((keyword) => keyword.content)}
+              imageUrl={company.logoUrl}
               isCompanyCardList={true}
               isLoggedIn={!!token}
               setIsBookmarked={setIsBookmarked}
