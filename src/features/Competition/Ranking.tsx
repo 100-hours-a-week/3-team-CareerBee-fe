@@ -8,6 +8,7 @@ import Timer from '@/features/Competition/components/timer';
 import RankCardList from './components/rankCardList';
 import MyRankCard from '@/features/Competition/components/myRankCard';
 
+import { useTopRankings } from './hooks/useTopRanking';
 import { useAuthStore } from '../Member/auth/store/auth';
 import { safeGet } from '@/lib/request';
 
@@ -29,6 +30,7 @@ export default function Ranking() {
   const token = useAuthStore((state) => state.token);
   const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
   const [alreadyEntered, setAlreadyEntered] = useState(false);
+  const { topRankings } = useTopRankings();
 
   const joined = async () => {
     const res = await safeGet(`/api/v1/competitions/${competitionId}`, {
@@ -85,7 +87,7 @@ export default function Ranking() {
         <>
           <div className="flex mx-auto">
             {rankingView === 'daily' ? (
-              <DailyBarChart></DailyBarChart>
+              <DailyBarChart rankingData={topRankings.daily} />
             ) : (
               <>
                 {rankingView === 'weekly' && (
