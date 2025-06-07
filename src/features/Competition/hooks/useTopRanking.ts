@@ -1,26 +1,20 @@
 import { useEffect, useState } from 'react';
 import { safeGet } from '@/lib/request';
 
-interface DailyRanking {
+// ChartProps interface for chart display
+export interface ChartProps {
+  rank: number;
   nickname: string;
-  badgeUrl: string;
-  profileUrl: string;
-  elapsedTime: number;
+  profileImgUrl: string;
+  badgeImgUrl: string;
+  elapsedTime: string;
   solvedCount: number;
 }
 
-interface PeriodicRanking {
-  nickname: string;
-  badgeUrl: string;
-  profileUrl: string;
-  continuous: number;
-  correctRate: number;
-}
-
 interface TopRankings {
-  daily: DailyRanking[];
-  weekly: PeriodicRanking[];
-  monthly: PeriodicRanking[];
+  daily: ChartProps[];
+  weekly: ChartProps[];
+  monthly: ChartProps[];
 }
 
 export const useTopRankings = () => {
@@ -34,11 +28,23 @@ export const useTopRankings = () => {
     (async () => {
       const res = await safeGet('/api/v1/competitions/rankings');
       if (res.status === 200) {
-        const { daily, week, month } = res.data;
+        const fallbackBadgeUrl = '/images/default_badge.png';
+
+        const convertToChartProps = (data: any[], isDaily: boolean): ChartProps[] => {
+          return data.map((item: any, index: number) => ({
+            rank: index + 1,
+            nickname: item.nickname,
+            profileImgUrl: item.profileUrl,
+            badgeImgUrl: fallbackBadgeUrl,
+            elapsedTime: isDaily ? String(item.elapsedTime) : String(item.continuous),
+            solvedCount: isDaily ? item.solvedCount : item.correctRate,
+          }));
+        };
+
         setTopRankings({
-          daily,
-          weekly: week,
-          monthly: month,
+          daily: convertToChartProps(res.data.daily, true),
+          weekly: convertToChartProps(res.data.week, false),
+          monthly: convertToChartProps(res.data.month, false),
         });
       }
     })();
