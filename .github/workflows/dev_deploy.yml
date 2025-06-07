@@ -96,18 +96,21 @@ jobs:
 
             sudo rm -rf /var/www/html/*
             aws s3 cp "${S3_BUCKET_INFRA}/fe/${DEPLOY_PATH}/" /var/www/html/ --recursive
-            
+          EOF
+            || echo "EC2 서버가 꺼져 있음." > failure_reason.txt
       - name: Health check and rollback if needed
         run: |
           set -e
           for i in $(seq 1 5); do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://dev.careerbee.co.kr/")
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://dev.careerbee.co.kr/health-check")
             if [ "\$STATUS" == "200" ]; then
               break
             fi
           done
 
           if [ "\$STATUS" != "200" ]; then
+            echo "헬스 체크 실패. 상태 코드: $STATUS" > failure_reason.txt
+            
             LATEST_VALID_BACKUP=$(aws s3 ls "${S3_BUCKET_INFRA}/fe/" | awk '{print $2}' | grep -v "^${DEPLOY_PATH}/$" | sort | tail -n 1 | sed 's#/$##')
             if [ -z "$LATEST_VALID_BACKUP" ]; then
               exit 1
@@ -166,10 +169,17 @@ jobs:
           BRANCH="${{ github.ref_name }}"
           RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           TIMESTAMP="${{ github.event.head_commit.timestamp }}"
-      
+          
+          if [ -f failure_reason.txt ]; then
+            FAILURE_REASON=$(cat failure_reason.txt)
+          else
+            FAILURE_REASON="워크플로 로그를 확인해 주세요."
+          fi
+
           DESCRIPTION="**Repository:** \`${REPO}\`
           **Branch:** \`${BRANCH}\`
           **Commit:** \`${COMMIT_MSG}\`
+          **실패 사유:** \`${FAILURE_REASON}\`
           [🔗 실행 로그 보기](${RUN_URL})"
       
           jq -n \
