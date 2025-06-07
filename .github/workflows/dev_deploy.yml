@@ -106,14 +106,14 @@ jobs:
           set -e
           for i in $(seq 1 5); do
             STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://dev.careerbee.co.kr/health-check")
-            if [ "\$STATUS" == "200" ]; then
+            if [ "$STATUS" == "200" ]; then
               break
             fi
             echo $STATUS
             sleep 10
           done
 
-          if [ "\$STATUS" != "200" ]; then
+          if [ "$STATUS" != "200" ]; then
             echo "헬스 체크 실패. 상태 코드: $STATUS" > failure_reason.txt
             
             LATEST_VALID_BACKUP=$(aws s3 ls "${S3_BUCKET_INFRA}/fe/" | awk '{print $2}' | grep -v "^${DEPLOY_PATH}/$" | sort | tail -n 1 | sed 's#/$##')
