@@ -91,13 +91,16 @@ jobs:
 
       - name: Deploy to EC2
         run: |
+          echo "EC2 서버와 연결할 수 없음." > failure_reason.txt
           ssh -i "${SSH_KEY}" -o StrictHostKeyChecking=no "ubuntu@${AWS_SERVER_IP}" <<EOF
             set -e
 
             sudo rm -rf /var/www/html/*
             aws s3 cp "${S3_BUCKET_INFRA}/fe/${DEPLOY_PATH}/" /var/www/html/ --recursive
           EOF
-            || echo "EC2 서버가 꺼져 있음." > failure_reason.txt
+
+          rm -f failure_reason.txt
+
       - name: Health check and rollback if needed
         run: |
           set -e
