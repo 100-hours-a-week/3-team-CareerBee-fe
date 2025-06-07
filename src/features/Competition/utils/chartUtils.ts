@@ -10,7 +10,7 @@ interface chartProps {
 }
 
 const width = 440;
-const height = 436;
+// const height = 436;
 const barHeight = 40;
 const gap = 4;
 const transTime = 1000;
@@ -21,8 +21,8 @@ export const widthScale = (data: number) => {
 const xScale = (data: number) => {
   return data === 0 ? width : data === 1 ? 0 : data === 2 ? 10 : data === 3 ? 20 : 30;
 };
-const yScale = (data: number, paddingTop: number) => {
-  return (data - 1) * barHeight + (data - 1) * gap + paddingTop;
+const yScale = (data: number, paddingTop: number, scale: number) => {
+  return (data - scale) * barHeight + (data - scale) * gap + paddingTop;
 };
 
 export const exitTransition = <El extends SVGElement, ParentEl extends d3.BaseType = SVGGElement>(
@@ -43,6 +43,7 @@ export const updateTransition = <El extends SVGElement, ParentEl extends d3.Base
   yPaddingTop: number,
   alignRight: boolean = false,
   prev: chartProps[],
+  scale: number,
 ) => {
   sel
     .attr('x', (data) => {
@@ -53,7 +54,7 @@ export const updateTransition = <El extends SVGElement, ParentEl extends d3.Base
     .attr('y', (data) => {
       const prevItem = prev.find((p) => p.nickname === data.nickname);
       const prevRank = prevItem ? prevItem.rank : data.rank;
-      return yScale(prevRank, yPaddingTop);
+      return yScale(prevRank, yPaddingTop, scale);
     })
     .transition()
     .duration((data) => {
@@ -61,7 +62,7 @@ export const updateTransition = <El extends SVGElement, ParentEl extends d3.Base
       const double = prevItem ? 1 : 2;
       return transTime * double;
     })
-    .attr('y', (data) => yScale(data.rank, yPaddingTop))
+    .attr('y', (data) => yScale(data.rank, yPaddingTop, scale))
     .attr('x', (data) => (alignRight ? 0 : xScale(data.rank)) + xPadding);
 };
 
@@ -72,6 +73,7 @@ export const imageElement = (
   size: number,
   elem: string,
   prev: chartProps[],
+  scale: number,
 ) => {
   let badgeImg = svg.append('g').selectAll<SVGImageElement, chartProps>('image');
 
@@ -86,7 +88,7 @@ export const imageElement = (
           enter
             .append('image')
             .attr('preserveAspectRatio', 'none')
-            .attr('y', (data) => yScale(data.rank, yPaddingTop))
+            .attr('y', (data) => yScale(data.rank, yPaddingTop, scale))
             .attr('x', xScale(0) + xPadding)
             .attr('width', size)
             .attr('height', size)
@@ -96,7 +98,7 @@ export const imageElement = (
             .attr('x', (data) => xScale(data.rank) + xPadding),
         (update) => {
           update.attr('href', (d) => d[elem as keyof chartProps]);
-          updateTransition(update, xPadding, yPaddingTop, false, prev);
+          updateTransition(update, xPadding, yPaddingTop, false, prev, scale);
           return update;
         },
         (exit) => exitTransition(exit, xPadding),
@@ -115,6 +117,7 @@ export const textElement = (
   alignRight: boolean = false,
   isSolved: boolean = false,
   prev: chartProps[],
+  scale: number,
 ) => {
   let textElement = svg
     .append('g')
@@ -129,7 +132,7 @@ export const textElement = (
         (enter) =>
           enter
             .append('text')
-            .attr('y', (data) => yScale(data.rank, yPaddingTop))
+            .attr('y', (data) => yScale(data.rank, yPaddingTop, scale))
             .attr('x', xScale(0) + xPadding)
             .text((d) => d[elem as keyof chartProps] + (isSolved ? '/5' : ''))
             .transition()
@@ -137,7 +140,7 @@ export const textElement = (
             .attr('x', (data) => (alignRight ? 0 : xScale(data.rank)) + xPadding),
         (update) => {
           update.text((d) => d[elem as keyof chartProps] + (isSolved ? '/5' : ''));
-          updateTransition(update, xPadding, yPaddingTop, alignRight, prev);
+          updateTransition(update, xPadding, yPaddingTop, alignRight, prev, scale);
           return update;
         },
         (exit) => exitTransition(exit, xPadding),
@@ -148,6 +151,7 @@ export const textElement = (
 export const bars = (
   svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>,
   defs: d3.Selection<SVGDefsElement, unknown, null, undefined>,
+  scale: number,
 ) => {
   let bar = svg.append('g').selectAll<SVGRectElement, chartProps>('rect');
 
@@ -160,7 +164,7 @@ export const bars = (
             .append('rect')
             .attr('id', (d) => `bar-${d.rank}`)
             .attr('fill', 'transparent')
-            .attr('y', (data) => yScale(data.rank, 0))
+            .attr('y', (data) => yScale(data.rank, 0, scale))
             .attr('x', width)
             .attr('width', (data) => widthScale(data.rank))
             .attr('height', barHeight)
@@ -174,7 +178,7 @@ export const bars = (
           update
             .transition()
             .duration(transTime)
-            .attr('y', (data) => yScale(data.rank, 0))
+            .attr('y', (data) => yScale(data.rank, 0, scale))
             .attr('x', (data) => xScale(data.rank))
             .attr('width', (data) => widthScale(data.rank)),
         (exit) => exitTransition(exit, 0),
@@ -189,7 +193,10 @@ export const bars = (
   };
 };
 
-export const background = (svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>) => {
+export const background = (
+  svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>,
+  scale: number,
+) => {
   let background = svg.append('g').selectAll<SVGImageElement, chartProps>('image');
 
   return (data: chartProps[]) => {
@@ -202,7 +209,7 @@ export const background = (svg: d3.Selection<SVGSVGElement | null, unknown, null
             .attr('preserveAspectRatio', 'none')
             .attr('clip-path', (d) => `url(#clip-bar-${d.nickname})`)
             .attr('x', width)
-            .attr('y', (data) => yScale(data.rank, 0))
+            .attr('y', (data) => yScale(data.rank, 0, scale))
             .attr('width', width)
             .attr('height', barHeight)
             .attr('href', (d) => {
@@ -226,7 +233,7 @@ export const background = (svg: d3.Selection<SVGSVGElement | null, unknown, null
             .transition()
             .duration(transTime)
             .attr('x', (data) => xScale(data.rank))
-            .attr('y', (data) => yScale(data.rank, 0)),
+            .attr('y', (data) => yScale(data.rank, 0, scale)),
         (exit) => exitTransition(exit, 0),
       );
   };

@@ -18,6 +18,7 @@ const width = 440;
 const height = 436;
 const barHeight = 40;
 const gap = 4;
+const dailyScale = 1;
 
 export default function BarChart() {
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -31,8 +32,8 @@ export default function BarChart() {
 
     const defs = svg.append('defs');
 
-    const updateBars = bars(svg, defs);
-    const updateBackground = background(svg);
+    const updateBars = bars(svg, defs, dailyScale);
+    const updateBackground = background(svg, dailyScale);
     const updateRanks = textElement(
       svg,
       16,
@@ -44,9 +45,10 @@ export default function BarChart() {
       false,
       false,
       prev,
+      dailyScale,
     );
-    const updateProfileImg = imageElement(svg, 40, 4, 32, 'profileImgUrl', prev);
-    const updateBadgeImg = imageElement(svg, 76, 12, 16, 'badgeImgUrl', prev);
+    const updateProfileImg = imageElement(svg, 40, 4, 32, 'profileImgUrl', prev, dailyScale);
+    const updateBadgeImg = imageElement(svg, 76, 12, 16, 'badgeImgUrl', prev, dailyScale);
     const updateNickname = textElement(
       svg,
       96,
@@ -58,6 +60,7 @@ export default function BarChart() {
       false,
       false,
       prev,
+      dailyScale,
     );
     const updateTime = textElement(
       svg,
@@ -70,6 +73,7 @@ export default function BarChart() {
       true,
       false,
       prev,
+      dailyScale,
     );
     const updateSolved = textElement(
       svg,
@@ -82,6 +86,7 @@ export default function BarChart() {
       true,
       true,
       prev,
+      dailyScale,
     );
     updateBars(mock[0]);
     updateBackground(mock[0]);
