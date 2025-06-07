@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import { mockChart } from '@/features/Competition/config/mock-chartdata';
 
 import {
+  ScaleFns,
   imageElement,
   textElement,
   bars,
@@ -17,7 +18,15 @@ const width = 440;
 const height = 304;
 const barHeight = 40;
 const gap = 4;
-const longTermScale = 4;
+
+const scaleFns: ScaleFns = {
+  xScale: (data: number) => {
+    return data === 0 ? width : 0;
+  },
+  yScale: (rank: number, paddingTop: number) => {
+    return (rank - 4) * barHeight + (rank - 4) * gap + paddingTop;
+  },
+};
 
 export default function BarChart() {
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -31,8 +40,8 @@ export default function BarChart() {
 
     const defs = svg.append('defs');
 
-    const updateBars = bars(svg, defs, longTermScale);
-    const updateBackground = background(svg, longTermScale);
+    const updateBars = bars(svg, defs, scaleFns);
+    const updateBackground = background(svg, scaleFns);
     const updateRanks = textElement(
       svg,
       16,
@@ -44,10 +53,10 @@ export default function BarChart() {
       false,
       false,
       prev,
-      longTermScale,
+      scaleFns,
     );
-    const updateProfileImg = imageElement(svg, 40, 4, 32, 'profileImgUrl', prev, longTermScale);
-    const updateBadgeImg = imageElement(svg, 76, 12, 16, 'badgeImgUrl', prev, longTermScale);
+    const updateProfileImg = imageElement(svg, 40, 4, 32, 'profileImgUrl', prev, scaleFns);
+    const updateBadgeImg = imageElement(svg, 76, 12, 16, 'badgeImgUrl', prev, scaleFns);
     const updateNickname = textElement(
       svg,
       96,
@@ -59,7 +68,7 @@ export default function BarChart() {
       false,
       false,
       prev,
-      longTermScale,
+      scaleFns,
     );
     const updateTime = textElement(
       svg,
@@ -72,7 +81,7 @@ export default function BarChart() {
       true,
       false,
       prev,
-      longTermScale,
+      scaleFns,
     );
     const updateSolved = textElement(
       svg,
@@ -85,7 +94,7 @@ export default function BarChart() {
       true,
       true,
       prev,
-      longTermScale,
+      scaleFns,
     );
     updateBars(mock[0]);
     updateBackground(mock[0]);

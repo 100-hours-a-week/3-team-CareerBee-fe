@@ -4,6 +4,7 @@ import { mockChart } from '@/features/Competition/config/mock-chartdata';
 import { mockChart2 } from '@/features/Competition/config/mock-chartdata2';
 
 import {
+  ScaleFns,
   imageElement,
   textElement,
   bars,
@@ -18,7 +19,15 @@ const width = 440;
 const height = 436;
 const barHeight = 40;
 const gap = 4;
-const dailyScale = 1;
+
+const scaleFns: ScaleFns = {
+  xScale: (data: number) => {
+    return data === 0 ? width : data === 1 ? 0 : data === 2 ? 10 : data === 3 ? 20 : 30;
+  },
+  yScale: (rank: number, paddingTop: number) => {
+    return (rank - 1) * barHeight + (rank - 1) * gap + paddingTop;
+  },
+};
 
 export default function BarChart() {
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -32,8 +41,8 @@ export default function BarChart() {
 
     const defs = svg.append('defs');
 
-    const updateBars = bars(svg, defs, dailyScale);
-    const updateBackground = background(svg, dailyScale);
+    const updateBars = bars(svg, defs, scaleFns);
+    const updateBackground = background(svg, scaleFns);
     const updateRanks = textElement(
       svg,
       16,
@@ -45,10 +54,10 @@ export default function BarChart() {
       false,
       false,
       prev,
-      dailyScale,
+      scaleFns,
     );
-    const updateProfileImg = imageElement(svg, 40, 4, 32, 'profileImgUrl', prev, dailyScale);
-    const updateBadgeImg = imageElement(svg, 76, 12, 16, 'badgeImgUrl', prev, dailyScale);
+    const updateProfileImg = imageElement(svg, 40, 4, 32, 'profileImgUrl', prev, scaleFns);
+    const updateBadgeImg = imageElement(svg, 76, 12, 16, 'badgeImgUrl', prev, scaleFns);
     const updateNickname = textElement(
       svg,
       96,
@@ -60,7 +69,7 @@ export default function BarChart() {
       false,
       false,
       prev,
-      dailyScale,
+      scaleFns,
     );
     const updateTime = textElement(
       svg,
@@ -73,7 +82,7 @@ export default function BarChart() {
       true,
       false,
       prev,
-      dailyScale,
+      scaleFns,
     );
     const updateSolved = textElement(
       svg,
@@ -86,7 +95,7 @@ export default function BarChart() {
       true,
       true,
       prev,
-      dailyScale,
+      scaleFns,
     );
     updateBars(mock[0]);
     updateBackground(mock[0]);
