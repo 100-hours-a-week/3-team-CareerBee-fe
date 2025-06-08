@@ -2,7 +2,7 @@ import CompanyCard from '@/features/Map/components/CompanyCard';
 
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 import { useCompanyStore } from '@/store/company';
-
+import axios from 'axios';
 import { safeGet } from '@/lib/request';
 
 import { useEffect, useState } from 'react';
@@ -23,10 +23,15 @@ export interface WishCompanyListResponse {
 }
 
 const getWishCompanyList = async (token: string | null) => {
-  if (!token) return;
-  const res = await safeGet('/api/v1/members/wish-companies', {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  let res;
+  if (import.meta.env.VITE_USE_MOCK === 'true') {
+    res = await axios.get('/mock/mock-wish-company.json'); //🚨 목 데이터로 작업할 때만 켜기
+  } else {
+    if (!token) return;
+    res = await safeGet('/api/v1/members/wish-companies', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
   if (res.status === 200) {
     return res.data;
   }
