@@ -25,7 +25,7 @@ export interface WishCompanyListResponse {
 const getWishCompanyList = async (token: string | null) => {
   let res;
   if (import.meta.env.VITE_USE_MOCK === 'true') {
-    res = await axios.get('/mock/mock-wish-company.json'); //🚨 목 데이터로 작업할 때만 켜기
+    res = await axios.get('/mock/mock-wish-company.json');
   } else {
     if (!token) return;
     res = await safeGet('/api/v1/members/wish-companies', {
