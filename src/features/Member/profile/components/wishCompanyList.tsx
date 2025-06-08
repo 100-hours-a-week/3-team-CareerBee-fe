@@ -1,3 +1,4 @@
+import endOfList from '@/features/Member/profile/image/end-of-list.png'
 import CompanyCard from '@/features/Map/components/CompanyCard';
 
 import { useAuthStore } from '@/features/Member/auth/store/auth';
@@ -112,7 +113,19 @@ export default function WishCompanyList() {
             지도에서 관심 기업을 추가해보세요!
           </div>
         )}
-        <div ref={bottomRef} className="h-full w-[1px] border border-2px border-border" />
+        {!hasNext ? (
+          <div className="flex-none w-24 h-full flex flex-col items-center justify-center text-text-secondary">
+            <img src={endOfList} alt="끝" className="w-10 h-10 mb-2" />
+            <span className="text-xs text-center">끝까지 봤어요!</span>
+          </div>
+        ) : (
+          <div
+            ref={bottomRef}
+            className="flex-none w-20 h-20 flex items-center justify-center py-4"
+          >
+            <span className="loader" />
+          </div>
+        )}
       </div>
     </div>
   );
