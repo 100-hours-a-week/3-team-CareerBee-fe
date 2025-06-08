@@ -1,31 +1,33 @@
+import noProfile from '/assets/no-profile.png';
+import imageUpdate from '@/features/Member/profile/image/image-update.png';
+
 import Footer from './components/footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-import { toast } from '@/hooks/useToast';
+import { useUserInfo } from '@/hooks/useUserInfo';
 
-import noProfile from '/assets/no-profile.png';
-import imageUpdate from '@/features/Member/profile/image/image-update.png';
+import { toast } from '@/hooks/useToast';
 
 import { useState, useEffect } from 'react';
 import React from 'react';
 
 export default function Account() {
-  const originalNickname = '회원 닉네임';
-  const originalEmail = '회원 이메일';
-
-  const [nickname, setNickname] = useState(originalNickname);
-  const [email, setEmail] = useState(originalEmail);
-  const [isDirty, setIsDirty] = useState(false);
+  const { data: userInfo } = useUserInfo();
+  const [nickname, setNickname] = useState(userInfo?.nickname || '닉네임');
+  const [email, setEmail] = useState(userInfo?.email || '이메일');
 
   // 값이 바뀌면 isDirty를 true로 변경
+  const [isDirty, setIsDirty] = useState(false);
   useEffect(() => {
+    const originalNickname = userInfo?.nickname || '닉네임';
+    const originalEmail = userInfo?.email || '이메일';
     setIsDirty(nickname !== originalNickname || email !== originalEmail);
-  }, [nickname, email]);
+  }, [nickname, email, userInfo]);
 
   const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // 서버로 데이터를 보내는 로직
+    // TODO: 서버로 데이터를 보내는 로직
     setIsDirty(false);
     toast({ title: '저장 완료', variant: 'success' });
   };
