@@ -72,8 +72,8 @@ export default function CompanyCard({
       role="button"
       onClick={handleClickAnywhere}
       className={cn(
-        'relative rounded-xl p-2 w-64 h-44 z-30 cursor-default bg-no-repeat bg-cover',
-        isCompanyCardList ? 'bg-white border border-border' : '',
+        'relative rounded-xl p-2 w-64 z-30 cursor-default bg-no-repeat bg-cover',
+        isCompanyCardList ? 'bg-white border border-border h-40' : 'h-44',
       )}
       style={!isCompanyCardList ? { backgroundImage: `url(${companyCardBackground})` } : {}}
     >
