@@ -23,7 +23,7 @@ export interface WishCompany {
 
 const getWishCompanyList = async ({ pageParam = 0 }: { pageParam?: number }) => {
   const token = useAuthStore.getState().token;
-  // if (!token) return;
+  if (!token) return;
   let res;
   if (import.meta.env.VITE_USE_MOCK === 'true') {
     res = await axios.get('/mock/mock-wish-company.json');
@@ -33,7 +33,7 @@ const getWishCompanyList = async ({ pageParam = 0 }: { pageParam?: number }) => 
       headers: { Authorization: `Bearer ${token}` },
     });
   }
-  if (res.status === 200) {
+  if (res.httpStatusCode === 200) {
     return res.data;
   }
 };
@@ -88,7 +88,7 @@ export default function WishCompanyList() {
           </div>
         )}
         {isFetchingNextPage ? (
-          <div className="flex items-center justify-center w-20 h-20">
+          <div className="flex items-center justify-center w-24 p-8 h-full">
             <CircleLoader />
           </div>
         ) : hasNextPage ? (
