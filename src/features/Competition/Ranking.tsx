@@ -93,9 +93,13 @@ export default function Ranking() {
                   <div className="flex-col">
                     <RankCardList
                       styleKeys={['green', 'red', 'blue']}
-                      nicknames={['김춘식1', '김춘식2', '김춘식3']}
+                      rankingData={[
+                        topRankings.weekly?.[1],
+                        topRankings.weekly?.[0],
+                        topRankings.weekly?.[2],
+                      ]}
                     />
-                    <MonthlyBarChart rankingData={topRankings.weekly} />
+                    <MonthlyBarChart rankingData={topRankings.weekly?.slice(3)} />
                   </div>
                 )}
                 {rankingView === 'monthly' && (
@@ -104,7 +108,7 @@ export default function Ranking() {
                       styleKeys={['green', 'red', 'blue']}
                       nicknames={['김춘식1', '김춘식2', '김춘식3']}
                     />
-                    <MonthlyBarChart rankingData={topRankings.monthly} />
+                    <MonthlyBarChart rankingData={topRankings.monthly?.slice(3)} />
                   </div>
                 )}
               </>
