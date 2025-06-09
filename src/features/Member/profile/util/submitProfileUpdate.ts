@@ -29,9 +29,6 @@ export async function handleProfileImageUpload(file: File | null, token: string)
 
   await fetch(uploadUrl, {
     method: 'PUT',
-    headers: {
-      'Content-Type': file.type,
-    },
     body: file,
   });
 
