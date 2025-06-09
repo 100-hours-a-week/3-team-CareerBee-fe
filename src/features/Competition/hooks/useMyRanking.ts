@@ -31,7 +31,7 @@ export function useMyRanking() {
   useEffect(() => {
     if (!token) return;
     (async () => {
-      const res = await safeGet('/api/v1/competitions/rankings/me', {
+      const res = await safeGet('/api/v1/members/competitions/rankings', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
