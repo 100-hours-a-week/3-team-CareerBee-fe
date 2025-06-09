@@ -5,7 +5,7 @@ import ProfileImageUploader from './components/profileImageUploader';
 
 import { submitProfileUpdate } from './util/submitProfileUpdate';
 import { useUserInfo } from '@/hooks/useUserInfo';
-import { DirtyProvider, useDirty } from './contexts/isDirtyContext';
+import { useDirty } from './contexts/isDirtyContext';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 
 import { useState, useEffect } from 'react';
