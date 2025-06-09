@@ -29,7 +29,7 @@ const getWishCompanyList = async ({ pageParam = 0 }: { pageParam?: number }) => 
     res = await axios.get('/mock/mock-wish-company.json');
   } else {
     res = await safeGet('/api/v1/members/wish-companies', {
-      // params: { cursor: pageParam },
+      ...(pageParam !== 0 ? { params: { cursor: pageParam } } : {}),
       headers: { Authorization: `Bearer ${token}` },
     });
   }
