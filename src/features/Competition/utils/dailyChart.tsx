@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { mockChart } from '@/features/Competition/config/mock-chartdata';
-import { mockChart2 } from '@/features/Competition/config/mock-chartdata2';
+// import { mockChart } from '@/features/Competition/config/mock-chartdata';
+// import { mockChart2 } from '@/features/Competition/config/mock-chartdata2';
 
 import {
   ScaleFns,
@@ -10,10 +10,11 @@ import {
   bars,
   background,
 } from '@/features/Competition/utils/chartUtils';
+import { ChartProps } from '@/features/Competition/hooks/useTopRanking';
 
 //목데이터
-let prev = mockChart;
-const mock = [mockChart, mockChart2];
+// let prev = mockChart;
+// const mock = [mockChart, mockChart2];
 
 const width = 440;
 const height = 436;
@@ -29,8 +30,9 @@ const scaleFns: ScaleFns = {
   },
 };
 
-export default function BarChart() {
+export default function BarChart({ rankingData }: { rankingData: ChartProps[] }) {
   const svgRef = useRef<SVGSVGElement | null>(null);
+  let prev = rankingData;
 
   useEffect(() => {
     const svg = d3
@@ -97,27 +99,36 @@ export default function BarChart() {
       prev,
       scaleFns,
     );
-    updateBars(mock[0]);
-    updateBackground(mock[0]);
-    updateRanks(mock[0]);
-    updateProfileImg(mock[0]);
-    updateBadgeImg(mock[0]);
-    updateNickname(mock[0]);
-    updateTime(mock[0]);
-    updateSolved(mock[0]);
-    prev = mock[0];
+    updateBars(rankingData);
+    updateBackground(rankingData);
+    updateRanks(rankingData);
+    updateProfileImg(rankingData);
+    updateBadgeImg(rankingData);
+    updateNickname(rankingData);
+    updateTime(rankingData);
+    updateSolved(rankingData);
+    prev = rankingData;
+    // updateBars(mock[0]);
+    // updateBackground(mock[0]);
+    // updateRanks(mock[0]);
+    // updateProfileImg(mock[0]);
+    // updateBadgeImg(mock[0]);
+    // updateNickname(mock[0]);
+    // updateTime(mock[0]);
+    // updateSolved(mock[0]);
+    // prev = mock[0];
 
-    // 목데이터
-    setTimeout(() => {
-      updateBars(mock[1]);
-      updateBackground(mock[1]);
-      updateRanks(mock[1]);
-      updateProfileImg(mock[1]);
-      updateBadgeImg(mock[1]);
-      updateNickname(mock[1]);
-      updateTime(mock[1]);
-      updateSolved(mock[1]);
-    }, 3000);
+    // // 목데이터
+    // setTimeout(() => {
+    //   updateBars(mock[1]);
+    //   updateBackground(mock[1]);
+    //   updateRanks(mock[1]);
+    //   updateProfileImg(mock[1]);
+    //   updateBadgeImg(mock[1]);
+    //   updateNickname(mock[1]);
+    //   updateTime(mock[1]);
+    //   updateSolved(mock[1]);
+    // }, 3000);
   }, []);
 
   return (

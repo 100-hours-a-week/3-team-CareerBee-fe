@@ -6,7 +6,9 @@ import WeeklyBarChart from '@/features/Competition/utils/weeklyChart';
 import MonthlyBarChart from '@/features/Competition/utils/monthlyChart';
 import Timer from '@/features/Competition/components/timer';
 import RankCardList from './components/rankCardList';
+import MyRankCard from '@/features/Competition/components/myRankCard';
 
+import { useTopRankings } from './hooks/useTopRanking';
 import { useAuthStore } from '../Member/auth/store/auth';
 import { safeGet } from '@/lib/request';
 
@@ -28,6 +30,7 @@ export default function Ranking() {
   const token = useAuthStore((state) => state.token);
   const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
   const [alreadyEntered, setAlreadyEntered] = useState(false);
+  const { topRankings } = useTopRankings();
 
   const joined = async () => {
     const res = await safeGet(`/api/v1/competitions/${competitionId}`, {
@@ -47,7 +50,6 @@ export default function Ranking() {
   }, [competitionId]);
 
   const [competitionTime, setCompetitionTime] = useState(false);
-
   useEffect(() => {
     const now = new Date();
     const utcHours = now.getUTCHours();
@@ -85,7 +87,7 @@ export default function Ranking() {
         <>
           <div className="flex mx-auto">
             {rankingView === 'daily' ? (
-              <DailyBarChart></DailyBarChart>
+              <DailyBarChart rankingData={topRankings.daily} />
             ) : (
               <>
                 {rankingView === 'weekly' && (
@@ -94,7 +96,7 @@ export default function Ranking() {
                       styleKeys={['green', 'red', 'blue']}
                       nicknames={['김춘식1', '김춘식2', '김춘식3']}
                     />
-                    <WeeklyBarChart />
+                    <MonthlyBarChart rankingData={topRankings.weekly} />
                   </div>
                 )}
                 {rankingView === 'monthly' && (
@@ -103,7 +105,7 @@ export default function Ranking() {
                       styleKeys={['green', 'red', 'blue']}
                       nicknames={['김춘식1', '김춘식2', '김춘식3']}
                     />
-                    <MonthlyBarChart />
+                    <MonthlyBarChart rankingData={topRankings.monthly} />
                   </div>
                 )}
               </>
@@ -111,23 +113,7 @@ export default function Ranking() {
           </div>
 
           {/* 내 랭킹 */}
-          {token && (
-            <>
-              <div className="mb-1 text-sm font-bold tracking-tighter">. . .</div>
-              <div className="w-[440px] h-[40px] rounded-md flex bg-[url('/assets/red-rank.svg')] bg-contain text-xs flex items-center px-2">
-                <div className="pl-2 pr-3 font-bold">1</div>
-                <img
-                  src="/assets/no-profile.png"
-                  className="w-8 h-8 mx-1.5"
-                  alt="프로필 이미지"
-                ></img>
-                <img src="/assets/default.svg" className="w-4 h-4 mr-1" alt="뱃지 이미지"></img>
-                <div className="mr-auto">김춘식1</div>
-                <div className="text-[0.625rem] pr-6">03.24.123</div>
-                <div className="text-[0.625rem] px-3">5/5</div>
-              </div>
-            </>
-          )}
+          {token && <MyRankCard rankingView={rankingView} />}
         </>
 
         {/* 대회 입장 버튼 */}
