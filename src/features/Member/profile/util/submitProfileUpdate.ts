@@ -11,7 +11,7 @@ export async function handleProfileImageUpload(file: File | null, token: string)
   if (!extension) return null;
 
   const presignedRes = await safePost(
-    '/api/v1/gcs/presigned-url?type=image',
+    '/api/v1/s3/presigned-url?type=image',
     {
       fileName: file.name,
       extension: extension,
@@ -24,7 +24,8 @@ export async function handleProfileImageUpload(file: File | null, token: string)
     },
   );
 
-  const { uploadUrl, objectUrl } = presignedRes.data.data;
+  console.log(presignedRes.data);
+  const { uploadUrl, objectUrl } = presignedRes.data;
 
   await fetch(uploadUrl, {
     method: 'PUT',
