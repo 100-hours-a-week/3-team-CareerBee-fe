@@ -106,7 +106,11 @@ export default function Ranking() {
                   <div className="flex-col">
                     <RankCardList
                       styleKeys={['green', 'red', 'blue']}
-                      nicknames={['김춘식1', '김춘식2', '김춘식3']}
+                      rankingData={[
+                        topRankings.monthly?.[1],
+                        topRankings.monthly?.[0],
+                        topRankings.monthly?.[2],
+                      ]}
                     />
                     <MonthlyBarChart rankingData={topRankings.monthly?.slice(3)} />
                   </div>
