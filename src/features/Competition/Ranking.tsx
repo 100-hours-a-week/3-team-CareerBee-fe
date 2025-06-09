@@ -2,7 +2,7 @@ import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
 
 import { Button } from '@/components/ui/button';
 import DailyBarChart from '@/features/Competition/utils/dailyChart';
-import MonthlyBarChart from '@/features/Competition/utils/monthlyChart';
+import PeriodicBarChart from '@/features/Competition/utils/periodicChart';
 import Timer from '@/features/Competition/components/timer';
 import RankCardList from './components/rankCardList';
 import MyRankCard from '@/features/Competition/components/myRankCard';
@@ -99,7 +99,7 @@ export default function Ranking() {
                         topRankings.weekly?.[2],
                       ]}
                     />
-                    <MonthlyBarChart rankingData={topRankings.weekly?.slice(3)} />
+                    <PeriodicBarChart rankingData={topRankings.weekly?.slice(3)} />
                   </div>
                 )}
                 {rankingView === 'monthly' && (
@@ -112,7 +112,7 @@ export default function Ranking() {
                         topRankings.monthly?.[2],
                       ]}
                     />
-                    <MonthlyBarChart rankingData={topRankings.monthly?.slice(3)} />
+                    <PeriodicBarChart rankingData={topRankings.monthly?.slice(3)} />
                   </div>
                 )}
               </>
