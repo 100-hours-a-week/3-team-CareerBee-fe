@@ -13,6 +13,8 @@ import Ranking from '@/features/Competition/Ranking';
 import Competition from '@/features/Competition/Competition';
 import Notification from '@/features/Member/notification/Notification';
 import Account from '@/features/Member/profile/Account';
+import { DirtyProvider } from '@/features/Member/profile/contexts/isDirtyContext';
+
 import Quit from '@/features/Member/profile/Quit';
 import Developers from '@/features/Member/service/developers';
 import ResumeForm from '@/features/Member/resume/resumeForm';
@@ -32,7 +34,15 @@ export const router = createBrowserRouter([
       { path: 'competition', element: <Ranking /> },
       { path: 'competition/entry', element: <Competition /> },
       { path: 'notification', element: <Notification /> },
-      { path: 'my/account', element: <Account /> },
+      {
+        path: 'my/account',
+        element: (
+          <DirtyProvider>
+            <Account />
+          </DirtyProvider>
+        ),
+      },
+      // { path: 'my/account', element: <Account /> },
       { path: 'my/account/quit', element: <Quit /> },
       { path: 'service/developers', element: <Developers /> },
       { path: 'resume/form', element: <ResumeForm /> },

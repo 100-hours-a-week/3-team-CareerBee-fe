@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import noProfile from '/assets/no-profile.png';
+import point from '@/features/Member/notification/image/point.png';
+import { PiCaretRight } from 'react-icons/pi';
 
-import { useUserInfo } from '@/hooks/useUserInfo';
 // import { useAuthStore } from '@/features/Member/auth/store/auth';
 // import { useCompanyStore } from '@/store/company';
 
@@ -9,11 +10,10 @@ import { Modal } from '@/components/ui/modal';
 import { logout } from '@/features/Member/auth/utils/logout';
 import WishCompanyList from './components/wishCompanyList';
 
-import noProfile from '/assets/no-profile.png';
-import point from '@/features/Member/notification/image/point.png';
-import { PiCaretRight } from 'react-icons/pi';
+import { useUserInfo } from '@/hooks/useUserInfo';
 
 import { useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 export default function Mypage() {
   // const token = useAuthStore((state) => state.token);
