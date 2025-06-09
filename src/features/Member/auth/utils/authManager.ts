@@ -7,28 +7,24 @@ import { queryClient } from '@/lib/react-query-client';
 import originAxios from 'axios';
 
 export async function retryWithRefreshedToken(config: AxiosRequestConfig) {
-  console.log('토큰 재발급 요청');
   try {
     const res = await axios.post('/api/v1/auth/reissue', null, {
       withCredentials: true,
     });
     const newToken = res.data.data.newAccessToken;
     useAuthStore.getState().setToken(newToken);
-    if (!config.headers) {
-      config.headers = {};
-    }
-    config.headers.Authorization = `Bearer ${newToken}`;
-    return axios(config);
+    config.headers = {
+      ...config.headers,
+      Authorization: `Bearer ${newToken}`,
+    };
+    return originAxios(config);
   } catch (e) {
-    if (originAxios.isCancel(e)) {
-      console.log('요청이 취소됨.', e.message);
-    } else {
+    if (!originAxios.isCancel(e)) {
       forceLogout();
     }
     return Promise.reject(e);
   }
 }
-
 export function forceLogout() {
   toast({ title: '로그아웃 되었습니다.' });
   useAuthStore.getState().clearToken();
