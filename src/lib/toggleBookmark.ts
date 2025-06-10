@@ -1,26 +1,26 @@
 //특정 회사의 저장 여부 get & 저장하면 post 날리기
 
-import { instance as axios } from '@/lib/axios';
+import { instance as axios } from '@/features/Member/auth/utils/axios';
 
 export const handleToggleBookmark = async (
   token: string,
   companyId: number,
   isBookmarked: boolean,
-  setIsBookmarked: (value: boolean) => void
+  setIsBookmarked: (_value: boolean) => void,
 ) => {
-    if (import.meta.env.VITE_USE_MOCK === 'true') {
-    console.warn('[mock] toggleBookmark 작동 중');
+  // if (import.meta.env.VITE_USE_MOCK === 'true') {
+  //   console.warn('[mock] toggleBookmark 작동 중');
 
-    return new Promise<boolean>((resolve) => {
-      setTimeout(() => {
-        const next = !isBookmarked;
-        setIsBookmarked(next);
-        resolve(next);
-        // console.log('🎀', next);
-        // return next;
-      }, 300);
-    });
-  }
+  //   return new Promise<boolean>((resolve) => {
+  //     setTimeout(() => {
+  //       const next = !isBookmarked;
+  //       setIsBookmarked(next);
+  //       resolve(next);
+  //       // console.log('🎀', next);
+  //       // return next;
+  //     }, 300);
+  //   });
+  // }
 
   if (!token) return;
 
@@ -42,7 +42,6 @@ export const handleToggleBookmark = async (
     }
   } catch (error) {
     console.error('관심기업 토글 실패:', error);
-    // throw error;
     return null;
   }
 };

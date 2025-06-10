@@ -1,20 +1,18 @@
 import { useMutation } from '@tanstack/react-query';
-import { instance as axios } from '@/lib/axios';
-import { useAuthStore } from '@/store/auth';
+import { instance as axios } from '@/features/Member/auth/utils/axios';
+import { useAuthStore } from '@/features/Member/auth/store/auth';
 
 export const useToggleBookmarkMutation = ({
-//   token,
   companyId,
   isBookmarked,
   setIsBookmarked,
   onSuccess,
   onError,
 }: {
-//   token: string;
   companyId: number;
   isBookmarked?: boolean;
-  setIsBookmarked: (val: boolean) => void;
-  onSuccess?: (next: boolean) => void;
+  setIsBookmarked: (_val: boolean) => void;
+  onSuccess?: (_next: boolean) => void;
   onError?: () => void;
 }) => {
   const handleToggleBookmark = async () => {

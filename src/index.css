@@ -1,4 +1,28 @@
 @import 'pretendard/dist/web/variable/pretendardvariable.css';
+
+/* 리아체 */
+@font-face {
+  font-family: 'RiaSans';
+  src: url('/fonts/ria-sans/RiaSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'RiaSans';
+  src: url('/fonts/ria-sans/RiaSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'RiaSans';
+  src: url('/fonts/ria-sans/RiaSans-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -28,7 +52,6 @@ div#root{
 }
 a {
   font-weight: 500;
-  text-decoration: inherit;
 }
 
 body {
@@ -58,6 +81,18 @@ button {
 
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* spinner 제거 (크롬/엣지/사파리) */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* spinner 제거 (파이어폭스) */
+input[type='number'] {
+  -moz-appearance: textfield;
 }
 
 ::-webkit-scrollbar {
@@ -145,8 +180,7 @@ button:focus-visible {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
 
-    --font-sans: 'Pretendard Variable', sans-serif;
-
+    --font-pretendard: 'Pretendard Variable', sans-serif;
   }
   /* .dark {
     --background: 0 0% 3.9%;
@@ -175,7 +209,7 @@ button:focus-visible {
     --chart-5: 340 75% 55%;
   } */
   html {
-    font-family: var(--font-sans);
+    font-family: var(--font-pretendard);
     background-color: var(--background);
     color: var(--text-primary);
   }

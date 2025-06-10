@@ -1,0 +1,26 @@
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+interface AuthState {
+  token: string | null;
+  setToken: (_token: string) => void;
+  clearToken: () => void;
+}
+
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      token: null,
+      setToken: (token) => set({ token }),
+      clearToken: () => {
+        localStorage.removeItem('auth-storage');
+        localStorage.removeItem('userPoint');
+        localStorage.removeItem('hasNewAlarm');
+        window.location.reload();
+      },
+    }),
+    {
+      name: 'auth-storage', // localStorage 키 이름
+    },
+  ),
+);

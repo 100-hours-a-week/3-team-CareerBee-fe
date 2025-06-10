@@ -1,11 +1,11 @@
-name: Deploy React Frontend to GCE (DEV)
+name: Deploy React Frontend to EC2 (DEV)
 
 on:
   push:
     branches: [ develop ]
 
 jobs:
-  Deploy-DEV:
+  "Deploy-DEV":
     runs-on: ubuntu-latest
 
     env:
@@ -15,6 +15,40 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Decrypt env file
+        run: |
+          openssl enc -aes-256-cbc -d -pbkdf2 -in cicd-variables.sh.enc -out cicd-variables.sh -k "${{ secrets.DEV_CICD_VARIABLES_ENC_PW }}"
+          chmod +x cicd-variables.sh
+
+      - name: Load selected env variables into GitHub Environment
+        run: |
+          source ./cicd-variables.sh
+
+          echo "::add-mask::$SSH_KEY"
+          echo "::add-mask::$SSH_KEY_BASE64"
+          echo "::add-mask::$AWS_SERVER_IP"
+          echo "::add-mask::$AWS_ACCESS_KEY_ID"
+          echo "::add-mask::$AWS_SECRET_ACCESS_KEY"
+          echo "::add-mask::$S3_BUCKET_INFRA"
+          echo "::add-mask::$VITE_KAKAOMAP_KEY"
+          echo "::add-mask::$VITE_API_URL"
+
+          echo "SSH_KEY=$SSH_KEY" >> $GITHUB_ENV
+          echo "SSH_KEY_BASE64=$SSH_KEY_BASE64" >> $GITHUB_ENV
+          echo "AWS_SERVER_IP=$AWS_SERVER_IP" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $GITHUB_ENV
+          echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION" >> $GITHUB_ENV
+          echo "S3_BUCKET_INFRA=$S3_BUCKET_INFRA" >> $GITHUB_ENV
+          echo "VITE_KAKAOMAP_KEY=${VITE_KAKAOMAP_KEY}" >> $GITHUB_ENV
+          echo "VITE_API_URL=${VITE_API_URL}" >> $GITHUB_ENV
+
+      - name: Restore SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${SSH_KEY_BASE64}" | base64 --decode > "${SSH_KEY}"
+          chmod 600 "${SSH_KEY}"
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -22,53 +56,81 @@ jobs:
 
       - name: Install pnpm
         run: |
+          corepack enable
           corepack prepare pnpm@10.7.1 --activate
 
       - name: Install dependencies
-        run: |
-          corepack enable
-          pnpm install
-      
+        run: pnpm install
+
       - name: Create .env file
         run: |
-          echo "${{ secrets.ENV_FILE_CONTENTS }}" > .env
+          echo "VITE_KAKAOMAP_KEY=${VITE_KAKAOMAP_KEY}" > .env
+          echo "VITE_API_URL=${VITE_API_URL}" >> .env
 
       - name: Build React App
         run: pnpm build
-      
+
       - name: Copy .env to dist folder
         run: cp .env dist/
-      - name: Google Auth
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: "${{ secrets.GCP_SA_KEY }}"
-
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          version: 'latest'
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Set timestamp-based path (Asia/Seoul)
         run: |
           TIMESTAMP=$(TZ='Asia/Seoul' date +%Y-%m-%d_%H_%M_%S)
           echo "DEPLOY_PATH=${TIMESTAMP}_${COMMIT_HASH}" >> $GITHUB_ENV
 
-      - name: Upload build to GCS
-        run: |
-          echo "Uploading to: ${{ secrets.GCS_DEV_BUCKET_PATH }}/fe/$DEPLOY_PATH"
-          gcloud storage cp -r ./dist/* "${{ secrets.GCS_DEV_BUCKET_PATH }}/fe/$DEPLOY_PATH/"
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
 
-      - name: Setup SSH key
+      - name: Upload build to S3
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.GCE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.GCE_HOST }} >> ~/.ssh/known_hosts
+          aws s3 cp ./dist "${S3_BUCKET_INFRA}/fe/${DEPLOY_PATH}/" --recursive
 
-      - name: Trigger remote deploy script on GCE
+      - name: Deploy to EC2
         run: |
-          ssh ${{ secrets.GCE_USER }}@${{ secrets.GCE_HOST }} "bash ~/release/deploy-fe.sh $DEPLOY_PATH"
+          echo "EC2 서버와 연결할 수 없음." > failure_reason.txt
+          ssh -i "${SSH_KEY}" -o StrictHostKeyChecking=no "ubuntu@${AWS_SERVER_IP}" <<EOF
+            set -e
+
+            sudo rm -rf /var/www/html/*
+            aws s3 cp "${S3_BUCKET_INFRA}/fe/${DEPLOY_PATH}/" /var/www/html/ --recursive
+          EOF
+
+          rm -f failure_reason.txt
+
+      - name: Health check and rollback if needed
+        run: |
+          set -e
+          for i in $(seq 1 5); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://dev.careerbee.co.kr/health-check")
+            if [ "$STATUS" == "200" ]; then
+              break
+            fi
+            echo $STATUS
+            sleep 10
+          done
+
+          if [ "$STATUS" != "200" ]; then
+            echo "헬스 체크 실패. 상태 코드: $STATUS" > failure_reason.txt
+            
+            LATEST_VALID_BACKUP=$(aws s3 ls "${S3_BUCKET_INFRA}/fe/" | awk '{print $2}' | grep -v "^${DEPLOY_PATH}/$" | sort | tail -n 1 | sed 's#/$##')
+            if [ -z "$LATEST_VALID_BACKUP" ]; then
+              exit 1
+            fi
+
+            ssh -i "${SSH_KEY}" -o StrictHostKeyChecking=no "ubuntu@${AWS_SERVER_IP}" <<EOF
+              set -e
+              sudo rm -rf /var/www/html
+              aws s3 cp "${S3_BUCKET_INFRA}/fe/${LATEST_VALID_BACKUP}/" /var/www/html/ --recursive
+          EOF
+            
+            aws s3 rm "${S3_BUCKET_INFRA}/fe/${DEPLOY_PATH}/" --recursive
+
+            exit 1
+          fi
 
       - name: Notify Discord on Success
         if: success()
@@ -112,10 +174,17 @@ jobs:
           BRANCH="${{ github.ref_name }}"
           RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           TIMESTAMP="${{ github.event.head_commit.timestamp }}"
-      
+          
+          if [ -f failure_reason.txt ]; then
+            FAILURE_REASON=$(cat failure_reason.txt)
+          else
+            FAILURE_REASON="워크플로 로그를 확인해 주세요."
+          fi
+
           DESCRIPTION="**Repository:** \`${REPO}\`
           **Branch:** \`${BRANCH}\`
           **Commit:** \`${COMMIT_MSG}\`
+          **실패 사유:** \`${FAILURE_REASON}\`
           [🔗 실행 로그 보기](${RUN_URL})"
       
           jq -n \

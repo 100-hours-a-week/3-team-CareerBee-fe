@@ -1,34 +1,77 @@
-import { PiBell, PiCoinsDuotone, PiCaretDown, PiCaretLeft } from 'react-icons/pi';
-import { cn } from '@/lib/utils';
-import { useNavigate } from 'react-router-dom';
-import logo from '@/assets/logo-with-text-2.png';
+import { PiBell, PiCaretDown, PiCaretLeft } from 'react-icons/pi';
+import logo from '@/static/logo-with-text-2.png';
+
+import { StateBasedModal } from '@/components/ui/modal';
+
 import { useUiStore } from '@/store/ui';
+
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 interface HeaderProps {
-  type: 'main' | 'login' | 'down' | 'downLogin' | 'nav' | 'minimal';
+  type: 'main' | 'login' | 'down' | 'downLogin' | 'nav' | 'navLogin' | 'minimal';
   point?: number;
   hasNewNotification?: boolean;
 }
 
 export const Header = ({ type = 'main', point = 0, hasNewNotification = false }: HeaderProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [showBackConfirmModal, setShowBackConfirmModal] = useState(false);
   const showUserAssets = type === 'main' || type === 'down' || type === 'nav';
   const isDown = type === 'down' || type === 'downLogin';
-  const isNav = type === 'nav' || type === 'minimal';
+  const isNav = type === 'nav' || type === 'minimal' || type === 'navLogin';
   const isMinimal = type === 'minimal';
 
   const setBackPressedFromHeader = useUiStore((state) => state.setBackPressedFromHeader);
 
+  const handleLogoClick = () => {
+    if (isDown) {
+      setBackPressedFromHeader(true);
+      setTimeout(() => {
+        navigate(-1);
+        setBackPressedFromHeader(false);
+      }, 400);
+    } else {
+      navigate('/'); // 메인 페이지로 이동
+    }
+  };
   return (
     <header className={cn('flex items-center justify-between px-4 h-14 w-full')}>
       {/* 왼쪽 영역 */}
       <div className="flex items-center gap-2">
         {isNav ? (
-          <button onClick={() => navigate(-1)} style={{ padding: 'inherit' }}>
-          <PiCaretLeft className="w-7 h-7 " />
-          </button>
+          <>
+            <button
+              onClick={() => {
+                if (location.pathname.startsWith('/competition/entry')) {
+                  setShowBackConfirmModal(true);
+                } else {
+                  navigate(-1);
+                }
+              }}
+              style={{ padding: 'inherit' }}
+            >
+              <PiCaretLeft className="w-7 h-7 " />
+            </button>
+            <StateBasedModal
+              open={showBackConfirmModal}
+              onOpenChange={setShowBackConfirmModal}
+              title="대회를 정말 종료할까요?"
+              description={
+                <>종료하면 지금까지 입력한 답변은 모두 삭제되고 다시 참여할 수 없어요.</>
+              }
+              actionText="종료하기"
+              cancelText="계속하기"
+              onAction={() => {
+                setShowBackConfirmModal(false);
+                navigate(-1);
+              }}
+            />
+          </>
         ) : isDown ? (
           <button
-            onClick={() => { 
+            onClick={() => {
               setBackPressedFromHeader(true);
               setTimeout(() => {
                 navigate(-1);
@@ -41,29 +84,18 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
           </button>
         ) : null}
 
-        <a
-          onClick={(e) => {
-            if (isDown) {
-              e.preventDefault();
-              setBackPressedFromHeader(true);
-              setTimeout(() => {
-                navigate(-1);
-                setBackPressedFromHeader(false);
-              }, 400);
-            }
-          }}
-        >
-          <img src={logo} alt="logo" className="h-8 cursor-pointer" />
-        </a>
+        <button onClick={handleLogoClick} className="cursor-pointer px-0">
+          <img src={logo} alt="logo" className="h-8" />
+        </button>
       </div>
 
       {/* 오른쪽 영역 */}
       <div className="flex items-center gap-3">
         {showUserAssets ? (
           <>
-            <div className="flex items-center gap-1">
-              <PiCoinsDuotone className="fill-yellow-400 w-9 h-9" />
-              <span className="text-base font-semibold">{point}</span>
+            <div className="flex items-center gap-2">
+              <img src="/assets/coin-small.svg" alt="포인트" className="w-8 h-8 rounded-full" />
+              <span className="text-lg font-semibold">{point}</span>
             </div>
             <a href="/notification" className="relative">
               <PiBell className="w-8 h-8" />

@@ -60,15 +60,15 @@ const AlertDialogContent = React.forwardRef<
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
 
 const AlertDialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('flex flex-col space-y-2 text-center w-full sm:text-left', className)} {...props} />
+  <div
+    className={cn('flex flex-col space-y-2 text-center w-full sm:text-left', className)}
+    {...props}
+  />
 );
 AlertDialogHeader.displayName = 'AlertDialogHeader';
 
 const AlertDialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn('flex flex-row m-auto gap-4', className)}
-    {...props}
-  />
+  <div className={cn('flex flex-row m-auto gap-4', className)} {...props} />
 );
 AlertDialogFooter.displayName = 'AlertDialogFooter';
 
@@ -100,11 +100,7 @@ const AlertDialogAction = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Action>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
 >(({ className, ...props }, ref) => (
-  <AlertDialogPrimitive.Action
-    ref={ref}
-    className={cn(buttonVariants(), className)}
-    {...props}
-  />
+  <AlertDialogPrimitive.Action ref={ref} className={cn(buttonVariants(), className)} {...props} />
 ));
 AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName;
 
@@ -127,13 +123,15 @@ const AlertDialogCancel = React.forwardRef<
 AlertDialogCancel.displayName = AlertDialogPrimitive.Cancel.displayName;
 
 interface ModalProps {
-  trigger: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  trigger?: React.ReactNode;
   title: string;
   description: React.ReactNode;
   cancelText?: string;
   actionText?: string;
   cancelButton?: boolean;
-  onAction: ()=>void;
+  onAction: () => void;
 }
 
 export const Modal = ({
@@ -151,7 +149,8 @@ export const Modal = ({
       <AlertDialogTrigger asChild>
         {React.cloneElement(trigger as React.ReactElement, {
           ref: triggerRef,
-        })}</AlertDialogTrigger>
+        })}
+      </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <div className="flex items-center justify-center">
@@ -169,7 +168,51 @@ export const Modal = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           {cancelText ? <AlertDialogCancel className="w-28">{cancelText}</AlertDialogCancel> : null}
-          {actionText ? <AlertDialogAction className="w-28" onClick={onAction}>{actionText}</AlertDialogAction> : null}
+          {actionText ? (
+            <AlertDialogAction className="w-28" onClick={onAction}>
+              {actionText}
+            </AlertDialogAction>
+          ) : null}
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+export const StateBasedModal = ({
+  open,
+  onOpenChange,
+  title,
+  description,
+  cancelText,
+  actionText,
+  cancelButton = false,
+  onAction,
+}: ModalProps) => {
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <div className="flex items-center justify-center">
+            <AlertDialogTitle>{title}</AlertDialogTitle>
+            {cancelButton ? (
+              <AlertDialogCancel
+                variant="transparent"
+                className="p-1 text-text-primary hover:text-foreground"
+              >
+                <PiX className="iconSize-default" />
+              </AlertDialogCancel>
+            ) : null}
+          </div>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          {cancelText ? <AlertDialogCancel className="w-28">{cancelText}</AlertDialogCancel> : null}
+          {actionText ? (
+            <AlertDialogAction className="w-28" onClick={onAction}>
+              {actionText}
+            </AlertDialogAction>
+          ) : null}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
