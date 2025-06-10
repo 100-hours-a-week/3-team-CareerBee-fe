@@ -1,39 +1,5 @@
-import { safePost, safePatch } from '@/lib/request';
+import { safePatch } from '@/lib/request';
 import { toast } from '@/hooks/useToast';
-
-// import { handleProfileImageUpload } from '../components/profileImageUploader';
-
-export async function handleProfileImageUpload(file: File | null, token: string) {
-  console.log('🗄️ ~ handleProfileImageUpload ~ file:', file);
-  if (!file) return null;
-
-  const extension = file.name.split('.').pop()?.toLowerCase();
-  if (!extension) return null;
-
-  const presignedRes = await safePost(
-    '/api/v1/s3/presigned-url?type=image',
-    {
-      fileName: file.name,
-      extension: extension,
-      uploadType: 'PROFILE_IMAGE',
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
-
-  console.log(presignedRes.data);
-  const { uploadUrl, objectUrl } = presignedRes.data;
-
-  await fetch(uploadUrl, {
-    method: 'PUT',
-    body: file,
-  });
-
-  return objectUrl;
-}
 
 export const submitProfileUpdate = async ({
   file,
@@ -47,9 +13,9 @@ export const submitProfileUpdate = async ({
   token,
 }: {
   file: File | null;
-  nickname: string;
-  email: string;
-  profileUrl: string;
+  nickname?: string;
+  email?: string;
+  profileUrl?: string;
   onSuccess?: () => void;
   onError?: () => void;
   setIsDirty: (_value: boolean) => void;
@@ -58,13 +24,11 @@ export const submitProfileUpdate = async ({
 }) => {
   if (!token) return;
 
-  const newProfileUrl = await handleProfileImageUpload(file, token);
-  // handleProfileImageUpload(file, token);
   try {
     const res = await safePatch(
       '/api/v1/members',
       {
-        newProfileUrl: newProfileUrl ? newProfileUrl : profileUrl,
+        newProfileUrl: profileUrl,
         newNickname: nickname,
         newEmail: email,
       },
