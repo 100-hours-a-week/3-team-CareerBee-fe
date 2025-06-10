@@ -26,6 +26,7 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
 
   const setBackPressedFromHeader = useUiStore((state) => state.setBackPressedFromHeader);
 
+  const { isSubmitted } = useCompetitionStore();
   const handleLogoClick = () => {
     if (isDown) {
       setBackPressedFromHeader(true);
@@ -33,11 +34,12 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
         navigate(-1);
         setBackPressedFromHeader(false);
       }, 400);
+    } else if (location.pathname.startsWith('/competition/entry') && !isSubmitted) {
+      setShowBackConfirmModal(true);
     } else {
       navigate('/'); // 메인 페이지로 이동
     }
   };
-  const { isSubmitted } = useCompetitionStore();
   return (
     <header className={cn('flex items-center justify-between px-4 h-14 w-full')}>
       {/* 왼쪽 영역 */}
