@@ -1,14 +1,14 @@
 import { safePatch } from '@/lib/request';
 import { toast } from '@/hooks/useToast';
 
-export const submitProfileUpdate = async ({
+export const SubmitProfileUpdate = async ({
   file,
   nickname,
   email,
   profileUrl,
   onSuccess,
   onError,
-  setIsDirty,
+  setIsProfileImageDirty,
   setHelperText,
   token,
 }: {
@@ -18,7 +18,7 @@ export const submitProfileUpdate = async ({
   profileUrl?: string;
   onSuccess?: () => void;
   onError?: () => void;
-  setIsDirty: (_value: boolean) => void;
+  setIsProfileImageDirty: (_value: boolean) => void;
   setHelperText: (_value: string) => void;
   token: string | null;
 }) => {
@@ -38,7 +38,7 @@ export const submitProfileUpdate = async ({
     );
     if (res.httpStatusCode === 204) {
       toast({ title: '저장 완료', variant: 'success' });
-      setIsDirty(false);
+      setIsProfileImageDirty(false);
       onSuccess?.();
     }
   } catch (err: any) {

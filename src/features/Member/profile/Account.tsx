@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import ProfileImageUploader from './components/profileImageUploader';
 
-import { submitProfileUpdate } from './util/submitProfileUpdate';
+import { SubmitProfileUpdate } from './util/submitProfileUpdate';
 import { useUserInfo } from '@/hooks/useUserInfo';
 import { useDirty } from './contexts/isDirtyContext';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
@@ -13,16 +13,16 @@ import { useState, useEffect } from 'react';
 export default function Account() {
   const { data: userInfo } = useUserInfo();
   const [nickname, setNickname] = useState(userInfo?.nickname || '예시 닉네임');
-  const [email, setEmail] = useState(userInfo?.email || 'test@example.com');
+  const email = userInfo?.email || 'test@example.com';
   const [file, setFile] = useState<File | null>(null);
   const token = useAuthStore((state) => state.token);
+
   // 값이 바뀌면 isDirty를 true로 변경
-  const { isDirty, setIsDirty } = useDirty();
+  const { setIsNicknameDirty, setIsProfileImageDirty, isAnyDirty } = useDirty();
   useEffect(() => {
-    const originalNickname = userInfo?.nickname || '예시 닉네임';
-    const originalEmail = userInfo?.email || 'test@example.com';
-    setIsDirty(nickname !== originalNickname || email !== originalEmail);
-  }, [nickname, email, userInfo]);
+    const originalNickname = userInfo?.nickname ?? '예시 닉네임';
+    setIsNicknameDirty(nickname !== originalNickname);
+  }, [nickname, userInfo]);
 
   const [helperText, setHelperText] = useState('');
 
@@ -35,12 +35,12 @@ export default function Account() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                submitProfileUpdate({
+                SubmitProfileUpdate({
                   file,
                   nickname,
                   email,
                   profileUrl: userInfo?.profileUrl ?? '',
-                  setIsDirty,
+                  setIsProfileImageDirty,
                   setHelperText,
                   token,
                 });
@@ -72,7 +72,7 @@ export default function Account() {
                   variant={'primary'}
                   label="저장하기"
                   className="px-6 py-2 rounded-xl"
-                  disabled={!isDirty}
+                  disabled={!isAnyDirty}
                 />
               </div>
             </form>
