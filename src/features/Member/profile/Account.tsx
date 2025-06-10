@@ -16,9 +16,7 @@ export default function Account() {
   const [nickname, setNickname] = useState(userInfo?.nickname || '예시 닉네임');
   const email = userInfo?.email || 'test@example.com';
   const [file, setFile] = useState<File | null>(null);
-  const token = useAuthStore((state) => state.token);
 
-  // 값이 바뀌면 isDirty를 true로 변경
   const {
     isNicknameDirty,
     setIsNicknameDirty,
@@ -31,6 +29,7 @@ export default function Account() {
     setIsNicknameDirty(nickname !== originalNickname);
   }, [nickname, userInfo]);
 
+  const token = useAuthStore((state) => state.token);
   const [helperText, setHelperText] = useState('');
 
   return (
@@ -43,7 +42,6 @@ export default function Account() {
               onSubmit={async (e) => {
                 e.preventDefault();
                 SubmitProfileUpdate({
-                  file,
                   nickname: isNicknameDirty ? nickname : undefined,
                   profileUrl: isProfileImageDirty
                     ? await handlePresignedUrl(file, token)

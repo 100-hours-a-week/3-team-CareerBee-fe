@@ -11,7 +11,7 @@ export default function ProfileImageUploader({
   onFileSelect: (_file: File | null) => void;
 }) {
   const { data: userInfo } = useUserInfo();
-  const { setIsDirty } = useDirty();
+  const { setIsProfileImageDirty } = useDirty();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [, setSelectedFile] = useState<File | null>(null);
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +23,7 @@ export default function ProfileImageUploader({
 
     const localUrl = URL.createObjectURL(file);
     setPreviewUrl(localUrl);
-    setIsDirty(true);
+    setIsProfileImageDirty(true);
   };
 
   return (
@@ -37,7 +37,7 @@ export default function ProfileImageUploader({
         <input
           id="profile-upload"
           type="file"
-          accept="image/*"
+          accept="image/jpeg, image/png, image/webp, image/jpg"
           className="hidden"
           onChange={handleImageUpload}
         />
