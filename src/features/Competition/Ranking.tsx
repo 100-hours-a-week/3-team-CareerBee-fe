@@ -6,21 +6,27 @@ import PeriodicBarChart from '@/features/Competition/utils/periodicChart';
 import Timer from '@/features/Competition/components/timer';
 import RankCardList from './components/rankCardList';
 import MyRankCard from '@/features/Competition/components/myRankCard';
+import {
+  COMPETITION_START_TIME,
+  COMPETITION_END_TIME,
+} from '@/features/Competition/config/competitionTime';
 
 import { useTopRankings } from './hooks/useTopRanking';
 import { useAuthStore } from '../Member/auth/store/auth';
 import { safeGet } from '@/lib/request';
+import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
-import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
+import { useNavigate } from 'react-router-dom';
 
 export default function Ranking() {
-  const { competitionId, setCompetitionId } = useCompetitionStore();
+  const navigate = useNavigate();
+  const { competitionId, setCompetitionId, setIsSubmitted } = useCompetitionStore();
   useEffect(() => {
     (async () => {
       const res = await safeGet('/api/v1/competitions/ids');
-      if (res.status === 200) {
+      if (res.httpStatusCode === 200) {
         setCompetitionId(res.data.competitionId);
       }
     })();
@@ -32,32 +38,35 @@ export default function Ranking() {
   const { topRankings } = useTopRankings();
 
   const joined = async () => {
-    const res = await safeGet(`/api/v1/competitions/${competitionId}`, {
+    const res = await safeGet(`/api/v1/members/competitions/${competitionId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    if (res.status === 200) {
+    if (res.httpStatusCode === 200) {
       setAlreadyEntered(res.data.isParticipant);
+      setIsSubmitted(res.data.isParticipant);
     }
   };
 
   useEffect(() => {
-    if (competitionId != null) {
+    if (competitionId != null && token) {
       joined();
     }
   }, [competitionId]);
 
+  // 대회 운영 시간 여부
   const [competitionTime, setCompetitionTime] = useState(false);
   useEffect(() => {
     const now = new Date();
     const utcHours = now.getUTCHours();
     const utcMinutes = now.getUTCMinutes();
     const utcSeconds = now.getUTCSeconds();
-    const currentSeconds = utcHours * 3600 + utcMinutes * 60 + utcSeconds;
+    const utcMilliseconds = now.getUTCMilliseconds();
+    const curr =
+      utcHours * 60 * 60 * 1000 + utcMinutes * 60 * 1000 + utcSeconds * 1000 + utcMilliseconds;
 
-    // 대회 운영 시간 여부
-    const isCompetitionTime = currentSeconds >= 4 * 3600 && currentSeconds < 4 * 3600 + 10 * 60;
+    const isCompetitionTime = curr >= COMPETITION_START_TIME && curr < COMPETITION_END_TIME;
     setCompetitionTime(isCompetitionTime);
   }, []);
 
@@ -150,7 +159,7 @@ export default function Ranking() {
                   '대회 입장'
                 )
               ) : (
-                <Timer KST_DUE_TIME_MS={13 * 60 * 60 * 1000} />
+                <Timer UTC_DUE_TIME_MS={COMPETITION_START_TIME} />
               )
             }
             variant={competitionTime ? 'primary' : 'secondary'}
@@ -160,6 +169,7 @@ export default function Ranking() {
                 window.location.href = '/login';
                 return;
               }
+              navigate('/competition/entry');
             }}
             className={`w-64 h-12 ${competitionTime ? 'text-xl text-text-primary ' : 'text-2xl disabled:opacity-100'} flex mx-auto rounded-xl font-normal`}
           />

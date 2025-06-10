@@ -36,17 +36,20 @@ export function useCompetitionSubmit({
       const correctCount = problems.filter(
         (_, index) => selectedAnswers[index] === problems[index].answer,
       ).length;
-      const res = await safePost(`/api/v1/competitions/${competitionId}/results`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
+      const res = await safePost(
+        `/api/v1/competitions/${competitionId}/results`,
+        {
           solvedCount: correctCount,
-          elapsedTime: 60000 - timeLeft,
-        }),
-      });
+          elapsedTime: 10 * 60 * 1000 - timeLeft,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
-      if (res.status !== 200) {
+      if (res.status !== 204) {
         alert('제출에 실패했습니다.');
       }
     },

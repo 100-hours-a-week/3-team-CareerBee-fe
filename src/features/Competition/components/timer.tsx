@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 
 interface TimerProps {
-  KST_DUE_TIME_MS: number;
+  UTC_DUE_TIME_MS: number;
   mode?: 'hms' | 'msms'; // 기본값은 'hms'
+  stopTimer?: boolean;
 }
 
 function formatToHMS(seconds: number) {
@@ -19,32 +20,37 @@ function formatToMS(milliseconds: number) {
   return `${m}:${s}:${ms}`;
 }
 
-function useCompetitionTimer(KST_DUE_TIME_MS: number, mode: 'hms' | 'msms') {
+function avoidMinus(rawDiff: number, base: number) {
+  return ((rawDiff % base) + base) % base;
+}
+
+function useCompetitionTimer(
+  UTC_DUE_TIME_MS: number,
+  mode: 'hms' | 'msms',
+  stopTimer: boolean = false,
+) {
   const [time, setTime] = useState('');
 
   useEffect(() => {
+    if (stopTimer) return;
+
     const checkTime = () => {
       const now = new Date();
-      const currentMs = now.getTime() % (24 * 60 * 60 * 1000);
-      const startUTC = KST_DUE_TIME_MS - 9 * 60 * 60 * 1000;
-
-      const remainingMs = startUTC - currentMs;
+      const utcHours = now.getUTCHours();
+      const utcMinutes = now.getUTCMinutes();
+      const utcSeconds = now.getUTCSeconds();
+      const utcMilliseconds = now.getUTCMilliseconds();
+      const currMs =
+        utcHours * 60 * 60 * 1000 + utcMinutes * 60 * 1000 + utcSeconds * 1000 + utcMilliseconds;
+      const currS = utcHours * 60 * 60 + utcMinutes * 60 + utcSeconds;
 
       if (mode === 'msms') {
+        const remainingMs = avoidMinus(UTC_DUE_TIME_MS - currMs, 24 * 60 * 60 * 1000);
         if (remainingMs < 0 || remainingMs > 10 * 60 * 1000) return setTime('00:00:00');
         setTime(formatToMS(remainingMs));
       } else {
-        const utcHours = now.getUTCHours();
-        const utcMinutes = now.getUTCMinutes();
-        const utcSeconds = now.getUTCSeconds();
-        const currentSeconds = utcHours * 3600 + utcMinutes * 60 + utcSeconds;
-        let startUTCSeconds = Math.floor(startUTC / 1000);
-
-        if (currentSeconds >= startUTCSeconds + 10 * 60) {
-          startUTCSeconds += 24 * 3600;
-        }
-
-        const remainingSeconds = startUTCSeconds - currentSeconds;
+        let UTC_DUE_TIME_S = Math.floor(UTC_DUE_TIME_MS / 1000);
+        const remainingSeconds = avoidMinus(UTC_DUE_TIME_S - currS, 24 * 60 * 60);
         setTime(formatToHMS(remainingSeconds));
       }
     };
@@ -52,12 +58,12 @@ function useCompetitionTimer(KST_DUE_TIME_MS: number, mode: 'hms' | 'msms') {
     checkTime();
     const interval = setInterval(checkTime, mode === 'msms' ? 50 : 1000);
     return () => clearInterval(interval);
-  }, [KST_DUE_TIME_MS, mode]);
+  }, [UTC_DUE_TIME_MS, mode, stopTimer]);
 
   return time;
 }
 
-export default function Timer({ KST_DUE_TIME_MS, mode = 'hms' }: TimerProps) {
-  const timeUntilStart = useCompetitionTimer(KST_DUE_TIME_MS, mode);
+export default function Timer({ UTC_DUE_TIME_MS, mode = 'hms', stopTimer = false }: TimerProps) {
+  const timeUntilStart = useCompetitionTimer(UTC_DUE_TIME_MS, mode, stopTimer);
   return <div>{timeUntilStart}</div>;
 }
