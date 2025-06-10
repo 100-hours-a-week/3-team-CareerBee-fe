@@ -6,6 +6,10 @@ import PeriodicBarChart from '@/features/Competition/utils/periodicChart';
 import Timer from '@/features/Competition/components/timer';
 import RankCardList from './components/rankCardList';
 import MyRankCard from '@/features/Competition/components/myRankCard';
+import {
+  COMPETITION_START_TIME,
+  COMPETITION_END_TIME,
+} from '@/features/Competition/config/competitionTime';
 
 import { useTopRankings } from './hooks/useTopRanking';
 import { useAuthStore } from '../Member/auth/store/auth';
@@ -48,16 +52,20 @@ export default function Ranking() {
     }
   }, [competitionId]);
 
+  // 대회 운영 시간 여부
   const [competitionTime, setCompetitionTime] = useState(false);
   useEffect(() => {
     const now = new Date();
     const utcHours = now.getUTCHours();
     const utcMinutes = now.getUTCMinutes();
     const utcSeconds = now.getUTCSeconds();
-    const currentSeconds = utcHours * 3600 + utcMinutes * 60 + utcSeconds;
+    const utcMilliseconds = now.getUTCMilliseconds();
+    const curr =
+      utcHours * 60 * 60 * 1000 + utcMinutes * 60 * 1000 + utcSeconds * 1000 + utcMilliseconds;
 
-    // 대회 운영 시간 여부
-    const isCompetitionTime = currentSeconds >= 4 * 3600 && currentSeconds < 4 * 3600 + 10 * 60;
+    const isCompetitionTime =
+      curr >= COMPETITION_START_TIME - 9 * 60 * 60 * 1000 &&
+      curr < COMPETITION_END_TIME - 9 * 60 * 60 * 1000;
     setCompetitionTime(isCompetitionTime);
   }, []);
 
@@ -150,7 +158,7 @@ export default function Ranking() {
                   '대회 입장'
                 )
               ) : (
-                <Timer KST_DUE_TIME_MS={13 * 60 * 60 * 1000} />
+                <Timer KST_DUE_TIME_MS={COMPETITION_START_TIME} />
               )
             }
             variant={competitionTime ? 'primary' : 'secondary'}
@@ -160,6 +168,7 @@ export default function Ranking() {
                 window.location.href = '/login';
                 return;
               }
+              window.location.href = '/competition/entry';
             }}
             className={`w-64 h-12 ${competitionTime ? 'text-xl text-text-primary ' : 'text-2xl disabled:opacity-100'} flex mx-auto rounded-xl font-normal`}
           />
