@@ -36,7 +36,7 @@ export default function Ranking() {
   const { topRankings } = useTopRankings();
 
   const joined = async () => {
-    const res = await safeGet(`/api/v1/competitions/${competitionId}`, {
+    const res = await safeGet(`/api/v1/members/competitions/${competitionId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -47,7 +47,7 @@ export default function Ranking() {
   };
 
   useEffect(() => {
-    if (competitionId != null) {
+    if (competitionId != null && token) {
       joined();
     }
   }, [competitionId]);
