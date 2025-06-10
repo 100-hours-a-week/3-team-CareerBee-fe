@@ -11,7 +11,7 @@ export default function ProfileImageUploader({
   onFileSelect: (_file: File | null) => void;
 }) {
   const { data: userInfo } = useUserInfo();
-  const { setIsDirty } = useDirty();
+  const { setIsProfileImageDirty } = useDirty();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [, setSelectedFile] = useState<File | null>(null);
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,11 +23,11 @@ export default function ProfileImageUploader({
 
     const localUrl = URL.createObjectURL(file);
     setPreviewUrl(localUrl);
-    setIsDirty(true);
+    setIsProfileImageDirty(true);
   };
 
   return (
-    <div className="flex justify-center w-full ">
+    <div className="flex relative justify-center w-full ">
       <label htmlFor="profile-upload" className="cursor-pointer relative w-24 h-24">
         <img
           src={previewUrl || userInfo?.profileUrl || noProfile}
@@ -37,16 +37,16 @@ export default function ProfileImageUploader({
         <input
           id="profile-upload"
           type="file"
-          accept="image/*"
+          accept="image/jpeg, image/png, image/webp, image/jpg"
           className="hidden"
           onChange={handleImageUpload}
         />
+        <img
+          src={imageUpdate}
+          alt="이미지 업데이트"
+          className="absolute inset-[70px] right-center w-[1.3125rem] h-[1.3125rem]"
+        />
       </label>
-      <img
-        src={imageUpdate}
-        alt="이미지 업데이트"
-        className="absolute bottom-1 right-1 w-[1.3125rem] h-[1.3125rem]"
-      />
     </div>
   );
 }

@@ -3,28 +3,45 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import ProfileImageUploader from './components/profileImageUploader';
 
-import { submitProfileUpdate } from './util/submitProfileUpdate';
+import { SubmitProfileUpdate } from './util/submitProfileUpdate';
 import { useUserInfo } from '@/hooks/useUserInfo';
 import { useDirty } from './contexts/isDirtyContext';
+import { handlePresignedUrl } from './util/handlePresignedUrl';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 
 import { useState, useEffect } from 'react';
 
 export default function Account() {
   const { data: userInfo } = useUserInfo();
-  const [nickname, setNickname] = useState(userInfo?.nickname || '닉네임');
-  const [email, setEmail] = useState(userInfo?.email || '이메일');
+  const [nickname, setNickname] = useState(userInfo?.nickname || '예시 닉네임');
+  const email = userInfo?.email || 'test@example.com';
   const [file, setFile] = useState<File | null>(null);
-  const token = useAuthStore((state) => state.token);
-  // 값이 바뀌면 isDirty를 true로 변경
-  const { isDirty, setIsDirty } = useDirty();
-  useEffect(() => {
-    const originalNickname = userInfo?.nickname || '닉네임';
-    const originalEmail = userInfo?.email || '이메일';
-    setIsDirty(nickname !== originalNickname || email !== originalEmail);
-  }, [nickname, email, userInfo]);
 
   const [helperText, setHelperText] = useState('');
+  const {
+    isNicknameDirty,
+    setIsNicknameDirty,
+    isProfileImageDirty,
+    setIsProfileImageDirty,
+    isAnyDirty,
+  } = useDirty();
+  useEffect(() => {
+    const originalNickname = userInfo?.nickname ?? '예시 닉네임';
+    setIsNicknameDirty(nickname !== originalNickname && nickname != '');
+  }, [nickname, userInfo]);
+
+  useEffect(() => {
+    if (nickname == '') {
+      setHelperText('*닉네임을 입력해주세요.');
+    }
+    if (isAnyDirty) {
+      setHelperText('*저장하기를 눌러주세요.');
+    } else {
+      setHelperText('');
+    }
+  }, [nickname, isAnyDirty]);
+
+  const token = useAuthStore((state) => state.token);
 
   return (
     <div className="flex flex-col h-full">
@@ -33,28 +50,25 @@ export default function Account() {
           <div className="text-base font-bold w-full items-start">회원 정보 관리</div>
           <div>
             <form
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
-                submitProfileUpdate({
-                  file,
-                  nickname,
-                  email,
-                  profileUrl: userInfo?.profileUrl ?? '',
-                  setIsDirty,
+                SubmitProfileUpdate({
+                  nickname: isNicknameDirty ? nickname : undefined,
+                  profileUrl: isProfileImageDirty
+                    ? await handlePresignedUrl(file, token)
+                    : undefined,
+                  setIsNicknameDirty,
+                  setIsProfileImageDirty,
                   setHelperText,
                   token,
                 });
               }}
             >
-              {/* <DirtyProvider> */}
               <ProfileImageUploader onFileSelect={setFile} />
-              {/* </DirtyProvider> */}
-              <p className="flex w-full justify-end text-xs text-error h-4">
-                {helperText ? helperText : '*변경 사항이 있다면 저장하기를 눌러주세요.'}
-              </p>
+              <p className="flex w-full justify-end text-xs text-error h-4">{helperText}</p>
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-1">
-                  <div>{userInfo?.nickname || '닉네임'}</div>
+                  <div>닉네임</div>
                   <Input
                     className="px-3 py-1"
                     value={nickname}
@@ -64,16 +78,8 @@ export default function Account() {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <div>{userInfo?.email || '이메일'}</div>
-
-                  <Input
-                    className="px-3 py-1"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      setHelperText('');
-                    }}
-                  />
+                  <div>이메일</div>
+                  <div className="text-text-secondary text-sm px-3 py-1">{email}</div>
                 </div>
               </div>
               <div className="flex w-full justify-end mt-6">
@@ -82,7 +88,7 @@ export default function Account() {
                   variant={'primary'}
                   label="저장하기"
                   className="px-6 py-2 rounded-xl"
-                  disabled={!isDirty}
+                  disabled={!isAnyDirty}
                 />
               </div>
             </form>

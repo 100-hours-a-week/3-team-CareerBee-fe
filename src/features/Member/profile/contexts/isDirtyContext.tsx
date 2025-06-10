@@ -2,13 +2,30 @@ import { createContext, useContext, useState } from 'react';
 import React from 'react';
 
 const DirtyContext = createContext<{
-  isDirty: boolean;
-  setIsDirty: (_val: boolean) => void;
+  isNicknameDirty: boolean;
+  isProfileImageDirty: boolean;
+  setIsNicknameDirty: (_val: boolean) => void;
+  setIsProfileImageDirty: (_val: boolean) => void;
+  isAnyDirty: boolean;
 } | null>(null);
 
 export const DirtyProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isDirty, setIsDirty] = useState(false);
-  return <DirtyContext.Provider value={{ isDirty, setIsDirty }}>{children}</DirtyContext.Provider>;
+  const [isNicknameDirty, setIsNicknameDirty] = useState(false);
+  const [isProfileImageDirty, setIsProfileImageDirty] = useState(false);
+  const isAnyDirty = isNicknameDirty || isProfileImageDirty;
+  return (
+    <DirtyContext.Provider
+      value={{
+        isNicknameDirty,
+        isProfileImageDirty,
+        setIsNicknameDirty,
+        setIsProfileImageDirty,
+        isAnyDirty,
+      }}
+    >
+      {children}
+    </DirtyContext.Provider>
+  );
 };
 
 export const useDirty = () => {
