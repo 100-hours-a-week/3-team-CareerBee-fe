@@ -17,6 +17,7 @@ export default function Account() {
   const email = userInfo?.email || 'test@example.com';
   const [file, setFile] = useState<File | null>(null);
 
+  const [helperText, setHelperText] = useState('');
   const {
     isNicknameDirty,
     setIsNicknameDirty,
@@ -26,11 +27,21 @@ export default function Account() {
   } = useDirty();
   useEffect(() => {
     const originalNickname = userInfo?.nickname ?? '예시 닉네임';
-    setIsNicknameDirty(nickname !== originalNickname);
+    setIsNicknameDirty(nickname !== originalNickname && nickname != '');
   }, [nickname, userInfo]);
 
+  useEffect(() => {
+    if (nickname == '') {
+      setHelperText('*닉네임을 입력해주세요.');
+    }
+    if (isAnyDirty) {
+      setHelperText('*저장하기를 눌러주세요.');
+    } else {
+      setHelperText('');
+    }
+  }, [nickname, isAnyDirty]);
+
   const token = useAuthStore((state) => state.token);
-  const [helperText, setHelperText] = useState('');
 
   return (
     <div className="flex flex-col h-full">
@@ -54,9 +65,7 @@ export default function Account() {
               }}
             >
               <ProfileImageUploader onFileSelect={setFile} />
-              <p className="flex w-full justify-end text-xs text-error h-4">
-                {helperText ? helperText : '*변경 사항이 있다면 저장하기를 눌러주세요.'}
-              </p>
+              <p className="flex w-full justify-end text-xs text-error h-4">{helperText}</p>
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-1">
                   <div>닉네임</div>
