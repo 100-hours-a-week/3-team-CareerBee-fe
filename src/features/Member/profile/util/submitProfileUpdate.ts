@@ -7,6 +7,7 @@ export const SubmitProfileUpdate = async ({
   profileUrl,
   onSuccess,
   onError,
+  setIsNicknameDirty,
   setIsProfileImageDirty,
   setHelperText,
   token,
@@ -16,6 +17,7 @@ export const SubmitProfileUpdate = async ({
   profileUrl?: string;
   onSuccess?: () => void;
   onError?: () => void;
+  setIsNicknameDirty: (_value: boolean) => void;
   setIsProfileImageDirty: (_value: boolean) => void;
   setHelperText: (_value: string) => void;
   token: string | null;
@@ -35,6 +37,7 @@ export const SubmitProfileUpdate = async ({
     );
     if (res.httpStatusCode === 204) {
       toast({ title: '저장 완료', variant: 'success' });
+      setIsNicknameDirty(false);
       setIsProfileImageDirty(false);
       onSuccess?.();
     }

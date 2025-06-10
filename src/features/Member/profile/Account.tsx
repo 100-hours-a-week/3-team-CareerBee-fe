@@ -48,6 +48,7 @@ export default function Account() {
                   profileUrl: isProfileImageDirty
                     ? await handlePresignedUrl(file, token)
                     : undefined,
+                  setIsNicknameDirty,
                   setIsProfileImageDirty,
                   setHelperText,
                   token,
