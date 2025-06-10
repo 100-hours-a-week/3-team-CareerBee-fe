@@ -12,15 +12,15 @@ import { useState, useEffect } from 'react';
 
 export default function Account() {
   const { data: userInfo } = useUserInfo();
-  const [nickname, setNickname] = useState(userInfo?.nickname || '닉네임');
-  const [email, setEmail] = useState(userInfo?.email || '이메일');
+  const [nickname, setNickname] = useState(userInfo?.nickname || '예시 닉네임');
+  const [email, setEmail] = useState(userInfo?.email || 'test@example.com');
   const [file, setFile] = useState<File | null>(null);
   const token = useAuthStore((state) => state.token);
   // 값이 바뀌면 isDirty를 true로 변경
   const { isDirty, setIsDirty } = useDirty();
   useEffect(() => {
-    const originalNickname = userInfo?.nickname || '닉네임';
-    const originalEmail = userInfo?.email || '이메일';
+    const originalNickname = userInfo?.nickname || '예시 닉네임';
+    const originalEmail = userInfo?.email || 'test@example.com';
     setIsDirty(nickname !== originalNickname || email !== originalEmail);
   }, [nickname, email, userInfo]);
 
@@ -46,15 +46,13 @@ export default function Account() {
                 });
               }}
             >
-              {/* <DirtyProvider> */}
               <ProfileImageUploader onFileSelect={setFile} />
-              {/* </DirtyProvider> */}
               <p className="flex w-full justify-end text-xs text-error h-4">
                 {helperText ? helperText : '*변경 사항이 있다면 저장하기를 눌러주세요.'}
               </p>
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-1">
-                  <div>{userInfo?.nickname || '닉네임'}</div>
+                  <div>닉네임</div>
                   <Input
                     className="px-3 py-1"
                     value={nickname}
@@ -64,16 +62,8 @@ export default function Account() {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <div>{userInfo?.email || '이메일'}</div>
-
-                  <Input
-                    className="px-3 py-1"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      setHelperText('');
-                    }}
-                  />
+                  <div>이메일</div>
+                  <div className="text-text-secondary text-sm px-3 py-1">{email}</div>
                 </div>
               </div>
               <div className="flex w-full justify-end mt-6">
