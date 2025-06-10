@@ -24,7 +24,7 @@ export default function Ranking() {
   useEffect(() => {
     (async () => {
       const res = await safeGet('/api/v1/competitions/ids');
-      if (res.status === 200) {
+      if (res.httpStatusCode === 200) {
         setCompetitionId(res.data.competitionId);
       }
     })();
@@ -41,7 +41,7 @@ export default function Ranking() {
         Authorization: `Bearer ${token}`,
       },
     });
-    if (res.status === 200) {
+    if (res.httpStatusCode === 200) {
       setAlreadyEntered(res.data.isParticipant);
     }
   };
