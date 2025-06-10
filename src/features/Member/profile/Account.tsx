@@ -6,6 +6,7 @@ import ProfileImageUploader from './components/profileImageUploader';
 import { SubmitProfileUpdate } from './util/submitProfileUpdate';
 import { useUserInfo } from '@/hooks/useUserInfo';
 import { useDirty } from './contexts/isDirtyContext';
+import { handlePresignedUrl } from './util/handlePresignedUrl';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 
 import { useState, useEffect } from 'react';
@@ -18,7 +19,13 @@ export default function Account() {
   const token = useAuthStore((state) => state.token);
 
   // 값이 바뀌면 isDirty를 true로 변경
-  const { setIsNicknameDirty, setIsProfileImageDirty, isAnyDirty } = useDirty();
+  const {
+    isNicknameDirty,
+    setIsNicknameDirty,
+    isProfileImageDirty,
+    setIsProfileImageDirty,
+    isAnyDirty,
+  } = useDirty();
   useEffect(() => {
     const originalNickname = userInfo?.nickname ?? '예시 닉네임';
     setIsNicknameDirty(nickname !== originalNickname);
@@ -33,12 +40,14 @@ export default function Account() {
           <div className="text-base font-bold w-full items-start">회원 정보 관리</div>
           <div>
             <form
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
                 SubmitProfileUpdate({
                   file,
-                  nickname,
-                  profileUrl: userInfo?.profileUrl ?? '',
+                  nickname: isNicknameDirty ? nickname : undefined,
+                  profileUrl: isProfileImageDirty
+                    ? await handlePresignedUrl(file, token)
+                    : undefined,
                   setIsProfileImageDirty,
                   setHelperText,
                   token,
