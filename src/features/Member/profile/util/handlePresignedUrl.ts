@@ -1,6 +1,6 @@
 import { safePost } from '@/lib/request';
 
-export async function handleProfileImageUpload(file: File | null, token: string | null) {
+export async function handlePresignedUrl(file: File | null, token: string | null) {
   if (!file) return null;
 
   const extension = file.name.split('.').pop()?.toLowerCase();
