@@ -38,7 +38,6 @@ export default function Account() {
                 SubmitProfileUpdate({
                   file,
                   nickname,
-                  email,
                   profileUrl: userInfo?.profileUrl ?? '',
                   setIsProfileImageDirty,
                   setHelperText,

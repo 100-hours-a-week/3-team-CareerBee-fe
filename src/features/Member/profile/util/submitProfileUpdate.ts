@@ -4,7 +4,6 @@ import { toast } from '@/hooks/useToast';
 export const SubmitProfileUpdate = async ({
   file,
   nickname,
-  email,
   profileUrl,
   onSuccess,
   onError,
@@ -14,7 +13,6 @@ export const SubmitProfileUpdate = async ({
 }: {
   file: File | null;
   nickname?: string;
-  email?: string;
   profileUrl?: string;
   onSuccess?: () => void;
   onError?: () => void;
@@ -30,7 +28,6 @@ export const SubmitProfileUpdate = async ({
       {
         newProfileUrl: profileUrl,
         newNickname: nickname,
-        newEmail: email,
       },
       {
         headers: { Authorization: `Bearer ${token}` },
