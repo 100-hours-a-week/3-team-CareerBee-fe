@@ -10,6 +10,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN corepack enable && corepack prepare pnpm@10.7.1 --activate
 
 # 의존성 설치
+ENV CI=true
 COPY . .
 RUN pnpm install
 RUN pnpm build
