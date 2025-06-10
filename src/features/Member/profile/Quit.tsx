@@ -2,14 +2,43 @@ import { Button } from '@/components/ui/button';
 import Dropdown from '@/components/ui/dropdown';
 import { Modal } from '@/components/ui/modal';
 
+import { useAuthStore } from '../auth/store/auth';
+import { queryClient } from '@/lib/react-query-client';
+
 import { useState } from 'react';
+import { safeDelete } from '@/lib/request';
 
 export default function Quit() {
-  const [selectedReason, setSelectedReason] = useState(''); // 추가
+  const [selectedReason, setSelectedReason] = useState('');
+  const token = useAuthStore((state) => state.token);
 
-  const quit = () => {
-    // localStorage.removeItem('token');
-    window.location.href = '/';
+  const quit = async () => {
+    try {
+      const res = await safeDelete(
+        '/api/v1/members',
+        {
+          data: {
+            withdrawReason: selectedReason,
+          },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      //탈퇴 성공
+      if (res.httpStatusCode === 204) {
+        useAuthStore.getState().clearToken();
+        queryClient.removeQueries({ queryKey: ['userInfo'] });
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 300);
+      }
+    } catch (error) {
+      console.error('회원 탈퇴 실패:', error);
+    }
   };
 
   return (
