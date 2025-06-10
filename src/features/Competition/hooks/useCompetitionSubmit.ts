@@ -42,7 +42,7 @@ export function useCompetitionSubmit({
         },
         body: JSON.stringify({
           solvedCount: correctCount,
-          elapsedTime: 60000 - timeLeft,
+          elapsedTime: 10 * 60 * 1000 - timeLeft,
         }),
       });
 
