@@ -39,7 +39,7 @@ jobs:
       - name: Copy .env to dist folder
         run: cp .env dist/
 
-      - name: Set timestamp-based path (Asia/Seoul)
+      - name: Set timestamp-based image tag (Asia/Seoul)
         run: |
           TIMESTAMP=$(TZ='Asia/Seoul' date +%Y%m%d-%H%M%S)
           echo "IMAGE_TAG=${TIMESTAMP}-${COMMIT_HASH}" >> $GITHUB_ENV
