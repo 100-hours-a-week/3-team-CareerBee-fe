@@ -27,7 +27,7 @@ export default function ProfileImageUploader({
   };
 
   return (
-    <div className="flex justify-center w-full ">
+    <div className="flex relative justify-center w-full ">
       <label htmlFor="profile-upload" className="cursor-pointer relative w-24 h-24">
         <img
           src={previewUrl || userInfo?.profileUrl || noProfile}
@@ -41,12 +41,12 @@ export default function ProfileImageUploader({
           className="hidden"
           onChange={handleImageUpload}
         />
+        <img
+          src={imageUpdate}
+          alt="이미지 업데이트"
+          className="absolute inset-[70px] right-center w-[1.3125rem] h-[1.3125rem]"
+        />
       </label>
-      <img
-        src={imageUpdate}
-        alt="이미지 업데이트"
-        className="absolute bottom-1 right-1 w-[1.3125rem] h-[1.3125rem]"
-      />
     </div>
   );
 }
