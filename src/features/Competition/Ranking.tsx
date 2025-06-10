@@ -22,7 +22,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Ranking() {
   const navigate = useNavigate();
-  const { competitionId, setCompetitionId } = useCompetitionStore();
+  const { competitionId, setCompetitionId, setIsSubmitted } = useCompetitionStore();
   useEffect(() => {
     (async () => {
       const res = await safeGet('/api/v1/competitions/ids');
@@ -45,6 +45,7 @@ export default function Ranking() {
     });
     if (res.httpStatusCode === 200) {
       setAlreadyEntered(res.data.isParticipant);
+      setIsSubmitted(res.data.isParticipant);
     }
   };
 

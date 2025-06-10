@@ -3,14 +3,18 @@ import { persist } from 'zustand/middleware';
 
 interface CompetitionState {
   competitionId: number | null;
+  isSubmitted: boolean;
   setCompetitionId: (_id: number) => void;
+  setIsSubmitted: (_val: boolean) => void;
 }
 
 export const useCompetitionStore = create(
   persist<CompetitionState>(
     (set) => ({
       competitionId: null,
+      isSubmitted: false,
       setCompetitionId: (id) => set({ competitionId: id }),
+      setIsSubmitted: (val) => set({ isSubmitted: val }),
     }),
     {
       name: 'competition-storage', // localStorage key

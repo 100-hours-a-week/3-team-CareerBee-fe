@@ -32,7 +32,7 @@ export interface Problem {
 }
 
 export default function Competition() {
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const { isSubmitted, setIsSubmitted } = useCompetitionStore();
   const [showPointResult, setShowPointResult] = useState(false);
   const [currentTab, setCurrentTab] = useState(1);
   const [showTimeOverModal, setShowTimeOverModal] = useState(false);

@@ -6,6 +6,7 @@ import { StateBasedModal } from '@/components/ui/modal';
 import { useUiStore } from '@/store/ui';
 
 import { useState } from 'react';
+import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 interface HeaderProps {
@@ -36,6 +37,7 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
       navigate('/'); // 메인 페이지로 이동
     }
   };
+  const { isSubmitted } = useCompetitionStore();
   return (
     <header className={cn('flex items-center justify-between px-4 h-14 w-full')}>
       {/* 왼쪽 영역 */}
@@ -44,7 +46,7 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
           <>
             <button
               onClick={() => {
-                if (location.pathname.startsWith('/competition/entry')) {
+                if (location.pathname.startsWith('/competition/entry') && !isSubmitted) {
                   setShowBackConfirmModal(true);
                 } else {
                   navigate(-1);
