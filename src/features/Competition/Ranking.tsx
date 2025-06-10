@@ -65,9 +65,7 @@ export default function Ranking() {
     const curr =
       utcHours * 60 * 60 * 1000 + utcMinutes * 60 * 1000 + utcSeconds * 1000 + utcMilliseconds;
 
-    const isCompetitionTime =
-      curr >= COMPETITION_START_TIME - 9 * 60 * 60 * 1000 &&
-      curr < COMPETITION_END_TIME - 9 * 60 * 60 * 1000;
+    const isCompetitionTime = curr >= COMPETITION_START_TIME && curr < COMPETITION_END_TIME;
     setCompetitionTime(isCompetitionTime);
   }, []);
 
@@ -160,7 +158,7 @@ export default function Ranking() {
                   '대회 입장'
                 )
               ) : (
-                <Timer KST_DUE_TIME_MS={COMPETITION_START_TIME} />
+                <Timer UTC_DUE_TIME_MS={COMPETITION_START_TIME} />
               )
             }
             variant={competitionTime ? 'primary' : 'secondary'}

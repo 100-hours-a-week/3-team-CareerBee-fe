@@ -64,7 +64,7 @@ export default function Competition() {
       {/* 타이머 */}
       <div className="flex h-full min-h-[48px] max-h-[96px]">
         <div className="w-[17rem] mx-auto font-medium text-5xl px-8 mb-auto">
-          <Timer KST_DUE_TIME_MS={COMPETITION_END_TIME} mode="msms"></Timer>
+          <Timer UTC_DUE_TIME_MS={COMPETITION_END_TIME} mode="msms"></Timer>
         </div>
       </div>
       <div className="flex justify-between items-stretch mt-2 w-full h-full">
