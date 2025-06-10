@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { ChartProps } from '@/features/Competition/hooks/useTopRanking';
 
 const rankCardStyles = {
   green: { bgImage: 'week-green-rank.svg', height: '120px', marginTop: 'mt-5' },
@@ -8,10 +9,10 @@ const rankCardStyles = {
 
 type RankCardProps = {
   styleKey: keyof typeof rankCardStyles;
-  nickname: string;
+  rankingData: ChartProps;
 };
 
-const RankCard = ({ styleKey, nickname }: RankCardProps) => {
+const RankCard = ({ styleKey, rankingData }: RankCardProps) => {
   const { bgImage, height, marginTop } = rankCardStyles[styleKey];
   return (
     <div className={`w-1/3 h-[${height}] px-0.5`}>
@@ -20,16 +21,22 @@ const RankCard = ({ styleKey, nickname }: RankCardProps) => {
         style={{ backgroundImage: `url(/assets/${bgImage})` }}
       >
         <img
-          src="/assets/no-profile.png"
+          src={rankingData.profileImgUrl || '/assets/no-profile.png'}
           className={`w-8 h-8 mx-auto ${marginTop}`}
           alt="프로필 이미지"
         />
         <div className="flex items-center justify-center mx-auto">
-          <img src="/assets/default.svg" className="w-4 h-4 mr-1" alt="뱃지 이미지" />
-          <div>{nickname}</div>
+          <img
+            src={rankingData.badgeImgUrl || '/assets/default.svg'}
+            className="w-4 h-4 mr-1"
+            alt="뱃지 이미지"
+          />
+          <div>{rankingData.nickname}</div>
         </div>
-        <div className="text-[0.625rem] text-center">03.24.123</div>
-        <div className="text-[0.625rem] text-center">5/5</div>
+        <div className="text-[0.625rem] text-center">
+          {rankingData.elapsedTime || '0'}일 연속 참여
+        </div>
+        <div className="text-[0.625rem] text-center">{rankingData.solvedCount || '0'}%</div>
       </div>
     </div>
   );
@@ -37,10 +44,10 @@ const RankCard = ({ styleKey, nickname }: RankCardProps) => {
 
 type RankCardListProps = {
   styleKeys: ('green' | 'red' | 'blue')[];
-  nicknames: string[];
+  rankingData: ChartProps[];
 };
 
-export default function RankCardList({ styleKeys, nicknames }: RankCardListProps) {
+export default function RankCardList({ styleKeys, rankingData }: RankCardListProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -50,7 +57,7 @@ export default function RankCardList({ styleKeys, nicknames }: RankCardListProps
     >
       <div className="flex w-[440px] h-[128px] items-end mb-1">
         {styleKeys.map((key, idx) => (
-          <RankCard key={idx} styleKey={key} nickname={nicknames[idx]} />
+          <RankCard key={idx} styleKey={key} rankingData={rankingData[idx]} />
         ))}
       </div>
     </motion.div>

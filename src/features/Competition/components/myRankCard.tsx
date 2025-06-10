@@ -11,6 +11,13 @@ export default function MyRankCard({ rankingView }: MyRankCardProps) {
   const { myRanking } = useMyRanking();
   const { data: userInfo } = useUserInfo();
 
+  if (
+    (rankingView === 'daily' && !myRanking.daily) ||
+    (rankingView === 'weekly' && !myRanking.weekly) ||
+    (rankingView === 'monthly' && !myRanking.monthly)
+  ) {
+    return <></>;
+  }
   const rank =
     rankingView === 'daily'
       ? myRanking.daily?.rank

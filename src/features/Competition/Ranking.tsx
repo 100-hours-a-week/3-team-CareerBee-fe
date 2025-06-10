@@ -2,7 +2,7 @@ import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
 
 import { Button } from '@/components/ui/button';
 import DailyBarChart from '@/features/Competition/utils/dailyChart';
-import MonthlyBarChart from '@/features/Competition/utils/monthlyChart';
+import PeriodicBarChart from '@/features/Competition/utils/periodicChart';
 import Timer from '@/features/Competition/components/timer';
 import RankCardList from './components/rankCardList';
 import MyRankCard from '@/features/Competition/components/myRankCard';
@@ -93,18 +93,26 @@ export default function Ranking() {
                   <div className="flex-col">
                     <RankCardList
                       styleKeys={['green', 'red', 'blue']}
-                      nicknames={['김춘식1', '김춘식2', '김춘식3']}
+                      rankingData={[
+                        topRankings.weekly?.[1],
+                        topRankings.weekly?.[0],
+                        topRankings.weekly?.[2],
+                      ]}
                     />
-                    <MonthlyBarChart rankingData={topRankings.weekly} />
+                    <PeriodicBarChart rankingData={topRankings.weekly?.slice(3)} />
                   </div>
                 )}
                 {rankingView === 'monthly' && (
                   <div className="flex-col">
                     <RankCardList
                       styleKeys={['green', 'red', 'blue']}
-                      nicknames={['김춘식1', '김춘식2', '김춘식3']}
+                      rankingData={[
+                        topRankings.monthly?.[1],
+                        topRankings.monthly?.[0],
+                        topRankings.monthly?.[2],
+                      ]}
                     />
-                    <MonthlyBarChart rankingData={topRankings.monthly} />
+                    <PeriodicBarChart rankingData={topRankings.monthly?.slice(3)} />
                   </div>
                 )}
               </>
