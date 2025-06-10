@@ -14,6 +14,7 @@ import {
 import { useCompetitionSubmit } from '@/features/Competition/hooks/useCompetitionSubmit';
 import { useCompetitionTimer } from '@/features/Competition/hooks/useCompetitionTimer';
 import { useCompetitionData } from '@/features/Competition/hooks/useCompetitionData';
+import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 
 import { useEffect, useState } from 'react';
 
@@ -41,7 +42,8 @@ export default function Competition() {
     if (isSubmitted === false && timeLeft <= 0) setShowTimeOverModal(true);
   }, [timeLeft]);
 
-  const { problems } = useCompetitionData();
+  const { competitionId } = useCompetitionStore();
+  const { problems } = useCompetitionData(competitionId);
 
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([0, 0, 0, 0, 0]);
   const notAnswered = selectedAnswers.every((answer) => answer !== 0);
@@ -145,6 +147,7 @@ export default function Competition() {
         actionText="바로 이동하기"
         cancelButton={false}
         onAction={() => {
+          setShowTimeOverModal(false);
           window.location.href = '/competition';
         }}
       />

@@ -14,12 +14,14 @@ import {
 import { useTopRankings } from './hooks/useTopRanking';
 import { useAuthStore } from '../Member/auth/store/auth';
 import { safeGet } from '@/lib/request';
+import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
-import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
+import { useNavigate } from 'react-router-dom';
 
 export default function Ranking() {
+  const navigate = useNavigate();
   const { competitionId, setCompetitionId } = useCompetitionStore();
   useEffect(() => {
     (async () => {
@@ -168,7 +170,7 @@ export default function Ranking() {
                 window.location.href = '/login';
                 return;
               }
-              window.location.href = '/competition/entry';
+              navigate('/competition/entry');
             }}
             className={`w-64 h-12 ${competitionTime ? 'text-xl text-text-primary ' : 'text-2xl disabled:opacity-100'} flex mx-auto rounded-xl font-normal`}
           />

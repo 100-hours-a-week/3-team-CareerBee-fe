@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Problem } from '../Competition';
 import { safeGet } from '@/lib/request';
-import { useCompetitionStore } from '../store/competitionStore';
+// import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 
-export function useCompetitionData() {
+export function useCompetitionData(competitionId: number | null) {
   const [problems, setProblems] = useState<Problem[]>([]);
-  const competitionId =
-    import.meta.env.VITE_USE_MOCK === 'true' ? 1 : useCompetitionStore.getState().competitionId;
   const token = useAuthStore((state) => state.token);
+  // const { competitionId } = useCompetitionStore();
 
   useEffect(() => {
     const fetchProblems = async () => {
