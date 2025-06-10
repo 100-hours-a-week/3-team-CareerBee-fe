@@ -19,7 +19,7 @@ export function useCompetitionData(competitionId: number | null) {
         const res = await safeGet(`/api/v1/competitions/${competitionId}/problems`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        if (res.status === 200) {
+        if (res.httpStatusCode === 200) {
           setProblems(res.data.problems);
         }
       }
