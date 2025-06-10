@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 interface TimerProps {
   UTC_DUE_TIME_MS: number;
   mode?: 'hms' | 'msms'; // 기본값은 'hms'
+  stopTimer?: boolean;
 }
 
 function formatToHMS(seconds: number) {
@@ -23,10 +24,16 @@ function avoidMinus(rawDiff: number, base: number) {
   return ((rawDiff % base) + base) % base;
 }
 
-function useCompetitionTimer(UTC_DUE_TIME_MS: number, mode: 'hms' | 'msms') {
+function useCompetitionTimer(
+  UTC_DUE_TIME_MS: number,
+  mode: 'hms' | 'msms',
+  stopTimer: boolean = false,
+) {
   const [time, setTime] = useState('');
 
   useEffect(() => {
+    if (stopTimer) return;
+
     const checkTime = () => {
       const now = new Date();
       const utcHours = now.getUTCHours();
@@ -51,12 +58,12 @@ function useCompetitionTimer(UTC_DUE_TIME_MS: number, mode: 'hms' | 'msms') {
     checkTime();
     const interval = setInterval(checkTime, mode === 'msms' ? 50 : 1000);
     return () => clearInterval(interval);
-  }, [UTC_DUE_TIME_MS, mode]);
+  }, [UTC_DUE_TIME_MS, mode, stopTimer]);
 
   return time;
 }
 
-export default function Timer({ UTC_DUE_TIME_MS, mode = 'hms' }: TimerProps) {
-  const timeUntilStart = useCompetitionTimer(UTC_DUE_TIME_MS, mode);
+export default function Timer({ UTC_DUE_TIME_MS, mode = 'hms', stopTimer = false }: TimerProps) {
+  const timeUntilStart = useCompetitionTimer(UTC_DUE_TIME_MS, mode, stopTimer);
   return <div>{timeUntilStart}</div>;
 }
