@@ -6,10 +6,7 @@ import MoveLeft from '@/features/Competition/image/caret-left.svg';
 import MoveRight from '@/features/Competition/image/caret-right.svg';
 import PointPopup from '@/features/Competition/components/pointPopup';
 import Timer from '@/features/Competition/components/timer';
-import {
-  // COMPETITION_START_TIME,
-  COMPETITION_END_TIME,
-} from '@/features/Competition/config/competitionTime';
+import { COMPETITION_END_TIME } from '@/features/Competition/config/competitionTime';
 
 import { useCompetitionSubmit } from '@/features/Competition/hooks/useCompetitionSubmit';
 import { useCompetitionTimer } from '@/features/Competition/hooks/useCompetitionTimer';
