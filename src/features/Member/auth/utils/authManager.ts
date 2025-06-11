@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
+import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 import { instance as axios } from '@/features/Member/auth/utils/axios';
 import { toast } from '@/hooks/useToast';
 import { queryClient } from '@/lib/react-query-client';
@@ -31,6 +32,7 @@ export async function retryWithRefreshedToken(config: AxiosRequestConfig) {
 export function forceLogout() {
   toast({ title: '로그아웃 되었습니다.' });
   useAuthStore.getState().clearToken();
+  useCompetitionStore.getState().clearCompetition();
   queryClient.removeQueries({ queryKey: ['userInfo'] });
   setTimeout(() => {
     window.location.href = '/login';

@@ -3,7 +3,7 @@ import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
 import { Button } from '@/components/ui/button';
 import DailyBarChart from '@/features/Competition/utils/dailyChart';
 import PeriodicBarChart from '@/features/Competition/utils/periodicChart';
-import Timer from '@/features/Competition/components/timer';
+import Timer, { checkTime } from '@/features/Competition/components/timer';
 import RankCardList from './components/rankCardList';
 import MyRankCard from '@/features/Competition/components/myRankCard';
 import {
@@ -58,14 +58,7 @@ export default function Ranking() {
   // 대회 운영 시간 여부
   const [competitionTime, setCompetitionTime] = useState(false);
   useEffect(() => {
-    const now = new Date();
-    const utcHours = now.getUTCHours();
-    const utcMinutes = now.getUTCMinutes();
-    const utcSeconds = now.getUTCSeconds();
-    const utcMilliseconds = now.getUTCMilliseconds();
-    const curr =
-      utcHours * 60 * 60 * 1000 + utcMinutes * 60 * 1000 + utcSeconds * 1000 + utcMilliseconds;
-
+    const curr = checkTime('ms');
     const isCompetitionTime = curr >= COMPETITION_START_TIME && curr < COMPETITION_END_TIME;
     setCompetitionTime(isCompetitionTime);
   }, []);
