@@ -9,16 +9,16 @@ import ToBeContinued from '@/pages/ToBeContinued';
 import MainLayout from '@/layout/MainLayout';
 import NotFound from '@/pages/NotFound';
 import OAuthCallback from '@/features/Member/auth/OAuthCallback';
-import Ranking from '@/features/Competition/Ranking';
-import Competition from '@/features/Competition/Competition';
-import Notification from '@/features/Member/notification/Notification';
-import Account from '@/features/Member/profile/Account';
+// import Ranking from '@/features/Competition/Ranking';
+// import Competition from '@/features/Competition/Competition';
+// import Notification from '@/features/Member/notification/Notification';
+// import Account from '@/features/Member/profile/Account';
 import { DirtyProvider } from '@/features/Member/profile/contexts/isDirtyContext';
 
-import Quit from '@/features/Member/profile/Quit';
-import Developers from '@/features/Member/service/developers';
-import ResumeForm from '@/features/Member/resume/resumeForm';
-import Upload from '@/features/Member/resume/upload';
+// import Quit from '@/features/Member/profile/Quit';
+// import Developers from '@/features/Member/service/developers';
+// import ResumeForm from '@/features/Member/resume/resumeForm';
+// import Upload from '@/features/Member/resume/upload';
 
 export const router = createBrowserRouter([
   {
@@ -31,22 +31,22 @@ export const router = createBrowserRouter([
       { path: 'login', element: <Login /> },
       { path: 'login-required', element: <LoginRequired /> },
       { path: 'oauth/callback/kakao', element: <OAuthCallback /> },
-      { path: 'competition', element: <Ranking /> },
-      { path: 'competition/entry', element: <Competition /> },
-      { path: 'notification', element: <Notification /> },
+      { path: 'competition', element: <ToBeContinued /> },
+      { path: 'competition/entry', element: <ToBeContinued /> },
+      { path: 'notification', element: <ToBeContinued /> },
       {
         path: 'my/account',
         element: (
           <DirtyProvider>
-            <Account />
+            <ToBeContinued />
           </DirtyProvider>
         ),
       },
       // { path: 'my/account', element: <Account /> },
-      { path: 'my/account/quit', element: <Quit /> },
-      { path: 'service/developers', element: <Developers /> },
-      { path: 'resume/form', element: <ResumeForm /> },
-      { path: 'resume/upload', element: <Upload /> },
+      { path: 'my/account/quit', element: <ToBeContinued /> },
+      { path: 'service/developers', element: <ToBeContinued /> },
+      { path: 'resume/form', element: <ToBeContinued /> },
+      { path: 'resume/upload', element: <ToBeContinued /> },
       { path: '*', element: <ToBeContinued /> },
     ],
   },
