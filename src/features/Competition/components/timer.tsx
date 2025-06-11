@@ -7,6 +7,18 @@ interface TimerProps {
   stopTimer?: boolean;
 }
 
+export function checkTime(mode: 'ms' | 's' = 'ms') {
+  const now = new Date();
+  const utcHours = now.getUTCHours();
+  const utcMinutes = now.getUTCMinutes();
+  const utcSeconds = now.getUTCSeconds();
+  const utcMilliseconds = now.getUTCMilliseconds();
+  const currMs =
+    utcHours * 60 * 60 * 1000 + utcMinutes * 60 * 1000 + utcSeconds * 1000 + utcMilliseconds;
+  const currS = utcHours * 60 * 60 + utcMinutes * 60 + utcSeconds;
+
+  return mode === 'ms' ? currMs : currS;
+}
 function formatToHMS(seconds: number) {
   const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
   const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
@@ -32,35 +44,28 @@ function useCompetitionTimer(
 ) {
   const [time, setTime] = useState('');
 
-  // console.log(stopTimer);
+  const calcTimer = () => {
+    if (mode === 'msms') {
+      const currMs = checkTime('ms');
+      const remainingMs = avoidMinus(UTC_DUE_TIME_MS - currMs, 24 * 60 * 60 * 1000);
+      if (remainingMs < 0 || remainingMs > DURATION * 60 * 1000) return setTime('00:00:00');
+      setTime(formatToMS(remainingMs));
+    } else {
+      const currS = checkTime('s');
+      let UTC_DUE_TIME_S = Math.floor(UTC_DUE_TIME_MS / 1000);
+      const remainingSeconds = avoidMinus(UTC_DUE_TIME_S - currS, 24 * 60 * 60);
+      setTime(formatToHMS(remainingSeconds));
+    }
+  };
+
   useEffect(() => {
     if (stopTimer) return;
 
-    const checkTime = () => {
-      const now = new Date();
-      const utcHours = now.getUTCHours();
-      const utcMinutes = now.getUTCMinutes();
-      const utcSeconds = now.getUTCSeconds();
-      const utcMilliseconds = now.getUTCMilliseconds();
-      const currMs =
-        utcHours * 60 * 60 * 1000 + utcMinutes * 60 * 1000 + utcSeconds * 1000 + utcMilliseconds;
-      const currS = utcHours * 60 * 60 + utcMinutes * 60 + utcSeconds;
+    calcTimer();
 
-      if (mode === 'msms') {
-        const remainingMs = avoidMinus(UTC_DUE_TIME_MS - currMs, 24 * 60 * 60 * 1000);
-        if (remainingMs < 0 || remainingMs > DURATION * 60 * 1000) return setTime('00:00:00');
-        setTime(formatToMS(remainingMs));
-      } else {
-        let UTC_DUE_TIME_S = Math.floor(UTC_DUE_TIME_MS / 1000);
-        const remainingSeconds = avoidMinus(UTC_DUE_TIME_S - currS, 24 * 60 * 60);
-        setTime(formatToHMS(remainingSeconds));
-      }
-    };
-
-    checkTime();
-    const interval = setInterval(checkTime, mode === 'msms' ? 50 : 1000);
+    const interval = setInterval(calcTimer, mode === 'msms' ? 50 : 1000);
     return () => clearInterval(interval);
-  }, [UTC_DUE_TIME_MS, mode, stopTimer]);
+  }, [mode, stopTimer]);
 
   return time;
 }

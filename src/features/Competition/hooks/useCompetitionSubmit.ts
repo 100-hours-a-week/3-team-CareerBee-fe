@@ -21,7 +21,7 @@ export function useCompetitionSubmit({
   setShowPointResult: (_value: boolean) => void;
 }) {
   const token = useAuthStore((state) => state.token);
-  const { competitionId, joinedTime } = useCompetitionStore();
+  const { competitionId, joinedTime, setJoinedTime } = useCompetitionStore();
   const navigate = useNavigate();
 
   const handleSubmitClick = useCallback(
@@ -33,8 +33,6 @@ export function useCompetitionSubmit({
         }, 5000);
         return;
       }
-
-      setIsSubmitted(true);
 
       const correctCount = problems.filter(
         (_, index) => selectedAnswers[index] === problems[index].answer,
@@ -54,6 +52,9 @@ export function useCompetitionSubmit({
 
       if (res.httpStatusCode >= 400) {
         toast({ title: '제출에 실패했습니다.', variant: 'destructive' });
+      } else if (!res) {
+        setIsSubmitted(true);
+        setJoinedTime(null);
       }
     },
     [

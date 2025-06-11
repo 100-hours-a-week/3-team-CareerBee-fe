@@ -6,7 +6,7 @@ interface CompetitionState {
   joinedTime: number | null;
   isSubmitted: boolean;
   setCompetitionId: (_id: number) => void;
-  setJoinedTime: (_time: number) => void;
+  setJoinedTime: (_time: number | null) => void;
   setIsSubmitted: (_val: boolean) => void;
   clearCompetition: () => void;
 }
