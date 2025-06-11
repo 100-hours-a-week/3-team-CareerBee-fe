@@ -6,10 +6,15 @@ import MoveLeft from '@/features/Competition/image/caret-left.svg';
 import MoveRight from '@/features/Competition/image/caret-right.svg';
 import PointPopup from '@/features/Competition/components/pointPopup';
 import Timer from '@/features/Competition/components/timer';
+import {
+  // COMPETITION_START_TIME,
+  COMPETITION_END_TIME,
+} from '@/features/Competition/config/competitionTime';
 
 import { useCompetitionSubmit } from '@/features/Competition/hooks/useCompetitionSubmit';
 import { useCompetitionTimer } from '@/features/Competition/hooks/useCompetitionTimer';
 import { useCompetitionData } from '@/features/Competition/hooks/useCompetitionData';
+import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 
 import { useEffect, useState } from 'react';
 
@@ -27,7 +32,7 @@ export interface Problem {
 }
 
 export default function Competition() {
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const { isSubmitted, setIsSubmitted } = useCompetitionStore();
   const [showPointResult, setShowPointResult] = useState(false);
   const [currentTab, setCurrentTab] = useState(1);
   const [showTimeOverModal, setShowTimeOverModal] = useState(false);
@@ -37,7 +42,8 @@ export default function Competition() {
     if (isSubmitted === false && timeLeft <= 0) setShowTimeOverModal(true);
   }, [timeLeft]);
 
-  const { problems } = useCompetitionData();
+  const { competitionId } = useCompetitionStore();
+  const { problems } = useCompetitionData(competitionId);
 
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([0, 0, 0, 0, 0]);
   const notAnswered = selectedAnswers.every((answer) => answer !== 0);
@@ -58,7 +64,7 @@ export default function Competition() {
       {/* 타이머 */}
       <div className="flex h-full min-h-[48px] max-h-[96px]">
         <div className="w-[17rem] mx-auto font-medium text-5xl px-8 mb-auto">
-          <Timer KST_DUE_TIME_MS={13 * 60 * 60 * 1000 + 10 * 60 * 1000} mode="msms"></Timer>
+          <Timer UTC_DUE_TIME_MS={COMPETITION_END_TIME} mode="msms" stopTimer={isSubmitted}></Timer>
         </div>
       </div>
       <div className="flex justify-between items-stretch mt-2 w-full h-full">
@@ -141,6 +147,7 @@ export default function Competition() {
         actionText="바로 이동하기"
         cancelButton={false}
         onAction={() => {
+          setShowTimeOverModal(false);
           window.location.href = '/competition';
         }}
       />

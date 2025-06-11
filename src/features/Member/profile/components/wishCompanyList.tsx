@@ -93,11 +93,13 @@ export default function WishCompanyList() {
           </div>
         ) : hasNextPage ? (
           <div ref={bottomRef} className="flex-none w-20 h-20" />
-        ) : (
+        ) : data?.pages?.length ? (
           <div className="flex-none w-24 h-full flex flex-col items-center justify-center text-text-secondary">
             <img src={endOfList} alt="끝" className="w-10 h-10 mb-2" />
             <span className="text-xs text-center">끝까지 봤어요!</span>
           </div>
+        ) : (
+          <></>
         )}
       </div>
     </div>

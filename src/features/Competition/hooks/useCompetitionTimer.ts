@@ -1,12 +1,20 @@
 import { useState, useEffect } from 'react';
+import {
+  // COMPETITION_START_TIME,
+  COMPETITION_END_TIME,
+} from '@/features/Competition/config/competitionTime';
 
 export const useCompetitionTimer = (isSubmitted: boolean, setShowTimeOverModal: Function) => {
   const getInitialTimeLeft = () => {
     const now = new Date();
-    const dueTime = new Date();
-    dueTime.setHours(13, 10, 0, 0); //⏰ 대회 종료 시간
-    const offset = 9 * 60 * 60 * 1000;
-    return Math.max(0, dueTime.getTime() - offset - (now.getTime() - offset));
+    const utcHours = now.getUTCHours();
+    const utcMinutes = now.getUTCMinutes();
+    const utcSeconds = now.getUTCSeconds();
+    const utcMilliseconds = now.getUTCMilliseconds();
+    const curr =
+      utcHours * 60 * 60 * 1000 + utcMinutes * 60 * 1000 + utcSeconds * 1000 + utcMilliseconds;
+
+    return Math.max(0, COMPETITION_END_TIME - curr);
   };
 
   const [timeLeft, setTimeLeft] = useState(getInitialTimeLeft());

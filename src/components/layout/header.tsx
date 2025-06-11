@@ -6,6 +6,7 @@ import { StateBasedModal } from '@/components/ui/modal';
 import { useUiStore } from '@/store/ui';
 
 import { useState } from 'react';
+import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 interface HeaderProps {
@@ -25,6 +26,7 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
 
   const setBackPressedFromHeader = useUiStore((state) => state.setBackPressedFromHeader);
 
+  const { isSubmitted } = useCompetitionStore();
   const handleLogoClick = () => {
     if (isDown) {
       setBackPressedFromHeader(true);
@@ -32,6 +34,8 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
         navigate(-1);
         setBackPressedFromHeader(false);
       }, 400);
+    } else if (location.pathname.startsWith('/competition/entry') && !isSubmitted) {
+      setShowBackConfirmModal(true);
     } else {
       navigate('/'); // 메인 페이지로 이동
     }
@@ -44,7 +48,7 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
           <>
             <button
               onClick={() => {
-                if (location.pathname.startsWith('/competition/entry')) {
+                if (location.pathname.startsWith('/competition/entry') && !isSubmitted) {
                   setShowBackConfirmModal(true);
                 } else {
                   navigate(-1);
