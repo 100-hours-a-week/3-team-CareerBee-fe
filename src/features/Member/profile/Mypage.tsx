@@ -8,7 +8,7 @@ import { PiCaretRight } from 'react-icons/pi';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
 import { logout } from '@/features/Member/auth/utils/logout';
-import WishCompanyList from './components/wishCompanyList';
+// import WishCompanyList from './components/wishCompanyList';
 
 import { useUserInfo } from '@/hooks/useUserInfo';
 
