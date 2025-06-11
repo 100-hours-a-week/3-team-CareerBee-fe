@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { safePost } from '@/lib/request';
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
+import { toast } from '@/hooks/useToast';
 
 export function useCompetitionSubmit({
   problems,
@@ -49,8 +50,8 @@ export function useCompetitionSubmit({
         },
       );
 
-      if (res.status !== 204) {
-        alert('제출에 실패했습니다.');
+      if (res.httpStatusCode >= 400) {
+        toast({ title: '제출에 실패했습니다.', variant: 'destructive' });
       }
     },
     [
