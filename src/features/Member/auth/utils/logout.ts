@@ -1,5 +1,6 @@
 import { instance as axios } from '@/features/Member/auth/utils/axios';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
+import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 import { queryClient } from '@/lib/react-query-client';
 
 export const logout = async () => {
@@ -14,6 +15,7 @@ export const logout = async () => {
     });
 
     useAuthStore.getState().clearToken?.();
+    useCompetitionStore.getState().clearCompetition?.();
     queryClient.removeQueries({ queryKey: ['userInfo'] });
     window.location.href = '/';
   } catch (error) {
