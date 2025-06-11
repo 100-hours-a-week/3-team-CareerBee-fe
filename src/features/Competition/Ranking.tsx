@@ -11,7 +11,7 @@ import {
   COMPETITION_END_TIME,
 } from '@/features/Competition/config/competitionTime';
 
-import { useTopRankings } from './hooks/useTopRanking';
+import { useTopRankings, useDailyPolling } from './hooks/useTopRanking';
 import { useAuthStore } from '../Member/auth/store/auth';
 import { safeGet } from '@/lib/request';
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
@@ -21,7 +21,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Ranking() {
+  // 랭킹 데이터 가져오기
+  // const { topRankings } = useTopRankings();
+  const { data: topRankings } = useTopRankings();
+  const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
+
   const navigate = useNavigate();
+  // 일일 대회 id 조회
   const { competitionId, setCompetitionId, setIsSubmitted } = useCompetitionStore();
   useEffect(() => {
     (async () => {
@@ -32,12 +38,10 @@ export default function Ranking() {
     })();
   }, [setCompetitionId]);
 
-  const token = useAuthStore((state) => state.token);
-  const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
+  // 멤버별 대회 참가 여부 조회
   const [alreadyEntered, setAlreadyEntered] = useState(false);
-  const { topRankings } = useTopRankings();
-
-  const joined = async () => {
+  const token = useAuthStore((state) => state.token);
+  const hasJoinedCompetition = async () => {
     const res = await safeGet(`/api/v1/members/competitions/${competitionId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -51,7 +55,7 @@ export default function Ranking() {
 
   useEffect(() => {
     if (competitionId != null && token) {
-      joined();
+      hasJoinedCompetition();
     }
   }, [competitionId]);
 
@@ -62,6 +66,8 @@ export default function Ranking() {
     const isCompetitionTime = curr >= COMPETITION_START_TIME && curr < COMPETITION_END_TIME;
     setCompetitionTime(isCompetitionTime);
   }, []);
+
+  useDailyPolling(competitionTime);
 
   return (
     <div className="py-5">
