@@ -33,7 +33,7 @@ export const safeRequest = async <T = any>(config: AxiosRequestConfig): Promise<
         console.error('🚨 알 수 없는 오류입니다.', error);
       }
     }
-    return null;
+    throw error;
   }
 };
 
