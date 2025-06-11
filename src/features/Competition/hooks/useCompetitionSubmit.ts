@@ -1,9 +1,11 @@
-import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { safePost } from '@/lib/request';
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
+
+import { safePost } from '@/lib/request';
 import { toast } from '@/hooks/useToast';
+import { useNavigate } from 'react-router-dom';
+
+import { useCallback } from 'react';
 
 export function useCompetitionSubmit({
   problems,
@@ -19,7 +21,7 @@ export function useCompetitionSubmit({
   setShowPointResult: (_value: boolean) => void;
 }) {
   const token = useAuthStore((state) => state.token);
-  const competitionId = useCompetitionStore((state) => state.competitionId);
+  const { competitionId, joinedTime } = useCompetitionStore();
   const navigate = useNavigate();
 
   const handleSubmitClick = useCallback(
@@ -41,7 +43,7 @@ export function useCompetitionSubmit({
         `/api/v1/competitions/${competitionId}/results`,
         {
           solvedCount: correctCount,
-          elapsedTime: 10 * 60 * 1000 - timeLeft,
+          elapsedTime: joinedTime! - timeLeft,
         },
         {
           headers: {
