@@ -26,10 +26,10 @@ function formatToHMS(seconds: number) {
   return `${h}:${m}:${s}`;
 }
 
-function formatToMS(milliseconds: number) {
+export function formatToMS(milliseconds: number, millipad: number = 2) {
   const m = String(Math.floor(milliseconds / 60000)).padStart(2, '0');
   const s = String(Math.floor((milliseconds % 60000) / 1000)).padStart(2, '0');
-  const ms = String(Math.floor((milliseconds % 1000) / 10) % 100).padStart(2, '0');
+  const ms = String(Math.floor((milliseconds % 1000) / 10) % 100).padStart(millipad, '0');
   return `${m}:${s}:${ms}`;
 }
 
