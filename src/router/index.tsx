@@ -19,6 +19,7 @@ import Quit from '@/features/Member/profile/Quit';
 import Developers from '@/features/Member/service/developers';
 import ResumeForm from '@/features/Member/resume/resumeForm';
 import Upload from '@/features/Member/resume/upload';
+import RequireMyAuth from '@/features/Member/auth/components/RequireMyAuth';
 
 export const router = createBrowserRouter([
   {
@@ -27,26 +28,30 @@ export const router = createBrowserRouter([
     children: [
       { path: '', element: <Main /> },
       { path: 'company/:id', element: <CompanyDetail /> },
-      { path: 'my', element: <Mypage /> },
+      {
+        element: <RequireMyAuth />,
+        children: [
+          { path: 'my', element: <Mypage /> },
+          {
+            path: 'my/account',
+            element: (
+              <DirtyProvider>
+                <Account />
+              </DirtyProvider>
+            ),
+          },
+          { path: 'my/account/quit', element: <Quit /> },
+          { path: 'competition/entry', element: <Competition /> },
+          { path: 'service/developers', element: <Developers /> },
+          { path: 'resume/form', element: <ResumeForm /> },
+          { path: 'resume/upload', element: <Upload /> },
+        ],
+      },
       { path: 'login', element: <Login /> },
       { path: 'login-required', element: <LoginRequired /> },
       { path: 'oauth/callback/kakao', element: <OAuthCallback /> },
       { path: 'competition', element: <Ranking /> },
-      { path: 'competition/entry', element: <Competition /> },
       { path: 'notification', element: <Notification /> },
-      {
-        path: 'my/account',
-        element: (
-          <DirtyProvider>
-            <Account />
-          </DirtyProvider>
-        ),
-      },
-      // { path: 'my/account', element: <Account /> },
-      { path: 'my/account/quit', element: <Quit /> },
-      { path: 'service/developers', element: <Developers /> },
-      { path: 'resume/form', element: <ResumeForm /> },
-      { path: 'resume/upload', element: <Upload /> },
       { path: '*', element: <ToBeContinued /> },
     ],
   },
