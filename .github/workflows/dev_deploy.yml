@@ -32,6 +32,7 @@ jobs:
           echo "::add-mask::$S3_BUCKET_INFRA"
           echo "::add-mask::$VITE_KAKAOMAP_KEY"
           echo "::add-mask::$VITE_API_URL"
+          echo "::add-mask::$VITE_SHOW_UNRELEASED"
 
           echo "SSH_KEY=$SSH_KEY" >> $GITHUB_ENV
           echo "SSH_KEY_BASE64=$SSH_KEY_BASE64" >> $GITHUB_ENV
@@ -42,12 +43,13 @@ jobs:
           echo "S3_BUCKET_INFRA=$S3_BUCKET_INFRA" >> $GITHUB_ENV
           echo "VITE_KAKAOMAP_KEY=${VITE_KAKAOMAP_KEY}" >> $GITHUB_ENV
           echo "VITE_API_URL=${VITE_API_URL}" >> $GITHUB_ENV
+          echo "VITE_SHOW_UNRELEASED=${VITE_SHOW_UNRELEASED}" >> $GITHUB_ENV
 
       - name: Restore SSH Key
         run: |
           mkdir -p ~/.ssh
-          echo "${SSH_KEY_BASE64}" | base64 --decode > "${SSH_KEY}"
-          chmod 600 "${SSH_KEY}"
+          echo "${{ env.SSH_KEY_BASE64 }}" | base64 --decode > "${{ env.SSH_KEY }}"
+          chmod 600 "${{ env.SSH_KEY }}"
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -64,8 +66,9 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "VITE_KAKAOMAP_KEY=${VITE_KAKAOMAP_KEY}" > .env
-          echo "VITE_API_URL=${VITE_API_URL}" >> .env
+          echo "VITE_KAKAOMAP_KEY=${{ env.VITE_KAKAOMAP_KEY }}" > .env
+          echo "VITE_API_URL=${{ env.VITE_API_URL }}" >> .env
+          echo "VITE_SHOW_UNRELEASED=${{ env.VITE_SHOW_UNRELEASED }}" >> .env
 
       - name: Build React App
         run: pnpm build
@@ -87,16 +90,16 @@ jobs:
 
       - name: Upload build to S3
         run: |
-          aws s3 cp ./dist "${S3_BUCKET_INFRA}/fe/${DEPLOY_PATH}/" --recursive
+          aws s3 cp ./dist "${{ env.S3_BUCKET_INFRA }}/fe/${{ env.DEPLOY_PATH }}/" --recursive
 
       - name: Deploy to EC2
         run: |
           echo "EC2 서버와 연결할 수 없음." > failure_reason.txt
-          ssh -i "${SSH_KEY}" -o StrictHostKeyChecking=no "ubuntu@${AWS_SERVER_IP}" <<EOF
+          ssh -i "${{ env.SSH_KEY }}" -o StrictHostKeyChecking=no "ubuntu@${{ env.AWS_SERVER_IP }}" <<EOF
             set -e
 
             sudo rm -rf /var/www/html/*
-            aws s3 cp "${S3_BUCKET_INFRA}/fe/${DEPLOY_PATH}/" /var/www/html/ --recursive
+            aws s3 cp "${{ env.S3_BUCKET_INFRA }}/fe/${{ env.DEPLOY_PATH }}/" /var/www/html/ --recursive
           EOF
 
           rm -f failure_reason.txt
@@ -116,18 +119,18 @@ jobs:
           if [ "$STATUS" != "200" ]; then
             echo "헬스 체크 실패. 상태 코드: $STATUS" > failure_reason.txt
             
-            LATEST_VALID_BACKUP=$(aws s3 ls "${S3_BUCKET_INFRA}/fe/" | awk '{print $2}' | grep -v "^${DEPLOY_PATH}/$" | sort | tail -n 1 | sed 's#/$##')
+            LATEST_VALID_BACKUP=$(aws s3 ls "${{ env.S3_BUCKET_INFRA }}/fe/" | awk '{print $2}' | grep -v "^${{ env.DEPLOY_PATH }}/$" | sort | tail -n 1 | sed 's#/$##')
             if [ -z "$LATEST_VALID_BACKUP" ]; then
               exit 1
             fi
 
-            ssh -i "${SSH_KEY}" -o StrictHostKeyChecking=no "ubuntu@${AWS_SERVER_IP}" <<EOF
+            ssh -i "${{ env.SSH_KEY }}" -o StrictHostKeyChecking=no "ubuntu@${{ env.AWS_SERVER_IP }}" <<EOF
               set -e
               sudo rm -rf /var/www/html
-              aws s3 cp "${S3_BUCKET_INFRA}/fe/${LATEST_VALID_BACKUP}/" /var/www/html/ --recursive
+              aws s3 cp "${{ env.S3_BUCKET_INFRA }}/fe/${LATEST_VALID_BACKUP}/" /var/www/html/ --recursive
           EOF
             
-            aws s3 rm "${S3_BUCKET_INFRA}/fe/${DEPLOY_PATH}/" --recursive
+            aws s3 rm "${{ env.S3_BUCKET_INFRA }}/fe/${{ env.DEPLOY_PATH }}/" --recursive
 
             exit 1
           fi
