@@ -20,7 +20,6 @@ export async function retryWithRefreshedToken(config: AxiosRequestConfig) {
     if (config.url?.includes('/auth/reissue')) {
       return Promise.resolve();
     }
-
     config.headers = {
       ...config.headers,
       Authorization: `Bearer ${newToken}`,
