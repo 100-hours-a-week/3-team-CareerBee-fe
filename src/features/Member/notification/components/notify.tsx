@@ -10,6 +10,7 @@ interface NotifyProps {
   title: string;
   description: string;
   time: string;
+  isRead: boolean;
 }
 
 const iconMap: Record<string, string> = {
@@ -19,7 +20,7 @@ const iconMap: Record<string, string> = {
   포인트: point,
 };
 
-export default function Notify({ title, description, time }: NotifyProps) {
+export default function Notify({ title, description, time, isRead }: NotifyProps) {
   const date = new Date(time);
   const displayTime = isToday(date)
     ? format(date, 'a h시 m분').replace('AM', '오전').replace('PM', '오후')
@@ -28,8 +29,16 @@ export default function Notify({ title, description, time }: NotifyProps) {
   return (
     <div
       className={cn(
-        `flex flex-col items-center justify-center my-auto px-16 gap-2 rounded-lg  p-2 w-full`,
-        title === '공채 알림' ? 'bg-secondary' : 'bg-white',
+        `flex flex-col w-full items-center justify-center 
+        my-auto px-16 gap-2 p-2 
+        rounded-lg drop-shadow-sm`,
+        title === '공채 알림'
+          ? isRead
+            ? 'bg-secondary'
+            : 'gradient-border-red bg-secondary'
+          : isRead
+            ? 'bg-white'
+            : 'gradient-border-yellow bg-white',
       )}
     >
       <div className="flex justify-between w-full text-xs">

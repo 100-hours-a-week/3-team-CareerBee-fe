@@ -230,3 +230,17 @@ input[type='number'] {
   }
 }
 
+.gradient-border-red {
+  border: 1.5px solid transparent;
+  border-radius: 8px;
+  background:
+    linear-gradient(#FBE3A3, #FBE3A3) padding-box,
+    linear-gradient(135deg, #FF595C, #EE8587) border-box;
+}
+.gradient-border-yellow {
+  border: 1.5px solid transparent;
+  border-radius: 8px;
+  background:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(135deg, #F7C746, #F1D588) border-box;
+}
