@@ -4,7 +4,6 @@ import logo from '@/static/logo-with-text-2.png';
 import { StateBasedModal } from '@/components/ui/modal';
 
 import { useUiStore } from '@/store/ui';
-
 import { useState } from 'react';
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -15,7 +14,7 @@ interface HeaderProps {
   hasNewNotification?: boolean;
 }
 
-export const Header = ({ type = 'main', point = 0, hasNewNotification = false }: HeaderProps) => {
+export const Header = ({ type = 'main', point, hasNewNotification }: HeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [showBackConfirmModal, setShowBackConfirmModal] = useState(false);
@@ -27,6 +26,7 @@ export const Header = ({ type = 'main', point = 0, hasNewNotification = false }:
   const setBackPressedFromHeader = useUiStore((state) => state.setBackPressedFromHeader);
 
   const { isSubmitted } = useCompetitionStore();
+
   const handleLogoClick = () => {
     if (isDown) {
       setBackPressedFromHeader(true);
