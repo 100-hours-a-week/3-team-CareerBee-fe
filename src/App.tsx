@@ -1,16 +1,22 @@
+import { useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { router } from '@/router';
-import { useEffect } from 'react';
-import { useAuthStore } from '@/features/Member/auth/store/auth';
+
+function setViewportHeightVar() {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
 
 function App() {
-  //토큰 초기화
+  // viewport height 적용
   useEffect(() => {
-    const raw = localStorage.getItem('auth-storage');
-    const token = raw ? JSON.parse(raw).state.token : null;
-    if (token) {
-      useAuthStore.getState().clearToken?.();
-    }
+    setViewportHeightVar();
+    window.addEventListener('resize', setViewportHeightVar);
+    window.addEventListener('orientationchange', setViewportHeightVar);
+    return () => {
+      window.removeEventListener('resize', setViewportHeightVar);
+      window.removeEventListener('orientationchange', setViewportHeightVar);
+    };
   }, []);
 
   return <RouterProvider router={router} />;
