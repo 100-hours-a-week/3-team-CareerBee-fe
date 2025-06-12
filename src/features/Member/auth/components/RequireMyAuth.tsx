@@ -6,7 +6,7 @@ export default function RequireMyAuth() {
   const location = useLocation();
 
   if (location.pathname.startsWith('/my') && !token) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login-required" replace />;
   }
 
   return <Outlet />;
