@@ -1,9 +1,9 @@
 // 대회 시작 시간 (KST 기준)
-const startHourKST = 16;
-const startMinuteKST = 20;
+const startHourKST = 9;
+const startMinuteKST = 0;
 
 // 대회 기간 (분 단위)
-export const DURATION = 10;
+export const DURATION = 12 * 60;
 
 // 대회 시작 시간 (UTC 기준)
 export const COMPETITION_START_TIME =
