@@ -16,6 +16,10 @@ export async function retryWithRefreshedToken(config: AxiosRequestConfig) {
     );
     const newToken = res.data.data.newAccessToken;
     useAuthStore.getState().setToken(newToken);
+
+    if (config.url?.includes('/auth/reissue')) {
+      return Promise.resolve();
+    }
     config.headers = {
       ...config.headers,
       Authorization: `Bearer ${newToken}`,
