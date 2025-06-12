@@ -31,7 +31,7 @@ export default function Notify({ title, description, time }: NotifyProps) {
             const imageSrc = iconMap[title] || undefined;
             return <img src={imageSrc} alt={title} className="w-4 h-4" />;
           })()}
-          <div className="flex mr-auto">{title}</div>
+          <div className="flex text-[10px] mr-auto">{title}</div>
         </div>
         <div className="flex text-left text-text-secondary">{time}</div>
       </div>
