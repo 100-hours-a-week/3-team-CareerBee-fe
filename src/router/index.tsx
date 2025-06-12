@@ -41,12 +41,20 @@ export const router = createBrowserRouter([
               <DirtyProvider>
                 <Account />
               </DirtyProvider>
-            ) : <ToBeContinued />,
+            ) : (
+              <ToBeContinued />
+            ),
           },
           { path: 'notification', element: showUnreleased ? <Notification /> : <ToBeContinued /> },
-          { path: 'competition/entry', element: showUnreleased ? <Competition /> : <ToBeContinued /> },
+          {
+            path: 'competition/entry',
+            element: showUnreleased ? <Competition /> : <ToBeContinued />,
+          },
           { path: 'my/account/quit', element: showUnreleased ? <Quit /> : <ToBeContinued /> },
-          { path: 'service/developers', element: showUnreleased ? <Developers /> : <ToBeContinued /> },
+          {
+            path: 'service/developers',
+            element: showUnreleased ? <Developers /> : <ToBeContinued />,
+          },
           { path: 'resume/form', element: showUnreleased ? <ResumeForm /> : <ToBeContinued /> },
           { path: 'resume/upload', element: showUnreleased ? <Upload /> : <ToBeContinued /> },
         ],
