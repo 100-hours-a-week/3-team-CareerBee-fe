@@ -33,6 +33,7 @@ export default function Notification() {
               title="공채 알림"
               description={noti.content}
               time={noti.notiDate}
+              isRead={noti.isRead}
             />
           ))}
         </div>
@@ -52,6 +53,7 @@ export default function Notification() {
               }
               description={noti.content}
               time={noti.notiDate}
+              isRead={noti.isRead}
             />
           ))}
         </div>
