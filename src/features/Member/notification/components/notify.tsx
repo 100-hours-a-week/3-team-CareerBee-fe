@@ -1,8 +1,10 @@
-import { cn } from '@/lib/utils';
 import competition from '@/features/Member/notification/image/competition.png';
 import growth from '@/features/Member/notification/image/growth.png';
 import point from '@/features/Member/notification/image/point.png';
 import recruit from '@/features/Member/notification/image/recruit.png';
+
+import { cn } from '@/lib/utils';
+import { format, isToday } from 'date-fns';
 
 interface NotifyProps {
   title: string;
@@ -18,6 +20,11 @@ const iconMap: Record<string, string> = {
 };
 
 export default function Notify({ title, description, time }: NotifyProps) {
+  const date = new Date(time);
+  const displayTime = isToday(date)
+    ? format(date, 'a h시 m분').replace('AM', '오전').replace('PM', '오후')
+    : format(date, 'M월 d일');
+
   return (
     <div
       className={cn(
@@ -33,7 +40,7 @@ export default function Notify({ title, description, time }: NotifyProps) {
           })()}
           <div className="flex text-[10px] mr-auto">{title}</div>
         </div>
-        <div className="flex text-left text-text-secondary">{time}</div>
+        <div className="flex text-left text-text-secondary">{displayTime}</div>
       </div>
       <div className="pl-5 w-full text-sm">{description}</div>
     </div>
