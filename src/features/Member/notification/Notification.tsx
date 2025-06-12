@@ -9,9 +9,16 @@ export default function Notification() {
     <>
       <div className="flex flex-col items-center justify-center mx-5 py-2 border-b-2 border-text-secondary/60">
         <div className="flex mr-auto mb-2">중요한 알림</div>
-        {recruitmentNotify.map((noti: NotifyProps) => (
-          <Notify key={noti.id} title="공채 알림" description={noti.content} time={noti.notiDate} />
-        ))}
+        <div className="flex flex-col gap-1.5 w-full">
+          {recruitmentNotify.map((noti: NotifyProps) => (
+            <Notify
+              key={noti.id}
+              title="공채 알림"
+              description={noti.content}
+              time={noti.notiDate}
+            />
+          ))}
+        </div>
       </div>
       <div className="flex flex-col items-center justify-center mx-5 py-2 border-b-2 border-text-secondary/60">
         <div className="flex mr-auto mb-2">기본 알림</div>
