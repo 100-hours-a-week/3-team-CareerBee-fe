@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import competition from '@/features/Member/notification/image/competition.png';
 import growth from '@/features/Member/notification/image/growth.png';
 import point from '@/features/Member/notification/image/point.png';
-import recruite from '@/features/Member/notification/image/recruite.png';
+import recruit from '@/features/Member/notification/image/recruit.png';
 
 interface NotifyProps {
   title: string;
@@ -11,7 +11,7 @@ interface NotifyProps {
 }
 
 const iconMap: Record<string, string> = {
-  '공채 알림': recruite,
+  '공채 알림': recruit,
   'CS 대회': competition,
   진척도: growth,
   포인트: point,
