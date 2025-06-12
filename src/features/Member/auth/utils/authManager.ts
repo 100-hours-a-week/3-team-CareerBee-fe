@@ -10,9 +10,13 @@ export async function retryWithRefreshedToken(config: AxiosRequestConfig) {
 
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     try {
-      const res = await originAxios.post('/api/v1/auth/reissue', null, {
-        withCredentials: true,
-      });
+      const res = await originAxios.post(
+        `${import.meta.env.VITE_API_URL}/api/v1/auth/reissue`,
+        null,
+        {
+          withCredentials: true,
+        },
+      );
       const newToken = res.data.data.newAccessToken;
       useAuthStore.getState().setToken(newToken);
       config.headers = {
