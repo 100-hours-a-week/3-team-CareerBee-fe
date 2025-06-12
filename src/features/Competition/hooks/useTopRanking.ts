@@ -53,9 +53,10 @@ export const useDailyPolling = (enabled: boolean) => {
     const interval = setInterval(async () => {
       const res = await safeGet('/api/v1/competitions/rankings/live');
       if (res.httpStatusCode === 200) {
+        const liveData = res.data.rankings;
         queryClient.setQueryData(['top-rankings'], (old: any) => ({
           ...old,
-          daily: res.data.map((item: any, index: number) => ({
+          daily: liveData.map((item: any, index: number) => ({
             rank: index + 1,
             nickname: item.nickname,
             profileImgUrl: item.profileUrl || noProfile,

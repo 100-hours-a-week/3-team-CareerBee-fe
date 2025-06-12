@@ -94,8 +94,8 @@ export default function Ranking() {
         <>
           <div className="flex mx-auto">
             {rankingView === 'daily' ? (
-              topRankings.daily && topRankings.daily.length > 0 ? (
-                <DailyBarChart rankingData={topRankings.daily} />
+              topRankings?.daily && topRankings?.daily.length > 0 ? (
+                <DailyBarChart rankingData={topRankings?.daily} />
               ) : (
                 <div className="flex items-center h-[436px]">아직 랭킹 데이터가 없어요.</div>
               )
@@ -103,17 +103,17 @@ export default function Ranking() {
               <>
                 {rankingView === 'weekly' && (
                   <div className="flex-col">
-                    {topRankings.weekly && topRankings.weekly.length > 0 ? (
+                    {topRankings?.weekly && topRankings?.weekly.length > 0 ? (
                       <>
                         <RankCardList
                           styleKeys={['green', 'red', 'blue']}
                           rankingData={[
-                            topRankings.weekly?.[1],
-                            topRankings.weekly?.[0],
-                            topRankings.weekly?.[2],
+                            topRankings?.weekly?.[1],
+                            topRankings?.weekly?.[0],
+                            topRankings?.weekly?.[2],
                           ]}
                         />
-                        <PeriodicBarChart rankingData={topRankings.weekly?.slice(3)} />
+                        <PeriodicBarChart rankingData={topRankings?.weekly?.slice(3)} />
                       </>
                     ) : (
                       <div className="flex items-center h-[436px]">아직 랭킹 데이터가 없어요.</div>
@@ -122,17 +122,17 @@ export default function Ranking() {
                 )}
                 {rankingView === 'monthly' && (
                   <div className="flex-col">
-                    {topRankings.monthly && topRankings.monthly.length > 0 ? (
+                    {topRankings?.monthly && topRankings?.monthly.length > 0 ? (
                       <>
                         <RankCardList
                           styleKeys={['green', 'red', 'blue']}
                           rankingData={[
-                            topRankings.monthly?.[1],
-                            topRankings.monthly?.[0],
-                            topRankings.monthly?.[2],
+                            topRankings?.monthly?.[1],
+                            topRankings?.monthly?.[0],
+                            topRankings?.monthly?.[2],
                           ]}
                         />
-                        <PeriodicBarChart rankingData={topRankings.monthly?.slice(3)} />
+                        <PeriodicBarChart rankingData={topRankings?.monthly?.slice(3)} />
                       </>
                     ) : (
                       <div className="flex items-center h-[436px]">아직 랭킹 데이터가 없어요.</div>
