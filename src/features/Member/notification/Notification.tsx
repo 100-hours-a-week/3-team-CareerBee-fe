@@ -1,9 +1,26 @@
 import Notify from '@/features/Member/notification/components/notify';
 
-import { useNotification, NotifyProps } from '@/features/Member/notification/hooks/useNotification';
+import {
+  useNotification,
+  useNotificationRead,
+  NotifyProps,
+} from '@/features/Member/notification/hooks/useNotification';
+
+import { useEffect } from 'react';
 
 export default function Notification() {
   const { recruitmentNotify, basicNotify } = useNotification();
+
+  // 안 읽은 알림 읽음 처리
+  const { markNotificationsAsRead } = useNotificationRead();
+  useEffect(() => {
+    const unread = [...recruitmentNotify, ...basicNotify]
+      .filter((noti) => !noti.isRead)
+      .map((noti) => noti.id);
+    if (unread.length > 0) {
+      markNotificationsAsRead(unread);
+    }
+  }, [recruitmentNotify, basicNotify]);
 
   return (
     <>
