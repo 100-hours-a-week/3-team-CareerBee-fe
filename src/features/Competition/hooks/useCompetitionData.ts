@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Problem } from '../Competition';
-import { safeGet } from '@/lib/request';
-// import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
+import { safeGet, safePost } from '@/lib/request';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
+import { toast } from '@/hooks/useToast';
 
 export function useCompetitionData(competitionId: number | null) {
   const [problems, setProblems] = useState<Problem[]>([]);
   const token = useAuthStore((state) => state.token);
-  // const { competitionId } = useCompetitionStore();
 
   useEffect(() => {
     const fetchProblems = async () => {
@@ -26,12 +25,16 @@ export function useCompetitionData(competitionId: number | null) {
     };
 
     const joinCompetition = async () => {
-      const res = await fetch(`/api/v1/competitions/${competitionId}`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.status !== 204) {
-        alert('대회 참가에 실패했습니다.');
+      const res = await safePost(
+        `/api/v1/competitions/${competitionId}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      if (res.httpStatusCode === 409) {
+        toast({ title: '이미 참가한 대회입니다.', variant: 'destructive' });
+        window.location.href = '/competition';
       }
     };
 

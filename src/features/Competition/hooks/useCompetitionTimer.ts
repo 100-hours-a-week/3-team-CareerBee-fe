@@ -1,19 +1,18 @@
+import { COMPETITION_END_TIME } from '@/features/Competition/config/competitionTime';
+import { checkTime } from '../components/timer';
+
+import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
+
 import { useState, useEffect } from 'react';
-import {
-  // COMPETITION_START_TIME,
-  COMPETITION_END_TIME,
-} from '@/features/Competition/config/competitionTime';
 
 export const useCompetitionTimer = (isSubmitted: boolean, setShowTimeOverModal: Function) => {
+  const { joinedTime, setJoinedTime } = useCompetitionStore();
   const getInitialTimeLeft = () => {
-    const now = new Date();
-    const utcHours = now.getUTCHours();
-    const utcMinutes = now.getUTCMinutes();
-    const utcSeconds = now.getUTCSeconds();
-    const utcMilliseconds = now.getUTCMilliseconds();
-    const curr =
-      utcHours * 60 * 60 * 1000 + utcMinutes * 60 * 1000 + utcSeconds * 1000 + utcMilliseconds;
+    const curr = checkTime('ms');
 
+    if (joinedTime === null) {
+      setJoinedTime(COMPETITION_END_TIME - curr);
+    }
     return Math.max(0, COMPETITION_END_TIME - curr);
   };
 
