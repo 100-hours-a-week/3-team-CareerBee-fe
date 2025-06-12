@@ -16,6 +16,10 @@ export const useNotificationSSE = (enabled: boolean) => {
       },
     });
 
+    eventSource.onopen = () => {
+      sessionStorage.setItem('sse_connected', 'true');
+    };
+
     eventSource.onmessage = (event) => {
       const { hasNew } = JSON.parse(event.data); //TODO: response 형식과 맞추기
       if (hasNew) {
