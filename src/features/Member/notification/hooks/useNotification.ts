@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { safeGet } from '@/lib/request';
+import { safeGet, safePost } from '@/lib/request';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 
 export interface NotifyProps {
@@ -42,4 +42,25 @@ export function useNotification() {
   }, [token]);
 
   return { recruitmentNotify, basicNotify };
+}
+
+export function useNotificationRead() {
+  const token = useAuthStore.getState().token;
+
+  const markNotificationsAsRead = async (notificationIds: number[]): Promise<void> => {
+    if (notificationIds.length === 0) return;
+    await safePost(
+      '/api/v1/members/notifications',
+      JSON.stringify({
+        notificationIds,
+      }),
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+  };
+
+  return { markNotificationsAsRead };
 }
