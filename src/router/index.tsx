@@ -20,6 +20,8 @@ import Developers from '@/features/Member/service/developers';
 import ResumeForm from '@/features/Member/resume/resumeForm';
 import Upload from '@/features/Member/resume/upload';
 
+const showUnreleased = import.meta.env.VITE_SHOW_UNRELEASED === 'true';
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -31,9 +33,9 @@ export const router = createBrowserRouter([
       { path: 'login', element: <Login /> },
       { path: 'login-required', element: <LoginRequired /> },
       { path: 'oauth/callback/kakao', element: <OAuthCallback /> },
-      { path: 'competition', element: <Ranking /> },
-      { path: 'competition/entry', element: <Competition /> },
-      { path: 'notification', element: <Notification /> },
+      { path: 'competition', element: showUnreleased ? <Ranking /> : <ToBeContinued /> },
+      { path: 'competition/entry', element: showUnreleased ? <Competition /> : <ToBeContinued /> },
+      { path: 'notification', element: showUnreleased ? <Notification /> : <ToBeContinued /> },
       {
         path: 'my/account',
         element: (
@@ -42,11 +44,10 @@ export const router = createBrowserRouter([
           </DirtyProvider>
         ),
       },
-      // { path: 'my/account', element: <Account /> },
-      { path: 'my/account/quit', element: <Quit /> },
-      { path: 'service/developers', element: <Developers /> },
-      { path: 'resume/form', element: <ResumeForm /> },
-      { path: 'resume/upload', element: <Upload /> },
+      { path: 'my/account/quit', element: showUnreleased ? <Quit /> : <ToBeContinued /> },
+      { path: 'service/developers', element: showUnreleased ? <Developers /> : <ToBeContinued /> },
+      { path: 'resume/form', element: showUnreleased ? <ResumeForm /> : <ToBeContinued /> },
+      { path: 'resume/upload', element: showUnreleased ? <Upload /> : <ToBeContinued /> },
       { path: '*', element: <ToBeContinued /> },
     ],
   },
