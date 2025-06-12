@@ -5,7 +5,27 @@ import { toast } from '@/hooks/useToast';
 import { queryClient } from '@/lib/react-query-client';
 import originAxios, { AxiosError } from 'axios';
 
+let isRefreshing = false;
+let requestQueue: ((_token: string) => void)[] = [];
+
 export async function retryWithRefreshedToken(config: AxiosRequestConfig) {
+  if (isRefreshing) {
+    if (config.url?.includes('/auth/reissue')) {
+      return Promise.resolve();
+    }
+    return new Promise((resolve) => {
+      requestQueue.push((token: string) => {
+        config.headers = {
+          ...config.headers,
+          Authorization: `Bearer ${token}`,
+        };
+        resolve(originAxios(config));
+      });
+    });
+  }
+
+  isRefreshing = true;
+
   try {
     const res = await originAxios.post(
       `${import.meta.env.VITE_API_URL}/api/v1/auth/reissue`,
@@ -17,15 +37,23 @@ export async function retryWithRefreshedToken(config: AxiosRequestConfig) {
     const newToken = res.data.data.newAccessToken;
     useAuthStore.getState().setToken(newToken);
 
+    requestQueue.forEach((cb) => cb(newToken));
+    requestQueue = [];
+    isRefreshing = false;
+
     if (config.url?.includes('/auth/reissue')) {
       return Promise.resolve();
     }
+
     config.headers = {
       ...config.headers,
       Authorization: `Bearer ${newToken}`,
     };
     return originAxios(config);
   } catch (e: unknown) {
+    requestQueue = [];
+    isRefreshing = false;
+
     const status = (e as AxiosError)?.response?.status;
     if (status && status < 500 && !originAxios.isCancel(e)) {
       await forceLogout();
