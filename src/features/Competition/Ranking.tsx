@@ -1,5 +1,4 @@
 import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
-import PocketWatch from '@/features/Competition/image/pocket-watch-md.png';
 
 import { Button } from '@/components/ui/button';
 import DailyBarChart from '@/features/Competition/utils/dailyChart';
@@ -12,6 +11,7 @@ import {
   COMPETITION_END_TIME,
   AGGREGATE_TIME,
 } from '@/features/Competition/config/competitionTime';
+import AggregationNotice from './components/aggregationNotice';
 
 import { useTopRankings, useDailyPolling } from './hooks/useTopRanking';
 import { useAuthStore } from '../Member/auth/store/auth';
@@ -102,15 +102,7 @@ export default function Ranking() {
               topRankings?.daily && topRankings?.daily.length > 0 ? (
                 <DailyBarChart rankingData={topRankings?.daily} />
               ) : isAggregationTime ? (
-                <div className="flex flex-col justify-center items-center h-[436px]">
-                  <img
-                    src={PocketWatch}
-                    alt="pocket-watch"
-                    className="w-16 h-16 mb-4 drop-shadow-md animate-[bounce_1.5s_infinite]"
-                  />
-                  <p className="text-base">대회 집계 시간입니다.</p>
-                  <p className="text-xs">(13시 10분 ~ 13시 20분)</p>
-                </div>
+                <AggregationNotice />
               ) : (
                 <div className="flex items-center h-[436px]">아직 랭킹 데이터가 없어요.</div>
               )
@@ -130,6 +122,8 @@ export default function Ranking() {
                         />
                         <PeriodicBarChart rankingData={topRankings?.weekly?.slice(3)} />
                       </>
+                    ) : isAggregationTime ? (
+                      <AggregationNotice />
                     ) : (
                       <div className="flex items-center h-[436px]">아직 랭킹 데이터가 없어요.</div>
                     )}
@@ -149,6 +143,8 @@ export default function Ranking() {
                         />
                         <PeriodicBarChart rankingData={topRankings?.monthly?.slice(3)} />
                       </>
+                    ) : isAggregationTime ? (
+                      <AggregationNotice />
                     ) : (
                       <div className="flex items-center h-[436px]">아직 랭킹 데이터가 없어요.</div>
                     )}
