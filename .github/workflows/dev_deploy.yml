@@ -119,7 +119,7 @@ jobs:
           if [ "$STATUS" != "200" ]; then
             echo "헬스 체크 실패. 상태 코드: $STATUS" > failure_reason.txt
             
-            LATEST_VALID_BACKUP=$(aws s3 ls "${{ env.S3_BUCKET_INFRA}/fe/" | awk '{print $2}' | grep -v "^${{ env.DEPLOY_PATH }}/$" | sort | tail -n 1 | sed 's#/$##')
+            LATEST_VALID_BACKUP=$(aws s3 ls "${{ env.S3_BUCKET_INFRA }}/fe/" | awk '{print $2}' | grep -v "^${{ env.DEPLOY_PATH }}/$" | sort | tail -n 1 | sed 's#/$##')
             if [ -z "$LATEST_VALID_BACKUP" ]; then
               exit 1
             fi
