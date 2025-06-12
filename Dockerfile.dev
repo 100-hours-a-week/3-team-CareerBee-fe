@@ -1,0 +1,23 @@
+# 1. Build Stage
+FROM node:22-alpine AS builder
+
+RUN corepack enable && corepack prepare pnpm@10.7.1 --activate
+
+WORKDIR /frontend
+
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install
+
+COPY . .
+
+RUN pnpm build
+
+# 2. Serve Stage
+FROM nginx:1.28.0-alpine-slim
+
+RUN rm -rf /var/www/html/*
+
+COPY --from=builder /frontend/dist /var/www/html
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
