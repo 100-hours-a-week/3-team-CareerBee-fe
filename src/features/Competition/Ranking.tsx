@@ -1,4 +1,5 @@
 import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
+import PocketWatch from '@/features/Competition/image/pocket-watch-md.png';
 
 import { Button } from '@/components/ui/button';
 import DailyBarChart from '@/features/Competition/utils/dailyChart';
@@ -9,6 +10,7 @@ import MyRankCard from '@/features/Competition/components/myRankCard';
 import {
   COMPETITION_START_TIME,
   COMPETITION_END_TIME,
+  AGGREGATE_TIME,
 } from '@/features/Competition/config/competitionTime';
 
 import { useTopRankings, useDailyPolling } from './hooks/useTopRanking';
@@ -22,7 +24,6 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Ranking() {
   // 랭킹 데이터 가져오기
-  // const { topRankings } = useTopRankings();
   const { data: topRankings } = useTopRankings();
   const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
 
@@ -61,10 +62,14 @@ export default function Ranking() {
 
   // 대회 운영 시간 여부
   const [competitionTime, setCompetitionTime] = useState(false);
+  const [isAggregationTime, setIsAggregationTime] = useState(false);
   useEffect(() => {
     const curr = checkTime('ms');
     const isCompetitionTime = curr >= COMPETITION_START_TIME && curr < COMPETITION_END_TIME;
     setCompetitionTime(isCompetitionTime);
+    setIsAggregationTime(
+      curr < COMPETITION_END_TIME + AGGREGATE_TIME && curr > COMPETITION_END_TIME,
+    );
   }, []);
 
   useDailyPolling(competitionTime);
@@ -96,6 +101,16 @@ export default function Ranking() {
             {rankingView === 'daily' ? (
               topRankings?.daily && topRankings?.daily.length > 0 ? (
                 <DailyBarChart rankingData={topRankings?.daily} />
+              ) : isAggregationTime ? (
+                <div className="flex flex-col justify-center items-center h-[436px]">
+                  <img
+                    src={PocketWatch}
+                    alt="pocket-watch"
+                    className="w-16 h-16 mb-4 drop-shadow-md animate-[bounce_1.5s_infinite]"
+                  />
+                  <p className="text-base">대회 집계 시간입니다.</p>
+                  <p className="text-xs">(13시 10분 ~ 13시 20분)</p>
+                </div>
               ) : (
                 <div className="flex items-center h-[436px]">아직 랭킹 데이터가 없어요.</div>
               )
