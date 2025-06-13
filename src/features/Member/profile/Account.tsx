@@ -13,8 +13,8 @@ import { useState, useEffect } from 'react';
 
 export default function Account() {
   const { data: userInfo } = useUserInfo();
-  const [nickname, setNickname] = useState(userInfo?.nickname || '예시 닉네임');
-  const email = userInfo?.email || 'test@example.com';
+  const [nickname, setNickname] = useState('');
+  const email = userInfo?.email ?? 'test@example.com';
   const [file, setFile] = useState<File | null>(null);
 
   const [helperText, setHelperText] = useState('');
@@ -29,6 +29,12 @@ export default function Account() {
     const originalNickname = userInfo?.nickname ?? '예시 닉네임';
     setIsNicknameDirty(nickname !== originalNickname && nickname != '');
   }, [nickname, userInfo]);
+
+  useEffect(() => {
+    if (userInfo?.nickname) {
+      setNickname(userInfo.nickname);
+    }
+  }, [userInfo?.nickname]);
 
   useEffect(() => {
     if (nickname == '') {
