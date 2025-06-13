@@ -10,6 +10,7 @@ import { handlePresignedUrl } from './util/handlePresignedUrl';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 
 import { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Account() {
   const { data: userInfo } = useUserInfo();
@@ -25,6 +26,10 @@ export default function Account() {
     setIsProfileImageDirty,
     isAnyDirty,
   } = useDirty();
+
+  const queryClient = useQueryClient();
+  queryClient.invalidateQueries({ queryKey: ['userinfo'] });
+
   useEffect(() => {
     const originalNickname = userInfo?.nickname ?? '예시 닉네임';
     setIsNicknameDirty(nickname !== originalNickname && nickname != '');
