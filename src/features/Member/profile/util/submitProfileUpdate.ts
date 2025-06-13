@@ -10,8 +10,8 @@ export const SubmitProfileUpdate = async ({
   setIsProfileImageDirty,
   setHelperText,
   token,
-  isNicknameDirty,
-  isProfileImageDirty,
+  // isNicknameDirty,
+  // isProfileImageDirty,
 }: {
   nickname?: string;
   profileUrl?: string;
@@ -28,8 +28,10 @@ export const SubmitProfileUpdate = async ({
 
   try {
     const body: Record<string, any> = {};
-    if (isNicknameDirty) body.newNickname = nickname;
-    if (isProfileImageDirty) body.newProfileUrl = profileUrl;
+    // if (isNicknameDirty)
+    body.newNickname = nickname;
+    // if (isProfileImageDirty)
+    body.newProfileUrl = profileUrl;
 
     await safePatch('/api/v1/members', body, {
       headers: { Authorization: `Bearer ${token}` },

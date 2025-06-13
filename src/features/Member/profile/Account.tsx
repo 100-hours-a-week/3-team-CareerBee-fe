@@ -59,10 +59,10 @@ export default function Account() {
               onSubmit={async (e) => {
                 e.preventDefault();
                 SubmitProfileUpdate({
-                  nickname: isNicknameDirty ? nickname : undefined,
+                  nickname: isNicknameDirty ? nickname : userInfo.nickname,
                   profileUrl: isProfileImageDirty
                     ? await handlePresignedUrl(file, token)
-                    : undefined,
+                    : userInfo.profileUrl,
                   setIsNicknameDirty,
                   setIsProfileImageDirty,
                   setHelperText: (value: string) => setHelperText(value),
