@@ -68,10 +68,6 @@ jobs:
             -f Dockerfile.dev \
             -t ${{ env.ECR_REGISTRY }}/frontend:${{ env.DEPLOY_TAG }} .
 
-      - name: Push Docker image to ECR
-        run: |
-          docker push ${{ env.ECR_REGISTRY }}/frontend:${{ env.DEPLOY_TAG }}
-
       - name: Get instance ID from tfstate
         run: |
           aws s3 cp $S3_BUCKET_INFRA/terraform.tfstate terraform.tfstate
