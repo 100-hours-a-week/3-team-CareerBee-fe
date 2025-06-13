@@ -65,8 +65,10 @@ export default function Account() {
                     : undefined,
                   setIsNicknameDirty,
                   setIsProfileImageDirty,
-                  setHelperText,
+                  setHelperText: (value: string) => setHelperText(value),
                   token,
+                  isNicknameDirty,
+                  isProfileImageDirty,
                 });
               }}
             >
