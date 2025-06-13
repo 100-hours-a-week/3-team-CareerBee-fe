@@ -2,7 +2,7 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from '@/router';
 import { useEffect, useState } from 'react';
 import { useNotificationSSE } from '@/features/Member/notification/hooks/useNotificationSSE';
-import { useUserInfo } from '@/hooks/useUserInfo';
+import { useAuthStore } from './features/Member/auth/store/auth';
 
 function setViewportHeightVar() {
   const vh = window.innerHeight * 0.01;
@@ -22,17 +22,19 @@ function App() {
   }, []);
 
   // SSE 연결
-  const { data: userInfo } = useUserInfo();
-  const isLoggedIn = !!userInfo;
+  const token = useAuthStore.getState().token;
   const [enableSSE, setEnableSSE] = useState(false);
 
   useEffect(() => {
     const alreadyConnected = sessionStorage.getItem('sse_connected');
-    if (isLoggedIn && !alreadyConnected) {
+    if (token && !alreadyConnected) {
       setEnableSSE(true);
       sessionStorage.setItem('sse_connected', 'true');
+    } else if (!token) {
+      setEnableSSE(false);
+      sessionStorage.removeItem('sse_connected');
     }
-  }, [isLoggedIn]);
+  }, [token]);
 
   useNotificationSSE(enableSSE);
 
