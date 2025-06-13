@@ -31,8 +31,8 @@ export function useNotification() {
 
       if (res.httpStatusCode === 200) {
         const all = res.data.notifications;
-        const important = all.filter((noti: NotifyProps) => noti.type === 'RECRUIMENT');
-        const basic = all.filter((noti: NotifyProps) => noti.type !== 'RECRUIMENT');
+        const important = all.filter((noti: NotifyProps) => noti.type === 'RECRUITMENT');
+        const basic = all.filter((noti: NotifyProps) => noti.type !== 'RECRUITMENT');
         setRecruitmentNotify(important);
         setBasicNotify(basic);
       }
