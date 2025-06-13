@@ -15,13 +15,21 @@ export const useNotificationSSE = (enabled: boolean) => {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log('SSE 연결 시도 중...');
+    console.log('readyState:', eventSource.readyState);
+
+    eventSource.addEventListener('open', () => {
+      console.log('SSE 연결 성공');
+      sessionStorage.setItem('sse_connected', 'true');
+    });
 
     eventSource.onopen = () => {
-      sessionStorage.setItem('sse_connected', 'true');
       console.log('SSE 연결 성공');
+      sessionStorage.setItem('sse_connected', 'true');
     };
 
     eventSource.onmessage = (event) => {
+      console.log('이벤트 옴');
       const { hasNew } = JSON.parse(event.data); //TODO: response 형식과 맞추기
       if (hasNew) {
         queryClient.setQueryData(['userinfo'], (prev: any) => ({
