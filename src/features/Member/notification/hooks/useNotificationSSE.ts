@@ -18,6 +18,7 @@ export const useNotificationSSE = (enabled: boolean) => {
 
     eventSource.onopen = () => {
       sessionStorage.setItem('sse_connected', 'true');
+      console.log('SSE 연결 성공');
     };
 
     eventSource.onmessage = (event) => {
