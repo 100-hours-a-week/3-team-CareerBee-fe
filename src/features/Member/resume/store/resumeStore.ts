@@ -10,7 +10,12 @@ interface resumeProps {
   additional_experiences: string;
 }
 
-export const useResumeStore = create((set) => ({
+interface ResumeState {
+  resume: resumeProps | null;
+  setResume: (_data: resumeProps) => void;
+}
+
+export const useResumeStore = create<ResumeState>((set) => ({
   resume: null,
   setResume: (data: resumeProps) => set({ resume: data }),
 }));

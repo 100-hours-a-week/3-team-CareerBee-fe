@@ -59,7 +59,7 @@ export default function Upload() {
             headers: { Authorization: `Bearer ${token}` },
           },
         );
-        if (res.httpStatusCode === 209) {
+        if (res.httpStatusCode === 200) {
           useResumeStore.getState().setResume(res.data);
         }
       } catch (err: any) {
