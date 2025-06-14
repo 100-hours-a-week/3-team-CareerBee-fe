@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 import Main from '@/features/Map/Main';
 import CompanyDetail from '@/features/Company/CompanyDetail';
@@ -22,6 +23,11 @@ import Upload from '@/features/Member/resume/upload';
 import RequireMyAuth from '@/features/Member/auth/components/RequireMyAuth';
 
 const showUnreleased = import.meta.env.VITE_SHOW_UNRELEASED === 'true';
+const thisIsEmily = import.meta.env.VITE_THIS_IS_EMILY === 'true';
+
+const AuthWrapper = () => {
+  return thisIsEmily ? <Outlet /> : <RequireMyAuth />;
+};
 
 export const router = createBrowserRouter([
   {
@@ -32,7 +38,7 @@ export const router = createBrowserRouter([
       { path: 'company/:id', element: <CompanyDetail /> },
       { path: 'competition', element: showUnreleased ? <Ranking /> : <ToBeContinued /> },
       {
-        element: <RequireMyAuth />,
+        element: <AuthWrapper />,
         children: [
           { path: 'my', element: <Mypage /> },
           {
