@@ -14,7 +14,7 @@ export const SubmitProfileUpdate = async ({
   // isProfileImageDirty,
 }: {
   nickname?: string;
-  profileUrl?: string;
+  profileUrl?: string | null;
   onSuccess?: () => void;
   onError?: () => void;
   setIsNicknameDirty: (_value: boolean) => void;
