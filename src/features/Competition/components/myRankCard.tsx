@@ -1,43 +1,44 @@
 import noProfile from '/assets/no-profile.png';
 
 import { useUserInfo } from '@/hooks/useUserInfo';
-import { useMyRanking } from '@/features/Competition/hooks/useMyRanking';
+import { useMyRanking, useDailyMyPolling } from '@/features/Competition/hooks/useMyRanking';
 
 interface MyRankCardProps {
   rankingView: 'daily' | 'weekly' | 'monthly';
 }
 
-export default function MyRankCard({ rankingView }: MyRankCardProps) {
+export default function MyRankCard({ rankingView }: MyRankCardProps, competitionTime: boolean) {
   const { myRanking } = useMyRanking();
-  const { data: userInfo } = useUserInfo();
+  useDailyMyPolling(competitionTime);
 
+  const { data: userInfo } = useUserInfo();
   if (
-    (rankingView === 'daily' && !myRanking.daily) ||
-    (rankingView === 'weekly' && !myRanking.weekly) ||
-    (rankingView === 'monthly' && !myRanking.monthly)
+    (rankingView === 'daily' && myRanking?.daily) ||
+    (rankingView === 'weekly' && myRanking?.weekly) ||
+    (rankingView === 'monthly' && myRanking?.monthly)
   ) {
     return <></>;
   }
   const rank =
     rankingView === 'daily'
-      ? myRanking.daily?.rank
+      ? myRanking?.daily?.rank
       : rankingView === 'weekly'
-        ? myRanking.weekly?.rank
-        : myRanking.monthly?.rank;
+        ? myRanking?.weekly?.rank
+        : myRanking?.monthly?.rank;
 
   const score =
     rankingView === 'daily'
-      ? `${myRanking.daily?.solvedCount || 0} /5`
+      ? `${myRanking?.daily?.solvedCount || 0} /5`
       : rankingView === 'weekly'
-        ? `${myRanking.weekly?.correctRate}%`
-        : `${myRanking.monthly?.correctRate}%`;
+        ? `${myRanking?.weekly?.solvedCount}%`
+        : `${myRanking?.monthly?.solvedCount}%`;
 
   const subInfo =
     rankingView === 'daily'
-      ? myRanking.daily?.elapsedTime
+      ? myRanking?.daily?.elapsedTime
       : rankingView === 'weekly'
-        ? myRanking.weekly?.continuous
-        : myRanking.monthly?.continuous;
+        ? myRanking?.weekly?.elapsedTime
+        : myRanking?.monthly?.elapsedTime;
 
   return (
     <>
