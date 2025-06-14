@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
-import { safeGet, safePost } from '@/lib/request';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
+
+import { safeGet, safePost } from '@/lib/request';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 export interface NotifyProps {
   id: number;
@@ -9,6 +11,28 @@ export interface NotifyProps {
   notiDate: string;
   isRead: boolean;
 }
+
+export const getNotification = async ({ pageParam = 0 }: { pageParam?: number }) => {
+  const token = useAuthStore.getState().token;
+  if (!token) return;
+  let res;
+  if (import.meta.env.VITE_USE_MOCK === 'true') {
+    const mock = await fetch('/mock/mock-notification.json');
+    res = await mock.json();
+  } else {
+    res = await safeGet('/api/v1/members/notifications', {
+      ...(pageParam !== 0 ? { params: { cursor: pageParam } } : {}),
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
+  if (res.httpStatusCode === 200) {
+    const all = res.data.notifications;
+    const important = all.filter((noti: NotifyProps) => noti.type === 'RECRUITMENT');
+    const basic = all.filter((noti: NotifyProps) => noti.type !== 'RECRUITMENT');
+    const { nextCursor, hasNext } = res.data;
+    return { important, basic, nextCursor, hasNext };
+  }
+};
 
 export function useNotification() {
   const token = useAuthStore.getState().token;
