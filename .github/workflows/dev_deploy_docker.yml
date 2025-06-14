@@ -29,7 +29,7 @@ jobs:
         run: |
           aws s3 cp s3://${{ secrets.DEV_S3_INFRA_NAME }}/terraform.tfvars.enc terraform.tfvars.enc
           openssl aes-256-cbc -d -salt -pbkdf2 -in terraform.tfvars.enc -out .env -k ${{ secrets.DEV_TFVARS_ENC_PW }}
-          
+
       - name: Load selected env variables into GitHub Environment
         run: |
           source .env
@@ -71,7 +71,7 @@ jobs:
 
       - name: Get instance ID from tfstate
         run: |
-          aws s3 cp $S3_BUCKET_INFRA/terraform.tfstate terraform.tfstate
+          aws s3 cp $S3_BUCKET_INFRA/tfstate/terraform_docker.tfstate terraform.tfstate
           INSTANCE_A_ID=$(jq -r \
             '.resources[] | select(.type == "aws_instance") | .instances[] |
             select(.attributes.tags.Name == "ec2-careerbee-dev-azone-service") | .attributes.id' terraform.tfstate)
