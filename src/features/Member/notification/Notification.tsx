@@ -3,7 +3,6 @@ import { CircleLoader } from '@/components/ui/loader';
 
 import {
   getNotification,
-  useNotification,
   useNotificationRead,
   NotifyProps,
 } from '@/features/Member/notification/hooks/useNotification';
@@ -13,8 +12,6 @@ import { useEffect, useRef } from 'react';
 import React from 'react';
 
 export default function Notification() {
-  const { recruitmentNotify, basicNotify } = useNotification();
-
   // 쿼리에 저장
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ['notifications'],
@@ -55,15 +52,38 @@ export default function Notification() {
       <div className="flex flex-col items-center justify-center mx-5 py-2 border-b-2 border-text-secondary/60">
         <div className="flex mr-auto mb-2">중요한 알림</div>
         <div className="flex flex-col gap-1.5 w-full">
-          {recruitmentNotify.map((noti: NotifyProps) => (
-            <Notify
-              key={noti.id}
-              title="공채 알림"
-              description={noti.content}
-              time={noti.notiDate}
-              isRead={noti.isRead}
-            />
-          ))}
+          {data?.pages?.length ? (
+            data.pages.map((group, i) => (
+              <React.Fragment key={i}>
+                {group?.important?.map((noti: NotifyProps) => (
+                  <Notify
+                    key={noti.id}
+                    title="공채 알림"
+                    description={noti.content}
+                    time={noti.notiDate}
+                    isRead={noti.isRead}
+                  />
+                ))}
+              </React.Fragment>
+            ))
+          ) : (
+            <div className="flex justify-center text-sm text-text-secondary py-2 w-full">
+              지금은 새로운 알림이 없어요.
+            </div>
+          )}
+          {isFetchingNextPage ? (
+            <div className="flex items-center justify-center w-24 p-8 h-full">
+              <CircleLoader />
+            </div>
+          ) : hasNextPage ? (
+            <div ref={bottomRef} className="flex-none w-full h-1" />
+          ) : data?.pages?.length ? (
+            <div className="flex-none w-full py-2 flex flex-col items-center justify-center text-text-secondary">
+              <span className="text-xs text-center">끝까지 봤어요!</span>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
       <div className="flex flex-col items-center justify-center mx-5 py-2 border-b-2 border-text-secondary/60">
@@ -99,7 +119,7 @@ export default function Notification() {
               <CircleLoader />
             </div>
           ) : hasNextPage ? (
-            <div ref={bottomRef} className="flex-none w-20 h-20" />
+            <div ref={bottomRef} className="flex-none w-full h-1" />
           ) : data?.pages?.length ? (
             <div className="flex-none w-full py-2 flex flex-col items-center justify-center text-text-secondary">
               <span className="text-xs text-center">끝까지 봤어요!</span>
