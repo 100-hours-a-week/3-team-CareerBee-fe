@@ -42,7 +42,7 @@ module.exports = [
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'no-console': 'warn',
       'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
-      'prettier/prettier': ['error'],
+      'prettier/prettier': ['error', {"endOfLine": "auto"}],
       'react/react-in-jsx-scope': 'off',
       'import/prefer-default-export': 'off',
       'react/jsx-props-no-spreading': 'off',
