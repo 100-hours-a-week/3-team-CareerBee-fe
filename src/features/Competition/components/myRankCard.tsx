@@ -3,6 +3,13 @@ import noProfile from '/assets/no-profile.png';
 import { useUserInfo } from '@/hooks/useUserInfo';
 import { useMyRanking, useDailyMyPolling } from '@/features/Competition/hooks/useMyRanking';
 
+const rankCardStyles = {
+  1: { bgImage: 'red-rank.svg', width: '440px' },
+  2: { bgImage: 'green-rank.svg', width: '432px' },
+  3: { bgImage: 'blue-rank.svg', width: '424px' },
+  default: { bgImage: 'yellow-rank.svg', width: '416px' },
+};
+
 interface MyRankCardProps {
   rankingView: 'daily' | 'weekly' | 'monthly';
 }
@@ -25,6 +32,7 @@ export default function MyRankCard({ rankingView }: MyRankCardProps, competition
       : rankingView === 'weekly'
         ? myRanking?.weekly?.rank
         : myRanking?.monthly?.rank;
+  const { bgImage, width } = rankCardStyles[rank as 1 | 2 | 3] ?? rankCardStyles.default;
 
   const score =
     rankingView === 'daily'
@@ -43,7 +51,11 @@ export default function MyRankCard({ rankingView }: MyRankCardProps, competition
   return (
     <>
       <div className="mb-1 text-sm font-bold tracking-tighter">. . .</div>
-      <div className="w-[440px] h-[40px] rounded-md flex bg-[url('/assets/red-rank.svg')] bg-contain text-xs flex items-center px-2">
+      <div
+        className={`w-[${width}] h-[40px] rounded-md flex 
+          bg-[url('/assets/${bgImage}')] bg-contain 
+          text-xs items-center px-2`}
+      >
         <div className="pl-2 pr-3 font-bold">{rank}</div>
         <img
           src={userInfo?.profileUrl || noProfile}
