@@ -26,6 +26,7 @@ export default function MyRankCard({ rankingView }: MyRankCardProps, competition
   ) {
     return <></>;
   }
+
   const rank =
     rankingView === 'daily'
       ? myRanking?.daily?.rank
@@ -62,7 +63,7 @@ export default function MyRankCard({ rankingView }: MyRankCardProps, competition
           className="w-8 h-8 mx-1.5"
           alt="프로필 이미지"
         />
-        <img src="/assets/default.svg" className="w-4 h-4 mr-1" alt="뱃지 이미지" />
+        {/* <img src="/assets/default.svg" className="w-4 h-4 mr-1" alt="뱃지 이미지" /> */}
         <div className="mr-auto">{userInfo?.nickname || '닉네임'}</div>
         <div className="text-[0.625rem] pr-6">{subInfo}</div>
         <div className="text-[0.625rem] px-3">{score}</div>
