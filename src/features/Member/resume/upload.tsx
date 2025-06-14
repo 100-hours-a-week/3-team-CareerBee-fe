@@ -3,10 +3,12 @@ import { Button } from '@/components/ui/button';
 import fileUpload from '@/features/Member/resume/image/file-arrow-up-light.svg';
 import { handlePresignedUrl } from '@/features/Member/profile/util/handlePresignedUrl';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
+import { useResumeStore } from '@/features/Member/resume/store/resumeStore';
 
 // import { useAuthStore } from '@/features/Member/auth/store/auth';
 // import { uploadPdf } from './util/uploadPdf';
 
+import { safePost } from '@/lib/request';
 import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -40,12 +42,32 @@ export default function Upload() {
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     const input = (e.target as HTMLFormElement).querySelector<HTMLInputElement>('#resume-upload');
     const file = input?.files?.[0] || null;
-    await handlePresignedUrl({
-      file,
-      token,
-      type: 'resume',
-      uploadType: 'RESUME',
-    });
+    if (file != null) {
+      const objectUrl = await handlePresignedUrl({
+        file,
+        token,
+        type: 'resume',
+        uploadType: 'RESUME',
+      });
+
+      if (!token) return;
+      try {
+        const res = await safePost(
+          '/api/v1/members/resume/complete-upload',
+          {
+            objectUrl: objectUrl,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
+        if (res.httpStatusCode === 209) {
+          useResumeStore.getState().setResume(res.data);
+        }
+      } catch (err: any) {
+        alert(err);
+      }
+    }
 
     window.location.href = '/resume/form';
   };
