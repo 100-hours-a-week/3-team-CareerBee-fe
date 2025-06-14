@@ -12,7 +12,7 @@ export const SubmitProfileUpdate = async ({
   token,
 }: {
   nickname?: string;
-  profileUrl?: string;
+  profileUrl?: string | null;
   onSuccess?: () => void;
   onError?: () => void;
   setIsNicknameDirty: (_value: boolean) => void;
