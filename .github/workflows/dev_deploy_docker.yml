@@ -1,9 +1,10 @@
 name: DEEV Frontend Docker CICD
 
 on:
-  push:
-    branches:
-      - develop
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - develop
 
 jobs:
   deploy:
@@ -82,18 +83,29 @@ jobs:
           echo "INSTANCE_C_ID=$INSTANCE_C_ID" >> $GITHUB_ENV
 
       - name: Deploy to instance A (azone)
+        env:
+          AWS_REGION: ${{ env.AWS_DEFAULT_REGION }}
+          ECR_REGISTRY: ${{ env.ECR_REGISTRY }}
+          INSTANCE_ID: ${{ env.INSTANCE_A_ID }}
+          DEPLOY_TAG: ${{ env.DEPLOY_TAG }}
         run: |
+          CMD_JSON=$(jq -nc \
+            --arg repo "$ECR_REGISTRY" \
+            --arg tag "$DEPLOY_TAG" \
+            '[
+              "docker stop frontend || true",
+              "docker rm frontend || true",
+              "docker pull \($repo)/frontend:\($tag)",
+              "docker run -d --name frontend -p 5173:80 --env-file /home/ubuntu/.env \($repo)/frontend:\($tag)"
+            ]'
+          )
+
           aws ssm send-command \
             --document-name "AWS-RunShellScript" \
             --comment "Deploy to A zone" \
-            --instance-ids "${{ env.INSTANCE_A_ID }}" \
-            --region ${{ env.AWS_DEFAULT_REGION }} \
-            --parameters commands='[
-              "docker stop frontend || true",
-              "docker rm frontend || true",
-              "docker pull ${{ env.ECR_REGISTRY }}/frontend:${{ env.DEPLOY_TAG }}",
-              "docker run -d --name frontend -p 5173:80 --env-file /home/ubuntu/.env ${{ env.ECR_REGISTRY }}/frontend:${{ env.DEPLOY_TAG }}"
-            ]'
+            --instance-ids "$INSTANCE_ID" \
+            --region "$AWS_REGION" \
+            --parameters "commands=$CMD_JSON"
 
       - name: Health check and mark result
         id: health
@@ -116,41 +128,62 @@ jobs:
 
       - name: Deploy to instance C (czone)
         if: steps.health.outputs.result == 'success'
+        env:
+          AWS_REGION: ${{ env.AWS_DEFAULT_REGION }}
+          ECR_REGISTRY: ${{ env.ECR_REGISTRY }}
+          DEPLOY_TAG: ${{ env.DEPLOY_TAG }}
+          INSTANCE_ID: ${{ env.INSTANCE_C_ID }}
         run: |
-          aws ssm send-command \
-            --document-name "AWS-RunShellScript" \
-            --comment "Deploy to C zone" \
-            --instance-ids "${{ env.INSTANCE_C_ID }}" \
-            --region $AWS_DEFAULT_REGION \
-            --parameters commands='[
-              "echo \"${{ secrets.DEV_ENV }}\" > /home/ubuntu/.env",
+          CMD_JSON=$(jq -nc \
+            --arg repo "$ECR_REGISTRY" \
+            --arg tag "$DEPLOY_TAG" \
+            '[
+              "echo \($envfile) > /home/ubuntu/.env",
               "docker stop frontend || true",
               "docker rm frontend || true",
-              "docker pull ${{ env.ECR_REGISTRY }}/frontend:${{ env.DEPLOY_TAG }}",
-              "docker run -d --name frontend -p 5173:80 --env-file /home/ubuntu/.env ${{ env.ECR_REGISTRY }}/frontend:${{ env.DEPLOY_TAG }}"
+              "docker pull \($repo)/frontend:\($tag)",
+              "docker run -d --name frontend -p 5173:80 --env-file /home/ubuntu/.env \($repo)/frontend:\($tag)"
             ]'
+          )
+
+          aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --comment "Deploy frontend to C zone" \
+            --instance-ids "$INSTANCE_ID" \
+            --region "$AWS_REGION" \
+            --parameters "commands=$CMD_JSON"
 
       - name: Rollback A instance to previous version
         if: steps.health.outputs.result == 'failure'
+        env:
+          AWS_REGION: ${{ env.AWS_DEFAULT_REGION }}
+          ECR_REGISTRY: ${{ env.ECR_REGISTRY }}
+          INSTANCE_ID: ${{ env.INSTANCE_A_ID }}
         run: |
           PREV_TAG=$(aws ecr describe-images \
             --repository-name frontend \
-            --region $AWS_DEFAULT_REGION \
+            --region "$AWS_REGION" \
             --query 'sort_by(imageDetails,& imagePushedAt)[-2].imageTags[0]' \
             --output text)
 
-          aws ssm send-command \
-            --document-name "AWS-RunShellScript" \
-            --comment "Rollback A zone" \
-            --instance-ids "${{ env.INSTANCE_A_ID }}" \
-            --region $AWS_DEFAULT_REGION \
-            --parameters commands='[
-              "echo \"${{ secrets.DEV_ENV }}\" > /home/ubuntu/.env",
+          CMD_JSON=$(jq -nc \
+            --arg repo "$ECR_REGISTRY" \
+            --arg tag "$PREV_TAG" \
+            '[
+              "echo \($envfile) > /home/ubuntu/.env",
               "docker stop frontend || true",
               "docker rm frontend || true",
-              "docker pull ${{ env.ECR_REGISTRY }}/frontend:$PREV_TAG",
-              "docker run -d --name frontend -p 5173:80 --env-file /home/ubuntu/.env ${{ env.ECR_REGISTRY }}/frontend:$PREV_TAG"
+              "docker pull \($repo)/frontend:\($tag)",
+              "docker run -d --name frontend -p 5173:80 --env-file /home/ubuntu/.env \($repo)/frontend:\($tag)"
             ]'
+          )
+
+          aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --comment "Rollback frontend on A zone" \
+            --instance-ids "$INSTANCE_ID" \
+            --region "$AWS_REGION" \
+            --parameters "commands=$CMD_JSON"
 
       - name: Set Discord message flag
         if: steps.health.outputs.result == 'success'
