@@ -20,6 +20,7 @@ import Quit from '@/features/Member/profile/Quit';
 import Developers from '@/features/Member/service/developers';
 import ResumeForm from '@/features/Member/resume/resumeForm';
 import Upload from '@/features/Member/resume/upload';
+import Download from '@/features/Member/resume/download';
 import RequireMyAuth from '@/features/Member/auth/components/RequireMyAuth';
 
 const showUnreleased = import.meta.env.VITE_SHOW_UNRELEASED === 'true';
@@ -61,6 +62,7 @@ export const router = createBrowserRouter([
           },
           { path: 'resume/form', element: showUnreleased ? <ResumeForm /> : <ToBeContinued /> },
           { path: 'resume/upload', element: showUnreleased ? <Upload /> : <ToBeContinued /> },
+          { path: 'resume/download', element: showUnreleased ? <Download /> : <ToBeContinued /> },
         ],
       },
       { path: 'login', element: <Login /> },
