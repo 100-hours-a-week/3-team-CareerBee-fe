@@ -1,8 +1,7 @@
 name: Deploy React Frontend to EC2 (DEV)
 
 on:
-  push:
-    branches: [ develop ]
+  workflow_dispatch:
 
 jobs:
   "Deploy-DEV":
