@@ -2,9 +2,9 @@ name: DEEV Frontend Docker CICD
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - develop
+  push:
+    branches:
+      - develop
 
 jobs:
   deploy:
@@ -26,23 +26,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: Download .env from S3
-        run: |
-          aws s3 cp s3://${{ secrets.DEV_S3_INFRA_NAME }}/terraform.tfvars.enc terraform.tfvars.enc
-          openssl aes-256-cbc -d -salt -pbkdf2 -in terraform.tfvars.enc -out .env -k ${{ secrets.DEV_TFVARS_ENC_PW }}
-
-      - name: Load selected env variables into GitHub Environment
-        run: |
-          source .env
-
-          echo "::add-mask::$AWS_DEFAULT_REGION"
-          echo "::add-mask::$ECR_REGISTRY"
-          echo "::add-mask::$S3_BUCKET_INFRA"
-
-          echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION" >> $GITHUB_ENV
-          echo "ECR_REGISTRY=$ECR_REGISTRY" >> $GITHUB_ENV
-          echo "S3_BUCKET_INFRA=$S3_BUCKET_INFRA" >> $GITHUB_ENV
-
       - name: Set timestamp-based path (Asia/Seoul)
         run: |
           TIMESTAMP=$(TZ='Asia/Seoul' date +%Y-%m-%d_%H_%M_%S)
@@ -51,7 +34,7 @@ jobs:
       - name: Login to ECR
         uses: aws-actions/amazon-ecr-login@v2
         with:
-          registry: ${{ env.ECR_REGISTRY }}
+          registry: ${{ secrets.DEV_ECR_REGISTRY }}
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -64,134 +47,38 @@ jobs:
       - name: Build Docker image using Dockerfile.dev
         run: |
           docker buildx build \
-            --cache-from=type=registry,ref=${{ env.ECR_REGISTRY }}/frontend:cache \
-            --cache-to=type=registry,ref=${{ env.ECR_REGISTRY }}/frontend:cache,mode=max \
+            --cache-from=type=registry,ref=${{ secrets.DEV_ECR_REGISTRY }}/frontend:cache \
+            --cache-to=type=registry,ref=${{ secrets.DEV_ECR_REGISTRY }}/frontend:cache,mode=max \
             --push \
             -f Dockerfile.dev \
-            -t ${{ env.ECR_REGISTRY }}/frontend:${{ env.DEPLOY_TAG }} .
+            -t ${{ secrets.DEV_ECR_REGISTRY }}/frontend:${{ env.DEPLOY_TAG }} \
+            -t ${{ secrets.DEV_ECR_REGISTRY }}/frontend:latest \
+            .
 
-      - name: Get instance ID from tfstate
+      - name: Trigger Deploy Webhook
         run: |
-          aws s3 cp $S3_BUCKET_INFRA/tfstate/terraform_docker.tfstate terraform.tfstate
-          INSTANCE_A_ID=$(jq -r \
-            '.resources[] | select(.type == "aws_instance") | .instances[] |
-            select(.attributes.tags.Name == "ec2-careerbee-dev-azone-service") | .attributes.id' terraform.tfstate)
-          INSTANCE_C_ID=$(jq -r \
-            '.resources[] | select(.type == "aws_instance") | .instances[] |
-            select(.attributes.tags.Name == "ec2-careerbee-dev-czone-service") | .attributes.id' terraform.tfstate)
-          echo "INSTANCE_A_ID=$INSTANCE_A_ID" >> $GITHUB_ENV
-          echo "INSTANCE_C_ID=$INSTANCE_C_ID" >> $GITHUB_ENV
-
-      - name: Deploy to instance A (azone)
-        env:
-          AWS_REGION: ${{ env.AWS_DEFAULT_REGION }}
-          ECR_REGISTRY: ${{ env.ECR_REGISTRY }}
-          INSTANCE_ID: ${{ env.INSTANCE_A_ID }}
-          DEPLOY_TAG: ${{ env.DEPLOY_TAG }}
-        run: |
-          CMD_JSON=$(jq -nc \
-            --arg repo "$ECR_REGISTRY" \
-            --arg tag "$DEPLOY_TAG" \
-            '[
-              "docker stop frontend || true",
-              "docker rm frontend || true",
-              "docker pull \($repo)/frontend:\($tag)",
-              "docker run -d --name frontend -p 5173:80 --env-file /home/ubuntu/.env \($repo)/frontend:\($tag)"
-            ]'
-          )
-
-          aws ssm send-command \
-            --document-name "AWS-RunShellScript" \
-            --comment "Deploy to A zone" \
-            --instance-ids "$INSTANCE_ID" \
-            --region "$AWS_REGION" \
-            --parameters "commands=$CMD_JSON"
+          curl -X POST https://webhook.dev.careerbee.co.kr/deploy \
+            -H "Content-Type: application/json" \
+            -d '{"fe_tag": "latest", "be_tag": "latest"}'
 
       - name: Health check and mark result
         id: health
         run: |
           set -e
-          for i in $(seq 1 5); do
+          for i in $(seq 1 10); do
             STATUS=$(curl --max-time 5 -s -o /dev/null -w "%{http_code}" "https://www.dev.careerbee.co.kr/health-check")
             echo "Status: $STATUS"
             if [ "$STATUS" == "200" ]; then
               echo "✅ Health check passed"
-              echo "result=success" >> $GITHUB_OUTPUT
+              echo "DISCORD_MSG=success" >> $GITHUB_ENV
               exit 0
             fi
             sleep 10
           done
 
           echo "❌ Health check failed after retries"
-          echo "result=failure" >> $GITHUB_OUTPUT
+          echo "DISCORD_MSG=failure" >> $GITHUB_ENV
           exit 0
-
-      - name: Deploy to instance C (czone)
-        if: steps.health.outputs.result == 'success'
-        env:
-          AWS_REGION: ${{ env.AWS_DEFAULT_REGION }}
-          ECR_REGISTRY: ${{ env.ECR_REGISTRY }}
-          DEPLOY_TAG: ${{ env.DEPLOY_TAG }}
-          INSTANCE_ID: ${{ env.INSTANCE_C_ID }}
-        run: |
-          CMD_JSON=$(jq -nc \
-            --arg repo "$ECR_REGISTRY" \
-            --arg tag "$DEPLOY_TAG" \
-            '[
-              "echo \($envfile) > /home/ubuntu/.env",
-              "docker stop frontend || true",
-              "docker rm frontend || true",
-              "docker pull \($repo)/frontend:\($tag)",
-              "docker run -d --name frontend -p 5173:80 --env-file /home/ubuntu/.env \($repo)/frontend:\($tag)"
-            ]'
-          )
-
-          aws ssm send-command \
-            --document-name "AWS-RunShellScript" \
-            --comment "Deploy frontend to C zone" \
-            --instance-ids "$INSTANCE_ID" \
-            --region "$AWS_REGION" \
-            --parameters "commands=$CMD_JSON"
-
-      - name: Rollback A instance to previous version
-        if: steps.health.outputs.result == 'failure'
-        env:
-          AWS_REGION: ${{ env.AWS_DEFAULT_REGION }}
-          ECR_REGISTRY: ${{ env.ECR_REGISTRY }}
-          INSTANCE_ID: ${{ env.INSTANCE_A_ID }}
-        run: |
-          PREV_TAG=$(aws ecr describe-images \
-            --repository-name frontend \
-            --region "$AWS_REGION" \
-            --query 'sort_by(imageDetails,& imagePushedAt)[-2].imageTags[0]' \
-            --output text)
-
-          CMD_JSON=$(jq -nc \
-            --arg repo "$ECR_REGISTRY" \
-            --arg tag "$PREV_TAG" \
-            '[
-              "echo \($envfile) > /home/ubuntu/.env",
-              "docker stop frontend || true",
-              "docker rm frontend || true",
-              "docker pull \($repo)/frontend:\($tag)",
-              "docker run -d --name frontend -p 5173:80 --env-file /home/ubuntu/.env \($repo)/frontend:\($tag)"
-            ]'
-          )
-
-          aws ssm send-command \
-            --document-name "AWS-RunShellScript" \
-            --comment "Rollback frontend on A zone" \
-            --instance-ids "$INSTANCE_ID" \
-            --region "$AWS_REGION" \
-            --parameters "commands=$CMD_JSON"
-
-      - name: Set Discord message flag
-        if: steps.health.outputs.result == 'success'
-        run: echo "DISCORD_MSG=success" >> $GITHUB_ENV
-
-      - name: Set Discord message flag (rollback)
-        if: steps.health.outputs.result == 'failure'
-        run: echo "DISCORD_MSG=failure" >> $GITHUB_ENV
 
       - name: Notify Discord
         if: always()
@@ -205,7 +92,7 @@ jobs:
             COLOR=65280
           elif [ "${{ env.DISCORD_MSG }}" = "failure" ]; then
             TITLE="❌ 개발 환경에 프론트 배포 실패"
-            DESC="배포 실패로 롤백하였습니다."
+            DESC="배포에 실패하였습니다."
             COLOR=16711680
           else
             TITLE="⚠️ 배포 상태 알 수 없음"
