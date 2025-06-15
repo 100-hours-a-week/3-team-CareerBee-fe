@@ -12,7 +12,7 @@ export const Loader = () => {
 export const CircleLoader = ({ size = 50 }: { size?: number }) => {
   return (
     <div className="flex items-center justify-center" style={{ width: size, height: size }}>
-      <div className="circleLoader" />
+      <div className="circleLoader w-full h-full" />
     </div>
   );
 };
