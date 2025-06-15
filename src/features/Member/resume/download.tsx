@@ -1,8 +1,31 @@
 import { Button } from '@/components/ui/button';
+import { Modal } from '@/components/ui/modal';
+
+import { useState } from 'react';
+import React from 'react';
+
+const LabelCell = ({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <div
+    className={`w-[108px] text-muted-foreground border border-transparent border-r-border ${className}`}
+  >
+    {children}
+  </div>
+);
 
 export default function Download() {
+  const [isLoading, setIsLoading] = useState(false);
+  const requestResume = () => {
+    setIsLoading(true);
+  };
+
   return (
-    <div className="flex flex-col py-3 px-6 w-full mb-auto gap-6 text-sm">
+    <div className="flex flex-col py-3 px-16 w-full mb-auto gap-6 text-sm">
       <div className="flex flex-col gap-1">
         <h1 className="text-lg font-bold">입력하신 이력 정보입니다</h1>
         <p className="text-sm text-muted-foreground">
@@ -10,54 +33,67 @@ export default function Download() {
         </p>
       </div>
 
-      <hr />
-
-      <div className="grid grid-cols-2 gap-y-4 text-sm">
-        <div className="text-muted-foreground">선호 직무</div>
-        <div className="font-medium">프론트엔드</div>
-        <div className="text-muted-foreground">백준 티어</div>
-        <div className="font-medium">브론즈</div>
-        <div className="text-muted-foreground">IT 자격증 개수</div>
-        <div className="font-medium">0 개</div>
-        <div className="text-muted-foreground">프로젝트 개수</div>
-        <div className="font-medium">0 개</div>
-        <div className="text-muted-foreground">전공자/비전공자</div>
-        <div className="font-medium">전공자</div>
-      </div>
-
-      <hr />
-
-      <div className="grid grid-cols-2 gap-y-4 text-sm">
-        <div className="text-muted-foreground">기업</div>
-        <div className="font-medium">카카오</div>
-        <div className="text-muted-foreground">근무 기간</div>
-        <div className="font-medium">0 개월</div>
-        <div className="text-muted-foreground">직무</div>
-        <div className="font-medium">프론트엔드</div>
-      </div>
-
-      <hr />
-
-      <div className="flex flex-col gap-2 text-sm">
-        <div className="text-muted-foreground">기타 어필</div>
-        <div className="whitespace-pre-line leading-relaxed font-medium">
-          줄글이 들어옵니다. 줄글이 들어옵니다. 줄글이 들어옵니다. 줄글이 들어옵니다.
+      <div className="gap-0">
+        <hr />
+        <div className="grid grid-cols-[auto,1fr] gap-y-4 text-sm py-2">
+          <LabelCell>선호 직무</LabelCell>
+          <div className="font-medium pl-4">프론트엔드</div>
+          <LabelCell>백준 티어</LabelCell>
+          <div className="font-medium pl-4">브론즈</div>
+          <LabelCell>IT 자격증 개수</LabelCell>
+          <div className="font-medium pl-4">0 개</div>
+          <LabelCell>프로젝트 개수</LabelCell>
+          <div className="font-medium pl-4">0 개</div>
+          <LabelCell>전공자/비전공자</LabelCell>
+          <div className="font-medium pl-4">전공자</div>
         </div>
-      </div>
 
-      <hr />
+        <div className="font-semibold pt-3 pb-2">경력</div>
+        <hr />
+
+        <div className="grid grid-cols-[auto,1fr] gap-y-4 py-2 text-sm">
+          <LabelCell className="px-2">기업</LabelCell>
+          <div className="font-medium pl-4">카카오</div>
+          <LabelCell className="px-2">근무 기간</LabelCell>
+          <div className="font-medium pl-4">0 개월</div>
+          <LabelCell className="px-2">직무</LabelCell>
+          <div className="font-medium pl-4">프론트엔드</div>
+        </div>
+
+        <div className="font-semibold pt-3 pb-2">기타 어필</div>
+        <hr />
+
+        <div className="flex flex-col px-2 py-2 text-sm">
+          <div className="whitespace-pre-line leading-relaxed font-medium">
+            줄글이 들어옵니다. 줄글이 들어옵니다. 줄글이 들어옵니다. 줄글이 들어옵니다.
+          </div>
+        </div>
+
+        <hr />
+      </div>
 
       <div className="flex w-full gap-auto justify-between mt-4 px-4">
         <Button
           label="아니요, 진척도만 확인할게요"
           variant="secondary"
           className="w-[11.5625rem] rounded-lg text-xs font-medium"
+          onClick={() => (window.location.href = '/')}
         ></Button>
         <Button
           label="이력서 초안 다운로드"
           variant="primary"
           className="w-[11.5625rem] rounded-lg text-xs font-medium"
+          // onClick={() => (window.location.href = '/')}
         ></Button>
+        {/* <Modal
+          trigger={isLoading}
+          title="이력서가 생성되었어요."
+          description={<>다시 보고 싶다면 마이페이지 → 내 이력 조회에서 확인하실 수 있어요.</>}
+          // cancelText="되돌아가기"
+          actionText="확인"
+          cancelButton={false}
+          onAction={() => (window.location.href = '/')}
+        /> */}
       </div>
     </div>
   );
