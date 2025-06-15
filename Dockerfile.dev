@@ -19,5 +19,5 @@ RUN rm -rf /var/www/html/*
 
 COPY --from=builder /frontend/dist /var/www/html
 
-EXPOSE 5173
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

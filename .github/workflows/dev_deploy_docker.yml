@@ -92,7 +92,7 @@ jobs:
               "docker stop frontend || true",
               "docker rm frontend || true",
               "docker pull ${{ env.ECR_REGISTRY }}/frontend:${{ env.DEPLOY_TAG }}",
-              "docker run -d --name frontend -p 5173:5173 --env-file /home/ubuntu/.env ${{ env.ECR_REGISTRY }}/frontend:${{ env.DEPLOY_TAG }}"
+              "docker run -d --name frontend -p 5173:80 --env-file /home/ubuntu/.env ${{ env.ECR_REGISTRY }}/frontend:${{ env.DEPLOY_TAG }}"
             ]'
 
       - name: Health check and mark result
@@ -127,7 +127,7 @@ jobs:
               "docker stop frontend || true",
               "docker rm frontend || true",
               "docker pull ${{ env.ECR_REGISTRY }}/frontend:${{ env.DEPLOY_TAG }}",
-              "docker run -d --name frontend -p 5173:5173 --env-file /home/ubuntu/.env ${{ env.ECR_REGISTRY }}/frontend:${{ env.DEPLOY_TAG }}"
+              "docker run -d --name frontend -p 5173:80 --env-file /home/ubuntu/.env ${{ env.ECR_REGISTRY }}/frontend:${{ env.DEPLOY_TAG }}"
             ]'
 
       - name: Rollback A instance to previous version
@@ -149,7 +149,7 @@ jobs:
               "docker stop frontend || true",
               "docker rm frontend || true",
               "docker pull ${{ env.ECR_REGISTRY }}/frontend:$PREV_TAG",
-              "docker run -d --name frontend -p 5173:5173 --env-file /home/ubuntu/.env ${{ env.ECR_REGISTRY }}/frontend:$PREV_TAG"
+              "docker run -d --name frontend -p 5173:80 --env-file /home/ubuntu/.env ${{ env.ECR_REGISTRY }}/frontend:$PREV_TAG"
             ]'
 
       - name: Set Discord message flag
