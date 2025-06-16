@@ -10,6 +10,8 @@ export const SubmitProfileUpdate = async ({
   setIsProfileImageDirty,
   setHelperText,
   token,
+  // isNicknameDirty,
+  // isProfileImageDirty,
 }: {
   nickname?: string;
   profileUrl?: string;
@@ -19,26 +21,26 @@ export const SubmitProfileUpdate = async ({
   setIsProfileImageDirty: (_value: boolean) => void;
   setHelperText: (_value: string) => void;
   token: string | null;
+  isNicknameDirty: boolean;
+  isProfileImageDirty: boolean;
 }) => {
   if (!token) return;
 
   try {
-    const res = await safePatch(
-      '/api/v1/members',
-      {
-        newProfileUrl: profileUrl,
-        newNickname: nickname,
-      },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      },
-    );
-    if (res.httpStatusCode === 204) {
-      toast({ title: '저장 완료', variant: 'success' });
-      setIsNicknameDirty(false);
-      setIsProfileImageDirty(false);
-      onSuccess?.();
-    }
+    const body: Record<string, any> = {};
+    // if (isNicknameDirty)
+    body.newNickname = nickname;
+    // if (isProfileImageDirty)
+    body.newProfileUrl = profileUrl;
+
+    await safePatch('/api/v1/members', body, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    toast({ title: '저장 완료', variant: 'success' });
+    setIsNicknameDirty(false);
+    setIsProfileImageDirty(false);
+    onSuccess?.();
   } catch (err: any) {
     //TODO: 아마 여기서는 안 잡힐거임.... request에서 잡기 때문에...
     //request에서 잡아도 위로 throw할 수는 없을까???
