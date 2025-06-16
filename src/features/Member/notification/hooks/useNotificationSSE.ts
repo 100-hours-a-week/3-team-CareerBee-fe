@@ -14,13 +14,13 @@ export const useNotificationSSE = (shouldConnect: boolean) => {
     const token = useAuthStore.getState().token;
     if (!shouldConnect || !token) return;
     if (sseRef.current) {
-      console.log('⚠️ 삭제 후 재연결');
+      // console.log('⚠️ 삭제 후 재연결');
       sseRef.current.close();
       sseRef.current = null;
       sessionStorage.removeItem('sse_connected');
     }
 
-    console.log('1. SSE 연결 시도 중...');
+    // console.log('1. SSE 연결 시도 중...');
     const EventSource = EventSourcePolyfill || NativeEventSource;
     let eventSource = new EventSource(`${import.meta.env.VITE_API_URL}/api/v1/sse/subscribe`, {
       headers: {
@@ -49,7 +49,7 @@ export const useNotificationSSE = (shouldConnect: boolean) => {
     sseRef.current = eventSource;
 
     eventSource.addEventListener('open', () => {
-      console.log('SSE 연결 성공');
+      // console.log('SSE 연결 성공');
       sessionStorage.setItem('sse_connected', 'true');
     });
 
@@ -63,19 +63,19 @@ export const useNotificationSSE = (shouldConnect: boolean) => {
       }
     };
 
-    eventSource.onerror = (error) => {
-      console.error('SSE 연결 오류:', error);
+    eventSource.onerror = (_error) => {
+      // console.error('SSE 연결 오류:', error);
       eventSource.close();
       sseRef.current = null;
       sessionStorage.removeItem('sse_connected');
-      if ((error as any).status === 401) {
-        //재연결 요청하기
-        console.log("SSE returned 401")
-      }
+      // if ((error as any).status === 401) {
+      //   //재연결 요청하기
+      //   console.log('SSE returned 401');
+      // }
     };
 
     return () => {
-      console.log("SSE 연결 해제");
+      // console.log('SSE 연결 해제');
       eventSource.close();
       sseRef.current = null;
       sessionStorage.removeItem('sse_connected');
