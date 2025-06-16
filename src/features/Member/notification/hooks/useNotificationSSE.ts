@@ -1,4 +1,5 @@
 import { useAuthStore } from '../../auth/store/auth';
+import { retryWithRefreshedToken } from '../../auth/utils/authManager';
 
 import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -63,15 +64,16 @@ export const useNotificationSSE = (shouldConnect: boolean) => {
       }
     };
 
-    eventSource.onerror = (_error) => {
+    eventSource.onerror = (error) => {
       // console.error('SSE 연결 오류:', error);
       eventSource.close();
       sseRef.current = null;
       sessionStorage.removeItem('sse_connected');
-      // if ((error as any).status === 401) {
-      //   //재연결 요청하기
-      //   console.log('SSE returned 401');
-      // }
+      if ((error as any).status === 401) {
+        //재연결 요청하기
+        console.log('SSE returned 401');
+        retryWithRefreshedToken(eventSource);
+      }
     };
 
     return () => {
