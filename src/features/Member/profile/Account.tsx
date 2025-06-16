@@ -27,13 +27,15 @@ export default function Account() {
     isAnyDirty,
   } = useDirty();
 
-  const queryClient = useQueryClient();
-  queryClient.invalidateQueries({ queryKey: ['userinfo'] });
-
   useEffect(() => {
-    const originalNickname = userInfo?.nickname ?? '예시 닉네임';
+    const originalNickname = userInfo?.nickname ?? '닉네임';
     setIsNicknameDirty(nickname !== originalNickname && nickname != '');
   }, [nickname, userInfo]);
+
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ['userinfo'] });
+  }, []);
 
   useEffect(() => {
     if (userInfo?.nickname) {
