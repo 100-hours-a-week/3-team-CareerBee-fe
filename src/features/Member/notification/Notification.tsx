@@ -50,8 +50,10 @@ export default function Notification() {
   const hasValidNotifications = data?.pages?.some(
     (page) =>
       page &&
-      ((Array.isArray(page.important) && page.important.length > 0) ||
-        (Array.isArray(page.basic) && page.basic.length > 0)),
+      Array.isArray(page.important) &&
+      page.important.length > 0 &&
+      Array.isArray(page.basic) &&
+      page.basic.length > 0,
   );
 
   return (
