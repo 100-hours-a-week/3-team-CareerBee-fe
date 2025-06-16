@@ -157,7 +157,7 @@ export default function Ranking() {
           </div>
 
           {/* 내 랭킹 */}
-          {token && <MyRankCard rankingView={rankingView} />}
+          {token && <MyRankCard rankingView={rankingView} competitionTime={competitionTime} />}
         </>
 
         {/* 대회 입장 버튼 */}

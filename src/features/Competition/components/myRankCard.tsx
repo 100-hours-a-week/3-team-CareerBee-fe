@@ -12,9 +12,10 @@ const rankCardStyles = {
 
 interface MyRankCardProps {
   rankingView: 'daily' | 'weekly' | 'monthly';
+  competitionTime: boolean;
 }
 
-export default function MyRankCard({ rankingView }: MyRankCardProps, competitionTime: boolean) {
+export default function MyRankCard({ rankingView, competitionTime }: MyRankCardProps) {
   const { myRanking } = useMyRanking();
   useDailyMyPolling(competitionTime);
 
