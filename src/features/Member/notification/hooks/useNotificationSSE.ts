@@ -29,9 +29,8 @@ export const useNotificationSSE = (enabled: boolean) => {
     };
 
     eventSource.onmessage = (event) => {
-      console.log('이벤트 옴');
-      const { hasNew } = JSON.parse(event.data); //TODO: response 형식과 맞추기
-      if (hasNew) {
+      const parsed = event.data;
+      if (parsed.event === 'notification' && parsed.hasNew) {
         queryClient.setQueryData(['userinfo'], (prev: any) => ({
           ...prev,
           hasNewAlarm: true,
