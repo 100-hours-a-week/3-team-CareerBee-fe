@@ -47,88 +47,104 @@ export default function Notification() {
     }
   }, [data?.pages]);
 
+  // const hasValidNotifications = data?.pages?.some(
+  //   (page) =>
+  //     page &&
+  //     Array.isArray(page.important) &&
+  //     page.important.length > 0 &&
+  //     Array.isArray(page.basic) &&
+  //     page.basic.length > 0,
+  // );
+
+  const hasImportant = data?.pages?.some(
+    (page) => page && Array.isArray(page.important) && page.important.length > 0,
+  );
+  const hasBasic = data?.pages?.some(
+    (page) => page && Array.isArray(page.basic) && page.basic.length > 0,
+  );
+
   return (
     <>
-      <div className="flex flex-col items-center justify-center mx-5 py-2 border-b-2 border-text-secondary/60">
-        <div className="flex mr-auto mb-2">중요한 알림</div>
-        <div className="flex flex-col gap-1.5 w-full">
-          {data?.pages?.length ? (
-            data.pages.map((group, i) => (
-              <React.Fragment key={i}>
-                {group?.important?.map((noti: NotifyProps) => (
-                  <Notify
-                    key={noti.id}
-                    title="공채 알림"
-                    description={noti.content}
-                    time={noti.notiDate}
-                    isRead={noti.isRead}
-                  />
-                ))}
-              </React.Fragment>
-            ))
-          ) : (
-            <div className="flex justify-center text-sm text-text-secondary py-2 w-full">
-              지금은 새로운 알림이 없어요.
-            </div>
-          )}
-          {isFetchingNextPage ? (
-            <div className="flex items-center justify-center w-24 p-8 h-full">
-              <CircleLoader />
-            </div>
-          ) : hasNextPage ? (
-            <div ref={bottomRef} className="flex-none w-full h-1" />
-          ) : data?.pages?.length ? (
-            <div className="flex-none w-full py-2 flex flex-col items-center justify-center text-text-secondary">
-              <span className="text-xs text-center">끝까지 봤어요!</span>
-            </div>
-          ) : (
-            <></>
-          )}
+      {!hasImportant && !hasBasic ? (
+        <div className="flex justify-center text-sm text-text-secondary py-4 w-full">
+          지금은 새로운 알림이 없어요.
         </div>
-      </div>
-      <div className="flex flex-col items-center justify-center mx-5 py-2 border-b-2 border-text-secondary/60">
-        <div className="flex mr-auto mb-2">기본 알림</div>
-        <div className="flex flex-col gap-1.5 w-full">
-          {data?.pages?.length ? (
-            data.pages.map((group, i) => (
-              <React.Fragment key={i}>
-                {group?.basic?.map((noti: NotifyProps) => (
-                  <Notify
-                    key={noti.id}
-                    title={
-                      noti.type === 'COMPETITION'
-                        ? 'CS 대회'
-                        : noti.type === 'PROGRESS'
-                          ? '진척도'
-                          : '포인트'
-                    }
-                    description={noti.content}
-                    time={noti.notiDate}
-                    isRead={noti.isRead}
-                  />
+      ) : (
+        <>
+          <div className="flex flex-col items-center justify-center mx-5 py-2 border-b-2 border-text-secondary/60">
+            <div className="flex mr-auto mb-2">중요한 알림</div>
+            <div className="flex flex-col gap-1.5 w-full">
+              <>
+                {data?.pages.map((group, i) => (
+                  <React.Fragment key={i}>
+                    {group?.important?.map((noti: NotifyProps) => (
+                      <Notify
+                        key={noti.id}
+                        title="공채 알림"
+                        description={noti.content}
+                        time={noti.notiDate}
+                        isRead={noti.isRead}
+                      />
+                    ))}
+                  </React.Fragment>
                 ))}
-              </React.Fragment>
-            ))
-          ) : (
-            <div className="flex justify-center text-sm text-text-secondary py-2 w-full">
-              지금은 새로운 알림이 없어요.
+                {isFetchingNextPage ? (
+                  <div className="flex items-center justify-center w-24 p-8 h-full">
+                    <CircleLoader />
+                  </div>
+                ) : hasNextPage ? (
+                  <div ref={bottomRef} className="flex-none w-full h-1" />
+                ) : hasImportant ? (
+                  <div className="flex-none w-full py-2 flex flex-col items-center justify-center text-text-secondary">
+                    <span className="text-xs text-center">끝까지 봤어요!</span>
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </>
             </div>
-          )}
-          {isFetchingNextPage ? (
-            <div className="flex items-center justify-center w-24 p-8 h-full">
-              <CircleLoader />
+          </div>
+          <div className="flex flex-col items-center justify-center mx-5 py-2 border-b-2 border-text-secondary/60">
+            <div className="flex mr-auto mb-2">기본 알림</div>
+            <div className="flex flex-col gap-1.5 w-full">
+              <>
+                {data?.pages.map((group, i) => (
+                  <React.Fragment key={i}>
+                    {group?.basic?.map((noti: NotifyProps) => (
+                      <Notify
+                        key={noti.id}
+                        title={
+                          noti.type === 'COMPETITION'
+                            ? 'CS 대회'
+                            : noti.type === 'PROGRESS'
+                              ? '진척도'
+                              : '포인트'
+                        }
+                        description={noti.content}
+                        time={noti.notiDate}
+                        isRead={noti.isRead}
+                      />
+                    ))}
+                  </React.Fragment>
+                ))}
+                {isFetchingNextPage ? (
+                  <div className="flex items-center justify-center w-24 p-8 h-full">
+                    <CircleLoader />
+                  </div>
+                ) : hasNextPage ? (
+                  <div ref={bottomRef} className="flex-none w-full h-1" />
+                ) : hasBasic ? (
+                  <div className="flex-none w-full py-2 flex flex-col items-center justify-center text-text-secondary">
+                    <span className="text-xs text-center">끝까지 봤어요!</span>
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </>
             </div>
-          ) : hasNextPage ? (
-            <div ref={bottomRef} className="flex-none w-full h-1" />
-          ) : data?.pages?.length ? (
-            <div className="flex-none w-full py-2 flex flex-col items-center justify-center text-text-secondary">
-              <span className="text-xs text-center">끝까지 봤어요!</span>
-            </div>
-          ) : (
-            <></>
-          )}
-        </div>
-      </div>
+          </div>
+        </>
+      )}
     </>
   );
 }
