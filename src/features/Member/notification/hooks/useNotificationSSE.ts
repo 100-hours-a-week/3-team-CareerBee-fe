@@ -50,19 +50,30 @@ export const useNotificationSSE = (shouldConnect: boolean) => {
     sseRef.current = eventSource;
 
     eventSource.addEventListener('open', () => {
-      // console.log('SSE 연결 성공');
+      console.log('SSE 연결 성공');
       sessionStorage.setItem('sse_connected', 'true');
     });
 
-    eventSource.onmessage = (event) => {
-      const parsed = event.data;
-      if (parsed.event === 'notification' && parsed.hasNew) {
-        queryClient.setQueryData(['userinfo'], (prev: any) => ({
+    eventSource.addEventListener('notification', (e: any) => {
+      console.log('noti ', e.data);
+      if (e.data === 'true') {
+        queryClient.setQueryData(['userInfo'], (prev: any) => ({
           ...prev,
           hasNewAlarm: true,
         }));
       }
-    };
+    });
+
+    // eventSource.onmessage = (event) => {
+    //   const parsed = event.data;
+    //   console.log("event: ", event);
+    //   if (event === 'notification' && parsed.hasNew) {
+    //     queryClient.setQueryData(['userinfo'], (prev: any) => ({
+    //       ...prev,
+    //       hasNewAlarm: true,
+    //     }));
+    //   }
+    // };
 
     eventSource.onerror = (error) => {
       // console.error('SSE 연결 오류:', error);
