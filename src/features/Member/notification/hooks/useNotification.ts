@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { safeGet, safePost } from '@/lib/request';
+import { safeGet, safePatch } from '@/lib/request';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 
 export interface NotifyProps {
@@ -49,7 +49,7 @@ export function useNotificationRead() {
 
   const markNotificationsAsRead = async (notificationIds: number[]): Promise<void> => {
     if (notificationIds.length === 0) return;
-    await safePost(
+    await safePatch(
       '/api/v1/members/notifications',
       JSON.stringify({
         notificationIds,
