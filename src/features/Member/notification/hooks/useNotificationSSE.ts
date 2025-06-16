@@ -6,10 +6,12 @@ import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
 
 export const useNotificationSSE = (shouldConnect: boolean) => {
   const queryClient = useQueryClient();
-  const token = useAuthStore.getState().token;
+  const token = useAuthStore((state) => state.token);
   const sseRef = useRef<EventSource | null>(null);
+  // const token = useAuthStore.getState().token;
 
   useEffect(() => {
+    const token = useAuthStore.getState().token;
     if (!shouldConnect || !token) return;
     if (sseRef.current) {
       console.log('⚠️ 삭제 후 재연결');
@@ -66,6 +68,10 @@ export const useNotificationSSE = (shouldConnect: boolean) => {
       eventSource.close();
       sseRef.current = null;
       sessionStorage.removeItem('sse_connected');
+      if ((error as any).status === 401) {
+        //재연결 요청하기
+        console.log("SSE returned 401")
+      }
     };
 
     return () => {
@@ -73,7 +79,6 @@ export const useNotificationSSE = (shouldConnect: boolean) => {
       eventSource.close();
       sseRef.current = null;
       sessionStorage.removeItem('sse_connected');
-
     };
   }, [shouldConnect, token]);
 };
