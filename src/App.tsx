@@ -23,20 +23,7 @@ function App() {
 
   // SSE 연결
   const token = useAuthStore.getState().token;
-  const [enableSSE, setEnableSSE] = useState(false);
-
-  useEffect(() => {
-    const alreadyConnected = sessionStorage.getItem('sse_connected');
-    if (token && !alreadyConnected) {
-      setEnableSSE(true);
-      sessionStorage.setItem('sse_connected', 'true');
-    } else if (!token) {
-      setEnableSSE(false);
-      sessionStorage.removeItem('sse_connected');
-    }
-  }, [token]);
-
-  useNotificationSSE(enableSSE);
+  useNotificationSSE(!!token); // ✅ 항상 호출하되, 실행 여부는 내부에서 결정
 
   return <RouterProvider router={router} />;
 }
