@@ -19,14 +19,16 @@ export default function MyRankCard({ rankingView, competitionTime }: MyRankCardP
   const { myRanking } = useMyRanking();
   useDailyMyPolling(competitionTime);
 
+  console.log("my")
   const { data: userInfo } = useUserInfo();
-  if (
-    (rankingView === 'daily' && myRanking?.daily) ||
-    (rankingView === 'weekly' && myRanking?.weekly) ||
-    (rankingView === 'monthly' && myRanking?.monthly)
-  ) {
-    return <></>;
-  }
+  const currentRanking =
+    rankingView === 'daily'
+      ? myRanking?.daily
+      : rankingView === 'weekly'
+        ? myRanking?.weekly
+        : myRanking?.monthly;
+
+  if (!currentRanking) return null;
 
   const rank =
     rankingView === 'daily'
@@ -54,9 +56,11 @@ export default function MyRankCard({ rankingView, competitionTime }: MyRankCardP
     <>
       <div className="mb-1 text-sm font-bold tracking-tighter">. . .</div>
       <div
-        className={`w-[${width}] h-[40px] rounded-md flex 
-          bg-[url('/assets/${bgImage}')] bg-contain 
-          text-xs items-center px-2`}
+        className="h-[39.5px]  rounded-md flex text-xs items-center px-2 bg-contain"
+        style={{
+          width,
+          backgroundImage: `url('/assets/${bgImage}')`,
+        }}
       >
         <div className="pl-2 pr-3 font-bold">{rank}</div>
         <img
