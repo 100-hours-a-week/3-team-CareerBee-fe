@@ -22,7 +22,7 @@ const convertToChartProps = (data: any[], isDaily: boolean): ChartProps[] => {
     profileImgUrl: item.profileUrl ? item.profileUrl : noProfile,
     badgeImgUrl: item.badgeImgUrl,
     elapsedTime: isDaily ? formatToMS(item.elapsedTime) : String(item.continuous),
-    solvedCount: isDaily ? item.solvedCount : item.correctRate,
+    solvedCount: isDaily ? item.solvedCount : Math.round(item.correctRate * 1000) / 1000,
   }));
 };
 
