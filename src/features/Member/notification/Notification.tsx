@@ -47,18 +47,25 @@ export default function Notification() {
     }
   }, [data?.pages]);
 
-  const hasValidNotifications = data?.pages?.some(
-    (page) =>
-      page &&
-      Array.isArray(page.important) &&
-      page.important.length > 0 &&
-      Array.isArray(page.basic) &&
-      page.basic.length > 0,
+  // const hasValidNotifications = data?.pages?.some(
+  //   (page) =>
+  //     page &&
+  //     Array.isArray(page.important) &&
+  //     page.important.length > 0 &&
+  //     Array.isArray(page.basic) &&
+  //     page.basic.length > 0,
+  // );
+
+  const hasImportant = data?.pages?.some(
+    (page) => page && Array.isArray(page.important) && page.important.length > 0,
+  );
+  const hasBasic = data?.pages?.some(
+    (page) => page && Array.isArray(page.basic) && page.basic.length > 0,
   );
 
   return (
     <>
-      {!hasValidNotifications ? (
+      {!hasImportant && !hasBasic ? (
         <div className="flex justify-center text-sm text-text-secondary py-4 w-full">
           지금은 새로운 알림이 없어요.
         </div>
@@ -87,10 +94,12 @@ export default function Notification() {
                   </div>
                 ) : hasNextPage ? (
                   <div ref={bottomRef} className="flex-none w-full h-1" />
-                ) : (
+                ) : hasImportant ? (
                   <div className="flex-none w-full py-2 flex flex-col items-center justify-center text-text-secondary">
                     <span className="text-xs text-center">끝까지 봤어요!</span>
                   </div>
+                ) : (
+                  <></>
                 )}
               </>
             </div>
@@ -124,10 +133,12 @@ export default function Notification() {
                   </div>
                 ) : hasNextPage ? (
                   <div ref={bottomRef} className="flex-none w-full h-1" />
-                ) : (
+                ) : hasBasic ? (
                   <div className="flex-none w-full py-2 flex flex-col items-center justify-center text-text-secondary">
                     <span className="text-xs text-center">끝까지 봤어요!</span>
                   </div>
+                ) : (
+                  <></>
                 )}
               </>
             </div>
