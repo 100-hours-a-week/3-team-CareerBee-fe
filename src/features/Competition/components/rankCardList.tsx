@@ -21,22 +21,20 @@ const RankCard = ({ styleKey, rankingData }: RankCardProps) => {
         style={{ backgroundImage: `url(/assets/${bgImage})` }}
       >
         <img
-          src={rankingData.profileImgUrl || '/assets/no-profile.png'}
+          src={rankingData.profileImgUrl ?? '/assets/no-profile.png'}
           className={`w-8 h-8 mx-auto ${marginTop}`}
           alt="프로필 이미지"
         />
         <div className="flex items-center justify-center mx-auto">
-          <img
-            src={rankingData.badgeImgUrl || '/assets/default.svg'}
-            className="w-4 h-4 mr-1"
-            alt="뱃지 이미지"
-          />
+          {rankingData.badgeImgUrl && (
+            <img src={rankingData.badgeImgUrl} className="w-4 h-4 mr-1" alt="뱃지 이미지" />
+          )}
           <div>{rankingData.nickname}</div>
         </div>
         <div className="text-[0.625rem] text-center">
           {rankingData.elapsedTime || '0'}일 연속 참여
         </div>
-        <div className="text-[0.625rem] text-center">{rankingData.solvedCount || '0'}%</div>
+        <div className="text-[0.625rem] text-center">{rankingData.solvedCount ?? '0'}%</div>
       </div>
     </div>
   );
@@ -56,9 +54,11 @@ export default function RankCardList({ styleKeys, rankingData }: RankCardListPro
       className="flex-col text-xs"
     >
       <div className="flex w-[440px] h-[128px] items-end mb-1">
-        {styleKeys.map((key, idx) => (
-          <RankCard key={idx} styleKey={key} rankingData={rankingData[idx]} />
-        ))}
+        {styleKeys.map((key, idx) => {
+          const data = rankingData[idx];
+          if (!data) return null;
+          return <RankCard key={idx} styleKey={key} rankingData={data} />;
+        })}
       </div>
     </motion.div>
   );

@@ -13,7 +13,7 @@ import {
 } from '@/features/Competition/config/competitionTime';
 import AggregationNotice from './components/aggregationNotice';
 
-import { useTopRankings, useDailyPolling } from './hooks/useTopRanking';
+import { useTopRankings, useDailyTopPolling } from './hooks/useTopRanking';
 import { useAuthStore } from '../Member/auth/store/auth';
 import { safeGet } from '@/lib/request';
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
@@ -25,6 +25,22 @@ import { useNavigate } from 'react-router-dom';
 export default function Ranking() {
   // 랭킹 데이터 가져오기
   const { data: topRankings } = useTopRankings();
+
+  // 대회 운영 시간 여부
+  const [competitionTime, setCompetitionTime] = useState(false);
+  const [isAggregationTime, setIsAggregationTime] = useState(false);
+  useEffect(() => {
+    const curr = checkTime('ms');
+    const isCompetitionTime = curr >= COMPETITION_START_TIME && curr < COMPETITION_END_TIME;
+    setCompetitionTime(isCompetitionTime);
+    setIsAggregationTime(
+      curr < COMPETITION_END_TIME + AGGREGATE_TIME && curr > COMPETITION_END_TIME,
+    );
+  }, []);
+
+  // 랭킹 실시간 데이터 polling
+  useDailyTopPolling(competitionTime);
+
   const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
 
   const navigate = useNavigate();
@@ -59,20 +75,6 @@ export default function Ranking() {
       hasJoinedCompetition();
     }
   }, [competitionId]);
-
-  // 대회 운영 시간 여부
-  const [competitionTime, setCompetitionTime] = useState(false);
-  const [isAggregationTime, setIsAggregationTime] = useState(false);
-  useEffect(() => {
-    const curr = checkTime('ms');
-    const isCompetitionTime = curr >= COMPETITION_START_TIME && curr < COMPETITION_END_TIME;
-    setCompetitionTime(isCompetitionTime);
-    setIsAggregationTime(
-      curr < COMPETITION_END_TIME + AGGREGATE_TIME && curr > COMPETITION_END_TIME,
-    );
-  }, []);
-
-  useDailyPolling(competitionTime);
 
   return (
     <div className="py-5">
@@ -155,7 +157,7 @@ export default function Ranking() {
           </div>
 
           {/* 내 랭킹 */}
-          {token && <MyRankCard rankingView={rankingView} />}
+          {token && <MyRankCard rankingView={rankingView} competitionTime={competitionTime} />}
         </>
 
         {/* 대회 입장 버튼 */}

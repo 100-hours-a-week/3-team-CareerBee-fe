@@ -15,23 +15,23 @@ export interface ChartProps {
   solvedCount: number;
 }
 
+const convertToChartProps = (data: any[], isDaily: boolean): ChartProps[] => {
+  return data.map((item: any, index: number) => ({
+    rank: index + 1,
+    nickname: item.nickname,
+    profileImgUrl: item.profileUrl ? item.profileUrl : noProfile,
+    badgeImgUrl: item.badgeImgUrl,
+    elapsedTime: isDaily ? formatToMS(item.elapsedTime) : String(item.continuous),
+    solvedCount: isDaily ? item.solvedCount : Math.round(item.correctRate * 1000) / 1000,
+  }));
+};
+
 export const useTopRankings = () => {
   return useQuery({
     queryKey: ['top-rankings'],
     queryFn: async () => {
       const res = await safeGet('/api/v1/competitions/rankings');
       if (res.httpStatusCode !== 200) throw new Error('Failed to fetch rankings');
-
-      const convertToChartProps = (data: any[], isDaily: boolean): ChartProps[] => {
-        return data.map((item: any, index: number) => ({
-          rank: index + 1,
-          nickname: item.nickname,
-          profileImgUrl: item.profileUrl ? item.profileUrl : noProfile,
-          badgeImgUrl: item.badgeImgUrl,
-          elapsedTime: isDaily ? formatToMS(item.elapsedTime) : String(item.continuous),
-          solvedCount: isDaily ? item.solvedCount : item.correctRate,
-        }));
-      };
 
       return {
         daily: convertToChartProps(res.data.daily, true),
@@ -44,7 +44,7 @@ export const useTopRankings = () => {
 };
 
 // polling으로 일일 실시간 랭킹 불러오기
-export const useDailyPolling = (enabled: boolean) => {
+export const useDailyTopPolling = (enabled: boolean) => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -56,14 +56,7 @@ export const useDailyPolling = (enabled: boolean) => {
         const liveData = res.data.rankings;
         queryClient.setQueryData(['top-rankings'], (old: any) => ({
           ...old,
-          daily: liveData.map((item: any, index: number) => ({
-            rank: index + 1,
-            nickname: item.nickname,
-            profileImgUrl: item.profileUrl || noProfile,
-            badgeImgUrl: item.badgeImgUrl,
-            elapsedTime: formatToMS(item.elapsedTime),
-            solvedCount: item.solvedCount,
-          })),
+          daily: convertToChartProps(liveData, true),
         }));
       }
     }, 5 * 1000); // 5초마다
