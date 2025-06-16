@@ -14,7 +14,7 @@ export default function Quit() {
 
   const quit = async () => {
     try {
-      const res = await safeDelete(
+      await safeDelete(
         '/api/v1/members',
         {
           data: {
@@ -29,13 +29,13 @@ export default function Quit() {
       );
 
       //탈퇴 성공
-      if (res.httpStatusCode === 204) {
-        useAuthStore.getState().clearToken();
-        queryClient.removeQueries({ queryKey: ['userInfo'] });
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 300);
-      }
+      // if (res.httpStatusCode === 204) {
+      useAuthStore.getState().clearToken();
+      queryClient.removeQueries({ queryKey: ['userInfo'] });
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 300);
+      // }
     } catch (error) {
       console.error('회원 탈퇴 실패:', error);
     }
