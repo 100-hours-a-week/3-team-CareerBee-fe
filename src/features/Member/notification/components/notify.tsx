@@ -51,7 +51,30 @@ export default function Notify({ title, description, time, isRead }: NotifyProps
         </div>
         <div className="flex text-left text-text-secondary">{displayTime}</div>
       </div>
-      <div className="pl-5 w-full text-sm">{description}</div>
+      <div className="pl-5 w-full text-sm">
+        {title === '공채 알림' && (
+          <>
+            저장하신 <span className="font-bold">{description}</span>의 채용 공고를 확인해보세요!
+          </>
+        )}
+        {title === 'CS 대회' && (
+          <>
+            <span className="font-bold">{description}</span>님이 오늘의 CS 대회에서 1위를
+            달성했어요!
+          </>
+        )}
+        {title === '진척도' && (
+          <>
+            이번 주에는 <span className="font-bold">{description}</span>을 앞질렀어요! 이번주도
+            화이팅!
+          </>
+        )}
+        {title === '포인트' && (
+          <>
+            CS 대회 참가로 포인트 <span className="font-bold">{description}</span>을 획득했어요.
+          </>
+        )}
+      </div>
     </div>
   );
 }

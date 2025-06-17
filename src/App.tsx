@@ -1,6 +1,6 @@
 import { RouterProvider } from 'react-router-dom';
 import { router } from '@/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNotificationSSE } from '@/features/Member/notification/hooks/useNotificationSSE';
 import { useAuthStore } from './features/Member/auth/store/auth';
 
