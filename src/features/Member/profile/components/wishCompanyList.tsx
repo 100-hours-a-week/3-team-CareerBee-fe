@@ -3,11 +3,11 @@ import CompanyCard from '@/features/Map/components/CompanyCard';
 import { CircleLoader } from '@/components/ui/loader';
 
 import { useAuthStore } from '@/features/Member/auth/store/auth';
-import { useCompanyStore } from '@/store/company';
+// import { useCompanyStore } from '@/store/company';
 import axios from 'axios';
 import { safeGet } from '@/lib/request';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import React from 'react';
 
@@ -26,7 +26,8 @@ const getWishCompanyList = async ({ pageParam = 0 }: { pageParam?: number }) => 
   if (!token) return;
   let res;
   if (import.meta.env.VITE_USE_MOCK === 'true') {
-    res = await axios.get('/mock/mock-wish-company.json');
+    let tmp = await axios.get('/mock/mock-wish-company.json');
+    res = tmp.data;
   } else {
     res = await safeGet('/api/v1/members/wish-companies', {
       ...(pageParam !== 0 ? { params: { cursor: pageParam } } : {}),
@@ -34,13 +35,18 @@ const getWishCompanyList = async ({ pageParam = 0 }: { pageParam?: number }) => 
     });
   }
   if (res.httpStatusCode === 200) {
+    console.log(res);
     return res.data;
+    // return res;
   }
 };
 
 export default function WishCompanyList() {
-  const { setIsBookmarked } = useCompanyStore();
+  // const { isBookmarked, setIsBookmarked } = useCompanyStore();
   const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  // const [isBookmarked, setIsBookmarked] = useState(true);
+  const [bookmarkStates, setBookmarkStates] = useState<Record<number, boolean>>({});
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ['wishCompanies'],
@@ -77,7 +83,10 @@ export default function WishCompanyList() {
                   imageUrl={company.logoUrl}
                   isCompanyCardList={true}
                   isLoggedIn={!!useAuthStore.getState().token}
-                  setIsBookmarked={setIsBookmarked}
+                  isBookmarked={bookmarkStates[company.id] ?? true}
+                  setIsBookmarked={(newVal: boolean) =>
+                    setBookmarkStates((prev) => ({ ...prev, [company.id]: newVal }))
+                  }
                 />
               ))}
             </React.Fragment>
