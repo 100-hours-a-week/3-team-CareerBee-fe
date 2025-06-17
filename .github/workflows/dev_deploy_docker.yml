@@ -60,11 +60,12 @@ jobs:
           buildkitd-flags: --debug
           use: true
 
-      - name: Build Docker image using Dockerfile.dev
+      - name: Download .env from S3 Build Docker image using Dockerfile.dev
         run: |
           aws s3 cp s3://${{ secrets.DEV_S3_INFRA_NAME }}/terraform.tfvars.enc terraform.tfvars.enc
           openssl aes-256-cbc -d -salt -pbkdf2 -in terraform.tfvars.enc -out .env -k "${{ secrets.DEV_TFVARS_ENC_PW }}"
-
+          source .env
+          
           docker buildx build \
             --build-arg VITE_KAKAO_APP_KEY=${VITE_KAKAO_APP_KEY} \
             --build-arg VITE_API_URL=${VITE_API_URL} \
