@@ -52,13 +52,18 @@ export const useMyRanking = () => {
 
 // polling으로 일일 실시간 내랭킹 불러오기
 export const useDailyMyPolling = (enabled: boolean) => {
+  const token = useAuthStore((state) => state.token);
   const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!enabled) return;
 
     const interval = setInterval(async () => {
-      const res = await safeGet('/api/v1/members/competitions/rankings/live');
+      const res = await safeGet('/api/v1/members/competitions/rankings/live', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res.httpStatusCode === 200) {
         const liveData = res.data.rankings;
         queryClient.setQueryData(['my-rankings'], (old: any) => ({
