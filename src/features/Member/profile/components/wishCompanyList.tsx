@@ -23,21 +23,22 @@ export interface WishCompany {
 
 const getWishCompanyList = async ({ pageParam = 0 }: { pageParam?: number }) => {
   const token = useAuthStore.getState().token;
-  if (!token) return;
-  let res;
   if (import.meta.env.VITE_USE_MOCK === 'true') {
     let tmp = await axios.get('/mock/mock-wish-company.json');
-    res = tmp.data;
+    const res = tmp.data;
+    if (res.httpStatusCode === 200) {
+      return res;
+    }
   } else {
-    res = await safeGet('/api/v1/members/wish-companies', {
+    if (!token) return;
+
+    const res = await safeGet('/api/v1/members/wish-companies', {
       ...(pageParam !== 0 ? { params: { cursor: pageParam } } : {}),
       headers: { Authorization: `Bearer ${token}` },
     });
-  }
-  if (res.httpStatusCode === 200) {
-    console.log(res);
-    return res.data;
-    // return res;
+    if (res.httpStatusCode === 200) {
+      return res.data;
+    }
   }
 };
 
