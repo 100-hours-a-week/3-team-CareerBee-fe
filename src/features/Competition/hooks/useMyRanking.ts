@@ -36,11 +36,10 @@ export const useMyRanking = () => {
         },
       });
       if (res.httpStatusCode !== 200) throw new Error('Failed to fetch rankings');
-
       return {
-        daily: convertToChartProps(res.data.daily, true),
-        weekly: convertToChartProps(res.data.week, false),
-        monthly: convertToChartProps(res.data.month, false),
+        daily: res.data.daily ? convertToChartProps(res.data.daily, true) : null,
+        weekly: res.data.week ? convertToChartProps(res.data.week, false) : null,
+        monthly: res.data.month ? convertToChartProps(res.data.month, false) : null,
       };
     },
     enabled: !!token,
