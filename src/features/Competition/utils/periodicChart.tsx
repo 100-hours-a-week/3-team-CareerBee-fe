@@ -97,6 +97,7 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
       true,
       prev,
       scaleFns,
+      false,
     );
     updateBars(rankingData);
     updateBackground(rankingData);
