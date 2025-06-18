@@ -49,8 +49,8 @@ export default function MyRankCard({ rankingView, competitionTime }: MyRankCardP
     rankingView === 'daily'
       ? myRanking?.daily?.elapsedTime
       : rankingView === 'weekly'
-        ? myRanking?.weekly?.elapsedTime
-        : myRanking?.monthly?.elapsedTime;
+        ? `${myRanking?.weekly?.elapsedTime}일 연속 참여`
+        : `${myRanking?.weekly?.elapsedTime}일 연속 참여`;
 
   return (
     <>
@@ -59,7 +59,7 @@ export default function MyRankCard({ rankingView, competitionTime }: MyRankCardP
         initial={{ x: '100%' }}
         animate={{ x: 0 }}
         transition={{ duration: 2, ease: [0.4, 0, 0.7, 1] }}
-        className="h-[39.5px] rounded-md flex text-xs items-center px-2 bg-contain"
+        className="h-10 rounded-md flex text-xs items-center bg-cover"
         style={{
           width,
           backgroundImage: `url('/assets/${bgImage}')`,
