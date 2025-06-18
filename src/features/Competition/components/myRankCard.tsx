@@ -60,9 +60,9 @@ export default function MyRankCard({ rankingView, competitionTime }: MyRankCardP
         initial={{ x: '100%' }}
         animate={{ x: 0 }}
         transition={{ duration: 2, ease: [0.4, 0, 0.7, 1] }}
-        className="h-10 rounded-md flex text-xs items-center bg-cover"
+        className="h-10 rounded-md flex text-xs items-center px-2 bg-cover"
         style={{
-          width,
+          width: rankingView === 'daily' ? width : '440px',
           backgroundImage: `url('/assets/${bgImage}')`,
         }}
         key={rankingView}

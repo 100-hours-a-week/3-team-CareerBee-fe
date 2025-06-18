@@ -168,6 +168,7 @@ export const bars = (
   svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>,
   defs: d3.Selection<SVGDefsElement, unknown, null, undefined>,
   scaleFns: ScaleFns,
+  isPeriodic: boolean = false,
 ) => {
   let bar = svg.append('g').selectAll<SVGRectElement, ChartProps>('rect');
 
@@ -182,7 +183,7 @@ export const bars = (
             .attr('fill', 'transparent')
             .attr('y', (data) => scaleFns.yScale(data.rank, 0))
             .attr('x', width)
-            .attr('width', (data) => widthScale(data.rank))
+            .attr('width', (data) => (isPeriodic ? 440 : widthScale(data.rank)))
             .attr('height', barHeight)
             .attr('rx', 8)
             .attr('ry', 8)

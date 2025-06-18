@@ -42,7 +42,7 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
 
     const defs = svg.append('defs');
 
-    const updateBars = bars(svg, defs, scaleFns);
+    const updateBars = bars(svg, defs, scaleFns, true);
     const updateBackground = background(svg, scaleFns);
     const updateRanks = textElement(
       svg,
