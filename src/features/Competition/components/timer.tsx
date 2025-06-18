@@ -48,7 +48,7 @@ function useCompetitionTimer(
     if (mode === 'msms') {
       const currMs = checkTime('ms');
       const remainingMs = avoidMinus(UTC_DUE_TIME_MS - currMs, 24 * 60 * 60 * 1000);
-      if (remainingMs < 0 || remainingMs > DURATION * 60 * 1000) return setTime('00:00:00');
+      if (remainingMs < 0 || remainingMs > DURATION) return setTime('00:00:00');
       setTime(formatToMS(remainingMs));
     } else {
       const currS = checkTime('s');
