@@ -10,8 +10,7 @@ export const SubmitProfileUpdate = async ({
   setIsProfileImageDirty,
   setHelperText,
   token,
-  // isNicknameDirty,
-  // isProfileImageDirty,
+  isProfileImageDirty,
 }: {
   nickname?: string;
   profileUrl?: string;
@@ -21,17 +20,14 @@ export const SubmitProfileUpdate = async ({
   setIsProfileImageDirty: (_value: boolean) => void;
   setHelperText: (_value: string) => void;
   token: string | null;
-  isNicknameDirty: boolean;
   isProfileImageDirty: boolean;
 }) => {
   if (!token) return;
 
   try {
     const body: Record<string, any> = {};
-    // if (isNicknameDirty)
     body.newNickname = nickname;
-    // if (isProfileImageDirty)
-    body.newProfileUrl = profileUrl;
+    if (isProfileImageDirty) body.newProfileUrl = profileUrl;
 
     await safePatch('/api/v1/members', body, {
       headers: { Authorization: `Bearer ${token}` },

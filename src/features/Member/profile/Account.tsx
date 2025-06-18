@@ -74,7 +74,6 @@ export default function Account() {
                   setIsProfileImageDirty,
                   setHelperText: (value: string) => setHelperText(value),
                   token,
-                  isNicknameDirty,
                   isProfileImageDirty,
                 });
               }}
