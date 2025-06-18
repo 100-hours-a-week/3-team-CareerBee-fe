@@ -135,11 +135,13 @@ jobs:
 
           if [ "${{ env.DISCORD_MSG }}" = "success" ]; then
             TITLE="✅ 개발 환경에 프론트 배포 성공"
-            DESC="모두 배포에 성공했습니다."
+            DESC="모두 배포에 성공했습니다.
+            **배포 태그:** \`${{ env.DEPLOY_TAG }}\`"
             COLOR=65280
           elif [ "${{ env.DISCORD_MSG }}" = "failure" ]; then
             TITLE="❌ 개발 환경에 프론트 배포 실패"
-            DESC="배포에 실패하여 롤백하였습니다."
+            DESC="배포에 실패하여 롤백하였습니다.
+            **롤백 태그:** \`${{ env.ROLLBACK_TAG }}\`"
             COLOR=16711680
           elif [ "${{ env.DISCORD_MSG }}" = "rollback_failure" ]; then
             TITLE="❌ 개발 환경에 프론트 배포 & 롤백 실패"
