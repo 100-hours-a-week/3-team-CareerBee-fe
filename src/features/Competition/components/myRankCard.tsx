@@ -40,7 +40,7 @@ export default function MyRankCard({ rankingView, competitionTime }: MyRankCardP
 
   const score =
     rankingView === 'daily'
-      ? `${myRanking?.daily?.solvedCount || 0} /5`
+      ? `${myRanking?.daily?.solvedCount || 0}/5`
       : rankingView === 'weekly'
         ? `${myRanking?.weekly?.solvedCount}%`
         : `${myRanking?.monthly?.solvedCount}%`;
