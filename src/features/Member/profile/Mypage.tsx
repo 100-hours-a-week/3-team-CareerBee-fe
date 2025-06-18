@@ -63,7 +63,7 @@ export default function Mypage() {
             }}
           />
         </div>
-        {import.meta.env.VITE_SHOW_UNRELEASED === 'true' ? <WishCompanyList /> : <></>}
+        <WishCompanyList />
       </div>
 
       <Modal

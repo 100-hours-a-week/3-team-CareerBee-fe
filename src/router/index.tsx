@@ -36,30 +36,28 @@ export const router = createBrowserRouter([
     children: [
       { path: '', element: <Main /> },
       { path: 'company/:id', element: <CompanyDetail /> },
-      { path: 'competition', element: showUnreleased ? <Ranking /> : <ToBeContinued /> },
+      { path: 'competition', element: <Ranking /> },
       {
         element: <AuthWrapper />,
         children: [
           { path: 'my', element: <Mypage /> },
           {
             path: 'my/account',
-            element: showUnreleased ? (
+            element: (
               <DirtyProvider>
                 <Account />
               </DirtyProvider>
-            ) : (
-              <ToBeContinued />
             ),
           },
-          { path: 'notification', element: showUnreleased ? <Notification /> : <ToBeContinued /> },
+          { path: 'notification', element: <Notification /> },
           {
             path: 'competition/entry',
-            element: showUnreleased ? <Competition /> : <ToBeContinued />,
+            element: <Competition />,
           },
-          { path: 'my/account/quit', element: showUnreleased ? <Quit /> : <ToBeContinued /> },
+          { path: 'my/account/quit', element: <Quit /> },
           {
             path: 'service/developers',
-            element: showUnreleased ? <Developers /> : <ToBeContinued />,
+            element: <Developers />,
           },
           { path: 'resume/form', element: showUnreleased ? <ResumeForm /> : <ToBeContinued /> },
           { path: 'resume/upload', element: showUnreleased ? <Upload /> : <ToBeContinued /> },
