@@ -10,11 +10,12 @@ import { handlePresignedUrl } from './util/handlePresignedUrl';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 
 import { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Account() {
   const { data: userInfo } = useUserInfo();
-  const [nickname, setNickname] = useState(userInfo?.nickname || '예시 닉네임');
-  const email = userInfo?.email || 'test@example.com';
+  const [nickname, setNickname] = useState('');
+  const email = userInfo?.email ?? 'test@example.com';
   const [file, setFile] = useState<File | null>(null);
 
   const [helperText, setHelperText] = useState('');
@@ -25,10 +26,22 @@ export default function Account() {
     setIsProfileImageDirty,
     isAnyDirty,
   } = useDirty();
+
   useEffect(() => {
-    const originalNickname = userInfo?.nickname ?? '예시 닉네임';
+    const originalNickname = userInfo?.nickname ?? '닉네임';
     setIsNicknameDirty(nickname !== originalNickname && nickname != '');
   }, [nickname, userInfo]);
+
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ['userinfo'] });
+  }, []);
+
+  useEffect(() => {
+    if (userInfo?.nickname) {
+      setNickname(userInfo.nickname);
+    }
+  }, [userInfo?.nickname]);
 
   useEffect(() => {
     if (nickname == '') {
@@ -53,14 +66,15 @@ export default function Account() {
               onSubmit={async (e) => {
                 e.preventDefault();
                 SubmitProfileUpdate({
-                  nickname: isNicknameDirty ? nickname : undefined,
+                  nickname: isNicknameDirty ? nickname : userInfo.nickname,
                   profileUrl: isProfileImageDirty
                     ? await handlePresignedUrl(file, token)
-                    : undefined,
+                    : userInfo.profileUrl,
                   setIsNicknameDirty,
                   setIsProfileImageDirty,
-                  setHelperText,
+                  setHelperText: (value: string) => setHelperText(value),
                   token,
+                  isProfileImageDirty,
                 });
               }}
             >

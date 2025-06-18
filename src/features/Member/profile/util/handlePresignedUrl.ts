@@ -20,12 +20,12 @@ export async function handlePresignedUrl(file: File | null, token: string | null
     },
   );
 
-  const { uploadUrl, objectUrl } = presignedRes.data;
+  const { uploadUrl, objectKey } = presignedRes.data;
 
   await fetch(uploadUrl, {
     method: 'PUT',
     body: file,
   });
 
-  return objectUrl;
+  return objectKey;
 }

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface AuthState {
   token: string | null;
@@ -13,14 +13,13 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       setToken: (token) => set({ token }),
       clearToken: () => {
-        localStorage.removeItem('auth-storage');
-        localStorage.removeItem('userPoint');
-        localStorage.removeItem('hasNewAlarm');
+        sessionStorage.removeItem('auth-storage');
         window.location.reload();
       },
     }),
     {
-      name: 'auth-storage', // localStorage 키 이름
+      name: 'auth-storage', // sessionStorage 키 이름
+      storage: createJSONStorage(() => sessionStorage),
     },
   ),
 );

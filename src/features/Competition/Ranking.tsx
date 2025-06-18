@@ -9,9 +9,11 @@ import MyRankCard from '@/features/Competition/components/myRankCard';
 import {
   COMPETITION_START_TIME,
   COMPETITION_END_TIME,
+  AGGREGATE_TIME,
 } from '@/features/Competition/config/competitionTime';
+import AggregationNotice from './components/aggregationNotice';
 
-import { useTopRankings } from './hooks/useTopRanking';
+import { useTopRankings, useDailyTopPolling } from './hooks/useTopRanking';
 import { useAuthStore } from '../Member/auth/store/auth';
 import { safeGet } from '@/lib/request';
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
@@ -21,7 +23,28 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Ranking() {
+  // 랭킹 데이터 가져오기
+  const { data: topRankings } = useTopRankings();
+
+  // 대회 운영 시간 여부
+  const [competitionTime, setCompetitionTime] = useState(false);
+  const [isAggregationTime, setIsAggregationTime] = useState(false);
+  useEffect(() => {
+    const curr = checkTime('ms');
+    const isCompetitionTime = curr >= COMPETITION_START_TIME && curr < COMPETITION_END_TIME;
+    setCompetitionTime(isCompetitionTime);
+    setIsAggregationTime(
+      curr < COMPETITION_END_TIME + AGGREGATE_TIME && curr > COMPETITION_END_TIME,
+    );
+  }, []);
+
+  // 랭킹 실시간 데이터 polling
+  useDailyTopPolling(competitionTime);
+
+  const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
+
   const navigate = useNavigate();
+  // 일일 대회 id 조회
   const { competitionId, setCompetitionId, setIsSubmitted } = useCompetitionStore();
   useEffect(() => {
     (async () => {
@@ -32,12 +55,10 @@ export default function Ranking() {
     })();
   }, [setCompetitionId]);
 
-  const token = useAuthStore((state) => state.token);
-  const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
+  // 멤버별 대회 참가 여부 조회
   const [alreadyEntered, setAlreadyEntered] = useState(false);
-  const { topRankings } = useTopRankings();
-
-  const joined = async () => {
+  const token = useAuthStore((state) => state.token);
+  const hasJoinedCompetition = async () => {
     const res = await safeGet(`/api/v1/members/competitions/${competitionId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -51,17 +72,9 @@ export default function Ranking() {
 
   useEffect(() => {
     if (competitionId != null && token) {
-      joined();
+      hasJoinedCompetition();
     }
   }, [competitionId]);
-
-  // 대회 운영 시간 여부
-  const [competitionTime, setCompetitionTime] = useState(false);
-  useEffect(() => {
-    const curr = checkTime('ms');
-    const isCompetitionTime = curr >= COMPETITION_START_TIME && curr < COMPETITION_END_TIME;
-    setCompetitionTime(isCompetitionTime);
-  }, []);
 
   return (
     <div className="py-5">
@@ -88,8 +101,10 @@ export default function Ranking() {
         <>
           <div className="flex mx-auto">
             {rankingView === 'daily' ? (
-              topRankings.daily && topRankings.daily.length > 0 ? (
-                <DailyBarChart rankingData={topRankings.daily} />
+              topRankings?.daily && topRankings?.daily.length > 0 ? (
+                <DailyBarChart rankingData={topRankings?.daily} />
+              ) : isAggregationTime ? (
+                <AggregationNotice />
               ) : (
                 <div className="flex items-center h-[436px]">아직 랭킹 데이터가 없어요.</div>
               )
@@ -97,18 +112,20 @@ export default function Ranking() {
               <>
                 {rankingView === 'weekly' && (
                   <div className="flex-col">
-                    {topRankings.weekly && topRankings.weekly.length > 0 ? (
+                    {topRankings?.weekly && topRankings?.weekly.length > 0 ? (
                       <>
                         <RankCardList
                           styleKeys={['green', 'red', 'blue']}
                           rankingData={[
-                            topRankings.weekly?.[1],
-                            topRankings.weekly?.[0],
-                            topRankings.weekly?.[2],
+                            topRankings?.weekly?.[1],
+                            topRankings?.weekly?.[0],
+                            topRankings?.weekly?.[2],
                           ]}
                         />
-                        <PeriodicBarChart rankingData={topRankings.weekly?.slice(3)} />
+                        <PeriodicBarChart rankingData={topRankings?.weekly?.slice(3)} />
                       </>
+                    ) : isAggregationTime ? (
+                      <AggregationNotice />
                     ) : (
                       <div className="flex items-center h-[436px]">아직 랭킹 데이터가 없어요.</div>
                     )}
@@ -116,18 +133,20 @@ export default function Ranking() {
                 )}
                 {rankingView === 'monthly' && (
                   <div className="flex-col">
-                    {topRankings.monthly && topRankings.monthly.length > 0 ? (
+                    {topRankings?.monthly && topRankings?.monthly.length > 0 ? (
                       <>
                         <RankCardList
                           styleKeys={['green', 'red', 'blue']}
                           rankingData={[
-                            topRankings.monthly?.[1],
-                            topRankings.monthly?.[0],
-                            topRankings.monthly?.[2],
+                            topRankings?.monthly?.[1],
+                            topRankings?.monthly?.[0],
+                            topRankings?.monthly?.[2],
                           ]}
                         />
-                        <PeriodicBarChart rankingData={topRankings.monthly?.slice(3)} />
+                        <PeriodicBarChart rankingData={topRankings?.monthly?.slice(3)} />
                       </>
+                    ) : isAggregationTime ? (
+                      <AggregationNotice />
                     ) : (
                       <div className="flex items-center h-[436px]">아직 랭킹 데이터가 없어요.</div>
                     )}
@@ -138,7 +157,7 @@ export default function Ranking() {
           </div>
 
           {/* 내 랭킹 */}
-          {token && <MyRankCard rankingView={rankingView} />}
+          {token && <MyRankCard rankingView={rankingView} competitionTime={competitionTime} />}
         </>
 
         {/* 대회 입장 버튼 */}

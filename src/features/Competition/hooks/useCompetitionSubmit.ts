@@ -11,17 +11,17 @@ export function useCompetitionSubmit({
   problems,
   selectedAnswers,
   timeLeft,
-  setIsSubmitted,
+  // setIsSubmitted,
   setShowPointResult,
 }: {
   problems: any[];
   selectedAnswers: number[];
   timeLeft: number;
-  setIsSubmitted: (_value: boolean) => void;
+  // setIsSubmitted: (_value: boolean) => void;
   setShowPointResult: (_value: boolean) => void;
 }) {
   const token = useAuthStore((state) => state.token);
-  const { competitionId, joinedTime, setJoinedTime } = useCompetitionStore();
+  const { competitionId, joinedTime, setJoinedTime, setIsSubmitted } = useCompetitionStore();
   const navigate = useNavigate();
 
   const handleSubmitClick = useCallback(
@@ -34,6 +34,8 @@ export function useCompetitionSubmit({
         return;
       }
 
+      const now = new Date();
+      const submitTime = now.getTime();
       const correctCount = problems.filter(
         (_, index) => selectedAnswers[index] === problems[index].answer,
       ).length;
@@ -41,7 +43,7 @@ export function useCompetitionSubmit({
         `/api/v1/competitions/${competitionId}/results`,
         {
           solvedCount: correctCount,
-          elapsedTime: joinedTime! - timeLeft,
+          elapsedTime: submitTime - joinedTime!,
         },
         {
           headers: {
@@ -63,7 +65,7 @@ export function useCompetitionSubmit({
       timeLeft,
       token,
       competitionId,
-      setIsSubmitted,
+      // setIsSubmitted,
       setShowPointResult,
       navigate,
     ],

@@ -108,6 +108,8 @@ export const textElement = (
   isSolved: boolean = false,
   prev: ChartProps[],
   scaleFns: ScaleFns,
+  isDaily: boolean = true,
+  showContinuous: boolean = false,
 ) => {
   let textElement = svg
     .append('g')
@@ -124,12 +126,36 @@ export const textElement = (
             .append('text')
             .attr('y', (data) => scaleFns.yScale(data.rank, yPaddingTop))
             .attr('x', scaleFns.xScale(0) + xPadding)
-            .text((d) => d[elem as keyof ChartProps] + (isSolved ? '/5' : ''))
+            .text(
+              (d) =>
+                d[elem as keyof ChartProps] +
+                (isDaily
+                  ? isSolved
+                    ? '/5'
+                    : ''
+                  : isSolved
+                    ? '%'
+                    : showContinuous
+                      ? '일 연속 참여'
+                      : ''),
+            )
             .transition()
             .duration(transTime * 2)
             .attr('x', (data) => (alignRight ? 0 : scaleFns.xScale(data.rank)) + xPadding),
         (update) => {
-          update.text((d) => d[elem as keyof ChartProps] + (isSolved ? '/5' : ''));
+          update.text(
+            (d) =>
+              d[elem as keyof ChartProps] +
+              (isDaily
+                ? isSolved
+                  ? '/5'
+                  : ''
+                : isSolved
+                  ? '%'
+                  : showContinuous
+                    ? '일 연속 참여'
+                    : ''),
+          );
           updateTransition(update, xPadding, yPaddingTop, alignRight, prev, scaleFns);
           return update;
         },
@@ -142,6 +168,7 @@ export const bars = (
   svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>,
   defs: d3.Selection<SVGDefsElement, unknown, null, undefined>,
   scaleFns: ScaleFns,
+  isPeriodic: boolean = false,
 ) => {
   let bar = svg.append('g').selectAll<SVGRectElement, ChartProps>('rect');
 
@@ -156,7 +183,7 @@ export const bars = (
             .attr('fill', 'transparent')
             .attr('y', (data) => scaleFns.yScale(data.rank, 0))
             .attr('x', width)
-            .attr('width', (data) => widthScale(data.rank))
+            .attr('width', (data) => (isPeriodic ? 440 : widthScale(data.rank)))
             .attr('height', barHeight)
             .attr('rx', 8)
             .attr('ry', 8)

@@ -29,7 +29,7 @@ export interface Problem {
 }
 
 export default function Competition() {
-  const { isSubmitted, setIsSubmitted } = useCompetitionStore();
+  const { isSubmitted } = useCompetitionStore();
   const [showPointResult, setShowPointResult] = useState(false);
   const [currentTab, setCurrentTab] = useState(1);
   const [showTimeOverModal, setShowTimeOverModal] = useState(false);
@@ -52,7 +52,7 @@ export default function Competition() {
     problems,
     selectedAnswers,
     timeLeft,
-    setIsSubmitted,
+    // setIsSubmitted,
     setShowPointResult,
   });
 
