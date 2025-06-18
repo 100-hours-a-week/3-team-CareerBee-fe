@@ -34,7 +34,7 @@ export default function Mypage() {
         <div className="flex items-center h-fit px-6 py-4 gap-4 border border-transparent border-b-border/30">
           <img
             src={userInfo?.profileUrl || noProfile}
-            className="bg-white rounded-full w-16 h-16 object-fill"
+            className="bg-white rounded-full w-16 h-16 object-cover"
             alt="프로필 이미지"
           ></img>
           <div className="flex flex-col my-auto mr-auto text-text-primary gap-1">
