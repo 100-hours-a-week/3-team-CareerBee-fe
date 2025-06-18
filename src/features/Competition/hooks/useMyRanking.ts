@@ -14,7 +14,7 @@ interface MyChartProps {
 
 const convertToChartProps = (item: any, isDaily: boolean): MyChartProps => {
   return {
-    rank: item.rank,
+    rank: item?.rank ?? -1,
     elapsedTime: isDaily ? formatToMS(item.elapsedTime) : String(item.continuous),
     solvedCount: isDaily ? item.solvedCount : item.correctRate,
   };
