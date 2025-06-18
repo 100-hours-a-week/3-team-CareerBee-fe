@@ -29,13 +29,9 @@ export default function Quit() {
       );
 
       //탈퇴 성공
-      // if (res.httpStatusCode === 204) {
       useAuthStore.getState().clearToken();
       queryClient.removeQueries({ queryKey: ['userInfo'] });
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 300);
-      // }
+      window.location.href = '/';
     } catch (error) {
       console.error('회원 탈퇴 실패:', error);
     }
