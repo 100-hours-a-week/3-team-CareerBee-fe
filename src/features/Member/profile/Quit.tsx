@@ -89,7 +89,7 @@ export default function Quit() {
             <>
               탈퇴 시 계정 정보는 모두 삭제되며,
               <br />
-              다시 복구할 수 없어요.
+              <p className="font-black">다시 회원가입할 수 없습니다.</p>
             </>
           }
           cancelText="되돌아가기"
