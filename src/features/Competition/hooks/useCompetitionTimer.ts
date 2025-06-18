@@ -6,11 +6,15 @@ import { useCompetitionStore } from '@/features/Competition/store/competitionSto
 import { useState, useEffect } from 'react';
 
 export const useCompetitionTimer = (isSubmitted: boolean, setShowTimeOverModal: Function) => {
-  const { joinedTime } = useCompetitionStore();
+  const { joinedTime, setJoinedTime } = useCompetitionStore();
   const getInitialTimeLeft = () => {
+    const now = new Date();
+    const time = now.getTime();
+
     const curr = checkTime('ms');
     if (joinedTime === null) {
-      return COMPETITION_END_TIME - curr;
+      setJoinedTime(time);
+      return time;
     }
     return Math.max(0, COMPETITION_END_TIME - curr);
   };

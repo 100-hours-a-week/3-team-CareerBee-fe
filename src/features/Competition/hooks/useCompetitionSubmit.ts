@@ -34,6 +34,8 @@ export function useCompetitionSubmit({
         return;
       }
 
+      const now = new Date();
+      const submitTime = now.getTime();
       const correctCount = problems.filter(
         (_, index) => selectedAnswers[index] === problems[index].answer,
       ).length;
@@ -41,7 +43,7 @@ export function useCompetitionSubmit({
         `/api/v1/competitions/${competitionId}/results`,
         {
           solvedCount: correctCount,
-          elapsedTime: joinedTime! - timeLeft,
+          elapsedTime: submitTime - joinedTime!,
         },
         {
           headers: {

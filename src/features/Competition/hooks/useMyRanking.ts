@@ -14,7 +14,7 @@ interface MyChartProps {
 
 const convertToChartProps = (item: any, isDaily: boolean): MyChartProps => {
   return {
-    rank: item.rank,
+    rank: item?.rank ?? -1,
     elapsedTime: isDaily ? formatToMS(item.elapsedTime) : String(item.continuous),
     solvedCount: isDaily ? item.solvedCount : item.correctRate,
   };
@@ -64,9 +64,10 @@ export const useDailyMyPolling = (enabled: boolean) => {
           Authorization: `Bearer ${token}`,
         },
       });
+      // console.log(res);
       if (res.httpStatusCode === 200) {
-        const liveData = res.data.rankings;
-        queryClient.setQueryData(['my-rankings'], (old: any) => ({
+        const liveData = res.data;
+        queryClient.setQueryData(['my-ranking'], (old: any) => ({
           ...old,
           daily: convertToChartProps(liveData, true),
         }));
