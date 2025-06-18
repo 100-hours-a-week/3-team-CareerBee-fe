@@ -71,7 +71,7 @@ export default function Notify({ title, description, time, isRead }: NotifyProps
         )}
         {title === '포인트' && (
           <>
-            CS 대회 참가로 포인트 <span className="font-bold">{description}</span>을 획득했어요.
+            CS 대회 참가로 <span className="font-bold">{description}</span> 포인트를 획득했어요.
           </>
         )}
       </div>
