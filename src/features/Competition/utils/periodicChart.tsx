@@ -84,6 +84,8 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
       false,
       prev,
       scaleFns,
+      false,
+      true,
     );
     const updateSolved = textElement(
       svg,

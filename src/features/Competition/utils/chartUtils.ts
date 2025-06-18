@@ -109,6 +109,7 @@ export const textElement = (
   prev: ChartProps[],
   scaleFns: ScaleFns,
   isDaily: boolean = true,
+  showContinuous: boolean = false,
 ) => {
   let textElement = svg
     .append('g')
@@ -128,7 +129,15 @@ export const textElement = (
             .text(
               (d) =>
                 d[elem as keyof ChartProps] +
-                (isDaily ? (isSolved ? '/5' : '') : isSolved ? '%' : ''),
+                (isDaily
+                  ? isSolved
+                    ? '/5'
+                    : ''
+                  : isSolved
+                    ? '%'
+                    : showContinuous
+                      ? '일 연속 참여'
+                      : ''),
             )
             .transition()
             .duration(transTime * 2)
@@ -137,7 +146,15 @@ export const textElement = (
           update.text(
             (d) =>
               d[elem as keyof ChartProps] +
-              (isDaily ? (isSolved ? '/5' : '') : isSolved ? '%' : ''),
+              (isDaily
+                ? isSolved
+                  ? '/5'
+                  : ''
+                : isSolved
+                  ? '%'
+                  : showContinuous
+                    ? '일 연속 참여'
+                    : ''),
           );
           updateTransition(update, xPadding, yPaddingTop, alignRight, prev, scaleFns);
           return update;
