@@ -9,7 +9,7 @@ export default function AggregationNotice() {
         className="w-16 h-16 mb-4 drop-shadow-md animate-[bounce_1.5s_infinite]"
       />
       <p className="text-base">대회 집계 시간입니다.</p>
-      <p className="text-xs">(13시 10분 ~ 13시 20분)</p>
+      <p className="text-xs">(13시 15분 ~ 집계 종료 시까지(2분 가량 소요 예정))</p>
     </div>
   );
 }

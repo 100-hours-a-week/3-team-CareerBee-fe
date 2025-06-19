@@ -57,13 +57,12 @@ export const useDailyMyPolling = (enabled: boolean) => {
   useEffect(() => {
     if (!enabled) return;
 
-    const interval = setInterval(async () => {
+    const fetchInitial = async () => {
       const res = await safeGet('/api/v1/members/competitions/rankings/live', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(res);
       if (res.httpStatusCode === 200) {
         const liveData = res.data;
         queryClient.setQueryData(['my-ranking'], (old: any) => ({
@@ -71,7 +70,11 @@ export const useDailyMyPolling = (enabled: boolean) => {
           daily: convertToChartProps(liveData, true),
         }));
       }
-    }, 5 * 1000); // 5초마다
+    };
+
+    fetchInitial();
+
+    const interval = setInterval(fetchInitial, 3000); // polling 3초
 
     return () => clearInterval(interval);
   }, [enabled, queryClient]);
