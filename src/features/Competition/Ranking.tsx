@@ -1,6 +1,6 @@
 import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
 
-import { Button, LiveButton } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import DailyBarChart from '@/features/Competition/utils/dailyChart';
 import PeriodicBarChart from '@/features/Competition/utils/periodicChart';
 import Timer, { checkTime } from '@/features/Competition/components/timer';
