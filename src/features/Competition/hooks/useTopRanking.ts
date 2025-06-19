@@ -50,7 +50,7 @@ export const useDailyTopPolling = (enabled: boolean) => {
   useEffect(() => {
     if (!enabled) return;
 
-    const interval = setInterval(async () => {
+    const fetchInitial = async () => {
       const res = await safeGet('/api/v1/competitions/rankings/live');
       if (res.httpStatusCode === 200) {
         const liveData = res.data.rankings;
@@ -59,7 +59,11 @@ export const useDailyTopPolling = (enabled: boolean) => {
           daily: convertToChartProps(liveData, true),
         }));
       }
-    }, 5 * 1000); // 5초마다
+    };
+
+    fetchInitial();
+
+    const interval = setInterval(fetchInitial, 3000); // polling 3초
 
     return () => clearInterval(interval);
   }, [enabled, queryClient]);
