@@ -2,9 +2,9 @@ name: DEV Frontend Docker CICD
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - develop
+  # push:
+  #   branches:
+  #     - develop
 
 jobs:
   deploy:
