@@ -1,4 +1,4 @@
-name: DEEV Frontend Docker CICD
+name: DEV Frontend Docker CICD
 
 on:
   workflow_dispatch:
@@ -63,10 +63,17 @@ jobs:
           source .env
           set +a
 
+          echo "::add-mask::$WEBHOOK_TOKEN"
+          echo "WEBHOOK_TOKEN=$WEBHOOK_TOKEN" >> $GITHUB_ENV
+
           docker buildx build \
             --build-arg VITE_KAKAO_APP_KEY=${VITE_KAKAO_APP_KEY} \
             --build-arg VITE_API_URL=${VITE_API_URL} \
             --build-arg VITE_SHOW_UNRELEASED=${VITE_SHOW_UNRELEASED} \
+            --build-arg VITE_COMPETITION_START_HOUR=${VITE_COMPETITION_START_HOUR} \
+            --build-arg VITE_COMPETITION_START_MINUTE=${VITE_COMPETITION_START_MINUTE} \
+            --build-arg VITE_COMPETITION_DURATION_MS=${VITE_COMPETITION_DURATION_MS} \
+            --build-arg VITE_COMPETITION_AGGREGATE_MS=${VITE_COMPETITION_AGGREGATE_MS} \
             --cache-from=type=registry,ref=${{ secrets.DEV_ECR_REGISTRY }}/frontend:cache \
             --cache-to=type=registry,ref=${{ secrets.DEV_ECR_REGISTRY }}/frontend:cache,mode=max \
             --push \
@@ -88,6 +95,7 @@ jobs:
         if: env.DISCORD_MSG != 'webhook_failure'
         run: |
           curl -X POST https://webhook.dev.careerbee.co.kr/deploy \
+            -H "Authorization: Bearer ${{ env.WEBHOOK_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d '{"frontend_tag": "latest"}'
             
@@ -115,6 +123,7 @@ jobs:
         run: |
           echo "⚠️ 롤백 시작: 태그 → ${{ env.ROLLBACK_TAG }}"
           curl -X POST https://webhook.dev.careerbee.co.kr/deploy \
+            -H "Authorization: Bearer ${{ env.WEBHOOK_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d '{"frontend_tag": "${{ env.ROLLBACK_TAG }}"}'
             
@@ -126,11 +135,13 @@ jobs:
 
           if [ "${{ env.DISCORD_MSG }}" = "success" ]; then
             TITLE="✅ 개발 환경에 프론트 배포 성공"
-            DESC="모두 배포에 성공했습니다."
+            DESC="모두 배포에 성공했습니다.
+            **배포 태그:** \`${{ env.DEPLOY_TAG }}\`"
             COLOR=65280
           elif [ "${{ env.DISCORD_MSG }}" = "failure" ]; then
             TITLE="❌ 개발 환경에 프론트 배포 실패"
-            DESC="배포에 실패하여 롤백하였습니다."
+            DESC="배포에 실패하여 롤백하였습니다.
+            **롤백 태그:** \`${{ env.ROLLBACK_TAG }}\`"
             COLOR=16711680
           elif [ "${{ env.DISCORD_MSG }}" = "rollback_failure" ]; then
             TITLE="❌ 개발 환경에 프론트 배포 & 롤백 실패"

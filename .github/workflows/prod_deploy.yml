@@ -74,10 +74,7 @@ jobs:
             --comment "Deploy Frontend Docker Compose" \
             --parameters 'commands=[
               "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}",
-              "cd /home/ubuntu/docker",
-              "sed -i \"/frontend:/,/^[^[:space:]]/ s|image: .*/.*|image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}|\" docker-compose.yml",
-              "docker-compose pull frontend",
-              "docker-compose up -d frontend"
+              "/home/ubuntu/deploy_frontend.sh ${{ env.IMAGE_TAG }}"
             ]' \
             --region ${{ env.ECR_REGION }}
 
