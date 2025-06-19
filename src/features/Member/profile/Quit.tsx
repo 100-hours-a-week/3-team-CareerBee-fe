@@ -2,14 +2,39 @@ import { Button } from '@/components/ui/button';
 import Dropdown from '@/components/ui/dropdown';
 import { Modal } from '@/components/ui/modal';
 
+import { useAuthStore } from '../auth/store/auth';
+import { queryClient } from '@/lib/react-query-client';
+
 import { useState } from 'react';
+import { safeDelete } from '@/lib/request';
 
 export default function Quit() {
-  const [selectedReason, setSelectedReason] = useState(''); // 추가
+  const [selectedReason, setSelectedReason] = useState('');
+  const token = useAuthStore((state) => state.token);
 
-  const quit = () => {
-    // localStorage.removeItem('token');
-    window.location.href = '/';
+  const quit = async () => {
+    try {
+      await safeDelete(
+        '/api/v1/members',
+        {
+          data: {
+            withdrawReason: selectedReason,
+          },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      //탈퇴 성공
+      useAuthStore.getState().clearToken();
+      queryClient.removeQueries({ queryKey: ['userInfo'] });
+      window.location.href = '/';
+    } catch (error) {
+      console.error('회원 탈퇴 실패:', error);
+    }
   };
 
   return (
@@ -60,7 +85,7 @@ export default function Quit() {
             <>
               탈퇴 시 계정 정보는 모두 삭제되며,
               <br />
-              다시 복구할 수 없어요.
+              <p className="font-black">다시 회원가입할 수 없습니다.</p>
             </>
           }
           cancelText="되돌아가기"
