@@ -62,3 +62,12 @@ export const safePatch = async <T = any>(
 ): Promise<T | null> => {
   return safeRequest<T>({ method: 'PATCH', url, data, ...config });
 };
+
+// DELETE 요청용
+export const safeDelete = async <T = any>(
+  url: string,
+  data?: any,
+  config?: AxiosRequestConfig,
+): Promise<T | null> => {
+  return safeRequest<T>({ method: 'DELETE', url, data, ...config });
+};
