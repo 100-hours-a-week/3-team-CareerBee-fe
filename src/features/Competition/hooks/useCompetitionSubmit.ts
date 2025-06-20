@@ -36,6 +36,7 @@ export function useCompetitionSubmit({
 
       const now = new Date();
       const submitTime = now.getTime();
+      console.log("submitTime:", submitTime, " ", "joinedTime:", joinedTime, " ");
       const correctCount = problems.filter(
         (_, index) => selectedAnswers[index] === problems[index].answer,
       ).length;
