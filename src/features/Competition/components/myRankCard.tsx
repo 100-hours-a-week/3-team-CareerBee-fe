@@ -21,7 +21,6 @@ export default function MyRankCard({ rankingView, competitionTime }: MyRankCardP
   useDailyMyPolling(competitionTime);
 
   const { data: userInfo } = useUserInfo();
-  console.log(myRanking);
   const currentRanking =
     rankingView === 'daily'
       ? myRanking?.daily

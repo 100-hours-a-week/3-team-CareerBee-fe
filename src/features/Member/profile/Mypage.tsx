@@ -23,7 +23,7 @@ export default function Mypage() {
 
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: ['userInfo'] });
-    console.log("hello mypage")
+    // console.log("hello mypage")
   }, []);
 
   // const { setIsBookmarked } = useCompanyStore();
