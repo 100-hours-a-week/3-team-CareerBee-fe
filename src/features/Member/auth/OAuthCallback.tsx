@@ -33,7 +33,7 @@ export default function OAuthCallback() {
 
             setTimeout(() => {
               window.location.href = '/';
-            }, 3000);
+            }, 2000);
           }
         }
       })();
