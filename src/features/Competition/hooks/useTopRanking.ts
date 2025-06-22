@@ -10,7 +10,7 @@ export interface ChartProps {
   rank: number;
   nickname: string;
   profileImgUrl: string;
-  badgeImgUrl: string;
+  badgeImgUrl: string | null;
   elapsedTime: string;
   solvedCount: number;
 }
@@ -19,8 +19,8 @@ const convertToChartProps = (data: any[], isDaily: boolean): ChartProps[] => {
   return data.map((item: any, index: number) => ({
     rank: index + 1,
     nickname: item.nickname,
-    profileImgUrl: item.profileUrl ? item.profileUrl : noProfile,
-    badgeImgUrl: item.badgeImgUrl,
+    profileImgUrl: item.profileImgUrl ? item.profileImgUrl : noProfile,
+    badgeImgUrl: null,
     elapsedTime: isDaily ? formatToMS(item.elapsedTime) : String(item.continuous),
     solvedCount: isDaily ? item.solvedCount : Math.round(item.correctRate * 1000) / 1000,
   }));

@@ -11,13 +11,11 @@ export function useCompetitionSubmit({
   problems,
   selectedAnswers,
   timeLeft,
-  // setIsSubmitted,
   setShowPointResult,
 }: {
   problems: any[];
   selectedAnswers: number[];
   timeLeft: number;
-  // setIsSubmitted: (_value: boolean) => void;
   setShowPointResult: (_value: boolean) => void;
 }) {
   const token = useAuthStore((state) => state.token);
@@ -60,16 +58,7 @@ export function useCompetitionSubmit({
         setJoinedTime(null);
       }
     },
-    [
-      problems,
-      selectedAnswers,
-      timeLeft,
-      token,
-      competitionId,
-      // setIsSubmitted,
-      setShowPointResult,
-      navigate,
-    ],
+    [problems, selectedAnswers, timeLeft, token, competitionId, setShowPointResult, navigate],
   );
 
   return { handleSubmitClick };
