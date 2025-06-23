@@ -44,6 +44,7 @@ export default function NumberForm({
           return (
             <Input
               {...field}
+              value={field.value === null ? '' : field.value}
               type="number"
               step="1"
               inputMode="numeric"
@@ -59,7 +60,7 @@ export default function NumberForm({
                 if (value < rules.min[0] || value > rules.max[0]) {
                   field.onChange('');
                 } else {
-                  field.onChange(e);
+                  field.onChange(value);
                 }
               }}
             />

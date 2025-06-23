@@ -99,10 +99,10 @@ export default function ResumeForm() {
                   {...field}
                   placeholder="선호 직무"
                   items={[
-                    { label: '프론트엔드', value: 'FE' },
-                    { label: '백엔드', value: 'BE' },
+                    { label: '프론트엔드', value: 'FRONTEND' },
+                    { label: '백엔드', value: 'BACKEND' },
                     { label: 'AI', value: 'AI' },
-                    { label: '클라우드(DevOps)', value: 'CLOUD' },
+                    { label: '클라우드(DevOps)', value: 'DEVOPS' },
                   ]}
                 />
               )}
@@ -171,22 +171,18 @@ export default function ResumeForm() {
                     value={field.value}
                   >
                     <div className="flex items-center space-x-2 p-1">
-                      <RadioGroupItem
-                        value={'major_type'}
-                        id={'major_type'}
-                        className="min-h-5 min-w-5"
-                      />
-                      <label htmlFor={'major_type'} className={cn(`cursor-pointer`)}>
+                      <RadioGroupItem value={'MAJOR'} id={'MAJOR'} className="min-h-5 min-w-5" />
+                      <label htmlFor={'MAJOR'} className={cn(`cursor-pointer`)}>
                         전공자
                       </label>
                     </div>
                     <div className="flex items-center space-x-2 p-1">
                       <RadioGroupItem
-                        value={'nonMajor'}
-                        id={'nonMajor'}
+                        value={'NON_MAJOR'}
+                        id={'NON_MAJOR'}
                         className="min-h-5 min-w-5"
                       />
-                      <label htmlFor={'nonMajor'} className={cn(`cursor-pointer`)}>
+                      <label htmlFor={'NON_MAJOR'} className={cn(`cursor-pointer`)}>
                         비전공자
                       </label>
                     </div>
