@@ -18,26 +18,31 @@ export async function handlePresignedUrl({
   const extension = file.name.split('.').pop()?.toLowerCase();
   if (!extension) return null;
 
-  const presignedRes = await safePost(
-    `/api/v1/s3/presigned-url?type=${type}`,
-    {
-      fileName: file.name,
-      extension,
-      uploadType,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
+  try {
+    const presignedRes = await safePost(
+      `/api/v1/s3/presigned-url?type=${type}`,
+      {
+        fileName: file.name,
+        extension,
+        uploadType,
       },
-    },
-  );
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
 
-  const { uploadUrl, objectKey } = presignedRes.data;
+    const { uploadUrl, objectKey } = presignedRes.data;
 
-  await fetch(uploadUrl, {
-    method: 'PUT',
-    body: file,
-  });
+    await fetch(uploadUrl, {
+      method: 'PUT',
+      body: file,
+    });
 
-  return objectKey;
+    return objectKey;
+  } catch (error) {
+    console.error('Error during presigned URL handling:', error);
+    return null;
+  }
 }
