@@ -21,6 +21,12 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    console.log('App 진입');
+    return () => {
+      console.log('bye bye');
+    };
+  }, []);
   // SSE 연결
   const token = useAuthStore.getState().token;
   useNotificationSSE(!!token); // ✅ 항상 호출하되, 실행 여부는 내부에서 결정
