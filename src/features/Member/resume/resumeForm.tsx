@@ -15,8 +15,10 @@ import { cn } from '@/lib/utils';
 import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useResumeStore } from './store/resumeStore';
 
 export default function ResumeForm() {
+  const { resume } = useResumeStore();
   const {
     control,
     handleSubmit,
@@ -24,36 +26,50 @@ export default function ResumeForm() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      job: '',
+      position: '',
       tier: '',
-      cert: '',
-      project: '',
-      major: '',
-      workPeriod: '',
-      role: '',
-      appeal: '',
+      certification_count: resume?.certificationCount ?? 0,
+      project_count: resume?.projectCount ?? 0,
+      major_type: resume?.majorType ?? '',
+      work_period: resume?.workPeriod ?? 0,
+      role: resume?.position ?? '',
+      additional_experiences: resume?.additionalExperiences ?? '',
     },
     mode: 'onChange',
   });
 
   const [visibleFields, setVisibleFields] = useState({
     tier: false,
-    cert: false,
-    project: false,
-    major: false,
+    certification_count: false,
+    project_count: false,
+    major_type: false,
     work: false,
   });
 
-  const watchedValues = watch(['job', 'tier', 'cert', 'project', 'major']);
+  const watchedValues = watch([
+    'position',
+    'tier',
+    'certification_count',
+    'project_count',
+    'major_type',
+  ]);
   const isReady = Object.values(watchedValues).every((v) => v !== '');
 
+  const watchedPosition = watch('position');
+  const watchedTier = watch('tier');
+  const watchedCert = watch('certification_count');
+  const watchedProject = watch('project_count');
+  const watchedMajor = watch('major_type');
+
   useEffect(() => {
-    if (watch('job')) setVisibleFields((prev) => ({ ...prev, tier: true }));
-    if (watch('tier')) setVisibleFields((prev) => ({ ...prev, cert: true }));
-    if (watch('cert')) setVisibleFields((prev) => ({ ...prev, project: true }));
-    if (watch('project')) setVisibleFields((prev) => ({ ...prev, major: true }));
-    if (watch('major')) setVisibleFields((prev) => ({ ...prev, work: true }));
-  }, [watch()]);
+    setVisibleFields({
+      tier: Boolean(watchedPosition),
+      certification_count: Boolean(watchedTier),
+      project_count: watchedCert !== 0 && watchedCert !== undefined,
+      major_type: watchedProject !== 0 && watchedProject !== undefined,
+      work: watchedMajor !== '',
+    });
+  }, [watchedPosition, watchedTier, watchedCert, watchedProject, watchedMajor]);
 
   const navigate = useNavigate();
   const submitForm = () => {
@@ -61,7 +77,7 @@ export default function ResumeForm() {
   };
 
   return (
-    <div className="flex flex-col py-3 px-16 w-full mb-auto gap-4">
+    <div className="flex flex-col py-3 px-16 w-full mb-auto gap-4 overflow-y-auto">
       <div className="flex flex-col">
         <div className="text-base font-bold w-full items-start">
           진척도 조회를 위해 정보를 입력해주세요.
@@ -75,7 +91,7 @@ export default function ResumeForm() {
             <p className="text-sm font-medium">선호 직무*</p>
             <Controller
               control={control}
-              name="job"
+              name="position"
               render={({ field }) => (
                 <Dropdown
                   {...field}
@@ -106,10 +122,10 @@ export default function ResumeForm() {
           )}
 
           {/* IT 자격증 개수 */}
-          {visibleFields.cert && (
+          {visibleFields.certification_count && (
             <NumberForm
               title="IT 자격증 개수*"
-              controllerName="cert"
+              controllerName="certification_count"
               rules={{
                 required: '0~50 사이의 숫자를 입력해주세요.',
                 min: [0, '0 이상 입력해주세요.'],
@@ -117,15 +133,15 @@ export default function ResumeForm() {
               }}
               placeholder="숫자를 입력해주세요."
               control={control}
-              errors={errors.cert}
+              errors={errors.certification_count}
             />
           )}
 
           {/* 프로젝트 개수 */}
-          {visibleFields.project && (
+          {visibleFields.project_count && (
             <NumberForm
               title="프로젝트 개수*"
-              controllerName="project"
+              controllerName="project_count"
               rules={{
                 required: '0~10 사이의 숫자를 입력해주세요.',
                 min: [0, '0 이상 입력해주세요.'],
@@ -133,19 +149,19 @@ export default function ResumeForm() {
               }}
               placeholder="이력서에 추가할 프로젝트 개수를 입력해주세요."
               control={control}
-              errors={errors.project}
+              errors={errors.project_count}
             />
           )}
 
           {/* 전공자/비전공자 */}
-          {visibleFields.major && (
+          {visibleFields.major_type && (
             <div className="flex flex-col w-full gap-1">
               <div className="text-sm flex w-full">
                 <p className=" font-medium mr-auto">전공자/비전공자*</p>
               </div>
               <Controller
                 control={control}
-                name="major"
+                name="major_type"
                 render={({ field }) => (
                   <RadioGroup
                     className="flex space-x-6"
@@ -153,8 +169,12 @@ export default function ResumeForm() {
                     value={field.value}
                   >
                     <div className="flex items-center space-x-2 p-1">
-                      <RadioGroupItem value={'major'} id={'major'} className="min-h-5 min-w-5" />
-                      <label htmlFor={'major'} className={cn(`cursor-pointer`)}>
+                      <RadioGroupItem
+                        value={'major_type'}
+                        id={'major_type'}
+                        className="min-h-5 min-w-5"
+                      />
+                      <label htmlFor={'major_type'} className={cn(`cursor-pointer`)}>
                         전공자
                       </label>
                     </div>
@@ -185,14 +205,14 @@ export default function ResumeForm() {
               {/* 근무 기간 */}
               <NumberForm
                 title="근무 기간"
-                controllerName="workPeriod"
+                controllerName="work_period"
                 rules={{
                   min: [1, '1 이상 입력해주세요.'],
                   max: [999, '999 이하까지만 입력 가능합니다.'],
                 }}
                 placeholder="월 단위로 입력해주세요."
                 control={control}
-                errors={errors.workPeriod}
+                errors={errors.work_period}
               />
 
               {/* 직무 */}
@@ -210,13 +230,13 @@ export default function ResumeForm() {
               {/* 기타 어필 */}
               <LongTextForm
                 title="기타 어필"
-                controllerName="appeal"
+                controllerName="additional_experiences"
                 rules={{
                   maxLength: [100, '입력을 확인해주세요. (최대 100자)'],
                 }}
                 placeholder="TOPCIT, 수상이력, 기술 스터디, 대회 참가 이력..."
                 control={control}
-                errors={errors.appeal}
+                errors={errors.additional_experiences}
               />
             </>
           )}

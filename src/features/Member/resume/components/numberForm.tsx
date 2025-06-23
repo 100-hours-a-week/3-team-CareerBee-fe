@@ -1,17 +1,9 @@
 import { Input } from '@/components/ui/input';
 
+import { ResumeFormValues } from '@/features/Member/resume/resumeForm';
+
 import { Control, FieldError, Controller } from 'react-hook-form';
 
-interface ResumeFormValues {
-  job: string;
-  tier: string;
-  cert: string;
-  project: string;
-  major: string;
-  workPeriod: string;
-  role: string;
-  appeal: string;
-}
 interface rulesProps {
   required?: string;
   min: [number, string];
@@ -19,7 +11,7 @@ interface rulesProps {
 }
 interface formProps {
   title: string;
-  controllerName: 'cert' | 'project' | 'workPeriod';
+  controllerName: 'certification_count' | 'project_count' | 'work_period';
   rules: rulesProps;
   placeholder: string;
   control: Control<ResumeFormValues>;
