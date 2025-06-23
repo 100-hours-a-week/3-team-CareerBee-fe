@@ -104,7 +104,6 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
     updateBackground(rankingData);
     updateRanks(rankingData);
     updateProfileImg(rankingData);
-    updateBadgeImg(rankingData);
     updateNickname(rankingData);
     updateTime(rankingData);
     updateSolved(rankingData);

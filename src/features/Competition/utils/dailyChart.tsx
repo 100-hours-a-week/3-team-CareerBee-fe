@@ -103,7 +103,6 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
     updateBackground(rankingData);
     updateRanks(rankingData);
     updateProfileImg(rankingData);
-    updateBadgeImg(rankingData);
     updateNickname(rankingData);
     updateTime(rankingData);
     updateSolved(rankingData);
@@ -112,7 +111,6 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
     // updateBackground(mock[0]);
     // updateRanks(mock[0]);
     // updateProfileImg(mock[0]);
-    // updateBadgeImg(mock[0]);
     // updateNickname(mock[0]);
     // updateTime(mock[0]);
     // updateSolved(mock[0]);
@@ -124,7 +122,6 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
     //   updateBackground(mock[1]);
     //   updateRanks(mock[1]);
     //   updateProfileImg(mock[1]);
-    //   updateBadgeImg(mock[1]);
     //   updateNickname(mock[1]);
     //   updateTime(mock[1]);
     //   updateSolved(mock[1]);
