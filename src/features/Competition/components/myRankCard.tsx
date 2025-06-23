@@ -50,7 +50,7 @@ export default function MyRankCard({ rankingView, competitionTime }: MyRankCardP
       ? myRanking?.daily?.elapsedTime
       : rankingView === 'weekly'
         ? `${myRanking?.weekly?.elapsedTime}일 연속 참여`
-        : `${myRanking?.weekly?.elapsedTime}일 연속 참여`;
+        : `${myRanking?.monthly?.elapsedTime}일 연속 참여`;
 
   return (
     <>
