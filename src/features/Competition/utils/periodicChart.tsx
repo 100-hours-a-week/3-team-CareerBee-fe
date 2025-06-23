@@ -58,7 +58,6 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
       scaleFns,
     );
     const updateProfileImg = imageElement(svg, 40, 4, 32, 'profileImgUrl', prev, scaleFns);
-    const updateBadgeImg = imageElement(svg, 76, 12, 16, 'badgeImgUrl', prev, scaleFns);
     const updateNickname = textElement(
       svg,
       96,
