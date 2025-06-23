@@ -3,6 +3,7 @@ import Correct from '@/features/Competition/image/correct.png';
 import Incorrect from '@/features/Competition/image/incorrect.png';
 import { cn } from '@/lib/utils';
 import { Problem } from '../Competition';
+import { useAnswerStore } from '@/features/Competition/store/answerStore';
 
 type QuestionProps = {
   value: string;
@@ -18,15 +19,18 @@ export default function Question({
   onChange,
   problem,
 }: QuestionProps) {
+  const { answers } = useAnswerStore.getState();
+
+  const gradingResult = answers.find((a) => a.problemId === problem.id);
   return (
     <div className="relative">
       <div className="flex-col overflow-y-auto overflow-x-visible h-[31.25rem] px-3">
         {showExplanation ? (
           <div className="sticky flex items-start left-[-0.5rem] z-10">
             <img
-              src={problem.answer === selectedValue ? Correct : Incorrect}
+              src={gradingResult?.isCorrect ? Correct : Incorrect}
               className="absolute left-[-0.5rem] h-20"
-              alt={problem.answer === selectedValue ? '정답' : '오답'}
+              alt={gradingResult?.isCorrect ? '정답' : '오답'}
             />
           </div>
         ) : null}
@@ -52,15 +56,10 @@ export default function Question({
                   <RadioGroupItem
                     value={key}
                     id={key}
-                    isAnswer={problem.answer === option.order && showExplanation}
+                    isAnswer={gradingResult?.answerChoice === option.order && showExplanation}
                     falseAnswer={
-                      selectedValue === option.order &&
-                      problem.answer !== selectedValue &&
-                      showExplanation
-                    }
-                    trueAnswer={
-                      selectedValue === option.order &&
-                      problem.answer === selectedValue &&
+                      !gradingResult?.isCorrect &&
+                      gradingResult?.answerChoice !== option.order &&
                       showExplanation
                     }
                     className="min-h-5 min-w-5"
@@ -76,7 +75,7 @@ export default function Question({
             })}
           </RadioGroup>
         </>
-        <>{showExplanation && <div className="mt-8">{problem.solution}</div>}</>
+        <>{showExplanation && <div className="mt-8">{gradingResult?.solution}</div>}</>
       </div>
     </div>
   );

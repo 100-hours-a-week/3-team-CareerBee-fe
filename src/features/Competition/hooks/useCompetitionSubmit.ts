@@ -1,5 +1,6 @@
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
+import { useAnswerStore } from '@/features/Competition/store/answerStore';
 
 import { safePost } from '@/lib/request';
 import { toast } from '@/hooks/useToast';
@@ -28,34 +29,45 @@ export function useCompetitionSubmit({
         setShowPointResult(true);
         setTimeout(() => {
           navigate('/competition');
-        }, 5000);
+        }, 3000);
         return;
       }
 
       const now = new Date();
       const submitTime = now.getTime();
       console.log("submitTime:", submitTime, " ", "joinedTime:", joinedTime, " ");
-      const correctCount = problems.filter(
-        (_, index) => selectedAnswers[index] === problems[index].answer,
-      ).length;
-      const res = await safePost(
-        `/api/v1/competitions/${competitionId}/results`,
-        {
-          solvedCount: correctCount,
-          elapsedTime: submitTime - joinedTime!,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
 
-      if (res.httpStatusCode >= 400) {
+      const submittedAnswers = problems.map((problem, index) => ({
+        problemId: problem.id,
+        userChoice: selectedAnswers[index],
+      }));
+
+      try {
+        const res = await safePost(
+          `/api/v1/competitions/${competitionId}/results`,
+          {
+            elapsedTime: submitTime - joinedTime!,
+            submittedAnswers,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        if (res.httpStatusCode === 200) {
+          setIsSubmitted(true);
+          setJoinedTime(null);
+          const { setAnswers } = useAnswerStore.getState();
+
+          const gradingResult = res.data?.gradingResults;
+          if (gradingResult && gradingResult.length > 0) {
+            setAnswers(gradingResult);
+          }
+        }
+      } catch {
         toast({ title: '제출에 실패했습니다.', variant: 'destructive' });
-      } else if (!res) {
-        setIsSubmitted(true);
-        setJoinedTime(null);
       }
     },
     [problems, selectedAnswers, timeLeft, token, competitionId, setShowPointResult, navigate],
