@@ -40,6 +40,8 @@ export default function Upload() {
 
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     const input = (e.target as HTMLFormElement).querySelector<HTMLInputElement>('#resume-upload');
     const file = input?.files?.[0] || null;
     if (file != null) {
@@ -63,13 +65,12 @@ export default function Upload() {
         );
         if (res.httpStatusCode === 209) {
           useResumeStore.getState().setResume(res.data);
+          window.location.href = '/resume/form';
         }
       } catch (err: any) {
         alert(err);
       }
     }
-
-    window.location.href = '/resume/form';
   };
 
   return (
