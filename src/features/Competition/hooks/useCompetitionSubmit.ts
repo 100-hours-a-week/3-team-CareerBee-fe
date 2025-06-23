@@ -59,20 +59,12 @@ export function useCompetitionSubmit({
         if (res.httpStatusCode === 200) {
           setIsSubmitted(true);
           setJoinedTime(null);
-          console.log('Result posted successfully res', res);
-          const { answers, setAnswers } = useAnswerStore.getState();
+          const { setAnswers } = useAnswerStore.getState();
 
           const gradingResult = res.data?.gradingResults;
           if (gradingResult && gradingResult.length > 0) {
-            console.log('💾 gradingResult:', gradingResult);
             setAnswers(gradingResult);
-            console.log('🧪 채점 response:', answers);
-          } else {
-            console.warn('❗ gradingResult가 없음 또는 빈 배열:', gradingResult);
           }
-          // if (res.data?.gradingResults) {
-          // setAnswers(res.data?.gradingResults);
-          // }
         }
       } catch {
         toast({ title: '제출에 실패했습니다.', variant: 'destructive' });

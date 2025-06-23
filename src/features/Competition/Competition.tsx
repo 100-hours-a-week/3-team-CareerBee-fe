@@ -49,23 +49,14 @@ export default function Competition() {
   const { answers } = useAnswerStore();
 
   const isCorrect = (index: number) => {
-    // if (!isSubmitted) return undefined;
-    // console.log("isCorrect index", index);
     const problemId = problems[index].id;
     return answers.find((a) => a.problemId === problemId)?.isCorrect;
   };
-  useEffect(() => {
-    console.log(problems);
-    console.log("주스탠드에 저장된 answers: ", answers);
-    const results = problems.map((_, idx) => isCorrect(idx));
-    console.log('🧪 채점 결과:', results);
-  }, [answers]);
 
   const { handleSubmitClick } = useCompetitionSubmit({
     problems,
     selectedAnswers,
     timeLeft,
-    // setIsSubmitted,
     setShowPointResult,
   });
 
