@@ -21,7 +21,7 @@ const RankCard = ({ styleKey, rankingData }: RankCardProps) => {
         style={{ backgroundImage: `url(/assets/${bgImage})` }}
       >
         <img
-          src={rankingData.profileImgUrl ?? '/assets/no-profile.png'}
+          src={rankingData.profileUrl ?? '/assets/no-profile.png'}
           className={`w-8 h-8 mx-auto ${marginTop}`}
           alt="프로필 이미지"
         />
