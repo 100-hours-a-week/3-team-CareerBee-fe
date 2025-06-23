@@ -50,12 +50,10 @@ export const useNotificationSSE = (shouldConnect: boolean) => {
     sseRef.current = eventSource;
 
     eventSource.addEventListener('open', () => {
-      console.log('SSE 연결 성공');
       sessionStorage.setItem('sse_connected', 'true');
     });
 
     eventSource.addEventListener('notification', (e: any) => {
-      console.log('noti ', e.data);
       if (e.data === 'true') {
         queryClient.setQueryData(['userInfo'], (prev: any) => ({
           ...prev,
