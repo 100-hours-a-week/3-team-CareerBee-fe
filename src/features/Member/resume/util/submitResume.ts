@@ -1,5 +1,6 @@
 import { ResumeFormValues } from '../resumeForm';
 
+import { toast } from '@/hooks/useToast';
 import { safePatch } from '@/lib/request';
 
 export const submitResume = async (data: ResumeFormValues, token: string | null) => {
@@ -27,6 +28,6 @@ export const submitResume = async (data: ResumeFormValues, token: string | null)
       window.location.href = '/resume/download';
     }
   } catch (error) {
-    console.error('이력 정보 저장 중 오류 발생:', error);
+    toast({ title: '저장 실패', variant: 'destructive' });
   }
 };
