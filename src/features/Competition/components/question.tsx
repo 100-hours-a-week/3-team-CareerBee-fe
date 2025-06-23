@@ -20,7 +20,8 @@ export default function Question({
   problem,
 }: QuestionProps) {
   const { answers } = useAnswerStore.getState();
-  const gradingResult = answers.find((a) => a.problemId === problem.number);
+
+  const gradingResult = answers.find((a) => a.problemId === problem.id);
   return (
     <div className="relative">
       <div className="flex-col overflow-y-auto overflow-x-visible h-[31.25rem] px-3">
@@ -55,15 +56,10 @@ export default function Question({
                   <RadioGroupItem
                     value={key}
                     id={key}
-                    isAnswer={gradingResult?.isCorrect && showExplanation}
+                    isAnswer={gradingResult?.answerChoice === option.order && showExplanation}
                     falseAnswer={
-                      gradingResult?.isCorrect &&
-                      gradingResult?.answerChoice !== selectedValue &&
-                      showExplanation
-                    }
-                    trueAnswer={
-                      gradingResult?.isCorrect &&
-                      gradingResult?.answerChoice === selectedValue &&
+                      !gradingResult?.isCorrect &&
+                      gradingResult?.answerChoice !== option.order &&
                       showExplanation
                     }
                     className="min-h-5 min-w-5"
