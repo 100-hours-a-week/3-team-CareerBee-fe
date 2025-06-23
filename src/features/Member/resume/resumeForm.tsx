@@ -10,14 +10,17 @@ import TextForm from '@/features/Member/resume/components/textForm';
 import LongTextForm from '@/features/Member/resume/components/longtextForm';
 
 import { baekjoonTierItems } from './config/baekjoonTierItems';
+import { submitResume } from './util/submitResume';
+import { useAuthStore } from '@/features/Member/auth/store/auth';
 
 import { cn } from '@/lib/utils';
 import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useResumeStore } from './store/resumeStore';
 
 export default function ResumeForm() {
+  const token = useAuthStore((state) => state.token);
+
   const { resume } = useResumeStore();
   const {
     control,
@@ -65,16 +68,11 @@ export default function ResumeForm() {
     setVisibleFields({
       tier: Boolean(watchedPosition),
       certification_count: Boolean(watchedTier),
-      project_count: watchedCert !== 0 && watchedCert !== undefined,
-      major_type: watchedProject !== 0 && watchedProject !== undefined,
+      project_count: watchedCert !== null && watchedCert !== undefined,
+      major_type: watchedProject !== null && watchedProject !== undefined,
       work: watchedMajor !== '',
     });
   }, [watchedPosition, watchedTier, watchedCert, watchedProject, watchedMajor]);
-
-  const navigate = useNavigate();
-  const submitForm = () => {
-    navigate('/resume/download');
-  };
 
   return (
     <div className="flex flex-col py-3 px-16 w-full mb-auto gap-4 overflow-y-auto">
@@ -84,7 +82,11 @@ export default function ResumeForm() {
         </div>
         <p className="text-xs text-text-secondary">해당 정보는 참고용입니다.</p>
       </div>
-      <form onSubmit={handleSubmit(submitForm)}>
+      <form
+        onSubmit={handleSubmit((data) => {
+          submitResume(data, token);
+        })}
+      >
         <div className="flex flex-col gap-2 w-full">
           {/* 선호 직무 */}
           <div className="flex flex-col w-full gap-1">
