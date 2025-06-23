@@ -11,7 +11,7 @@ export const submitResume = async (data: ResumeFormValues, token: string | null)
     psTier: data.tier,
     certificationCount: data.certification_count,
     projectCount: data.project_count,
-    majorType: data.major_type === 'major_type' ? 'MAJOR' : 'NON_MAJOR',
+    majorType: data.major_type,
     workPeriod: data.work_period,
     position: data.role,
     additionalExperiences: data.additional_experiences,
