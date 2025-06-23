@@ -21,14 +21,11 @@ const RankCard = ({ styleKey, rankingData }: RankCardProps) => {
         style={{ backgroundImage: `url(/assets/${bgImage})` }}
       >
         <img
-          src={rankingData.profileImgUrl ?? '/assets/no-profile.png'}
+          src={rankingData.profileUrl ?? '/assets/no-profile.png'}
           className={`w-8 h-8 mx-auto ${marginTop}`}
           alt="프로필 이미지"
         />
         <div className="flex items-center justify-center mx-auto">
-          {rankingData.badgeImgUrl && (
-            <img src={rankingData.badgeImgUrl} className="w-4 h-4 mr-1" alt="뱃지 이미지" />
-          )}
           <div>{rankingData.nickname}</div>
         </div>
         <div className="text-[0.625rem] text-center">
