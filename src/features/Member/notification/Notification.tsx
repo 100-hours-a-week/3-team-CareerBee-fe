@@ -64,7 +64,7 @@ export default function Notification() {
   );
 
   return (
-    <>
+    <div className="overflow-y-auto">
       {!hasImportant && !hasBasic ? (
         <div className="flex justify-center text-sm text-text-secondary py-4 w-full">
           지금은 새로운 알림이 없어요.
@@ -145,6 +145,6 @@ export default function Notification() {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }
