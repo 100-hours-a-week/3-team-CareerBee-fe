@@ -10,33 +10,21 @@ import WishCompanyList from './components/wishCompanyList';
 import { useUserInfo } from '@/hooks/useUserInfo';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
-
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useNavigationType, NavigationType } from 'react-router-dom';
 
 export default function Mypage() {
   const { data: userInfo } = useUserInfo();
   const queryClient = useQueryClient();
 
-  const location = useLocation();
-  const navigate = useNavigate();
-  const navigationType = useNavigationType();
-
-  // 브라우저 뒤로가기
-  useEffect(() => {
-    if (navigationType === NavigationType.Pop) {
+  // 뒤로가기
+  window.onpageshow = function (event) {
+    if (
+      event.persisted ||
+      (window.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming).type ==
+        'back_forward'
+    ) {
       queryClient.invalidateQueries({ queryKey: ['userInfo'] });
     }
-  }, [navigationType]);
-
-  // 헤더 바 뒤로가기
-  useEffect(() => {
-    if (location.state?.updated) {
-      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
-      navigate(location.pathname, { replace: true });
-    }
-  }, [location.state]);
+  };
 
   return (
     <>

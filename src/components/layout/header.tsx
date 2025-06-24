@@ -50,8 +50,6 @@ export const Header = ({ type = 'main', point, hasNewNotification }: HeaderProps
               onClick={() => {
                 if (location.pathname.startsWith('/competition/entry') && !isSubmitted) {
                   setShowBackConfirmModal(true);
-                } else if (location.pathname.startsWith('/my/account')) {
-                  navigate('/my', { state: { updated: true } });
                 } else {
                   navigate(-1);
                 }
