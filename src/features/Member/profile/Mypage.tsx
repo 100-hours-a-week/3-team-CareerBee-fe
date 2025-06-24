@@ -2,9 +2,6 @@ import noProfile from '/assets/no-profile.png';
 import point from '@/features/Member/notification/image/point.png';
 import { PiCaretRight } from 'react-icons/pi';
 
-// import { useAuthStore } from '@/features/Member/auth/store/auth';
-// import { useCompanyStore } from '@/store/company';
-
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
 import { logout } from '@/features/Member/auth/utils/logout';
@@ -15,19 +12,31 @@ import { useUserInfo } from '@/hooks/useUserInfo';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
-export default function Mypage() {
-  // const token = useAuthStore((state) => state.token);
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigationType, NavigationType } from 'react-router-dom';
 
+export default function Mypage() {
   const { data: userInfo } = useUserInfo();
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ['userInfo'] });
-    // console.log("hello mypage")
-  }, []);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const navigationType = useNavigationType();
 
-  // const { setIsBookmarked } = useCompanyStore();
-  // const companies = [...Array(0)];
+  // 브라우저 뒤로가기
+  useEffect(() => {
+    if (navigationType === NavigationType.Pop) {
+      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+    }
+  }, [navigationType]);
+
+  // 헤더 바 뒤로가기
+  useEffect(() => {
+    if (location.state?.updated) {
+      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location.state]);
 
   return (
     <>
