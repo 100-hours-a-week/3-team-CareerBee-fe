@@ -76,6 +76,7 @@ export default function Account() {
                   token,
                   isProfileImageDirty,
                 });
+                queryClient.invalidateQueries({ queryKey: ['userinfo'] });
               }}
             >
               <ProfileImageUploader onFileSelect={setFile} />

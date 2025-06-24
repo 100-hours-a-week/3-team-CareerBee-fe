@@ -2,9 +2,6 @@ import noProfile from '/assets/no-profile.png';
 import point from '@/features/Member/notification/image/point.png';
 import { PiCaretRight } from 'react-icons/pi';
 
-// import { useAuthStore } from '@/features/Member/auth/store/auth';
-// import { useCompanyStore } from '@/store/company';
-
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
 import { logout } from '@/features/Member/auth/utils/logout';
@@ -13,21 +10,21 @@ import WishCompanyList from './components/wishCompanyList';
 import { useUserInfo } from '@/hooks/useUserInfo';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
 
 export default function Mypage() {
-  // const token = useAuthStore((state) => state.token);
-
   const { data: userInfo } = useUserInfo();
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ['userInfo'] });
-    // console.log("hello mypage")
-  }, []);
-
-  // const { setIsBookmarked } = useCompanyStore();
-  // const companies = [...Array(0)];
+  // 뒤로가기
+  window.onpageshow = function (event) {
+    if (
+      event.persisted ||
+      (window.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming).type ==
+        'back_forward'
+    ) {
+      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+    }
+  };
 
   return (
     <>
