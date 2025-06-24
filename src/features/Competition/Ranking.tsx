@@ -30,12 +30,16 @@ export default function Ranking() {
   const [competitionTime, setCompetitionTime] = useState(false);
   const [isAggregationTime, setIsAggregationTime] = useState(false);
   useEffect(() => {
-    const curr = checkTime('ms');
-    const isCompetitionTime = curr >= COMPETITION_START_TIME && curr < COMPETITION_END_TIME;
-    setCompetitionTime(isCompetitionTime);
-    setIsAggregationTime(
-      curr < COMPETITION_END_TIME + AGGREGATE_TIME && curr > COMPETITION_END_TIME,
-    );
+    const timer = setInterval(() => {
+      const curr = checkTime('ms');
+      const isCompetitionTime = curr >= COMPETITION_START_TIME && curr < COMPETITION_END_TIME;
+      setCompetitionTime(isCompetitionTime);
+      setIsAggregationTime(
+        curr < COMPETITION_END_TIME + AGGREGATE_TIME && curr > COMPETITION_END_TIME,
+      );
+    }, 1000); // 1초
+
+    return () => clearInterval(timer);
   }, []);
 
   // 랭킹 실시간 데이터 polling

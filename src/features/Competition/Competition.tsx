@@ -12,6 +12,7 @@ import { useCompetitionSubmit } from '@/features/Competition/hooks/useCompetitio
 import { useCompetitionTimer } from '@/features/Competition/hooks/useCompetitionTimer';
 import { useCompetitionData } from '@/features/Competition/hooks/useCompetitionData';
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
+import { useAnswerStore } from '@/features/Competition/store/answerStore';
 
 import { useEffect, useState } from 'react';
 
@@ -20,11 +21,10 @@ export interface Choice {
   content: string;
 }
 export interface Problem {
+  id: number;
   number: number;
   title: string;
   description: string;
-  solution: string;
-  answer: number;
   choices: Choice[];
 }
 
@@ -45,14 +45,18 @@ export default function Competition() {
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([0, 0, 0, 0, 0]);
   const notAnswered = selectedAnswers.every((answer) => answer !== 0);
   const isSolved = (index: number) => selectedAnswers[index] !== 0;
-  const isCorrect = (index: number) =>
-    isSubmitted ? selectedAnswers[index] === problems[index].answer : undefined;
+
+  const { answers } = useAnswerStore();
+
+  const isCorrect = (index: number) => {
+    const problemId = problems[index].id;
+    return answers.find((a) => a.problemId === problemId)?.isCorrect;
+  };
 
   const { handleSubmitClick } = useCompetitionSubmit({
     problems,
     selectedAnswers,
     timeLeft,
-    // setIsSubmitted,
     setShowPointResult,
   });
 
@@ -90,7 +94,7 @@ export default function Competition() {
                   value={String(index + 1)}
                   variant="pill"
                   isSolved={isSolved(index)}
-                  isCorrect={isCorrect(index)}
+                  isCorrect={isSubmitted ? isCorrect(index) : undefined}
                 >
                   {index + 1}
                 </TabsTrigger>

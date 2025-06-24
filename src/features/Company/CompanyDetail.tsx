@@ -119,139 +119,141 @@ export default function CompanyDetail() {
 
   return (
     <AnimatePresence>
-      {!exit && (
-        <motion.div
-          key={location.pathname}
-          initial={{ y: '100vh', opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: '100vh', opacity: 0 }}
-          transition={{ duration: 0.4, ease: 'easeInOut' }}
-        >
-          <div className="flex flex-col grow">
-            {company.recruitments && company.recruitments.length > 0 ? (
-              <div className="overflow-hidden h-6 bg-secondary text-text-primary text-sm flex items-center">
-                <div className="flex animate-marquee whitespace-nowrap min-w-max">
-                  <span className="mx-16">현재 채용 중입니다.</span>
-                  <span className="mx-16">현재 채용 중입니다.</span>
-                  <span className="mx-16">현재 채용 중입니다.</span>
-                  <span className="mx-16">현재 채용 중입니다.</span>
+      <div className="overflow-auto">
+        {!exit && (
+          <motion.div
+            key={location.pathname}
+            initial={{ y: '100vh', opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: '100vh', opacity: 0 }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+          >
+            <div className="flex flex-col grow">
+              {company.recruitments && company.recruitments.length > 0 ? (
+                <div className="overflow-hidden h-6 bg-secondary text-text-primary text-sm flex items-center">
+                  <div className="flex animate-marquee whitespace-nowrap min-w-max">
+                    <span className="mx-16">현재 채용 중입니다.</span>
+                    <span className="mx-16">현재 채용 중입니다.</span>
+                    <span className="mx-16">현재 채용 중입니다.</span>
+                    <span className="mx-16">현재 채용 중입니다.</span>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
+
+              {/* 갤러리 */}
+              <div className="grid grid-cols-4 grid-rows-2 gap-1 max-w-full mx-auto">
+                {[...Array(5)].map((_, index) => {
+                  const photo = company.photos?.[index];
+                  const imageUrl = photo?.url ?? noImg;
+                  return (
+                    <img
+                      key={index}
+                      src={imageUrl}
+                      alt={company.name ?? 'no image'}
+                      className={
+                        index === 0
+                          ? 'col-span-2 row-span-2 w-full h-full rounded-lg aspect-[4/3] object-cover'
+                          : 'aspect-[4/3] object-cover rounded-lg'
+                      }
+                    />
+                  );
+                })}
+              </div>
+
+              {/* 기업 제목 */}
+              <div className="-mt-9 pl-2 relative z-10">
+                <CompanyTitle
+                  logoUrl={company.logoUrl ?? noImg}
+                  name={company.name}
+                  wishCount={company.wishCount}
+                  isLoggedIn={!!token}
+                  companyId={company.id}
+                  {...(token
+                    ? {
+                        isBookmarked: isBookmarked,
+                      }
+                    : {
+                        isBookmarked: false,
+                      })}
+                  setIsBookmarked={setIsBookmarked}
+                />
+              </div>
+
+              {/* 기업 정보 */}
+              <div className="flex flex-col px-4 gap-2 my-2">
+                <div className="text-lg font-semibold">{company.title}</div>
+                <div className="flex gap-0.5 [&_svg]:size-5 text-primary ">
+                  {[...Array(5)].map((_, index) => {
+                    const full = Math.floor(company.rating);
+                    const decimal = company.rating - full;
+                    if (index < full) {
+                      return <PiStarFill key={index} />;
+                    } else if (index === full) {
+                      if (decimal < 0.333) return <PiStar key={index} />;
+                      if (decimal < 0.666) return <PiStarHalfFill key={index} />;
+                      return <PiStarFill key={index} />;
+                    } else {
+                      return <PiStar key={index} />;
+                    }
+                  })}
+                  <p className="ml-2 text-xs text-text-secondary mt-auto">캐치 종합 점수 기준</p>
+                </div>
+                <div className="w-full text-center font-semibold">
+                  {`평균: ${
+                    company.financials.annualSalary
+                      ? (company.financials.annualSalary / 10000).toLocaleString()
+                      : '-'
+                  }만원 / 신입: ${
+                    company.financials.startingSalary
+                      ? (company.financials.startingSalary / 10000).toLocaleString()
+                      : '-'
+                  }만원`}
                 </div>
               </div>
-            ) : (
-              <></>
-            )}
-
-            {/* 갤러리 */}
-            <div className="grid grid-cols-4 grid-rows-2 gap-1 max-w-full mx-auto">
-              {[...Array(5)].map((_, index) => {
-                const photo = company.photos?.[index];
-                const imageUrl = photo?.url ?? noImg;
-                return (
-                  <img
-                    key={index}
-                    src={imageUrl}
-                    alt={company.name ?? 'no image'}
-                    className={
-                      index === 0
-                        ? 'col-span-2 row-span-2 w-full h-full rounded-lg aspect-[4/3] object-cover'
-                        : 'aspect-[4/3] object-cover rounded-lg'
-                    }
-                  />
-                );
-              })}
-            </div>
-
-            {/* 기업 제목 */}
-            <div className="-mt-9 pl-2 relative z-10">
-              <CompanyTitle
-                logoUrl={company.logoUrl ?? noImg}
-                name={company.name}
-                wishCount={company.wishCount}
-                isLoggedIn={!!token}
-                companyId={company.id}
-                {...(token
-                  ? {
-                      isBookmarked: isBookmarked,
-                    }
-                  : {
-                      isBookmarked: false,
-                    })}
-                setIsBookmarked={setIsBookmarked}
-              />
-            </div>
-
-            {/* 기업 정보 */}
-            <div className="flex flex-col px-4 gap-2 my-2">
-              <div className="text-lg font-semibold">{company.title}</div>
-              <div className="flex gap-0.5 [&_svg]:size-5 text-primary ">
-                {[...Array(5)].map((_, index) => {
-                  const full = Math.floor(company.rating);
-                  const decimal = company.rating - full;
-                  if (index < full) {
-                    return <PiStarFill key={index} />;
-                  } else if (index === full) {
-                    if (decimal < 0.333) return <PiStar key={index} />;
-                    if (decimal < 0.666) return <PiStarHalfFill key={index} />;
-                    return <PiStarFill key={index} />;
-                  } else {
-                    return <PiStar key={index} />;
-                  }
-                })}
-                <p className="ml-2 text-xs text-text-secondary mt-auto">캐치 종합 점수 기준</p>
-              </div>
-              <div className="w-full text-center font-semibold">
-                {`평균: ${
-                  company.financials.annualSalary
-                    ? (company.financials.annualSalary / 10000).toLocaleString()
-                    : '-'
-                }만원 / 신입: ${
-                  company.financials.startingSalary
-                    ? (company.financials.startingSalary / 10000).toLocaleString()
-                    : '-'
-                }만원`}
-              </div>
-            </div>
-            <Tabs defaultValue="defaultTab" className="grow mt-4 w-full">
-              <TabsList>
-                <TabsTrigger value="defaultTab" variant={'company'}>
-                  기본
-                </TabsTrigger>
-                <TabsTrigger value="recruit" variant={'company'}>
-                  채용 정보
-                </TabsTrigger>
-                <TabsTrigger value="issue" variant={'company'}>
-                  최근 이슈
-                </TabsTrigger>
-                <TabsTrigger value="benefit" variant={'company'}>
-                  복지
-                </TabsTrigger>
-                {company.techStacks.length > 0 && (
-                  <TabsTrigger value="techStack" variant={'company'}>
-                    기술 스택
+              <Tabs defaultValue="defaultTab" className="grow mt-4 w-full">
+                <TabsList>
+                  <TabsTrigger value="defaultTab" variant={'company'}>
+                    기본
                   </TabsTrigger>
-                )}
-              </TabsList>
-              <TabsContent value="defaultTab" className="grow">
-                <DefaultTab company={company} />
-              </TabsContent>
-              <TabsContent value="recruit">
-                <RecruitTab recruitments={company.recruitments} />
-              </TabsContent>
-              <TabsContent value="issue">
-                <IssueTab name={company.name} issue={company.recentIssue} />
-              </TabsContent>
-              <TabsContent value="benefit">
-                <BenefitTab benefits={company.benefits} />
-              </TabsContent>
-              {company.techStacks.length > 0 && (
-                <TabsContent value="techStack">
-                  <TechstackTab techstacks={company.techStacks} />
+                  <TabsTrigger value="recruit" variant={'company'}>
+                    채용 정보
+                  </TabsTrigger>
+                  <TabsTrigger value="issue" variant={'company'}>
+                    최근 이슈
+                  </TabsTrigger>
+                  <TabsTrigger value="benefit" variant={'company'}>
+                    복지
+                  </TabsTrigger>
+                  {company.techStacks.length > 0 && (
+                    <TabsTrigger value="techStack" variant={'company'}>
+                      기술 스택
+                    </TabsTrigger>
+                  )}
+                </TabsList>
+                <TabsContent value="defaultTab" className="grow">
+                  <DefaultTab company={company} />
                 </TabsContent>
-              )}
-            </Tabs>
-          </div>
-        </motion.div>
-      )}
+                <TabsContent value="recruit">
+                  <RecruitTab recruitments={company.recruitments} />
+                </TabsContent>
+                <TabsContent value="issue">
+                  <IssueTab name={company.name} issue={company.recentIssue} />
+                </TabsContent>
+                <TabsContent value="benefit">
+                  <BenefitTab benefits={company.benefits} />
+                </TabsContent>
+                {company.techStacks.length > 0 && (
+                  <TabsContent value="techStack">
+                    <TechstackTab techstacks={company.techStacks} />
+                  </TabsContent>
+                )}
+              </Tabs>
+            </div>
+          </motion.div>
+        )}
+      </div>
     </AnimatePresence>
   );
 }

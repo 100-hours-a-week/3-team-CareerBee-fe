@@ -2,6 +2,7 @@ import { Loader } from '@/components/ui/loader';
 
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 import { safePost } from '@/lib/request';
+import { toast } from '@/hooks/useToast';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
@@ -16,14 +17,24 @@ export default function OAuthCallback() {
 
     if (token) {
       (async () => {
-        const res = await safePost('/api/v1/auth/oauth/tokens/kakao', {
-          authorizationCode: token,
-        });
-        if (res) {
-          setToken(res.data.accessToken); // ✅ Zustand + persist로 저장됨
-          queryClient.removeQueries({ queryKey: ['userInfo'] });
-          queryClient.invalidateQueries({ queryKey: ['userInfo'] });
-          window.location.href = '/'; // ✅ 로그인 성공 후 홈으로 이동
+        try {
+          const res = await safePost('/api/v1/auth/oauth/tokens/kakao', {
+            authorizationCode: token,
+          });
+          if (res) {
+            setToken(res.data.accessToken); // ✅ Zustand + persist로 저장됨
+            queryClient.removeQueries({ queryKey: ['userInfo'] });
+            queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+            window.location.href = '/'; // ✅ 로그인 성공 후 홈으로 이동
+          }
+        } catch (error: any) {
+          if (error.response?.data?.httpStatusCode === 410) {
+            toast({ title: '탈퇴한 회원입니다', variant: 'destructive' });
+
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 2000);
+          }
         }
       })();
     } else {
