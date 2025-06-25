@@ -4,7 +4,7 @@ import { formatToMS } from '@/features/Competition/components/timer';
 import { safeGet } from '@/lib/request';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface ChartProps {
   rank: number;
@@ -44,6 +44,7 @@ export const useTopRankings = () => {
 // polling으로 일일 실시간 랭킹 불러오기
 export const useDailyTopPolling = (enabled: boolean) => {
   const queryClient = useQueryClient();
+  const [liveRanking, setLiveRanking] = useState<ChartProps[] | null>(null);
 
   useEffect(() => {
     if (!enabled) return;
@@ -52,10 +53,13 @@ export const useDailyTopPolling = (enabled: boolean) => {
       const res = await safeGet('/api/v1/competitions/rankings/live');
       if (res.httpStatusCode === 200) {
         const liveData = res.data.rankings;
+        const converted = convertToChartProps(liveData, true);
         queryClient.setQueryData(['top-rankings'], (old: any) => ({
           ...old,
-          daily: convertToChartProps(liveData, true),
+          daily: converted,
         }));
+        setLiveRanking(converted);
+        return converted;
       }
     };
 
@@ -65,4 +69,6 @@ export const useDailyTopPolling = (enabled: boolean) => {
 
     return () => clearInterval(interval);
   }, [enabled, queryClient]);
+
+  return liveRanking;
 };

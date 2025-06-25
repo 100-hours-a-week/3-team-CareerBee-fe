@@ -43,7 +43,15 @@ export default function Ranking() {
   }, []);
 
   // 랭킹 실시간 데이터 polling
-  useDailyTopPolling(competitionTime);
+  const polling = useDailyTopPolling(competitionTime);
+  const [dailyRanking, setDailyRanking] = useState(topRankings?.daily);
+  useEffect(() => {
+    if (polling !== undefined && polling !== null) {
+      setDailyRanking(polling);
+    } else if (polling === null) {
+      setDailyRanking(topRankings?.daily);
+    }
+  }, [polling]);
 
   const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
 
@@ -105,8 +113,8 @@ export default function Ranking() {
         <>
           <div className="flex mx-auto">
             {rankingView === 'daily' ? (
-              topRankings?.daily && topRankings?.daily.length > 0 ? (
-                <DailyBarChart rankingData={topRankings?.daily} />
+              topRankings?.daily && (dailyRanking?.length ?? 0) > 0 ? (
+                <DailyBarChart rankingData={dailyRanking ?? []} />
               ) : isAggregationTime ? (
                 <AggregationNotice />
               ) : (
