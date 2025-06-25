@@ -4,6 +4,7 @@ import fileUpload from '@/features/Member/resume/image/file-arrow-up-light.svg';
 
 import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Upload() {
   const {
@@ -28,8 +29,9 @@ export default function Upload() {
   }, [watch('resume')]);
 
   const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const navigate = useNavigate();
   const submitForm = () => {
-    window.location.href = '/resume/form';
+    navigate('/resume/form');
   };
 
   return (
@@ -114,7 +116,7 @@ export default function Upload() {
               label="건너뛰기"
               variant="secondary"
               className="w-40"
-              onClick={() => (window.location.href = '/resume/form')}
+              onClick={() => navigate('/resume/form')}
             />
             <Button
               type="submit"

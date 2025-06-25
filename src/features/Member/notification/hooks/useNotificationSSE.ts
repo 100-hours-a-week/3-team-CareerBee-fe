@@ -1,56 +1,34 @@
 import { useAuthStore } from '../../auth/store/auth';
 import { retryWithRefreshedToken } from '../../auth/utils/authManager';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
 
-export const useNotificationSSE = (shouldConnect: boolean) => {
+export const useNotificationSSE = () => {
   const queryClient = useQueryClient();
-  const token = useAuthStore((state) => state.token);
   const sseRef = useRef<EventSource | null>(null);
-  // const token = useAuthStore.getState().token;
 
-  useEffect(() => {
-    const token = useAuthStore.getState().token;
-    if (!shouldConnect || !token) return;
-    if (sseRef.current) {
-      // console.log('⚠️ 삭제 후 재연결');
-      sseRef.current.close();
-      sseRef.current = null;
-      sessionStorage.removeItem('sse_connected');
-    }
+  const token = useAuthStore.getState().token;
+  if (sseRef.current) return; // 이미 연결된 경우 실행 방지
+  if (!token) return;
 
-    // console.log('1. SSE 연결 시도 중...');
-    const EventSource = EventSourcePolyfill || NativeEventSource;
-    let eventSource = new EventSource(`${import.meta.env.VITE_API_URL}/api/v1/sse/subscribe`, {
+  const EventSource = EventSourcePolyfill || NativeEventSource;
+  let retryCount = 0;
+
+  const connect = () => {
+    const eventSource = new EventSource(`${import.meta.env.VITE_API_URL}/api/v1/sse/subscribe`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      heartbeatTimeout: 10000,
+      heartbeatTimeout: 60 * 60 * 1000,
+      withCredentials: true,
     });
-    // setInterval(() => {
-    //   const ready = sseRef.current?.readyState;
-    //   console.log(ready);
-    //   if (ready === EventSource.CLOSED) {
-    //     console.warn('SSE 연결 닫힘 감지됨. 재연결 시도 가능');
-    //     // 재연결 로직
-    //     eventSource.close();
-    //     sseRef.current = null;
-    //     sessionStorage.removeItem('sse_connected');
-    //     eventSource = new EventSource(`${import.meta.env.VITE_API_URL}/api/v1/sse/subscribe`, {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //       heartbeatTimeout: 10000,
-    //     });
-    //   }
-    // }, 3000);
 
     sseRef.current = eventSource;
 
     eventSource.addEventListener('open', () => {
-      sessionStorage.setItem('sse_connected', 'true');
+      retryCount = 0;
     });
 
     eventSource.addEventListener('notification', (e: any) => {
@@ -62,34 +40,30 @@ export const useNotificationSSE = (shouldConnect: boolean) => {
       }
     });
 
-    // eventSource.onmessage = (event) => {
-    //   const parsed = event.data;
-    //   console.log("event: ", event);
-    //   if (event === 'notification' && parsed.hasNew) {
-    //     queryClient.setQueryData(['userinfo'], (prev: any) => ({
-    //       ...prev,
-    //       hasNewAlarm: true,
-    //     }));
-    //   }
-    // };
-
     eventSource.onerror = (error) => {
-      // console.error('SSE 연결 오류:', error);
       eventSource.close();
       sseRef.current = null;
-      sessionStorage.removeItem('sse_connected');
+
+      // 토큰 이슈로 연결 해제 시
       if ((error as any).status === 401) {
-        //재연결 요청하기
-        console.log('SSE returned 401');
         retryWithRefreshedToken(eventSource);
+      } else {
+        const retryDelay = Math.min(1000 * 2 ** retryCount, 30000); // 최대 30초
+        retryCount += 1;
+
+        setTimeout(() => {
+          console.log(`SSE 재연결 시도 (${retryCount}회)...`);
+          connect();
+        }, retryDelay);
       }
     };
 
     return () => {
-      // console.log('SSE 연결 해제');
+      console.log('SSE 연결 해제');
       eventSource.close();
       sseRef.current = null;
-      sessionStorage.removeItem('sse_connected');
     };
-  }, [shouldConnect, token]);
+  };
+
+  connect();
 };

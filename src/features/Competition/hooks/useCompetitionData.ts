@@ -4,11 +4,13 @@ import { useAuthStore } from '@/features/Member/auth/store/auth';
 import { toast } from '@/hooks/useToast';
 import { safeGet, safePost } from '@/lib/request';
 
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 export function useCompetitionData(competitionId: number | null) {
   const [problems, setProblems] = useState<Problem[]>([]);
   const token = useAuthStore((state) => state.token);
+  const navigate = useNavigate();
 
   const fetchProblems = async () => {
     if (import.meta.env.VITE_USE_MOCK === 'true') {
@@ -37,7 +39,7 @@ export function useCompetitionData(competitionId: number | null) {
     } catch (error: any) {
       if (error.response?.data?.httpStatusCode === 409) {
         toast({ title: '이미 참가한 대회입니다.', variant: 'destructive' });
-        window.location.href = '/competition';
+        navigate('/competition');
       }
     }
   };

@@ -10,10 +10,12 @@ import WishCompanyList from './components/wishCompanyList';
 import { useUserInfo } from '@/hooks/useUserInfo';
 
 import { useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
 export default function Mypage() {
   const { data: userInfo } = useUserInfo();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   // 뒤로가기
   window.onpageshow = function (event) {
@@ -43,7 +45,7 @@ export default function Mypage() {
                 label={<PiCaretRight className="text-text-secondary" />}
                 className="p-0 m-0 h-full"
                 onClick={() => {
-                  window.location.href = '/my/account';
+                  navigate('/my/account');
                 }}
               />
             </div>
@@ -57,7 +59,7 @@ export default function Mypage() {
             variant="primary"
             className="text-sm rounded-xl px-6"
             onClick={() => {
-              window.location.href = '/resume/upload';
+              navigate('/resume/upload');
             }}
           />
         </div>

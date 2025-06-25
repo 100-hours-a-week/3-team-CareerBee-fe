@@ -11,6 +11,7 @@ import BeehiveImage from '@/features/Member/resume/image/beehive.png';
 import { cn } from '@/lib/utils';
 import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const baekjoonTierItems = [
   {
@@ -136,8 +137,9 @@ export default function ResumeForm() {
     if (watch('major')) setVisibleFields((prev) => ({ ...prev, work: true }));
   }, [watch()]);
 
+  const navigate = useNavigate();
   const submitForm = () => {
-    window.location.href = '/resume/download';
+    navigate('/resume/download');
   };
 
   return (

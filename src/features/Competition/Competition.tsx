@@ -14,6 +14,7 @@ import { useCompetitionData } from '@/features/Competition/hooks/useCompetitionD
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 import { useAnswerStore } from '@/features/Competition/store/answerStore';
 
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 export interface Choice {
@@ -29,6 +30,7 @@ export interface Problem {
 }
 
 export default function Competition() {
+  const navigate = useNavigate();
   const { isSubmitted } = useCompetitionStore();
   const [showPointResult, setShowPointResult] = useState(false);
   const [currentTab, setCurrentTab] = useState(1);
@@ -149,7 +151,7 @@ export default function Competition() {
         cancelButton={false}
         onAction={() => {
           setShowTimeOverModal(false);
-          window.location.href = '/competition';
+          navigate('/competition');
         }}
       />
     </div>
