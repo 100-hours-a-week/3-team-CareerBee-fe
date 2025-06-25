@@ -1,4 +1,3 @@
-// import { PiBookOpenText, PiMedalMilitary, PiMapTrifold, PiShoppingCartSimple, PiUser } from 'react-icons/pi';
 import React from 'react';
 import {
   PiBookOpenTextLight,
@@ -10,7 +9,7 @@ import {
 
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 import { useUiStore } from '@/store/ui';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface NavItem {
   id: string;
@@ -63,6 +62,7 @@ const getNavItems = (token: string | null): NavItem[] => [
 ];
 
 export const Navbar = () => {
+  const navigate = useNavigate();
   const token = useAuthStore.getState().token;
   const navItems = getNavItems(token);
   const setMapPressedFromNavbar = useUiStore((state) => state.setMapPressedFromNavbar);
@@ -76,21 +76,22 @@ export const Navbar = () => {
           key={item.id}
           className="flex flex-col gap-0.5 justify-center items-center [&_svg]:size-7"
         >
-          <a
-            href={item.href}
+          <button
             onClick={(e) => {
               if (isCompanyDetailPage && item.href === '/') {
                 e.preventDefault();
                 setMapPressedFromNavbar(true);
                 setTimeout(() => {
-                  window.location.href = '/';
+                  navigate(item.href);
                   setMapPressedFromNavbar(false);
                 }, 400);
+              } else {
+                navigate(item.href);
               }
             }}
           >
             {item.icon}
-          </a>
+          </button>
           <div className="text-xs text-text-primary">{item.title}</div>
         </div>
       ))}
