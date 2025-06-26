@@ -31,6 +31,7 @@ export const uploadPdf = async (
         },
         {
           headers: { Authorization: `Bearer ${token}` },
+          timeout: 0,
         },
       );
       if (res.httpStatusCode === 200) {
