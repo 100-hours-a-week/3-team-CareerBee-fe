@@ -70,8 +70,13 @@ export default function Account() {
                 SubmitProfileUpdate({
                   nickname: isNicknameDirty ? nickname : userInfo.nickname,
                   profileUrl: isProfileImageDirty
-                    ? await handlePresignedUrl(file, token)
-                    : userInfo.profileUrl,
+                    ? await handlePresignedUrl({
+                        file,
+                        token,
+                        type: 'image',
+                        uploadType: 'PROFILE_IMAGE',
+                      })
+                    : undefined,
                   setIsNicknameDirty,
                   setIsProfileImageDirty,
                   setHelperText: (value: string) => setHelperText(value),

@@ -2,13 +2,18 @@ import { Button } from '@/components/ui/button';
 
 import fileUpload from '@/features/Member/resume/image/file-arrow-up-light.svg';
 
+import { useAuthStore } from '@/features/Member/auth/store/auth';
+import { uploadPdf } from './util/uploadPdf';
+
 import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Upload() {
+  const token = useAuthStore((state) => state.token);
+  const navigate = useNavigate();
+
   const {
-    handleSubmit,
     watch,
     formState: { errors },
     control,
@@ -29,10 +34,6 @@ export default function Upload() {
   }, [watch('resume')]);
 
   const [fileUrl, setFileUrl] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const submitForm = () => {
-    navigate('/resume/form');
-  };
 
   return (
     <>
@@ -44,7 +45,7 @@ export default function Upload() {
             <p>이력서를 업로드하면, 더 정밀한 분석 결과를 받아볼 수 있어요.</p>
           </div>
         </div>
-        <form onSubmit={handleSubmit(submitForm)}>
+        <form onSubmit={(e) => uploadPdf(e, token, navigate)}>
           <div className="flex flex-col w-full items-center gap-2">
             <label
               htmlFor="resume-upload"
@@ -124,6 +125,7 @@ export default function Upload() {
               label="완료"
               variant="primary"
               className="w-40"
+              // onClick={() => navigate('/resume/form')}
             />
           </div>
         </form>
