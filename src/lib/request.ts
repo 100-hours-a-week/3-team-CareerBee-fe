@@ -4,7 +4,9 @@ import { toast } from '@/hooks/useToast';
 import { forceLogout } from '@/features/Member/auth/utils/authManager';
 
 // 공통 요청 핸들러
-export const safeRequest = async <T = any>(config: AxiosRequestConfig): Promise<T | null> => {
+export const safeRequest = async <T = any>(
+  config: AxiosRequestConfig,
+): Promise<T | { status: number } | null> => {
   try {
     const authHeader = config.headers?.Authorization;
     if (authHeader && typeof authHeader === 'string') {
@@ -17,6 +19,10 @@ export const safeRequest = async <T = any>(config: AxiosRequestConfig): Promise<
       }
     }
     const res = await axios.request<T>(config);
+
+    if (res.data == null || res.data === '') {
+      return { status: res.status };
+    }
     return res.data;
   } catch (error) {
     const status = (error as AxiosError)?.response?.status;

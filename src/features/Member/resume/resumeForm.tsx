@@ -1,3 +1,6 @@
+import BeeImage from '@/features/Member/resume/image/bee.png';
+import BeehiveImage from '@/features/Member/resume/image/beehive.png';
+
 import Dropdown from '@/components/ui/dropdown';
 import DoubleDropdown from '@/components/ui/double-dropdown';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -6,99 +9,32 @@ import NumberForm from '@/features/Member/resume/components/numberForm';
 import TextForm from '@/features/Member/resume/components/textForm';
 import LongTextForm from '@/features/Member/resume/components/longtextForm';
 
-import BeeImage from '@/features/Member/resume/image/bee.png';
-import BeehiveImage from '@/features/Member/resume/image/beehive.png';
+import { baekjoonTierItems } from './config/baekjoonTierItems';
+import { submitResume } from './util/submitResume';
+import { useAuthStore } from '@/features/Member/auth/store/auth';
+import { useResumeStore } from './store/resumeStore';
+
 import { cn } from '@/lib/utils';
 import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const baekjoonTierItems = [
-  {
-    label: '브론즈',
-    value: 'BRONZE',
-    children: [
-      { label: '브론즈 5', value: 'BRONZE_5' },
-      { label: '브론즈 4', value: 'BRONZE_4' },
-      { label: '브론즈 3', value: 'BRONZE_3' },
-      { label: '브론즈 2', value: 'BRONZE_2' },
-      { label: '브론즈 1', value: 'BRONZE_1' },
-    ],
-  },
-  {
-    label: '실버',
-    value: 'SILVER',
-    children: [
-      { label: '실버 5', value: 'SILVER_5' },
-      { label: '실버 4', value: 'SILVER_4' },
-      { label: '실버 3', value: 'SILVER_3' },
-      { label: '실버 2', value: 'SILVER_2' },
-      { label: '실버 1', value: 'SILVER_1' },
-    ],
-  },
-  {
-    label: '골드',
-    value: 'GOLD',
-    children: [
-      { label: '골드 5', value: 'GOLD_5' },
-      { label: '골드 4', value: 'GOLD_4' },
-      { label: '골드 3', value: 'GOLD_3' },
-      { label: '골드 2', value: 'GOLD_2' },
-      { label: '골드 1', value: 'GOLD_1' },
-    ],
-  },
-  {
-    label: '플래티넘',
-    value: 'PLATINUM',
-    children: [
-      { label: '플래티넘 5', value: 'PLATINUM_5' },
-      { label: '플래티넘 4', value: 'PLATINUM_4' },
-      { label: '플래티넘 3', value: 'PLATINUM_3' },
-      { label: '플래티넘 2', value: 'PLATINUM_2' },
-      { label: '플래티넘 1', value: 'PLATINUM_1' },
-    ],
-  },
-  {
-    label: '다이아',
-    value: 'DIAMOND',
-    children: [
-      { label: '다이아 5', value: 'DIAMOND_5' },
-      { label: '다이아 4', value: 'DIAMOND_4' },
-      { label: '다이아 3', value: 'DIAMOND_3' },
-      { label: '다이아 2', value: 'DIAMOND_2' },
-      { label: '다이아 1', value: 'DIAMOND_1' },
-    ],
-  },
-  {
-    label: '루비',
-    value: 'RUBY',
-    children: [
-      { label: '루비 5', value: 'RUBY_5' },
-      { label: '루비 4', value: 'RUBY_4' },
-      { label: '루비 3', value: 'RUBY_3' },
-      { label: '루비 2', value: 'RUBY_2' },
-      { label: '루비 1', value: 'RUBY_1' },
-    ],
-  },
-  {
-    label: '마스터',
-    value: 'MASTER',
-    children: [
-      { label: '마스터 5', value: 'MASTER_5' },
-      { label: '마스터 4', value: 'MASTER_4' },
-      { label: '마스터 3', value: 'MASTER_3' },
-      { label: '마스터 2', value: 'MASTER_2' },
-      { label: '마스터 1', value: 'MASTER_1' },
-    ],
-  },
-  {
-    label: '해당없음',
-    value: 'NONE',
-    children: [],
-  },
-];
+export interface ResumeFormValues {
+  position: string;
+  tier: string;
+  certification_count: number;
+  project_count: number;
+  major_type: string;
+  work_period: number;
+  role: string;
+  additional_experiences: string;
+}
 
 export default function ResumeForm() {
+  const navigate = useNavigate();
+  const token = useAuthStore((state) => state.token);
+
+  const { resume } = useResumeStore();
   const {
     control,
     handleSubmit,
@@ -106,67 +42,80 @@ export default function ResumeForm() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      job: '',
+      position: '',
       tier: '',
-      cert: '',
-      project: '',
-      major: '',
-      workPeriod: '',
-      role: '',
-      appeal: '',
+      certification_count: resume?.certificationCount ?? 0,
+      project_count: resume?.projectCount ?? 0,
+      major_type: resume?.majorType ?? '',
+      work_period: resume?.workPeriod ?? 0,
+      role: resume?.position ?? '',
+      additional_experiences: resume?.additionalExperiences ?? '',
     },
     mode: 'onChange',
   });
 
   const [visibleFields, setVisibleFields] = useState({
     tier: false,
-    cert: false,
-    project: false,
-    major: false,
+    certification_count: false,
+    project_count: false,
+    major_type: false,
     work: false,
   });
 
-  const watchedValues = watch(['job', 'tier', 'cert', 'project', 'major']);
+  const watchedValues = watch([
+    'position',
+    'tier',
+    'certification_count',
+    'project_count',
+    'major_type',
+  ]);
   const isReady = Object.values(watchedValues).every((v) => v !== '');
 
-  useEffect(() => {
-    if (watch('job')) setVisibleFields((prev) => ({ ...prev, tier: true }));
-    if (watch('tier')) setVisibleFields((prev) => ({ ...prev, cert: true }));
-    if (watch('cert')) setVisibleFields((prev) => ({ ...prev, project: true }));
-    if (watch('project')) setVisibleFields((prev) => ({ ...prev, major: true }));
-    if (watch('major')) setVisibleFields((prev) => ({ ...prev, work: true }));
-  }, [watch()]);
+  const watchedPosition = watch('position');
+  const watchedTier = watch('tier');
+  const watchedCert = watch('certification_count');
+  const watchedProject = watch('project_count');
+  const watchedMajor = watch('major_type');
 
-  const navigate = useNavigate();
-  const submitForm = () => {
-    navigate('/resume/download');
-  };
+  useEffect(() => {
+    setVisibleFields({
+      tier: Boolean(watchedPosition),
+      certification_count: Boolean(watchedTier),
+      project_count: watchedCert !== null && watchedCert !== undefined,
+      major_type: watchedProject !== null && watchedProject !== undefined,
+      work: watchedMajor !== '',
+    });
+  }, [watchedPosition, watchedTier, watchedCert, watchedProject, watchedMajor]);
 
   return (
-    <div className="flex flex-col py-3 px-16 w-full mb-auto gap-4">
+    <div className="flex flex-col py-3 px-16 w-full mb-auto gap-4 overflow-y-auto">
       <div className="flex flex-col">
         <div className="text-base font-bold w-full items-start">
           진척도 조회를 위해 정보를 입력해주세요.
         </div>
         <p className="text-xs text-text-secondary">해당 정보는 참고용입니다.</p>
       </div>
-      <form onSubmit={handleSubmit(submitForm)}>
+      <form
+        onSubmit={handleSubmit((data) => {
+          submitResume(data, token, navigate);
+        })}
+      >
         <div className="flex flex-col gap-2 w-full">
           {/* 선호 직무 */}
           <div className="flex flex-col w-full gap-1">
             <p className="text-sm font-medium">선호 직무*</p>
             <Controller
               control={control}
-              name="job"
+              name="position"
               render={({ field }) => (
                 <Dropdown
                   {...field}
                   placeholder="선호 직무"
                   items={[
-                    { label: '프론트엔드', value: 'FE' },
-                    { label: '백엔드', value: 'BE' },
+                    { label: '프론트엔드', value: 'FRONTEND' },
+                    { label: '백엔드', value: 'BACKEND' },
                     { label: 'AI', value: 'AI' },
-                    { label: '클라우드(DevOps)', value: 'CLOUD' },
+                    { label: '클라우드(DevOps)', value: 'DEVOPS' },
                   ]}
                 />
               )}
@@ -188,10 +137,10 @@ export default function ResumeForm() {
           )}
 
           {/* IT 자격증 개수 */}
-          {visibleFields.cert && (
+          {visibleFields.certification_count && (
             <NumberForm
               title="IT 자격증 개수*"
-              controllerName="cert"
+              controllerName="certification_count"
               rules={{
                 required: '0~50 사이의 숫자를 입력해주세요.',
                 min: [0, '0 이상 입력해주세요.'],
@@ -199,15 +148,15 @@ export default function ResumeForm() {
               }}
               placeholder="숫자를 입력해주세요."
               control={control}
-              errors={errors.cert}
+              errors={errors.certification_count}
             />
           )}
 
           {/* 프로젝트 개수 */}
-          {visibleFields.project && (
+          {visibleFields.project_count && (
             <NumberForm
               title="프로젝트 개수*"
-              controllerName="project"
+              controllerName="project_count"
               rules={{
                 required: '0~10 사이의 숫자를 입력해주세요.',
                 min: [0, '0 이상 입력해주세요.'],
@@ -215,19 +164,19 @@ export default function ResumeForm() {
               }}
               placeholder="이력서에 추가할 프로젝트 개수를 입력해주세요."
               control={control}
-              errors={errors.project}
+              errors={errors.project_count}
             />
           )}
 
           {/* 전공자/비전공자 */}
-          {visibleFields.major && (
+          {visibleFields.major_type && (
             <div className="flex flex-col w-full gap-1">
               <div className="text-sm flex w-full">
                 <p className=" font-medium mr-auto">전공자/비전공자*</p>
               </div>
               <Controller
                 control={control}
-                name="major"
+                name="major_type"
                 render={({ field }) => (
                   <RadioGroup
                     className="flex space-x-6"
@@ -235,18 +184,18 @@ export default function ResumeForm() {
                     value={field.value}
                   >
                     <div className="flex items-center space-x-2 p-1">
-                      <RadioGroupItem value={'major'} id={'major'} className="min-h-5 min-w-5" />
-                      <label htmlFor={'major'} className={cn(`cursor-pointer`)}>
+                      <RadioGroupItem value={'MAJOR'} id={'MAJOR'} className="min-h-5 min-w-5" />
+                      <label htmlFor={'MAJOR'} className={cn(`cursor-pointer`)}>
                         전공자
                       </label>
                     </div>
                     <div className="flex items-center space-x-2 p-1">
                       <RadioGroupItem
-                        value={'nonMajor'}
-                        id={'nonMajor'}
+                        value={'NON_MAJOR'}
+                        id={'NON_MAJOR'}
                         className="min-h-5 min-w-5"
                       />
-                      <label htmlFor={'nonMajor'} className={cn(`cursor-pointer`)}>
+                      <label htmlFor={'NON_MAJOR'} className={cn(`cursor-pointer`)}>
                         비전공자
                       </label>
                     </div>
@@ -267,14 +216,14 @@ export default function ResumeForm() {
               {/* 근무 기간 */}
               <NumberForm
                 title="근무 기간"
-                controllerName="workPeriod"
+                controllerName="work_period"
                 rules={{
                   min: [1, '1 이상 입력해주세요.'],
                   max: [999, '999 이하까지만 입력 가능합니다.'],
                 }}
                 placeholder="월 단위로 입력해주세요."
                 control={control}
-                errors={errors.workPeriod}
+                errors={errors.work_period}
               />
 
               {/* 직무 */}
@@ -292,13 +241,13 @@ export default function ResumeForm() {
               {/* 기타 어필 */}
               <LongTextForm
                 title="기타 어필"
-                controllerName="appeal"
+                controllerName="additional_experiences"
                 rules={{
                   maxLength: [100, '입력을 확인해주세요. (최대 100자)'],
                 }}
                 placeholder="TOPCIT, 수상이력, 기술 스터디, 대회 참가 이력..."
                 control={control}
-                errors={errors.appeal}
+                errors={errors.additional_experiences}
               />
             </>
           )}
