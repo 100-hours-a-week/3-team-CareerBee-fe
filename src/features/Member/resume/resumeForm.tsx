@@ -12,13 +12,26 @@ import LongTextForm from '@/features/Member/resume/components/longtextForm';
 import { baekjoonTierItems } from './config/baekjoonTierItems';
 import { submitResume } from './util/submitResume';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
+import { useResumeStore } from './store/resumeStore';
 
 import { cn } from '@/lib/utils';
 import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
-import { useResumeStore } from './store/resumeStore';
+import { useNavigate } from 'react-router-dom';
+
+export interface ResumeFormValues {
+  position: string;
+  tier: string;
+  certification_count: number;
+  project_count: number;
+  major_type: string;
+  work_period: number;
+  role: string;
+  additional_experiences: string;
+}
 
 export default function ResumeForm() {
+  const navigate = useNavigate();
   const token = useAuthStore((state) => state.token);
 
   const { resume } = useResumeStore();
@@ -84,7 +97,7 @@ export default function ResumeForm() {
       </div>
       <form
         onSubmit={handleSubmit((data) => {
-          submitResume(data, token);
+          submitResume(data, token, navigate);
         })}
       >
         <div className="flex flex-col gap-2 w-full">
