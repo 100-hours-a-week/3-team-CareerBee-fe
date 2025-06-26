@@ -7,9 +7,11 @@ import { uploadPdf } from './util/uploadPdf';
 
 import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Upload() {
   const token = useAuthStore((state) => state.token);
+  const navigate = useNavigate();
 
   const {
     watch,
@@ -123,6 +125,7 @@ export default function Upload() {
               label="완료"
               variant="primary"
               className="w-40"
+              onClick={() => navigate('/resume/form')}
             />
           </div>
         </form>

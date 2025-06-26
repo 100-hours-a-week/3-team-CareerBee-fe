@@ -30,7 +30,6 @@ export const uploadPdf = async (e: React.FormEvent<HTMLFormElement>, token: stri
       );
       if (res.httpStatusCode === 200) {
         useResumeStore.getState().setResume(res.data);
-        window.location.href = '/resume/form';
       }
     } catch (err: any) {
       alert(err);
