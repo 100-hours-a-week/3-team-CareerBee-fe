@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export interface resumeProps {
+interface resumeProps {
   certificationCount: number;
   projectCount: number;
   majorType: string;
