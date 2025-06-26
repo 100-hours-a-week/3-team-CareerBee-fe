@@ -57,7 +57,7 @@ export const updateTransition = <El extends SVGElement, ParentEl extends d3.Base
 };
 
 export const imageElement = (
-  svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>,
+  svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
   xPadding: number,
   yPaddingTop: number,
   size: number,
@@ -97,7 +97,7 @@ export const imageElement = (
 };
 
 export const textElement = (
-  svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>,
+  svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
   xPadding: number,
   yPaddingTop: number,
   elem: string,
@@ -165,7 +165,7 @@ export const textElement = (
 };
 
 export const bars = (
-  svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>,
+  svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
   defs: d3.Selection<SVGDefsElement, unknown, null, undefined>,
   scaleFns: ScaleFns,
   isPeriodic: boolean = false,
@@ -211,7 +211,7 @@ export const bars = (
 };
 
 export const background = (
-  svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>,
+  svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
   scaleFns: ScaleFns,
 ) => {
   let background = svg.append('g').selectAll<SVGImageElement, ChartProps>('image');

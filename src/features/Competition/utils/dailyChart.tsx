@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 // import { mockChart } from '@/features/Competition/config/mock-chartdata';
 // import { mockChart2 } from '@/features/Competition/config/mock-chartdata2';
+import { useTopRankings } from '../hooks/useTopRanking';
 
 import {
   ScaleFns,
@@ -30,22 +31,34 @@ const scaleFns: ScaleFns = {
   },
 };
 
-export default function BarChart({ rankingData }: { rankingData: ChartProps[] }) {
+export default function BarChart() {
+  const { data: topRankings } = useTopRankings();
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const rankingData: ChartProps[] = topRankings?.daily!;
   let prev = rankingData;
 
+  const updateBars = useRef<((data: ChartProps[]) => void) | null>(null);
+  const updateBackground = useRef<((data: ChartProps[]) => void) | null>(null);
+  const updateRanks = useRef<((data: ChartProps[]) => void) | null>(null);
+  const updateProfileImg = useRef<((data: ChartProps[]) => void) | null>(null);
+  const updateNickname = useRef<((data: ChartProps[]) => void) | null>(null);
+  const updateTime = useRef<((data: ChartProps[]) => void) | null>(null);
+  const updateSolved = useRef<((data: ChartProps[]) => void) | null>(null);
+
   useEffect(() => {
+    if (!svgRef.current) return;
+
     const svg = d3
-      .select(svgRef.current)
+      .select(svgRef.current!)
       .attr('viewBox', `0,0,${width},${height}`)
       .attr('width', width)
       .attr('height', height);
 
     const defs = svg.append('defs');
 
-    const updateBars = bars(svg, defs, scaleFns);
-    const updateBackground = background(svg, scaleFns);
-    const updateRanks = textElement(
+    updateBars.current = bars(svg, defs, scaleFns);
+    updateBackground.current = background(svg, scaleFns);
+    updateRanks.current = textElement(
       svg,
       16,
       (barHeight + gap * 2) / 2,
@@ -58,8 +71,8 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
       prev,
       scaleFns,
     );
-    const updateProfileImg = imageElement(svg, 40, 4, 32, 'profileUrl', prev, scaleFns);
-    const updateNickname = textElement(
+    updateProfileImg.current = imageElement(svg, 40, 4, 32, 'profileUrl', prev, scaleFns);
+    updateNickname.current = textElement(
       svg,
       96,
       (barHeight + gap * 2) / 2,
@@ -72,7 +85,7 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
       prev,
       scaleFns,
     );
-    const updateTime = textElement(
+    updateTime.current = textElement(
       svg,
       width - 116,
       (barHeight + gap * 2) / 2,
@@ -85,7 +98,7 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
       prev,
       scaleFns,
     );
-    const updateSolved = textElement(
+    updateSolved.current = textElement(
       svg,
       width - 36,
       (barHeight + gap * 2) / 2,
@@ -99,38 +112,24 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
       scaleFns,
       true,
     );
-    updateBars(rankingData);
-    updateBackground(rankingData);
-    updateRanks(rankingData);
-    updateProfileImg(rankingData);
-    updateNickname(rankingData);
-    updateTime(rankingData);
-    updateSolved(rankingData);
-    prev = rankingData;
-    // updateBars(mock[0]);
-    // updateBackground(mock[0]);
-    // updateRanks(mock[0]);
-    // updateProfileImg(mock[0]);
-    // updateNickname(mock[0]);
-    // updateTime(mock[0]);
-    // updateSolved(mock[0]);
-    // prev = mock[0];
-
-    // // 목데이터
-    // setTimeout(() => {
-    //   updateBars(mock[1]);
-    //   updateBackground(mock[1]);
-    //   updateRanks(mock[1]);
-    //   updateProfileImg(mock[1]);
-    //   updateNickname(mock[1]);
-    //   updateTime(mock[1]);
-    //   updateSolved(mock[1]);
-    // }, 3000);
   }, []);
+
+  useEffect(() => {
+    // console.log(rankingData);
+    if (!rankingData) return;
+    updateBars.current?.(rankingData);
+    updateBackground.current?.(rankingData);
+    updateRanks.current?.(rankingData);
+    updateProfileImg.current?.(rankingData);
+    updateNickname.current?.(rankingData);
+    updateTime.current?.(rankingData);
+    updateSolved.current?.(rankingData);
+    // prev = rankingData;
+  }, [rankingData]);
 
   return (
     <>
-      <svg ref={svgRef}> </svg>
+      <svg ref={svgRef}></svg>
     </>
   );
 }
