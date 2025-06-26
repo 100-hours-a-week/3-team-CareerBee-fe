@@ -45,7 +45,7 @@ export default function Upload() {
             <p>이력서를 업로드하면, 더 정밀한 분석 결과를 받아볼 수 있어요.</p>
           </div>
         </div>
-        <form onSubmit={(e) => uploadPdf(e, token)}>
+        <form onSubmit={(e) => uploadPdf(e, token, navigate)}>
           <div className="flex flex-col w-full items-center gap-2">
             <label
               htmlFor="resume-upload"
@@ -125,7 +125,7 @@ export default function Upload() {
               label="완료"
               variant="primary"
               className="w-40"
-              onClick={() => navigate('/resume/form')}
+              // onClick={() => navigate('/resume/form')}
             />
           </div>
         </form>
