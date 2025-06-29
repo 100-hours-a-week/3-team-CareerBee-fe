@@ -35,7 +35,10 @@ export default function BarChart() {
   const { data: topRankings } = useTopRankings();
   const svgRef = useRef<SVGSVGElement | null>(null);
   const rankingData: ChartProps[] = topRankings?.daily!;
-  let prev = rankingData;
+  // let prev = rankingData;
+
+  const prev = useRef<ChartProps[]>([]);
+  // prev.current = rankingData;
 
   const updateBars = useRef<((data: ChartProps[]) => void) | null>(null);
   const updateBackground = useRef<((data: ChartProps[]) => void) | null>(null);
@@ -68,10 +71,10 @@ export default function BarChart() {
       'rank',
       false,
       false,
-      prev,
+      prev.current,
       scaleFns,
     );
-    updateProfileImg.current = imageElement(svg, 40, 4, 32, 'profileUrl', prev, scaleFns);
+    updateProfileImg.current = imageElement(svg, 40, 4, 32, 'profileUrl', prev.current, scaleFns);
     updateNickname.current = textElement(
       svg,
       96,
@@ -82,7 +85,7 @@ export default function BarChart() {
       'nickname',
       false,
       false,
-      prev,
+      prev.current,
       scaleFns,
     );
     updateTime.current = textElement(
@@ -92,10 +95,10 @@ export default function BarChart() {
       'elapsedTime',
       '400',
       '10px',
-      undefined,
+      'nickname',
       true,
       false,
-      prev,
+      prev.current,
       scaleFns,
     );
     updateSolved.current = textElement(
@@ -105,17 +108,18 @@ export default function BarChart() {
       'solvedCount',
       '400',
       '10px',
-      undefined,
+      'nickname',
       true,
       true,
-      prev,
+      prev.current,
       scaleFns,
       true,
     );
   }, []);
 
   useEffect(() => {
-    // console.log(rankingData);
+    console.log('rankingData', rankingData);
+    console.log('prev.current', prev.current);
     if (!rankingData) return;
     updateBars.current?.(rankingData);
     updateBackground.current?.(rankingData);
@@ -124,7 +128,9 @@ export default function BarChart() {
     updateNickname.current?.(rankingData);
     updateTime.current?.(rankingData);
     updateSolved.current?.(rankingData);
-    // prev = rankingData;
+    // setTimeout(() => {
+    prev.current = rankingData;
+    // }, 1000);
   }, [rankingData]);
 
   return (
