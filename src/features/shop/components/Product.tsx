@@ -13,14 +13,16 @@ export interface ProductProps {
 
 const Product = ({ ticket, productImage, productDescription }: ProductProps) => {
   return (
-    <div className="flex flex-col items-center">
-      <img src={ticket.ticketImage} alt={ticket.title} />
-      <p>뽑기권</p>
-      <p>{ticket.point} 포인트</p>
-      <Button label="구매하기" className="w-full" variant="primary" />
-      <li className="border-border"></li>
-      <img src={productImage} alt={productDescription} />
-      <p>{productDescription}</p>
+    <div className="flex flex-col items-center gap-[10px]">
+      <div className="flex flex-col items-center gap-1">
+        <img src={ticket.ticketImage} alt={ticket.title} className="w-20 h-20" />
+        <p className="font-ria">{ticket.title}</p>
+        <p>{ticket.point} 포인트</p>
+      </div>
+      <Button label="구매하기" className="rounded-full px-6" variant="primary" />
+      <hr className="border-border w-full my-[10px]"></hr>
+      <img src={productImage} alt={productDescription} className="w-[108px] h-[108px]" />
+      <p className="text-center">{productDescription}</p>
     </div>
   );
 };
