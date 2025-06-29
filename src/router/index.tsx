@@ -22,6 +22,8 @@ import ResumeForm from '@/features/Member/resume/resumeForm';
 import Upload from '@/features/Member/resume/upload';
 import RequireMyAuth from '@/features/Member/auth/components/RequireMyAuth';
 
+import Shop from '@/features/shop';
+
 const showUnreleased = import.meta.env.VITE_SHOW_UNRELEASED === 'true';
 const thisIsEmily = import.meta.env.VITE_THIS_IS_EMILY === 'true';
 
@@ -29,44 +31,70 @@ const AuthWrapper = () => {
   return thisIsEmily ? <Outlet /> : <RequireMyAuth />;
 };
 
+// 이력서
+const resumeRoutes = [
+  {
+    path: 'resume/form',
+    element: showUnreleased ? <ResumeForm /> : <ToBeContinued />,
+  },
+  {
+    path: 'resume/upload',
+    element: showUnreleased ? <Upload /> : <ToBeContinued />,
+  },
+];
+
+// 회원
+const myRoutes = [
+  { path: 'my', element: <Mypage /> },
+  {
+    path: 'my/account',
+    element: (
+      <DirtyProvider>
+        <Account />
+      </DirtyProvider>
+    ),
+  },
+  { path: 'my/account/quit', element: <Quit /> },
+];
+const serviceRoutes = [{ path: 'service/developers', element: <Developers /> }];
+
+// 대회
+const competitionRoutes = [
+  { path: 'competition', element: <Ranking /> },
+  { path: 'competition/entry', element: <Competition /> },
+];
+
+const protectedRoutes = [
+  ...myRoutes,
+  ...serviceRoutes,
+  ...resumeRoutes,
+  { path: 'notification', element: <Notification /> },
+  ...competitionRoutes.filter((r) => r.path.includes('entry')),
+];
+
+const publicRoutes = [
+  { path: '', element: <Main /> },
+  { path: 'company/:id', element: <CompanyDetail /> },
+  ...competitionRoutes.filter((r) => r.path === 'competition'),
+  { path: 'login', element: <Login /> },
+  { path: 'login-required', element: <LoginRequired /> },
+  { path: 'oauth/callback/kakao', element: <OAuthCallback /> },
+  { path: 'interview/questions/:id', element: <ToBeContinued /> },
+  { path: 'interview/saved', element: <ToBeContinued /> },
+  { path: 'interview', element: <ToBeContinued /> },
+  { path: 'shop', element: showUnreleased ? <Shop /> : <ToBeContinued /> },
+];
+
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
     children: [
-      { path: '', element: <Main /> },
-      { path: 'company/:id', element: <CompanyDetail /> },
-      { path: 'competition', element: <Ranking /> },
+      ...publicRoutes,
       {
         element: <AuthWrapper />,
-        children: [
-          { path: 'my', element: <Mypage /> },
-          {
-            path: 'my/account',
-            element: (
-              <DirtyProvider>
-                <Account />
-              </DirtyProvider>
-            ),
-          },
-          { path: 'notification', element: <Notification /> },
-          {
-            path: 'competition/entry',
-            element: <Competition />,
-          },
-          { path: 'my/account/quit', element: <Quit /> },
-          {
-            path: 'service/developers',
-            element: <Developers />,
-          },
-          { path: 'resume/form', element: showUnreleased ? <ResumeForm /> : <ToBeContinued /> },
-          { path: 'resume/upload', element: showUnreleased ? <Upload /> : <ToBeContinued /> },
-        ],
+        children: protectedRoutes,
       },
-      { path: 'login', element: <Login /> },
-      { path: 'login-required', element: <LoginRequired /> },
-      { path: 'oauth/callback/kakao', element: <OAuthCallback /> },
-      { path: '*', element: <ToBeContinued /> },
     ],
   },
   {

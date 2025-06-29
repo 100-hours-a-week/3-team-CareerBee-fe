@@ -182,7 +182,7 @@ export default function Ranking() {
             disabled={!competitionTime || alreadyEntered || !token}
             onClick={() => {
               if (!token) {
-                window.location.href = '/login';
+                navigate('/login');
                 return;
               }
               navigate('/competition/entry');

@@ -11,8 +11,10 @@ import { useAuthStore } from '@/features/Member/auth/store/auth';
 
 import { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
 export default function Account() {
+  const navigate = useNavigate();
   const { data: userInfo } = useUserInfo();
   const [nickname, setNickname] = useState('');
   const email = userInfo?.email ?? 'test@example.com';
@@ -68,14 +70,20 @@ export default function Account() {
                 SubmitProfileUpdate({
                   nickname: isNicknameDirty ? nickname : userInfo.nickname,
                   profileUrl: isProfileImageDirty
-                    ? await handlePresignedUrl(file, token)
-                    : userInfo.profileUrl,
+                    ? await handlePresignedUrl({
+                        file,
+                        token,
+                        type: 'image',
+                        uploadType: 'PROFILE_IMAGE',
+                      })
+                    : undefined,
                   setIsNicknameDirty,
                   setIsProfileImageDirty,
                   setHelperText: (value: string) => setHelperText(value),
                   token,
                   isProfileImageDirty,
                 });
+                queryClient.invalidateQueries({ queryKey: ['userinfo'] });
               }}
             >
               <ProfileImageUploader onFileSelect={setFile} />
@@ -134,7 +142,7 @@ export default function Account() {
             variant="link"
             className="underline pl-3 py-2"
             onClick={() => {
-              window.location.href = '/my/account/quit';
+              navigate('/my/account/quit');
             }}
           ></Button>
         </div>
