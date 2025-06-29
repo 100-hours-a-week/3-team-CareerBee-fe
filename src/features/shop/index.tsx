@@ -1,10 +1,10 @@
 import Intro from './components/Intro';
+import ProductList from './components/ProductList';
 
 const Shop = () => (
-  <div>
+  <div className="overflow-y-auto">
     <Intro />
-    {/* Additional shop components can be added here */}
-    {/* For example, a product list, cart, etc. */}
+    <ProductList />
   </div>
 );
 
