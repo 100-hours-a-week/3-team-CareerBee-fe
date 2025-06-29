@@ -22,6 +22,8 @@ import ResumeForm from '@/features/Member/resume/resumeForm';
 import Upload from '@/features/Member/resume/upload';
 import RequireMyAuth from '@/features/Member/auth/components/RequireMyAuth';
 
+import Shop from '@/features/shop';
+
 const showUnreleased = import.meta.env.VITE_SHOW_UNRELEASED === 'true';
 const thisIsEmily = import.meta.env.VITE_THIS_IS_EMILY === 'true';
 
@@ -29,7 +31,7 @@ const AuthWrapper = () => {
   return thisIsEmily ? <Outlet /> : <RequireMyAuth />;
 };
 
-// Domain-specific route groups
+// 이력서
 const resumeRoutes = [
   {
     path: 'resume/form',
@@ -41,6 +43,7 @@ const resumeRoutes = [
   },
 ];
 
+// 회원
 const myRoutes = [
   { path: 'my', element: <Mypage /> },
   {
@@ -53,9 +56,9 @@ const myRoutes = [
   },
   { path: 'my/account/quit', element: <Quit /> },
 ];
-
 const serviceRoutes = [{ path: 'service/developers', element: <Developers /> }];
 
+// 대회
 const competitionRoutes = [
   { path: 'competition', element: <Ranking /> },
   { path: 'competition/entry', element: <Competition /> },
@@ -79,7 +82,7 @@ const publicRoutes = [
   { path: 'interview/questions/:id', element: <ToBeContinued /> },
   { path: 'interview/saved', element: <ToBeContinued /> },
   { path: 'interview', element: <ToBeContinued /> },
-  { path: 'store', element: <ToBeContinued /> },
+  { path: 'shop', element: <Shop /> },
 ];
 
 export const router = createBrowserRouter([
