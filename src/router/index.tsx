@@ -82,7 +82,7 @@ const publicRoutes = [
   { path: 'interview/questions/:id', element: <ToBeContinued /> },
   { path: 'interview/saved', element: <ToBeContinued /> },
   { path: 'interview', element: <ToBeContinued /> },
-  { path: 'shop', element: <Shop /> },
+  { path: 'shop', element: showUnreleased ? <Shop /> : <ToBeContinued /> },
 ];
 
 export const router = createBrowserRouter([
