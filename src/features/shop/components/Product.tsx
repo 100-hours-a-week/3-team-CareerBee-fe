@@ -1,6 +1,4 @@
 import { Button } from '@/components/ui/button';
-
-export type TicketType = 'red' | 'green' | 'blue';
 export interface ProductProps {
   ticket: {
     title: string;
