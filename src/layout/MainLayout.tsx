@@ -48,7 +48,7 @@ export default function MainLayout() {
           hasNewNotification={userInfo?.hasNewAlarm}
           point={userInfo?.point}
         />
-        <main className="flex flex-col flex-1 w-full h-[calc(100dvh-120px)]">
+        <main className="flex flex-col flex-1 w-full h-[calc(100dvh-120px)] overflow-y-auto">
           <Outlet key={location.pathname} />
         </main>
         {showNavbar() ? <Navbar /> : null}
