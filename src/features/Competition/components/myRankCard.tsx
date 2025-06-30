@@ -8,9 +8,9 @@ import { useEffect, useState } from 'react';
 
 const rankCardStyles = {
   1: { bgImage: 'red-rank.svg', width: '440px' },
-  2: { bgImage: 'green-rank.svg', width: '432px' },
-  3: { bgImage: 'blue-rank.svg', width: '424px' },
-  default: { bgImage: 'yellow-rank.svg', width: '416px' },
+  2: { bgImage: 'green-rank.svg', width: '430px' },
+  3: { bgImage: 'blue-rank.svg', width: '420px' },
+  default: { bgImage: 'yellow-rank.svg', width: '410px' },
 };
 
 interface MyRankCardProps {
@@ -65,7 +65,7 @@ export default function MyRankCard({ rankingView, competitionTime }: MyRankCardP
   return (
     <>
       <div className="mb-1 text-sm font-bold tracking-tighter">. . .</div>
-      <div className="overflow-x-hidden">
+      <div className="overflow-x-hidden w-[440px] justify-items-end">
         <motion.div
           initial={{ x: '100%' }}
           animate={{ x: 0 }}
