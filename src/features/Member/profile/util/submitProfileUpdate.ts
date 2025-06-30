@@ -4,8 +4,6 @@ import { toast } from '@/hooks/useToast';
 export const SubmitProfileUpdate = async ({
   nickname,
   profileUrl,
-  onSuccess,
-  onError,
   setIsNicknameDirty,
   setIsProfileImageDirty,
   setHelperText,
@@ -14,8 +12,6 @@ export const SubmitProfileUpdate = async ({
 }: {
   nickname?: string;
   profileUrl?: string | null;
-  onSuccess?: () => void;
-  onError?: () => void;
   setIsNicknameDirty: (_value: boolean) => void;
   setIsProfileImageDirty: (_value: boolean) => void;
   setHelperText: (_value: string) => void;
@@ -36,7 +32,6 @@ export const SubmitProfileUpdate = async ({
     toast({ title: '저장 완료', variant: 'success' });
     setIsNicknameDirty(false);
     setIsProfileImageDirty(false);
-    onSuccess?.();
   } catch (err: any) {
     //TODO: 아마 여기서는 안 잡힐거임.... request에서 잡기 때문에...
     //request에서 잡아도 위로 throw할 수는 없을까???
@@ -47,6 +42,5 @@ export const SubmitProfileUpdate = async ({
       setHelperText('');
       toast({ title: '정보 수정에 실패했습니다.', variant: 'destructive' });
     }
-    onError?.();
   }
 };

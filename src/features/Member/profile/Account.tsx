@@ -36,7 +36,7 @@ export default function Account() {
 
   const queryClient = useQueryClient();
   useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ['userinfo'] });
+    queryClient.invalidateQueries({ queryKey: ['userInfo'] });
   }, []);
 
   useEffect(() => {
@@ -67,7 +67,7 @@ export default function Account() {
             <form
               onSubmit={async (e) => {
                 e.preventDefault();
-                SubmitProfileUpdate({
+                await SubmitProfileUpdate({
                   nickname: isNicknameDirty ? nickname : userInfo.nickname,
                   profileUrl: isProfileImageDirty
                     ? await handlePresignedUrl({
@@ -83,7 +83,7 @@ export default function Account() {
                   token,
                   isProfileImageDirty,
                 });
-                queryClient.invalidateQueries({ queryKey: ['userinfo'] });
+                queryClient.refetchQueries({ queryKey: ['userInfo'] });
               }}
             >
               <ProfileImageUploader onFileSelect={setFile} />
