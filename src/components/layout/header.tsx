@@ -4,19 +4,19 @@ import logo from '@/static/logo-with-text-2.png';
 import { StateBasedModal } from '@/components/ui/modal';
 
 import { useUiStore } from '@/store/ui';
-import { useState } from 'react';
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
+import { useUserInfo } from '@/hooks/useUserInfo';
+
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 
 interface HeaderProps {
   type: 'main' | 'login' | 'down' | 'downLogin' | 'nav' | 'navLogin' | 'minimal';
-  point?: number;
-  hasNewNotification?: boolean;
 }
 
-export const Header = ({ type = 'main', point, hasNewNotification }: HeaderProps) => {
+export const Header = ({ type = 'main' }: HeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [showBackConfirmModal, setShowBackConfirmModal] = useState(false);
@@ -42,6 +42,9 @@ export const Header = ({ type = 'main', point, hasNewNotification }: HeaderProps
       navigate('/'); // 메인 페이지로 이동
     }
   };
+
+  const { data: userInfo } = useUserInfo();
+
   return (
     <header className={cn('flex items-center justify-between px-4 h-14 w-full')}>
       {/* 왼쪽 영역 */}
@@ -97,15 +100,15 @@ export const Header = ({ type = 'main', point, hasNewNotification }: HeaderProps
 
       {/* 오른쪽 영역 */}
       <div className="flex items-center gap-3">
-        {showUserAssets ? (
+        {showUserAssets && userInfo ? (
           <>
             <div className="flex items-center gap-2">
               <img src="/assets/coin-small.svg" alt="포인트" className="w-8 h-8 rounded-full" />
-              <span className="text-lg font-semibold">{point}</span>
+              <span className="text-lg font-semibold">{userInfo.point ?? 0}</span>
             </div>
             <Link to="/notification" className="relative">
               <PiBell className="w-8 h-8" />
-              {hasNewNotification && (
+              {userInfo.hasNewNotification && (
                 <span className="absolute top-1 right-1 block h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background" />
               )}
             </Link>
