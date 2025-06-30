@@ -33,13 +33,13 @@ export default function BarChart() {
   const [rankingData, setRankingData] = useState<ChartProps[]>(topRankings?.daily ?? []);
   const prev = useRef<ChartProps[]>([]);
 
-  const updateBars = useRef<((data: ChartProps[]) => void) | null>(null);
-  const updateBackground = useRef<((data: ChartProps[]) => void) | null>(null);
-  const updateRanks = useRef<((data: ChartProps[]) => void) | null>(null);
-  const updateProfileImg = useRef<((data: ChartProps[]) => void) | null>(null);
-  const updateNickname = useRef<((data: ChartProps[]) => void) | null>(null);
-  const updateTime = useRef<((data: ChartProps[]) => void) | null>(null);
-  const updateSolved = useRef<((data: ChartProps[]) => void) | null>(null);
+  const updateBars = useRef<((_data: ChartProps[]) => void) | null>(null);
+  const updateBackground = useRef<((_data: ChartProps[]) => void) | null>(null);
+  const updateRanks = useRef<((_data: ChartProps[]) => void) | null>(null);
+  const updateProfileImg = useRef<((_data: ChartProps[]) => void) | null>(null);
+  const updateNickname = useRef<((_data: ChartProps[]) => void) | null>(null);
+  const updateTime = useRef<((_data: ChartProps[]) => void) | null>(null);
+  const updateSolved = useRef<((_data: ChartProps[]) => void) | null>(null);
 
   useEffect(() => {
     if (!svgRef.current) return;
