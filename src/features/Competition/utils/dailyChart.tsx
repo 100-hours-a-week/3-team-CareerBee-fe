@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-// import { mockChart } from '@/features/Competition/config/mock-chartdata';
-// import { mockChart2 } from '@/features/Competition/config/mock-chartdata2';
+import { useState } from 'react';
 import { useTopRankings } from '../hooks/useTopRanking';
 
 import {
@@ -12,10 +11,6 @@ import {
   background,
 } from '@/features/Competition/utils/chartUtils';
 import { ChartProps } from '@/features/Competition/hooks/useTopRanking';
-
-//목데이터
-// let prev = mockChart;
-// const mock = [mockChart, mockChart2];
 
 const width = 440;
 const height = 436;
@@ -34,11 +29,9 @@ const scaleFns: ScaleFns = {
 export default function BarChart() {
   const { data: topRankings } = useTopRankings();
   const svgRef = useRef<SVGSVGElement | null>(null);
-  const rankingData: ChartProps[] = topRankings?.daily!;
-  // let prev = rankingData;
 
+  const [rankingData, setRankingData] = useState<ChartProps[]>(topRankings?.daily ?? []);
   const prev = useRef<ChartProps[]>([]);
-  // prev.current = rankingData;
 
   const updateBars = useRef<((data: ChartProps[]) => void) | null>(null);
   const updateBackground = useRef<((data: ChartProps[]) => void) | null>(null);
@@ -68,13 +61,12 @@ export default function BarChart() {
       'rank',
       'bold',
       '12px',
-      'rank',
       false,
       false,
-      prev.current,
+      prev,
       scaleFns,
     );
-    updateProfileImg.current = imageElement(svg, 40, 4, 32, 'profileUrl', prev.current, scaleFns);
+    updateProfileImg.current = imageElement(svg, 40, 4, 32, 'profileUrl', prev, scaleFns);
     updateNickname.current = textElement(
       svg,
       96,
@@ -82,10 +74,9 @@ export default function BarChart() {
       'nickname',
       '400',
       '12px',
-      'nickname',
       false,
       false,
-      prev.current,
+      prev,
       scaleFns,
     );
     updateTime.current = textElement(
@@ -95,10 +86,9 @@ export default function BarChart() {
       'elapsedTime',
       '400',
       '10px',
-      'nickname',
       true,
       false,
-      prev.current,
+      prev,
       scaleFns,
     );
     updateSolved.current = textElement(
@@ -108,18 +98,15 @@ export default function BarChart() {
       'solvedCount',
       '400',
       '10px',
-      'nickname',
       true,
       true,
-      prev.current,
+      prev,
       scaleFns,
       true,
     );
   }, []);
 
   useEffect(() => {
-    console.log('rankingData', rankingData);
-    console.log('prev.current', prev.current);
     if (!rankingData) return;
     updateBars.current?.(rankingData);
     updateBackground.current?.(rankingData);
@@ -128,10 +115,14 @@ export default function BarChart() {
     updateNickname.current?.(rankingData);
     updateTime.current?.(rankingData);
     updateSolved.current?.(rankingData);
-    // setTimeout(() => {
     prev.current = rankingData;
-    // }, 1000);
   }, [rankingData]);
+
+  useEffect(() => {
+    if (topRankings?.daily) {
+      setRankingData(topRankings.daily);
+    }
+  }, [topRankings]);
 
   return (
     <>
