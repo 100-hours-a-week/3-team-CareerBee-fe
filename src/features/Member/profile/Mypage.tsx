@@ -24,7 +24,7 @@ export default function Mypage() {
       (window.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming).type ==
         'back_forward'
     ) {
-      queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+      queryClient.refetchQueries({ queryKey: ['userInfo'] });
     }
   };
 
