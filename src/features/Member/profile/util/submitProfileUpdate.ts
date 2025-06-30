@@ -5,18 +5,18 @@ export const SubmitProfileUpdate = async ({
   nickname,
   profileUrl,
   setIsNicknameDirty,
+  isProfileImageDirty,
   setIsProfileImageDirty,
   setHelperText,
   token,
-  isProfileImageDirty,
 }: {
   nickname?: string;
   profileUrl?: string | null;
   setIsNicknameDirty: (_value: boolean) => void;
+  isProfileImageDirty: boolean;
   setIsProfileImageDirty: (_value: boolean) => void;
   setHelperText: (_value: string) => void;
   token: string | null;
-  isProfileImageDirty: boolean;
 }) => {
   if (!token) return;
 
@@ -33,14 +33,7 @@ export const SubmitProfileUpdate = async ({
     setIsNicknameDirty(false);
     setIsProfileImageDirty(false);
   } catch (err: any) {
-    //TODO: 아마 여기서는 안 잡힐거임.... request에서 잡기 때문에...
-    //request에서 잡아도 위로 throw할 수는 없을까???
-    //아니면... 409의 경우만 catch에서 빼기???
-    if (err.response?.status === 409) {
-      setHelperText('이미 존재하는 변경값입니다.');
-    } else {
-      setHelperText('');
-      toast({ title: '정보 수정에 실패했습니다.', variant: 'destructive' });
-    }
+    setHelperText('');
+    toast({ title: '정보 수정에 실패했습니다.', variant: 'destructive' });
   }
 };

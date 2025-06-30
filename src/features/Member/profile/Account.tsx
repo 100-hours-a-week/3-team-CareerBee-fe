@@ -1,7 +1,7 @@
 import Footer from './components/footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import ProfileImageUploader from './components/profileImageUploader';
+import ProfileImageInput from './components/profileImageInput';
 
 import { SubmitProfileUpdate } from './util/submitProfileUpdate';
 import { useUserInfo } from '@/hooks/useUserInfo';
@@ -16,6 +16,8 @@ import { useNavigate } from 'react-router-dom';
 export default function Account() {
   const navigate = useNavigate();
   const { data: userInfo } = useUserInfo();
+  const queryClient = useQueryClient();
+
   const [nickname, setNickname] = useState('');
   const email = userInfo?.email ?? 'test@example.com';
   const [file, setFile] = useState<File | null>(null);
@@ -34,27 +36,13 @@ export default function Account() {
     setIsNicknameDirty(nickname !== originalNickname && nickname != '');
   }, [nickname, userInfo]);
 
-  const queryClient = useQueryClient();
   useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ['userInfo'] });
-  }, []);
-
-  useEffect(() => {
-    if (userInfo?.nickname) {
-      setNickname(userInfo.nickname);
-    }
-  }, [userInfo?.nickname]);
-
-  useEffect(() => {
-    if (nickname == '') {
-      setHelperText('*닉네임을 입력해주세요.');
-    }
     if (isAnyDirty) {
       setHelperText('*저장하기를 눌러주세요.');
     } else {
       setHelperText('');
     }
-  }, [nickname, isAnyDirty]);
+  }, [isAnyDirty]);
 
   const token = useAuthStore((state) => state.token);
 
@@ -78,15 +66,15 @@ export default function Account() {
                       })
                     : undefined,
                   setIsNicknameDirty,
+                  isProfileImageDirty,
                   setIsProfileImageDirty,
                   setHelperText: (value: string) => setHelperText(value),
                   token,
-                  isProfileImageDirty,
                 });
                 queryClient.refetchQueries({ queryKey: ['userInfo'] });
               }}
             >
-              <ProfileImageUploader onFileSelect={setFile} />
+              <ProfileImageInput onFileSelect={setFile} />
               <p className="flex w-full justify-end text-xs text-error h-4">{helperText}</p>
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-1">
@@ -95,7 +83,23 @@ export default function Account() {
                     className="px-3 py-1"
                     value={nickname}
                     onChange={(e) => {
-                      setNickname(e.target.value);
+                      const value = e.target.value;
+                      const space = /\s/;
+                      const pattern = /^[ㄱ-ㅎ가-힣a-zA-Z0-9]*$/;
+
+                      if (value === '') {
+                        setNickname('');
+                        setHelperText('*닉네임을 입력해주세요.');
+                      } else if (value.length > 20) {
+                        setHelperText('*닉네임은 20자 이내로 입력해주세요.');
+                      } else if (space.test(value)) {
+                        setHelperText('*띄어쓰기는 사용할 수 없어요.');
+                      } else if (pattern.test(value)) {
+                        setNickname(value);
+                        setHelperText('');
+                      } else {
+                        setHelperText('*닉네임에는 한글, 영문, 숫자만 사용할 수 있어요.');
+                      }
                     }}
                   />
                 </div>
