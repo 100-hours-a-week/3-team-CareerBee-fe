@@ -47,7 +47,7 @@ export const safeRequest = async <T = any>(
 export const safeGet = async <T = any>(
   url: string,
   config?: AxiosRequestConfig,
-): Promise<T | null> => {
+): Promise<T | { status: number } | null> => {
   return safeRequest<T>({ method: 'GET', url, ...config });
 };
 
@@ -56,7 +56,7 @@ export const safePost = async <T = any>(
   url: string,
   data?: any,
   config?: AxiosRequestConfig,
-): Promise<T | null> => {
+): Promise<T | { status: number } | null> => {
   return safeRequest<T>({ method: 'POST', url, data, ...config });
 };
 
@@ -65,7 +65,7 @@ export const safePatch = async <T = any>(
   url: string,
   data?: any,
   config?: AxiosRequestConfig,
-): Promise<T | null> => {
+): Promise<T | { status: number } | null> => {
   return safeRequest<T>({ method: 'PATCH', url, data, ...config });
 };
 
@@ -74,6 +74,6 @@ export const safeDelete = async <T = any>(
   url: string,
   data?: any,
   config?: AxiosRequestConfig,
-): Promise<T | null> => {
+): Promise<T | { status: number } | null> => {
   return safeRequest<T>({ method: 'DELETE', url, data, ...config });
 };
