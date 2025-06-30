@@ -8,6 +8,8 @@ import { useState } from 'react';
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { Link } from 'react-router-dom';
+
 interface HeaderProps {
   type: 'main' | 'login' | 'down' | 'downLogin' | 'nav' | 'navLogin' | 'minimal';
   point?: number;
@@ -101,12 +103,12 @@ export const Header = ({ type = 'main', point, hasNewNotification }: HeaderProps
               <img src="/assets/coin-small.svg" alt="포인트" className="w-8 h-8 rounded-full" />
               <span className="text-lg font-semibold">{point}</span>
             </div>
-            <a href="/notification" className="relative">
+            <Link to="/notification" className="relative">
               <PiBell className="w-8 h-8" />
               {hasNewNotification && (
                 <span className="absolute top-1 right-1 block h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background" />
               )}
-            </a>
+            </Link>
           </>
         ) : isMinimal ? null : (
           <a
