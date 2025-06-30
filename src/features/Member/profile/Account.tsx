@@ -1,7 +1,7 @@
 import Footer from './components/footer';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import ProfileImageInput from './components/profileImageInput';
+import NicknameInput from './components/nicknameInput';
 
 import { SubmitProfileUpdate } from './util/submitProfileUpdate';
 import { useUserInfo } from '@/hooks/useUserInfo';
@@ -18,7 +18,7 @@ export default function Account() {
   const { data: userInfo } = useUserInfo();
   const queryClient = useQueryClient();
 
-  const [nickname, setNickname] = useState('');
+  const [nickname, setNickname] = useState(userInfo?.nickname ?? '');
   const email = userInfo?.email ?? 'test@example.com';
   const [file, setFile] = useState<File | null>(null);
 
@@ -30,11 +30,6 @@ export default function Account() {
     setIsProfileImageDirty,
     isAnyDirty,
   } = useDirty();
-
-  useEffect(() => {
-    const originalNickname = userInfo?.nickname ?? '닉네임';
-    setIsNicknameDirty(nickname !== originalNickname && nickname != '');
-  }, [nickname, userInfo]);
 
   useEffect(() => {
     if (isAnyDirty) {
@@ -78,29 +73,10 @@ export default function Account() {
               <p className="flex w-full justify-end text-xs text-error h-4">{helperText}</p>
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-1">
-                  <div>닉네임</div>
-                  <Input
-                    className="px-3 py-1"
-                    value={nickname}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      const space = /\s/;
-                      const pattern = /^[ㄱ-ㅎ가-힣a-zA-Z0-9]*$/;
-
-                      if (value === '') {
-                        setNickname('');
-                        setHelperText('*닉네임을 입력해주세요.');
-                      } else if (value.length > 20) {
-                        setHelperText('*닉네임은 20자 이내로 입력해주세요.');
-                      } else if (space.test(value)) {
-                        setHelperText('*띄어쓰기는 사용할 수 없어요.');
-                      } else if (pattern.test(value)) {
-                        setNickname(value);
-                        setHelperText('');
-                      } else {
-                        setHelperText('*닉네임에는 한글, 영문, 숫자만 사용할 수 있어요.');
-                      }
-                    }}
+                  <NicknameInput
+                    nickname={nickname}
+                    setNickname={setNickname}
+                    setHelperText={setHelperText}
                   />
                 </div>
                 <div className="flex flex-col gap-1">
