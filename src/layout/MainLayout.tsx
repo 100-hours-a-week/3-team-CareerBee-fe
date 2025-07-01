@@ -44,7 +44,7 @@ export default function MainLayout() {
       <Toaster />
       <div className="flex flex-col h-dvh fixed inset-0 max-w-[600px] w-full mx-auto bg-background shadow-sides">
         <Header type={headerType} />
-        <main className="flex flex-col flex-1 w-full h-[calc(100dvh-120px)]">
+        <main className="flex flex-col flex-1 w-full h-[calc(100dvh-120px)] overflow-y-auto">
           <Outlet key={location.pathname} />
         </main>
         {showNavbar() ? <Navbar /> : null}
