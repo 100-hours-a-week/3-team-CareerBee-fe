@@ -1,7 +1,7 @@
 import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
 
 import { Button } from '@/components/ui/button';
-import DailyBarChart from '@/features/Competition/utils/dailyChart';
+import LiveBarChart from '@/features/Competition/utils/liveChart';
 import StaticBarChart from '@/features/Competition/utils/staticChart';
 import Timer, { checkTime } from '@/features/Competition/components/timer';
 import RankCardList from './components/rankCardList';
@@ -107,7 +107,7 @@ export default function Ranking() {
           <div className="flex mx-auto">
             {rankingView === 'daily' ? (
               competitionTime ? (
-                <DailyBarChart />
+                <LiveBarChart />
               ) : isAggregationTime ? (
                 <AggregationNotice />
               ) : topRankings?.daily ? (
