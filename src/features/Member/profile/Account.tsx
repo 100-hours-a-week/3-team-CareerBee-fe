@@ -16,7 +16,6 @@ import { useNavigate } from 'react-router-dom';
 export default function Account() {
   const navigate = useNavigate();
   const { data: userInfo } = useUserInfo();
-  const queryClient = useQueryClient();
 
   const [nickname, setNickname] = useState(userInfo?.nickname ?? '');
   const email = userInfo?.email ?? 'test@example.com';
