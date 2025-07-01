@@ -70,7 +70,7 @@ export const Navbar = () => {
   const isCompanyDetailPage = location.pathname.startsWith('/company/');
 
   return (
-    <div className="flex items-center justify-between px-8 h-16 w-full gap-2 bg-background">
+    <div className="flex items-center justify-between px-8 h-16 mb-2 w-full gap-2 bg-background">
       {navItems.map((item) => (
         <div
           key={item.id}

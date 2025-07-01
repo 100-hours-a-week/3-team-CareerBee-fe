@@ -32,6 +32,25 @@ export default function Account() {
   } = useDirty();
 
   useEffect(() => {
+    const originalNickname = userInfo?.nickname ?? '닉네임';
+    setIsNicknameDirty(nickname !== originalNickname && nickname != '');
+  }, [nickname, userInfo]);
+
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+  }, []);
+
+  useEffect(() => {
+    if (userInfo?.nickname) {
+      setNickname(userInfo.nickname);
+    }
+  }, [userInfo?.nickname]);
+
+  useEffect(() => {
+    if (nickname == '') {
+      setHelperText('*닉네임을 입력해주세요.');
+    }
     if (isAnyDirty) {
       setHelperText('*저장하기를 눌러주세요.');
     } else {

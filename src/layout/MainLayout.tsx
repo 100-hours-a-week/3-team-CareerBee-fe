@@ -1,10 +1,11 @@
-import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from '@/components/layout/header';
 import { Navbar } from '@/components/layout/navbar';
+
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 import { Toaster } from '@/components/ui/toaster';
 import { useGlobalErrorToast } from '@/hooks/useGlobalErrorToast';
-import { useUserInfo } from '@/hooks/useUserInfo';
+
+import { Outlet, useLocation } from 'react-router-dom';
 
 export default function MainLayout() {
   useGlobalErrorToast();
@@ -27,7 +28,6 @@ export default function MainLayout() {
     return 'minimal';
   })();
 
-  const { data: userInfo } = useUserInfo();
   const showNavbar = () => {
     if (
       location.pathname.startsWith('/competition/entry') ||
@@ -43,12 +43,8 @@ export default function MainLayout() {
     <>
       <Toaster />
       <div className="flex flex-col h-dvh fixed inset-0 max-w-[600px] w-full mx-auto bg-background shadow-sides">
-        <Header
-          type={headerType}
-          hasNewNotification={userInfo?.hasNewAlarm}
-          point={userInfo?.point}
-        />
-        <main className="flex flex-col flex-1 w-full h-[calc(100dvh-120px)] overflow-y-auto">
+        <Header type={headerType} />
+        <main className="flex flex-col flex-1 w-full h-[calc(100dvh-120px)]">
           <Outlet key={location.pathname} />
         </main>
         {showNavbar() ? <Navbar /> : null}

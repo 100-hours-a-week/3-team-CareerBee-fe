@@ -7,12 +7,12 @@ import {
   NotifyProps,
 } from '@/features/Member/notification/hooks/useNotification';
 
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import React from 'react';
 
 export default function Notification() {
-  // 쿼리에 저장
+  // 무한스크롤
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ['notifications'],
     queryFn: getNotification,
@@ -47,21 +47,25 @@ export default function Notification() {
     }
   }, [data?.pages]);
 
-  // const hasValidNotifications = data?.pages?.some(
-  //   (page) =>
-  //     page &&
-  //     Array.isArray(page.important) &&
-  //     page.important.length > 0 &&
-  //     Array.isArray(page.basic) &&
-  //     page.basic.length > 0,
-  // );
-
   const hasImportant = data?.pages?.some(
     (page) => page && Array.isArray(page.important) && page.important.length > 0,
   );
   const hasBasic = data?.pages?.some(
     (page) => page && Array.isArray(page.basic) && page.basic.length > 0,
   );
+
+  // 알림 아이콘 읽음 처리
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    queryClient.setQueryData(['userInfo'], (oldData: any) => {
+      if (!oldData) return oldData;
+      if (oldData.hasNewAlarm === false) return oldData;
+      return {
+        ...oldData,
+        hasNewAlarm: false,
+      };
+    });
+  }, []);
 
   return (
     <div className="overflow-y-auto">
