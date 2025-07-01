@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-// import { mockChart } from '@/features/Competition/config/mock-chartdata';
 
 import {
   ScaleFns,
@@ -9,27 +8,19 @@ import {
   bars,
   background,
 } from '@/features/Competition/utils/chartUtils';
+import { ChartType, width, barHeight, gap, scaleConfigMap } from '../config/scaleConfig';
 import { ChartProps } from '@/features/Competition/hooks/useTopRanking';
 
-// //목데이터
-// let prev = mockChart.slice(3, 10);
-// const mock = [mockChart.slice(3, 10)];
+export default function BarChart({
+  rankingData,
+  type,
+}: {
+  rankingData: ChartProps[];
+  type: ChartType;
+}) {
+  const height = scaleConfigMap[type].height;
+  const scaleFns = scaleConfigMap[type].scaleFns;
 
-const width = 440;
-const height = 304;
-const barHeight = 40;
-const gap = 4;
-
-const scaleFns: ScaleFns = {
-  xScale: (data: number) => {
-    return data === 0 ? width : 0;
-  },
-  yScale: (rank: number, paddingTop: number) => {
-    return (rank - 4) * barHeight + (rank - 4) * gap + paddingTop;
-  },
-};
-
-export default function BarChart({ rankingData }: { rankingData: ChartProps[] }) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const prev = useRef<ChartProps[]>([]);
 
@@ -51,7 +42,7 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
 
     const defs = svg.append('defs');
 
-    updateBars.current = bars(svg, defs, scaleFns, true);
+    updateBars.current = bars(svg, defs, scaleFns, !scaleConfigMap[type].isDaily);
     updateBackground.current = background(svg, scaleFns);
     updateRanks.current = textElement(
       svg,
@@ -89,8 +80,8 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
       false,
       prev,
       scaleFns,
-      false,
-      true,
+      scaleConfigMap[type].isDaily,
+      !scaleConfigMap[type].isDaily,
     );
     updateSolved.current = textElement(
       svg,
@@ -103,7 +94,7 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
       true,
       prev,
       scaleFns,
-      false,
+      scaleConfigMap[type].isDaily,
     );
     updateBars.current?.(rankingData);
     updateBackground.current?.(rankingData);

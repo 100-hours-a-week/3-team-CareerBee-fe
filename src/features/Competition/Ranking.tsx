@@ -13,7 +13,7 @@ import {
 } from '@/features/Competition/config/competitionTime';
 import AggregationNotice from './components/aggregationNotice';
 
-import { useTopRankings, useDailyTopPolling } from './hooks/useTopRanking';
+import { useTopRankings } from './hooks/useTopRanking';
 import { useAuthStore } from '../Member/auth/store/auth';
 import { safeGet } from '@/lib/request';
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
@@ -41,9 +41,6 @@ export default function Ranking() {
 
     return () => clearInterval(timer);
   }, []);
-
-  // 랭킹 실시간 데이터 polling
-  useDailyTopPolling(competitionTime);
 
   const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
 
@@ -105,10 +102,12 @@ export default function Ranking() {
         <>
           <div className="flex mx-auto">
             {rankingView === 'daily' ? (
-              topRankings?.daily ? (
+              competitionTime ? (
                 <DailyBarChart />
               ) : isAggregationTime ? (
                 <AggregationNotice />
+              ) : topRankings?.daily ? (
+                <PeriodicBarChart rankingData={topRankings?.daily} type="daily" />
               ) : (
                 <div className="flex items-center h-[436px]">아직 랭킹 데이터가 없어요.</div>
               )
@@ -126,7 +125,10 @@ export default function Ranking() {
                             topRankings?.weekly?.[2],
                           ]}
                         />
-                        <PeriodicBarChart rankingData={topRankings?.weekly?.slice(3)} />
+                        <PeriodicBarChart
+                          rankingData={topRankings?.weekly?.slice(3)}
+                          type="periodic"
+                        />
                       </>
                     ) : isAggregationTime ? (
                       <AggregationNotice />
@@ -147,7 +149,10 @@ export default function Ranking() {
                             topRankings?.monthly?.[2],
                           ]}
                         />
-                        <PeriodicBarChart rankingData={topRankings?.monthly?.slice(3)} />
+                        <PeriodicBarChart
+                          rankingData={topRankings?.monthly?.slice(3)}
+                          type="periodic"
+                        />
                       </>
                     ) : isAggregationTime ? (
                       <AggregationNotice />

@@ -2,9 +2,7 @@ import noProfile from '/assets/no-profile.png';
 import { formatToMS } from '@/features/Competition/components/timer';
 
 import { safeGet } from '@/lib/request';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-
-import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 export interface ChartProps {
   rank: number;
