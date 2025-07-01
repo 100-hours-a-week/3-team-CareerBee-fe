@@ -37,9 +37,9 @@ const getNavItems = (token: string | null): NavItem[] => [
     icon: <PiMapTrifoldLight className="iconSize-default" />,
   },
   {
-    id: 'Store',
+    id: 'Shop',
     title: '상점',
-    href: '/store',
+    href: '/shop',
     icon: <PiShoppingCartSimpleLight className="iconSize-default" />,
   },
   ...(token
