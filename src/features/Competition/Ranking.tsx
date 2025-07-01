@@ -30,14 +30,18 @@ export default function Ranking() {
   const [competitionTime, setCompetitionTime] = useState(false);
   const [isAggregationTime, setIsAggregationTime] = useState(false);
   useEffect(() => {
-    const timer = setInterval(() => {
+    const check = () => {
       const curr = checkTime('ms');
       const isCompetitionTime = curr >= COMPETITION_START_TIME && curr < COMPETITION_END_TIME;
       setCompetitionTime(isCompetitionTime);
       setIsAggregationTime(
         curr < COMPETITION_END_TIME + AGGREGATE_TIME && curr > COMPETITION_END_TIME,
       );
-    }, 1000); // 1초
+    };
+
+    check();
+
+    const timer = setInterval(check, 1000);
 
     return () => clearInterval(timer);
   }, []);
