@@ -108,7 +108,7 @@ export const Header = ({ type = 'main' }: HeaderProps) => {
             </div>
             <Link to="/notification" className="relative">
               <PiBell className="w-8 h-8" />
-              {userInfo.hasNewNotification && (
+              {userInfo.hasNewAlarm && (
                 <span className="absolute top-1 right-1 block h-2.5 w-2.5 rounded-full bg-primary ring-2 ring-background" />
               )}
             </Link>

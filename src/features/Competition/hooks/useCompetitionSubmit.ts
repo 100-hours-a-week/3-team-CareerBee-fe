@@ -35,7 +35,6 @@ export function useCompetitionSubmit({
 
       const now = new Date();
       const submitTime = now.getTime();
-      console.log("submitTime:", submitTime, " ", "joinedTime:", joinedTime, " ");
 
       const submittedAnswers = problems.map((problem, index) => ({
         problemId: problem.id,

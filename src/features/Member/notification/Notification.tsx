@@ -57,12 +57,12 @@ export default function Notification() {
   // 알림 아이콘 읽음 처리
   const queryClient = useQueryClient();
   useEffect(() => {
-    queryClient.setQueryData(['userinfo'], (oldData: any) => {
+    queryClient.setQueryData(['userInfo'], (oldData: any) => {
       if (!oldData) return oldData;
-      if (oldData.hasNewNotification === false) return oldData;
+      if (oldData.hasNewAlarm === false) return oldData;
       return {
         ...oldData,
-        hasNewNotification: false,
+        hasNewAlarm: false,
       };
     });
   }, []);

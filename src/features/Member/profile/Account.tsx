@@ -36,7 +36,7 @@ export default function Account() {
 
   const queryClient = useQueryClient();
   useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ['userinfo'] });
+    queryClient.invalidateQueries({ queryKey: ['userInfo'] });
   }, []);
 
   useEffect(() => {
@@ -83,7 +83,7 @@ export default function Account() {
                   token,
                   isProfileImageDirty,
                 });
-                queryClient.invalidateQueries({ queryKey: ['userinfo'] });
+                queryClient.invalidateQueries({ queryKey: ['userInfo'] });
               }}
             >
               <ProfileImageUploader onFileSelect={setFile} />

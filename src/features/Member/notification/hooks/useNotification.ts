@@ -52,7 +52,7 @@ export function useNotificationRead() {
           },
         },
       );
-      queryClient.refetchQueries({ queryKey: ['userinfo'] });
+      queryClient.refetchQueries({ queryKey: ['userInfo'] });
     } catch (error) {
       queryClient.setQueryData(['userInfo'], previousUserInfo);
     }
