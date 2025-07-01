@@ -1,36 +1,26 @@
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { useState } from 'react';
-import { useTopRankings } from '../hooks/useTopRanking';
 
 import {
-  ScaleFns,
   imageElement,
   textElement,
   bars,
   background,
 } from '@/features/Competition/utils/chartUtils';
+import { ChartType, width, barHeight, gap, scaleConfigMap } from '../config/scaleConfig';
 import { ChartProps } from '@/features/Competition/hooks/useTopRanking';
 
-const width = 440;
-const height = 436;
-const barHeight = 40;
-const gap = 4;
+export default function BarChart({
+  rankingData,
+  type,
+}: {
+  rankingData: ChartProps[];
+  type: ChartType;
+}) {
+  const height = scaleConfigMap[type].height;
+  const scaleFns = scaleConfigMap[type].scaleFns;
 
-const scaleFns: ScaleFns = {
-  xScale: (data: number) => {
-    return data === 0 ? width : data === 1 ? 0 : data === 2 ? 10 : data === 3 ? 20 : 30;
-  },
-  yScale: (rank: number, paddingTop: number) => {
-    return (rank - 1) * barHeight + (rank - 1) * gap + paddingTop;
-  },
-};
-
-export default function BarChart() {
-  const { data: topRankings } = useTopRankings();
   const svgRef = useRef<SVGSVGElement | null>(null);
-
-  const [rankingData, setRankingData] = useState<ChartProps[]>(topRankings?.daily ?? []);
   const prev = useRef<ChartProps[]>([]);
 
   const updateBars = useRef<((_data: ChartProps[]) => void) | null>(null);
@@ -43,16 +33,15 @@ export default function BarChart() {
 
   useEffect(() => {
     if (!svgRef.current) return;
-
     const svg = d3
-      .select(svgRef.current!)
+      .select(svgRef.current)
       .attr('viewBox', `0,0,${width},${height}`)
       .attr('width', width)
       .attr('height', height);
 
     const defs = svg.append('defs');
 
-    updateBars.current = bars(svg, defs, scaleFns);
+    updateBars.current = bars(svg, defs, scaleFns, !scaleConfigMap[type].isDaily);
     updateBackground.current = background(svg, scaleFns);
     updateRanks.current = textElement(
       svg,
@@ -90,6 +79,8 @@ export default function BarChart() {
       false,
       prev,
       scaleFns,
+      scaleConfigMap[type].isDaily,
+      !scaleConfigMap[type].isDaily,
     );
     updateSolved.current = textElement(
       svg,
@@ -102,12 +93,8 @@ export default function BarChart() {
       true,
       prev,
       scaleFns,
-      true,
+      scaleConfigMap[type].isDaily,
     );
-  }, []);
-
-  useEffect(() => {
-    if (!rankingData) return;
     updateBars.current?.(rankingData);
     updateBackground.current?.(rankingData);
     updateRanks.current?.(rankingData);
@@ -115,18 +102,11 @@ export default function BarChart() {
     updateNickname.current?.(rankingData);
     updateTime.current?.(rankingData);
     updateSolved.current?.(rankingData);
-    prev.current = rankingData;
-  }, [rankingData]);
-
-  useEffect(() => {
-    if (topRankings?.daily) {
-      setRankingData(topRankings.daily);
-    }
-  }, [topRankings]);
+  }, []);
 
   return (
     <>
-      <svg ref={svgRef}></svg>
+      <svg ref={svgRef}> </svg>
     </>
   );
 }

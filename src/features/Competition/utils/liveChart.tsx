@@ -1,36 +1,25 @@
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-// import { mockChart } from '@/features/Competition/config/mock-chartdata';
+import { useState } from 'react';
+import { useDailyTopPolling } from '../hooks/useTopRanking';
 
 import {
-  ScaleFns,
   imageElement,
   textElement,
   bars,
   background,
 } from '@/features/Competition/utils/chartUtils';
+import { width, barHeight, gap, scaleConfigMap } from '../config/scaleConfig';
 import { ChartProps } from '@/features/Competition/hooks/useTopRanking';
 
-// //목데이터
-// let prev = mockChart.slice(3, 10);
-// const mock = [mockChart.slice(3, 10)];
+const height = scaleConfigMap.daily.height;
+const scaleFns = scaleConfigMap.daily.scaleFns;
 
-const width = 440;
-const height = 304;
-const barHeight = 40;
-const gap = 4;
-
-const scaleFns: ScaleFns = {
-  xScale: (data: number) => {
-    return data === 0 ? width : 0;
-  },
-  yScale: (rank: number, paddingTop: number) => {
-    return (rank - 4) * barHeight + (rank - 4) * gap + paddingTop;
-  },
-};
-
-export default function BarChart({ rankingData }: { rankingData: ChartProps[] }) {
+export default function BarChart() {
+  const { data: topRankings } = useDailyTopPolling();
   const svgRef = useRef<SVGSVGElement | null>(null);
+
+  const [rankingData, setRankingData] = useState<ChartProps[]>(topRankings?.daily ?? []);
   const prev = useRef<ChartProps[]>([]);
 
   const updateBars = useRef<((_data: ChartProps[]) => void) | null>(null);
@@ -43,15 +32,16 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
 
   useEffect(() => {
     if (!svgRef.current) return;
+
     const svg = d3
-      .select(svgRef.current)
+      .select(svgRef.current!)
       .attr('viewBox', `0,0,${width},${height}`)
       .attr('width', width)
       .attr('height', height);
 
     const defs = svg.append('defs');
 
-    updateBars.current = bars(svg, defs, scaleFns, true);
+    updateBars.current = bars(svg, defs, scaleFns);
     updateBackground.current = background(svg, scaleFns);
     updateRanks.current = textElement(
       svg,
@@ -89,8 +79,6 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
       false,
       prev,
       scaleFns,
-      false,
-      true,
     );
     updateSolved.current = textElement(
       svg,
@@ -103,8 +91,12 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
       true,
       prev,
       scaleFns,
-      false,
+      true,
     );
+  }, []);
+
+  useEffect(() => {
+    if (!rankingData) return;
     updateBars.current?.(rankingData);
     updateBackground.current?.(rankingData);
     updateRanks.current?.(rankingData);
@@ -112,11 +104,18 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
     updateNickname.current?.(rankingData);
     updateTime.current?.(rankingData);
     updateSolved.current?.(rankingData);
-  }, []);
+    prev.current = rankingData;
+  }, [rankingData]);
+
+  useEffect(() => {
+    if (topRankings?.daily) {
+      setRankingData(topRankings.daily);
+    }
+  }, [topRankings]);
 
   return (
     <>
-      <svg ref={svgRef}> </svg>
+      <svg ref={svgRef}></svg>
     </>
   );
 }
