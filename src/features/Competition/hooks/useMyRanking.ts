@@ -81,7 +81,7 @@ export const useDailyMyPolling = (enabled: boolean) => {
     const interval = setInterval(fetchInitial, 3000); // polling 3초
 
     return () => clearInterval(interval);
-  }, [enabled, queryClient]);
+  }, [enabled, queryClient, token]);
 
   return liveRanking;
 };
