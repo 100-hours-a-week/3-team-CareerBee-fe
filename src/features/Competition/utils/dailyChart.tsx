@@ -4,27 +4,16 @@ import { useState } from 'react';
 import { useDailyTopPolling } from '../hooks/useTopRanking';
 
 import {
-  ScaleFns,
   imageElement,
   textElement,
   bars,
   background,
 } from '@/features/Competition/utils/chartUtils';
+import { width, barHeight, gap, scaleConfigMap } from '../config/scaleConfig';
 import { ChartProps } from '@/features/Competition/hooks/useTopRanking';
 
-const width = 440;
-const height = 436;
-const barHeight = 40;
-const gap = 4;
-
-const scaleFns: ScaleFns = {
-  xScale: (data: number) => {
-    return data === 0 ? width : data === 1 ? 0 : data === 2 ? 10 : data === 3 ? 20 : 30;
-  },
-  yScale: (rank: number, paddingTop: number) => {
-    return (rank - 1) * barHeight + (rank - 1) * gap + paddingTop;
-  },
-};
+const height = scaleConfigMap.daily.height;
+const scaleFns = scaleConfigMap.daily.scaleFns;
 
 export default function BarChart() {
   const { data: topRankings } = useDailyTopPolling();
