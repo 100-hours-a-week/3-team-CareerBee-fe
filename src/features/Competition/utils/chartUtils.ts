@@ -1,6 +1,8 @@
 import * as d3 from 'd3';
 import { ChartProps } from '@/features/Competition/hooks/useTopRanking';
 
+import React from 'react';
+
 const width = 440;
 const barHeight = 40;
 const transTime = 1000;
@@ -57,56 +59,60 @@ export const updateTransition = <El extends SVGElement, ParentEl extends d3.Base
 };
 
 export const imageElement = (
-  svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>,
+  svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
   xPadding: number,
   yPaddingTop: number,
   size: number,
   elem: string,
-  prev: ChartProps[],
+  prev: React.RefObject<ChartProps[]>,
   scaleFns: ScaleFns,
 ) => {
-  let badgeImg = svg.append('g').selectAll<SVGImageElement, ChartProps>('image');
+  let ImgElement = svg.append('g').selectAll<SVGImageElement, ChartProps>('image');
 
   return (data: ChartProps[]) => {
-    badgeImg = badgeImg
-      .data(
-        data.filter((d) => d[elem as keyof ChartProps]),
-        (d) => d.nickname,
-      )
-      .join(
-        (enter) =>
-          enter
-            .append('image')
-            .attr('preserveAspectRatio', 'none')
-            .attr('y', (data) => scaleFns.yScale(data.rank, yPaddingTop))
-            .attr('x', scaleFns.xScale(0) + xPadding)
-            .attr('width', size)
-            .attr('height', size)
-            .attr('href', (d) => d[elem as keyof ChartProps])
-            .transition()
-            .duration(transTime * 2)
-            .attr('x', (data) => scaleFns.xScale(data.rank) + xPadding),
-        (update) => {
-          update.attr('href', (d) => d[elem as keyof ChartProps]);
-          updateTransition(update, xPadding, yPaddingTop, false, prev, scaleFns);
-          return update;
-        },
-        (exit) => exitTransition(exit, xPadding, scaleFns),
-      );
+    ImgElement = ImgElement.data(data, (data) => data.nickname).join(
+      (enter) =>
+        enter
+          .append('image')
+          .attr('preserveAspectRatio', 'none')
+          .attr('y', (data) => scaleFns.yScale(data.rank, yPaddingTop))
+          .attr('x', scaleFns.xScale(0) + xPadding)
+          .attr('width', size)
+          .attr('height', size)
+          .attr('href', (d) => d[elem as keyof ChartProps])
+          .transition()
+          .duration(transTime * 2)
+          .attr('x', (data) => scaleFns.xScale(data.rank) + xPadding),
+      (update) => {
+        update.each(function (d) {
+          if (prev.current === undefined || prev.current === null) {
+            return;
+          } else {
+            const prevItem = prev.current.find((p) => p.nickname === d.nickname);
+            if (prevItem!.rank !== d.rank) {
+              update.attr('href', (d) => d[elem as keyof ChartProps]);
+              updateTransition(update, xPadding, yPaddingTop, false, prev.current ?? [], scaleFns);
+            }
+          }
+        });
+
+        return update;
+      },
+      (exit) => exitTransition(exit, xPadding, scaleFns),
+    );
   };
 };
 
 export const textElement = (
-  svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>,
+  svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
   xPadding: number,
   yPaddingTop: number,
   elem: string,
   fontWeight: string,
   fontSize: string,
-  base: string = 'nickname',
   alignRight: boolean = false,
   isSolved: boolean = false,
-  prev: ChartProps[],
+  prev: React.RefObject<ChartProps[]>,
   scaleFns: ScaleFns,
   isDaily: boolean = true,
   showContinuous: boolean = false,
@@ -119,10 +125,10 @@ export const textElement = (
 
   return (data: ChartProps[]) => {
     textElement = textElement
-      .data(data, (data) => data[base as keyof ChartProps])
+      .data(data, (data) => data.nickname)
       .join(
-        (enter) =>
-          enter
+        (enter) => {
+          return enter
             .append('text')
             .attr('y', (data) => scaleFns.yScale(data.rank, yPaddingTop))
             .attr('x', scaleFns.xScale(0) + xPadding)
@@ -141,22 +147,39 @@ export const textElement = (
             )
             .transition()
             .duration(transTime * 2)
-            .attr('x', (data) => (alignRight ? 0 : scaleFns.xScale(data.rank)) + xPadding),
+            .attr('x', (data) => (alignRight ? 0 : scaleFns.xScale(data.rank)) + xPadding);
+        },
         (update) => {
-          update.text(
-            (d) =>
-              d[elem as keyof ChartProps] +
-              (isDaily
-                ? isSolved
-                  ? '/5'
-                  : ''
-                : isSolved
-                  ? '%'
-                  : showContinuous
-                    ? '일 연속 참여'
-                    : ''),
-          );
-          updateTransition(update, xPadding, yPaddingTop, alignRight, prev, scaleFns);
+          update.each(function (d) {
+            if (prev.current === undefined || prev.current === null) {
+              return;
+            } else {
+              const prevItem = prev.current.find((p) => p.nickname === d.nickname);
+              const newValue =
+                d[elem as keyof ChartProps] +
+                (isDaily
+                  ? isSolved
+                    ? '/5'
+                    : ''
+                  : isSolved
+                    ? '%'
+                    : showContinuous
+                      ? '일 연속 참여'
+                      : '');
+              if (prevItem!.rank !== d.rank) {
+                d3.select(this).text(newValue);
+                updateTransition(
+                  update,
+                  xPadding,
+                  yPaddingTop,
+                  alignRight,
+                  prev.current ?? undefined,
+                  scaleFns,
+                );
+              }
+            }
+          });
+
           return update;
         },
         (exit) => exitTransition(exit, xPadding, scaleFns),
@@ -165,7 +188,7 @@ export const textElement = (
 };
 
 export const bars = (
-  svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>,
+  svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
   defs: d3.Selection<SVGDefsElement, unknown, null, undefined>,
   scaleFns: ScaleFns,
   isPeriodic: boolean = false,
@@ -211,7 +234,7 @@ export const bars = (
 };
 
 export const background = (
-  svg: d3.Selection<SVGSVGElement | null, unknown, null, undefined>,
+  svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
   scaleFns: ScaleFns,
 ) => {
   let background = svg.append('g').selectAll<SVGImageElement, ChartProps>('image');

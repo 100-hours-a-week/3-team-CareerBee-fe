@@ -31,9 +31,18 @@ const scaleFns: ScaleFns = {
 
 export default function BarChart({ rankingData }: { rankingData: ChartProps[] }) {
   const svgRef = useRef<SVGSVGElement | null>(null);
-  let prev = rankingData;
+  const prev = useRef<ChartProps[]>([]);
+
+  const updateBars = useRef<((_data: ChartProps[]) => void) | null>(null);
+  const updateBackground = useRef<((_data: ChartProps[]) => void) | null>(null);
+  const updateRanks = useRef<((_data: ChartProps[]) => void) | null>(null);
+  const updateProfileImg = useRef<((_data: ChartProps[]) => void) | null>(null);
+  const updateNickname = useRef<((_data: ChartProps[]) => void) | null>(null);
+  const updateTime = useRef<((_data: ChartProps[]) => void) | null>(null);
+  const updateSolved = useRef<((_data: ChartProps[]) => void) | null>(null);
 
   useEffect(() => {
+    if (!svgRef.current) return;
     const svg = d3
       .select(svgRef.current)
       .attr('viewBox', `0,0,${width},${height}`)
@@ -42,43 +51,40 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
 
     const defs = svg.append('defs');
 
-    const updateBars = bars(svg, defs, scaleFns, true);
-    const updateBackground = background(svg, scaleFns);
-    const updateRanks = textElement(
+    updateBars.current = bars(svg, defs, scaleFns, true);
+    updateBackground.current = background(svg, scaleFns);
+    updateRanks.current = textElement(
       svg,
       16,
       (barHeight + gap * 2) / 2,
       'rank',
       'bold',
       '12px',
-      'rank',
       false,
       false,
       prev,
       scaleFns,
     );
-    const updateProfileImg = imageElement(svg, 40, 4, 32, 'profileUrl', prev, scaleFns);
-    const updateNickname = textElement(
+    updateProfileImg.current = imageElement(svg, 40, 4, 32, 'profileUrl', prev, scaleFns);
+    updateNickname.current = textElement(
       svg,
       96,
       (barHeight + gap * 2) / 2,
       'nickname',
       '400',
       '12px',
-      'nickname',
       false,
       false,
       prev,
       scaleFns,
     );
-    const updateTime = textElement(
+    updateTime.current = textElement(
       svg,
       width - 116,
       (barHeight + gap * 2) / 2,
       'elapsedTime',
       '400',
       '10px',
-      undefined,
       true,
       false,
       prev,
@@ -86,27 +92,26 @@ export default function BarChart({ rankingData }: { rankingData: ChartProps[] })
       false,
       true,
     );
-    const updateSolved = textElement(
+    updateSolved.current = textElement(
       svg,
       width - 36,
       (barHeight + gap * 2) / 2,
       'solvedCount',
       '400',
       '10px',
-      undefined,
       true,
       true,
       prev,
       scaleFns,
       false,
     );
-    updateBars(rankingData);
-    updateBackground(rankingData);
-    updateRanks(rankingData);
-    updateProfileImg(rankingData);
-    updateNickname(rankingData);
-    updateTime(rankingData);
-    updateSolved(rankingData);
+    updateBars.current?.(rankingData);
+    updateBackground.current?.(rankingData);
+    updateRanks.current?.(rankingData);
+    updateProfileImg.current?.(rankingData);
+    updateNickname.current?.(rankingData);
+    updateTime.current?.(rankingData);
+    updateSolved.current?.(rankingData);
   }, []);
 
   return (

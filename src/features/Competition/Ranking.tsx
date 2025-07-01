@@ -105,8 +105,8 @@ export default function Ranking() {
         <>
           <div className="flex mx-auto">
             {rankingView === 'daily' ? (
-              topRankings?.daily && topRankings?.daily.length > 0 ? (
-                <DailyBarChart rankingData={topRankings?.daily} />
+              topRankings?.daily ? (
+                <DailyBarChart />
               ) : isAggregationTime ? (
                 <AggregationNotice />
               ) : (

@@ -52,10 +52,12 @@ export const useDailyTopPolling = (enabled: boolean) => {
       const res = await safeGet('/api/v1/competitions/rankings/live');
       if (res.httpStatusCode === 200) {
         const liveData = res.data.rankings;
+        const converted = convertToChartProps(liveData, true);
         queryClient.setQueryData(['top-rankings'], (old: any) => ({
           ...old,
-          daily: convertToChartProps(liveData, true),
+          daily: converted,
         }));
+        return converted;
       }
     };
 
