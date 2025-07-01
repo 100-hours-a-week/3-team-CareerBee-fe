@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
 import {
-  ScaleFns,
   imageElement,
   textElement,
   bars,

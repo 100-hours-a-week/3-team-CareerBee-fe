@@ -2,7 +2,7 @@ import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
 
 import { Button } from '@/components/ui/button';
 import DailyBarChart from '@/features/Competition/utils/dailyChart';
-import PeriodicBarChart from '@/features/Competition/utils/periodicChart';
+import StaticBarChart from '@/features/Competition/utils/staticChart';
 import Timer, { checkTime } from '@/features/Competition/components/timer';
 import RankCardList from './components/rankCardList';
 import MyRankCard from '@/features/Competition/components/myRankCard';
@@ -107,7 +107,7 @@ export default function Ranking() {
               ) : isAggregationTime ? (
                 <AggregationNotice />
               ) : topRankings?.daily ? (
-                <PeriodicBarChart rankingData={topRankings?.daily} type="daily" />
+                <StaticBarChart rankingData={topRankings?.daily} type="daily" />
               ) : (
                 <div className="flex items-center h-[436px]">아직 랭킹 데이터가 없어요.</div>
               )
@@ -125,7 +125,7 @@ export default function Ranking() {
                             topRankings?.weekly?.[2],
                           ]}
                         />
-                        <PeriodicBarChart
+                        <StaticBarChart
                           rankingData={topRankings?.weekly?.slice(3)}
                           type="periodic"
                         />
@@ -149,7 +149,7 @@ export default function Ranking() {
                             topRankings?.monthly?.[2],
                           ]}
                         />
-                        <PeriodicBarChart
+                        <StaticBarChart
                           rankingData={topRankings?.monthly?.slice(3)}
                           type="periodic"
                         />
