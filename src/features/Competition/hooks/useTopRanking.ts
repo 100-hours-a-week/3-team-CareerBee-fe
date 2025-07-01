@@ -42,29 +42,19 @@ export const useTopRankings = () => {
 };
 
 // polling으로 일일 실시간 랭킹 불러오기
-export const useDailyTopPolling = (enabled: boolean) => {
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    if (!enabled) return;
-
-    const fetchInitial = async () => {
+export const useDailyTopPolling = () => {
+  return useQuery({
+    queryKey: ['top-rankings', 'live'],
+    queryFn: async () => {
       const res = await safeGet('/api/v1/competitions/rankings/live');
-      if (res.httpStatusCode === 200) {
-        const liveData = res.data.rankings;
-        const converted = convertToChartProps(liveData, true);
-        queryClient.setQueryData(['top-rankings'], (old: any) => ({
-          ...old,
-          daily: converted,
-        }));
-        return converted;
-      }
-    };
 
-    fetchInitial();
+      if (res.httpStatusCode !== 200) throw new Error('Failed to fetch rankings');
 
-    const interval = setInterval(fetchInitial, 3000); // polling 3초
-
-    return () => clearInterval(interval);
-  }, [enabled, queryClient]);
+      return {
+        daily: convertToChartProps(res.data.rankings, true),
+      };
+    },
+    refetchInterval: 3000,
+    refetchIntervalInBackground: true,
+  });
 };

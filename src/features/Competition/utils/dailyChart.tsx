@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { useState } from 'react';
-import { useTopRankings } from '../hooks/useTopRanking';
+import { useDailyTopPolling } from '../hooks/useTopRanking';
 
 import {
   ScaleFns,
@@ -27,7 +27,7 @@ const scaleFns: ScaleFns = {
 };
 
 export default function BarChart() {
-  const { data: topRankings } = useTopRankings();
+  const { data: topRankings } = useDailyTopPolling();
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   const [rankingData, setRankingData] = useState<ChartProps[]>(topRankings?.daily ?? []);
