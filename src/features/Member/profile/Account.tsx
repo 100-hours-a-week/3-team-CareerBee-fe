@@ -1,7 +1,7 @@
 import Footer from './components/footer';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import ProfileImageUploader from './components/profileImageUploader';
+import ProfileImageInput from './components/profileImageInput';
+import NicknameInput from './components/nicknameInput';
 
 import { SubmitProfileUpdate } from './util/submitProfileUpdate';
 import { useUserInfo } from '@/hooks/useUserInfo';
@@ -16,7 +16,9 @@ import { useNavigate } from 'react-router-dom';
 export default function Account() {
   const navigate = useNavigate();
   const { data: userInfo } = useUserInfo();
-  const [nickname, setNickname] = useState('');
+  const queryClient = useQueryClient();
+
+  const [nickname, setNickname] = useState(userInfo?.nickname ?? '');
   const email = userInfo?.email ?? 'test@example.com';
   const [file, setFile] = useState<File | null>(null);
 
@@ -54,7 +56,7 @@ export default function Account() {
     } else {
       setHelperText('');
     }
-  }, [nickname, isAnyDirty]);
+  }, [isAnyDirty]);
 
   const token = useAuthStore((state) => state.token);
 
@@ -67,7 +69,7 @@ export default function Account() {
             <form
               onSubmit={async (e) => {
                 e.preventDefault();
-                SubmitProfileUpdate({
+                await SubmitProfileUpdate({
                   nickname: isNicknameDirty ? nickname : userInfo.nickname,
                   profileUrl: isProfileImageDirty
                     ? await handlePresignedUrl({
@@ -78,25 +80,22 @@ export default function Account() {
                       })
                     : undefined,
                   setIsNicknameDirty,
+                  isProfileImageDirty,
                   setIsProfileImageDirty,
                   setHelperText: (value: string) => setHelperText(value),
                   token,
-                  isProfileImageDirty,
                 });
-                queryClient.invalidateQueries({ queryKey: ['userInfo'] });
+                queryClient.refetchQueries({ queryKey: ['userInfo'] });
               }}
             >
-              <ProfileImageUploader onFileSelect={setFile} />
+              <ProfileImageInput onFileSelect={setFile} />
               <p className="flex w-full justify-end text-xs text-error h-4">{helperText}</p>
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-1">
-                  <div>닉네임</div>
-                  <Input
-                    className="px-3 py-1"
-                    value={nickname}
-                    onChange={(e) => {
-                      setNickname(e.target.value);
-                    }}
+                  <NicknameInput
+                    nickname={nickname}
+                    setNickname={setNickname}
+                    setHelperText={setHelperText}
                   />
                 </div>
                 <div className="flex flex-col gap-1">
