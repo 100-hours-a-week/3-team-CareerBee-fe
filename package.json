@@ -1,13 +1,12 @@
 {
   "name": "careerbee-frontend",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
   "scripts": {
-    "dev": "vite --host",
-    "build": "tsc -b && vite build",
-    "lint": "eslint './src/**/*.{js,ts,jsx,tsx}'",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@fontsource/pretendard": "^5.2.5",

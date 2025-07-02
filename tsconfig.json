@@ -35,7 +35,8 @@
     "pages",
     "components",
     "src",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "next.config.ts"
   ],
   "exclude": ["node_modules"]
 }
