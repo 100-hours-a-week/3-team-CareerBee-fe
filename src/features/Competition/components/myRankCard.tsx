@@ -25,10 +25,14 @@ export default function MyRankCard({ rankingView, competitionTime }: MyRankCardP
   const [dailyRanking, setDailyRanking] = useState(myRanking?.daily);
 
   useEffect(() => {
-    if (polling !== undefined) {
-      setDailyRanking(polling);
-    }
+    if (!polling) return;
+    setDailyRanking(polling);
   }, [polling]);
+
+  useEffect(() => {
+    if (!myRanking?.daily) return;
+    setDailyRanking(myRanking?.daily);
+  }, [myRanking?.daily]);
 
   const { data: userInfo } = useUserInfo();
   const currentRanking =
