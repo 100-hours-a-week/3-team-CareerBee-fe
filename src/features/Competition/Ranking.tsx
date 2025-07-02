@@ -1,8 +1,8 @@
 import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
 
 import { Button } from '@/components/ui/button';
-import DailyBarChart from '@/features/Competition/utils/dailyChart';
-import PeriodicBarChart from '@/features/Competition/utils/periodicChart';
+import LiveBarChart from '@/features/Competition/utils/liveChart';
+import StaticBarChart from '@/features/Competition/utils/staticChart';
 import Timer, { checkTime } from '@/features/Competition/components/timer';
 import RankCardList from './components/rankCardList';
 import MyRankCard from '@/features/Competition/components/myRankCard';
@@ -13,7 +13,7 @@ import {
 } from '@/features/Competition/config/competitionTime';
 import AggregationNotice from './components/aggregationNotice';
 
-import { useTopRankings, useDailyTopPolling } from './hooks/useTopRanking';
+import { useTopRankings } from './hooks/useTopRanking';
 import { useAuthStore } from '../Member/auth/store/auth';
 import { safeGet } from '@/lib/request';
 import { useCompetitionStore } from '@/features/Competition/store/competitionStore';
@@ -30,20 +30,21 @@ export default function Ranking() {
   const [competitionTime, setCompetitionTime] = useState(false);
   const [isAggregationTime, setIsAggregationTime] = useState(false);
   useEffect(() => {
-    const timer = setInterval(() => {
+    const check = () => {
       const curr = checkTime('ms');
       const isCompetitionTime = curr >= COMPETITION_START_TIME && curr < COMPETITION_END_TIME;
       setCompetitionTime(isCompetitionTime);
       setIsAggregationTime(
         curr < COMPETITION_END_TIME + AGGREGATE_TIME && curr > COMPETITION_END_TIME,
       );
-    }, 1000); // 1초
+    };
+
+    check();
+
+    const timer = setInterval(check, 1000);
 
     return () => clearInterval(timer);
   }, []);
-
-  // 랭킹 실시간 데이터 polling
-  useDailyTopPolling(competitionTime);
 
   const [rankingView, setRankingView] = useState<'daily' | 'weekly' | 'monthly'>('daily');
 
@@ -105,10 +106,12 @@ export default function Ranking() {
         <>
           <div className="flex mx-auto">
             {rankingView === 'daily' ? (
-              topRankings?.daily && topRankings?.daily.length > 0 ? (
-                <DailyBarChart rankingData={topRankings?.daily} />
+              competitionTime ? (
+                <LiveBarChart />
               ) : isAggregationTime ? (
                 <AggregationNotice />
+              ) : topRankings?.daily ? (
+                <StaticBarChart rankingData={topRankings?.daily} type="daily" />
               ) : (
                 <div className="flex items-center h-[436px]">아직 랭킹 데이터가 없어요.</div>
               )
@@ -126,7 +129,10 @@ export default function Ranking() {
                             topRankings?.weekly?.[2],
                           ]}
                         />
-                        <PeriodicBarChart rankingData={topRankings?.weekly?.slice(3)} />
+                        <StaticBarChart
+                          rankingData={topRankings?.weekly?.slice(3)}
+                          type="periodic"
+                        />
                       </>
                     ) : isAggregationTime ? (
                       <AggregationNotice />
@@ -147,7 +153,10 @@ export default function Ranking() {
                             topRankings?.monthly?.[2],
                           ]}
                         />
-                        <PeriodicBarChart rankingData={topRankings?.monthly?.slice(3)} />
+                        <StaticBarChart
+                          rankingData={topRankings?.monthly?.slice(3)}
+                          type="periodic"
+                        />
                       </>
                     ) : isAggregationTime ? (
                       <AggregationNotice />

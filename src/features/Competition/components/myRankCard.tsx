@@ -4,11 +4,13 @@ import noProfile from '/assets/no-profile.png';
 import { useUserInfo } from '@/hooks/useUserInfo';
 import { useMyRanking, useDailyMyPolling } from '@/features/Competition/hooks/useMyRanking';
 
+import { useEffect, useState } from 'react';
+
 const rankCardStyles = {
   1: { bgImage: 'red-rank.svg', width: '440px' },
-  2: { bgImage: 'green-rank.svg', width: '432px' },
-  3: { bgImage: 'blue-rank.svg', width: '424px' },
-  default: { bgImage: 'yellow-rank.svg', width: '416px' },
+  2: { bgImage: 'green-rank.svg', width: '430px' },
+  3: { bgImage: 'blue-rank.svg', width: '420px' },
+  default: { bgImage: 'yellow-rank.svg', width: '410px' },
 };
 
 interface MyRankCardProps {
@@ -17,13 +19,21 @@ interface MyRankCardProps {
 }
 
 export default function MyRankCard({ rankingView, competitionTime }: MyRankCardProps) {
-  const { myRanking } = useMyRanking();
-  useDailyMyPolling(competitionTime);
+  let { myRanking } = useMyRanking();
+  const polling = useDailyMyPolling(competitionTime);
+
+  const [dailyRanking, setDailyRanking] = useState(myRanking?.daily);
+
+  useEffect(() => {
+    if (polling !== undefined) {
+      setDailyRanking(polling);
+    }
+  }, [polling]);
 
   const { data: userInfo } = useUserInfo();
   const currentRanking =
     rankingView === 'daily'
-      ? myRanking?.daily
+      ? dailyRanking
       : rankingView === 'weekly'
         ? myRanking?.weekly
         : myRanking?.monthly;
@@ -32,7 +42,7 @@ export default function MyRankCard({ rankingView, competitionTime }: MyRankCardP
 
   const rank =
     rankingView === 'daily'
-      ? myRanking?.daily?.rank
+      ? dailyRanking?.rank
       : rankingView === 'weekly'
         ? myRanking?.weekly?.rank
         : myRanking?.monthly?.rank;
@@ -40,14 +50,14 @@ export default function MyRankCard({ rankingView, competitionTime }: MyRankCardP
 
   const score =
     rankingView === 'daily'
-      ? `${myRanking?.daily?.solvedCount || 0}/5`
+      ? `${dailyRanking?.solvedCount || 0}/5`
       : rankingView === 'weekly'
         ? `${myRanking?.weekly?.solvedCount}%`
         : `${myRanking?.monthly?.solvedCount}%`;
 
   const subInfo =
     rankingView === 'daily'
-      ? myRanking?.daily?.elapsedTime
+      ? dailyRanking?.elapsedTime
       : rankingView === 'weekly'
         ? `${myRanking?.weekly?.elapsedTime}일 연속 참여`
         : `${myRanking?.monthly?.elapsedTime}일 연속 참여`;
@@ -55,7 +65,7 @@ export default function MyRankCard({ rankingView, competitionTime }: MyRankCardP
   return (
     <>
       <div className="mb-1 text-sm font-bold tracking-tighter">. . .</div>
-      <div className="overflow-x-hidden">
+      <div className="overflow-x-hidden w-[440px] justify-items-end">
         <motion.div
           initial={{ x: '100%' }}
           animate={{ x: 0 }}

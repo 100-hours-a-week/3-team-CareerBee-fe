@@ -1,5 +1,6 @@
 import { safeGet, safePatch } from '@/lib/request';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
+import { QueryClient } from '@tanstack/react-query';
 
 export interface NotifyProps {
   id: number;
@@ -32,21 +33,29 @@ export const getNotification = async ({ pageParam = 0 }: { pageParam?: number })
 };
 
 export function useNotificationRead() {
+  const queryClient = new QueryClient();
   const token = useAuthStore.getState().token;
 
   const markNotificationsAsRead = async (notificationIds: number[]): Promise<void> => {
     if (notificationIds.length === 0) return;
-    await safePatch(
-      '/api/v1/members/notifications',
-      JSON.stringify({
-        notificationIds,
-      }),
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+
+    const previousUserInfo = queryClient.getQueryData(['userInfo']);
+    try {
+      await safePatch(
+        '/api/v1/members/notifications',
+        JSON.stringify({
+          notificationIds,
+        }),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      },
-    );
+      );
+      queryClient.refetchQueries({ queryKey: ['userInfo'] });
+    } catch (error) {
+      queryClient.setQueryData(['userInfo'], previousUserInfo);
+    }
   };
 
   return { markNotificationsAsRead };

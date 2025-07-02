@@ -4,7 +4,7 @@ import { safeGet } from '@/lib/request';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface MyChartProps {
   rank: number;
@@ -53,6 +53,7 @@ export const useMyRanking = () => {
 export const useDailyMyPolling = (enabled: boolean) => {
   const token = useAuthStore((state) => state.token);
   const queryClient = useQueryClient();
+  const [liveRanking, setLiveRanking] = useState<MyChartProps | null>(null);
 
   useEffect(() => {
     if (!enabled) return;
@@ -65,10 +66,13 @@ export const useDailyMyPolling = (enabled: boolean) => {
       });
       if (res.httpStatusCode === 200) {
         const liveData = res.data;
+        const converted = convertToChartProps(liveData, true);
         queryClient.setQueryData(['my-ranking'], (old: any) => ({
           ...old,
-          daily: convertToChartProps(liveData, true),
+          daily: converted,
         }));
+        setLiveRanking(converted);
+        return converted;
       }
     };
 
@@ -77,5 +81,7 @@ export const useDailyMyPolling = (enabled: boolean) => {
     const interval = setInterval(fetchInitial, 3000); // polling 3초
 
     return () => clearInterval(interval);
-  }, [enabled, queryClient]);
+  }, [enabled, queryClient, token]);
+
+  return liveRanking;
 };
