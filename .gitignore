@@ -24,6 +24,10 @@ dist-ssr
 *.sw?
 .env
 
-tmp.txt
-
 public/mock/*
+
+# Next.js 관련 파일
+next-env.d.ts
+.vercel
+/.next/
+/out/

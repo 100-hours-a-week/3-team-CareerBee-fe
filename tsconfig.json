@@ -8,7 +8,7 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "skipLibCheck": true,
     "strict": true,
     "noUnusedLocals": true,
@@ -22,7 +22,18 @@
       "@/*": ["src/*"],
       "@/pages/": ["src/pages/"],
       "@/layout/": ["src/layout/"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["src", "vite.config.ts"]
+  "include": [
+    "next-env.d.ts",
+    "src",
+    "vite.config.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
 }
