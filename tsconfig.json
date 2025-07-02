@@ -31,8 +31,10 @@
   },
   "include": [
     "next-env.d.ts",
+    "app",
+    "pages",
+    "components",
     "src",
-    "vite.config.ts",
     ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
