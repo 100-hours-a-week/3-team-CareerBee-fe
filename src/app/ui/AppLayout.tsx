@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useAuthStore } from '@/features/Member/auth/store/auth';
+import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { Header } from '@/components/layout/header';
 import { Navbar } from '@/components/layout/navbar';
 import { Toaster } from '@/src/widgets/ui/toaster';
@@ -9,7 +9,7 @@ import React from 'react';
 
 export function AppFrame({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const token = useAuthStore((s: { token: string }) => s.token);
+  const token = useAuthStore((s) => s.token);
 
   const headerType = (() => {
     if (!pathname) return;
