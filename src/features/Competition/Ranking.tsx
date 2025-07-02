@@ -110,7 +110,7 @@ export default function Ranking() {
                 <LiveBarChart />
               ) : isAggregationTime ? (
                 <AggregationNotice />
-              ) : topRankings?.daily ? (
+              ) : topRankings?.daily && topRankings?.daily.length > 0 ? (
                 <StaticBarChart rankingData={topRankings?.daily} type="daily" />
               ) : (
                 <div className="flex items-center h-[436px]">아직 랭킹 데이터가 없어요.</div>
