@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -19,15 +23,24 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@/pages/": ["src/pages/"],
-      "@/layout/": ["src/layout/"]
+      "@/*": [
+        "src/*"
+      ],
+      "@/pages/": [
+        "src/pages/"
+      ],
+      "@/layout/": [
+        "src/layout/"
+      ]
     },
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "allowJs": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true
   },
   "include": [
     "next-env.d.ts",
@@ -35,7 +48,10 @@
     "pages",
     "components",
     "src",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "next.config.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
