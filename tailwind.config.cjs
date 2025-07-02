@@ -2,17 +2,9 @@
 module.exports = {
   darkMode: ['class'],
   content: [
-    './index.html',
-    './src/**/*.{js,ts,jsx,tsx}',
-    '!./src/mock/**',
-    '!./src/icons/**',
-    '!./src/assets/**',
+    './app/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
   ],
-  //TODO: 파일 옮기고 테일윈드 속성 content 아래로 변경하기
-  // content: [
-  //   './app/**/*.{js,ts,jsx,tsx}',
-  //   './components/**/*.{js,ts,jsx,tsx}',
-  // ],
   theme: {
     extend: {
       fontFamily: {
