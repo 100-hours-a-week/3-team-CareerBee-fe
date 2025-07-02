@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import { useAuthStore } from '@/features/Member/auth/store/auth';
 import { Header } from '@/components/layout/header';
 import { Navbar } from '@/components/layout/navbar';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@/src/widgets/ui/toaster';
 import React from 'react';
 
 export function AppFrame({ children }: { children: React.ReactNode }) {
