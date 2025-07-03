@@ -27,6 +27,9 @@ module.exports = [
         sourceType: 'module',
       },
     },
+    env: {
+      node: true,
+    },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
       react,
