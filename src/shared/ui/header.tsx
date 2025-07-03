@@ -1,5 +1,5 @@
 import { PiBell, PiCaretDown, PiCaretLeft } from 'react-icons/pi';
-import logo from '@/static/logo-with-text-2.png';
+import logo from '@/public/images/logo-with-title.png';
 
 import { StateBasedModal } from '@/src/shared/ui/modal';
 
@@ -94,7 +94,6 @@ export const Header = ({ type = 'main' }: HeaderProps) => {
             <PiCaretDown className="w-7 h-7" />
           </button>
         ) : null}
-        ㅇ
         <button onClick={handleLogoClick} className="cursor-pointer px-0">
           <Image src={logo} alt="logo" className="h-8" />
         </button>

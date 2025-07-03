@@ -2,8 +2,8 @@
 
 import { usePathname } from 'next/navigation';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
-import { Header } from '@/components/layout/header';
-import { Navbar } from '@/components/layout/navbar';
+import { Header } from '@/src/shared/ui/header';
+import { Navbar } from '@/src/shared/ui/navbar';
 import { Toaster } from '@/src/widgets/ui/toaster';
 import React from 'react';
 
