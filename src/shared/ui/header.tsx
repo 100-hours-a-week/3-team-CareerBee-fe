@@ -1,7 +1,7 @@
 import { PiBell, PiCaretDown, PiCaretLeft } from 'react-icons/pi';
 import logo from '@/public/images/logo-with-title.png';
 
-import { StateBasedModal } from '@/src/shared/ui/modal';
+import { StateBasedModal } from '@/src/widgets/ui/modal';
 
 import { useUiStore } from '@/src/shared/model/ui';
 import { useCompetitionStore } from '@/src/entities/competition/model/competitionStore';
