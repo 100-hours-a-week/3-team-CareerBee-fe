@@ -1,3 +1,4 @@
+'use client';
 // 지도 기반의 검색 페이지. 메인 페이지이자 진입 페이지.
 // 도메인 상에서 "지도 도메인"
 /* global kakao */
@@ -24,8 +25,7 @@ import { Map, MarkerClusterer, Polygon } from 'react-kakao-maps-sdk';
 import { useState, useEffect, useRef } from 'react';
 
 export default function Home() {
-  const { openCardIndex, setOpenCardIndex, highlightedCompanyId, setHighlightedCompanyId } =
-    useCompanyStore();
+  const { openCardIndex, setOpenCardIndex, highlightedCompanyId } = useCompanyStore();
   const { search, setSearch, suggestions } = useSearchStore();
   const companyDisabledMap = useMarkerStore((state) => state.companyDisabledMap);
   const { center, zoom } = useMapStore();
@@ -57,7 +57,7 @@ export default function Home() {
         value={search}
         onChange={(e: { target: { value: string } }) => setSearch(e.target.value)}
         suggestions={suggestions}
-        setHighlightedCompanyId={setHighlightedCompanyId}
+        // setHighlightedCompanyId={setHighlightedCompanyId}
         mapRef={mapRef}
       />
       <div className="relative flex item-center justify-center w-full h-[calc(100%-4rem)] top-16">

@@ -2,9 +2,9 @@ import { toast } from '@/src/shared/model/useToast';
 import { useMapStore } from '@/src/features/map/model/map';
 import { useCompanyStore } from '@/src/shared/lib/company';
 
-const { setCenter, setZoom } = useMapStore();
 
 export const handleMapMove = (map: kakao.maps.Map) => {
+  const { setCenter, setZoom } = useMapStore();
   const { setHighlightedCompanyId } = useCompanyStore();
   const level = map.getLevel();
   const latlng = map.getCenter();
