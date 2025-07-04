@@ -9,7 +9,7 @@ import LogoutButton from '@/src/features/member/ui/LogoutButton';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
-export default function Mypage() {
+export default function Page() {
   const queryClient = useQueryClient();
   const router = useRouter();
 

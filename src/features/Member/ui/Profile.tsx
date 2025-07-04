@@ -6,7 +6,7 @@ import { PiCaretRight } from 'react-icons/pi';
 
 import { Button } from '@/src/widgets/ui/button';
 
-import { useUserInfo } from '@/src/features/member/api/useUserInfo';
+import { useUserInfo } from '@/src/features/member/model/useUserInfo';
 
 import { useRouter } from 'next/navigation';
 

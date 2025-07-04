@@ -5,7 +5,7 @@ import { StateBasedModal } from '@/src/widgets/ui/modal';
 
 import { useUiStore } from '@/src/shared/model/ui';
 import { useCompetitionStore } from '@/src/entities/competition/model/competitionStore';
-import { useUserInfo } from '@/src/features/member/api/useUserInfo';
+import { useUserInfo } from '@/src/features/member/model/useUserInfo';
 
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
