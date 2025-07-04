@@ -14,6 +14,13 @@ export const convertToTopChartProps = (data: any[], isDaily: boolean): ChartProp
 };
 
 export const convertToMyChartProps = (item: any, isDaily: boolean): MyChartProps => {
+  if (!item) {
+    return {
+      rank: -1,
+      elapsedTime: '-',
+      solvedCount: 0,
+    };
+  }
   return {
     rank: item?.rank ?? -1,
     elapsedTime: isDaily ? formatToMS(item.elapsedTime) : String(item.continuous),

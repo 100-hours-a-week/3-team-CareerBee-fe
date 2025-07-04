@@ -26,7 +26,10 @@ export const useDailyMyPolling = (enabled: boolean) => {
       });
       if (res.httpStatusCode === 200) {
         const liveData = res.data;
-        const converted = convertToMyChartProps(liveData, true);
+        let converted = null;
+        if (liveData != null) {
+          converted = convertToMyChartProps(liveData, true);
+        }
         queryClient.setQueryData(['my-ranking'], (old: any) => ({
           ...old,
           daily: converted,
