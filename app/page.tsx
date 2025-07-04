@@ -5,7 +5,7 @@
 
 import { SearchBar } from '@/src/features/map/ui/SearchBar';
 import { FilterGroup } from '@/src/features/map/ui/filter';
-import MapOverlay from '@/src/features/map/ui/MapOverlay';
+import MapOverlay from '@/src/entities/map/ui/MapOverlay';
 import { Button } from '@/src/widgets/ui/button';
 import { PiCrosshairSimple } from 'react-icons/pi';
 

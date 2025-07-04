@@ -91,6 +91,7 @@ export default function Page() {
                   const imageUrl = photo?.url ?? noImg;
                   return (
                     <div
+                      key={index}
                       className={
                         index === 0
                           ? 'col-span-2 row-span-2 relative aspect-[4/3]'
@@ -98,7 +99,6 @@ export default function Page() {
                       }
                     >
                       <Image
-                        key={index}
                         src={imageUrl}
                         alt={company.name ?? 'no image'}
                         fill
