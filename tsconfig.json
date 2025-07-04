@@ -23,15 +23,7 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "@/pages/": [
-        "src/pages/"
-      ],
-      "@/layout/": [
-        "src/layout/"
-      ]
+      "@/*": ["./*"]
     },
     "plugins": [
       {
@@ -45,8 +37,6 @@
   "include": [
     "next-env.d.ts",
     "app",
-    "pages",
-    "components",
     "src",
     ".next/types/**/*.ts",
     "next.config.ts"
