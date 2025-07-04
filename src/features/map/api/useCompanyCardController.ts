@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useCompanyStore } from '@/src/shared/lib/company';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { instance as axios } from '@/src/shared/api/axios';
-import { useFetchBookmarkStatus } from '@/src/entities/map/api/useFetchBookmarkStatus';
+import { useFetchBookmarkStatus } from '@/src/shared/api/useFetchBookmarkStatus';
 
 export function useCompanyCardController(companyId: number) {
   const { openCardIndex, setOpenCardIndex, setCompanyInfo, setIsBookmarked } = useCompanyStore();
