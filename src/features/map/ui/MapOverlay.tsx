@@ -1,3 +1,5 @@
+'use client';
+
 import { MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import CompanyCard from '@/src/features/map/ui/CompanyCard';
 import noImg from '@/public/images/no-image.png';

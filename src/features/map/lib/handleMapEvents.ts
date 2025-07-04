@@ -1,19 +1,24 @@
 import { toast } from '@/src/shared/model/useToast';
-import { useMapStore } from '@/src/features/map/model/map';
-import { useCompanyStore } from '@/src/shared/lib/company';
 
+import { LatLng } from '@/src/features/map/model/map';
 
-export const handleMapMove = (map: kakao.maps.Map) => {
-  const { setCenter, setZoom } = useMapStore();
-  const { setHighlightedCompanyId } = useCompanyStore();
+export const handleMapMove = (
+  map: kakao.maps.Map,
+  options: {
+    setCenter: (_center: LatLng) => void;
+    setZoom:  (_zoom: number) => void;
+    setHighlightedCompanyId: (_id: number | null) => void;
+  }
+) => {
   const level = map.getLevel();
   const latlng = map.getCenter();
-  setHighlightedCompanyId(null);
-  setCenter({
+
+  options.setHighlightedCompanyId(null);
+  options.setCenter({
     lat: latlng.getLat(),
     lng: latlng.getLng(),
   });
-  setZoom(level);
+  options.setZoom(level);
 };
 
 export const handleMoveToCurrentLocation = (mapRef: React.MutableRefObject<kakao.maps.Map | null>) => {

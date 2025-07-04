@@ -25,10 +25,11 @@ import { Map, MarkerClusterer, Polygon } from 'react-kakao-maps-sdk';
 import { useState, useEffect, useRef } from 'react';
 
 export default function Home() {
-  const { openCardIndex, setOpenCardIndex, highlightedCompanyId } = useCompanyStore();
+  const { openCardIndex, setOpenCardIndex, highlightedCompanyId, setHighlightedCompanyId } =
+    useCompanyStore();
   const { search, setSearch, suggestions } = useSearchStore();
   const companyDisabledMap = useMarkerStore((state) => state.companyDisabledMap);
-  const { center, zoom } = useMapStore();
+  const { center, zoom, setCenter, setZoom } = useMapStore();
 
   const { data: companies = [] } = useCompanyList(center, zoom);
 
@@ -64,8 +65,20 @@ export default function Home() {
             center={{ lat: center.lat, lng: center.lng }}
             className="w-full h-full pb-16"
             level={zoom}
-            onZoomChanged={handleMapMove}
-            onDragEnd={handleMapMove}
+            onZoomChanged={(map) =>
+              handleMapMove(map, {
+                setCenter,
+                setZoom,
+                setHighlightedCompanyId,
+              })
+            }
+            onDragEnd={(map) =>
+              handleMapMove(map, {
+                setCenter,
+                setZoom,
+                setHighlightedCompanyId,
+              })
+            }
             onClick={() => setOpenCardIndex(null)}
             minLevel={8}
           >

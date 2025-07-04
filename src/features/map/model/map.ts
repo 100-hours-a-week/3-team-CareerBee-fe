@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { KTB } from '@/src/features/map/config/map';
 import { persist } from 'zustand/middleware';
 
-type LatLng = { lat: number; lng: number };
+export type LatLng = { lat: number; lng: number };
 interface MapStore {
   center: LatLng;
   zoom: number;

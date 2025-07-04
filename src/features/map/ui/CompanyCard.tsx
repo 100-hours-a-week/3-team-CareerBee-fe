@@ -1,3 +1,5 @@
+'use client';
+
 import { PiBookmarkSimple, PiBookmarkSimpleFill, PiX } from 'react-icons/pi';
 import noImg from '@/public/images/no-image.png';
 import companyCardBackground from '@/src/features/map/assets/company-card-background.png';
@@ -7,7 +9,7 @@ import { Toggle } from '@/src/widgets/ui/toggle';
 import { useToggleBookmarkMutation } from '@/src/widgets/api/useToggleBookmarkMutation';
 import { toast } from '@/src/shared/model/useToast';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import React from 'react';
@@ -78,7 +80,7 @@ export default function CompanyCard({
         'relative rounded-xl p-2 w-64 z-30 cursor-pointer bg-no-repeat bg-cover',
         isCompanyCardList ? 'bg-white border border-border h-40' : 'h-44',
       )}
-      style={!isCompanyCardList ? { backgroundImage: `url(${companyCardBackground})` } : {}}
+      style={!isCompanyCardList ? { backgroundImage: `url(${companyCardBackground.src})` } : {}}
     >
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-2">
@@ -118,11 +120,13 @@ export default function CompanyCard({
 
       <div className="flex items-center">
         {/* 이미지 */}
-        <div className="w-[108px] h-[108px] rounded-md flex items-center justify-center overflow-hidden mr-auto">
+        <div className="relative w-[108px] h-[108px] rounded-md flex items-center justify-center overflow-hidden mr-auto">
           <Image
             src={imageUrl || noImg}
             alt={companyName}
-            className="w-full h-full object-cover rounded-md"
+            fill
+            sizes="(max-width: 640px) 100vw, 108px"
+            className="object-cover rounded-md"
           />
         </div>
 
