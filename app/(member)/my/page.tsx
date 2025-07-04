@@ -1,8 +1,90 @@
-export default function Page() {
+'use client';
+
+import noProfile from '@/public/images/no-profile.png';
+import point from '@/public/images/point.svg';
+import { PiCaretRight } from 'react-icons/pi';
+
+import { Button } from '@/src/widgets/ui/button';
+import { Modal } from '@/src/widgets/ui/modal';
+import { logout } from '@/src/features/auth/api/logout';
+import WishCompanyList from '@/src/features/member/ui/wishCompanyList';
+
+import { useUserInfo } from '@/src/features/member/api/useUserInfo';
+
+import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+
+export default function Mypage() {
+  const { data: userInfo } = useUserInfo();
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  // 뒤로가기
+  window.onpageshow = function (event) {
+    if (
+      event.persisted ||
+      (window.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming).type ==
+        'back_forward'
+    ) {
+      queryClient.refetchQueries({ queryKey: ['userInfo'] });
+    }
+  };
+
   return (
-    <div>
-      <h1>페이지</h1>
-      <p>라우팅 확인용입니다.</p>
-    </div>
+    <>
+      <div className="flex flex-col grow">
+        <div className="flex items-center h-fit px-6 py-4 gap-4 border border-transparent border-b-border/30">
+          <img
+            src={userInfo?.profileUrl || noProfile}
+            className="bg-white rounded-full w-16 h-16 object-cover"
+            alt="프로필 이미지"
+          ></img>
+          <div className="flex flex-col my-auto mr-auto text-text-primary gap-1">
+            <div className="flex items-center gap-1 [&_svg]:size-5">
+              <div className="text-xl my-auto font-bold">{userInfo?.nickname || '닉네임'}</div>
+              <Button
+                variant="icon"
+                label={<PiCaretRight className="text-text-secondary" />}
+                className="p-0 m-0 h-full"
+                onClick={() => {
+                  router.push('/my/account');
+                }}
+              />
+            </div>
+            <div className="flex items-center gap-1">
+              <img src={point.src} className="w-4 h-4 inline-block" alt="포인트 아이콘" />
+              <div className="text-sm">{userInfo?.point || 0}</div>
+            </div>
+          </div>
+          <Button
+            label="내 이력 조회"
+            variant="primary"
+            className="text-sm rounded-xl px-6"
+            onClick={() => {
+              router.push('/resume/upload');
+            }}
+          />
+        </div>
+        <WishCompanyList />
+      </div>
+
+      <Modal
+        trigger={
+          <Button label="로그아웃" size="sm" variant="link" className="mx-16 mb-8 underline" />
+        }
+        title="로그아웃 하시겠어요?"
+        description={
+          <>
+            다음에 서비스를 더 편하게 이용하시려면
+            <br />
+            로그인 상태를 유지해 주세요.
+          </>
+        }
+        cancelText="되돌아가기"
+        actionText="로그아웃 하기"
+        cancelButton={false}
+        onAction={logout}
+      />
+    </>
   );
 }
