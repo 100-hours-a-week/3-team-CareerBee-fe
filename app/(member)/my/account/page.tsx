@@ -14,25 +14,25 @@ export default function Page() {
   const router = useRouter();
 
   return (
-    <DirtyProvider>
-      <div className="flex flex-col h-full">
-        <div className="py-3 w-full mb-auto">
+    <div className="flex flex-col h-full">
+      <div className="py-3 w-full mb-auto">
+        <DirtyProvider>
           <ProfileUpdate />
-          <CustomerService />
-          <div className="flex px-16 py-3 gap-2 border border-transparent border-b-border/30">
-            <Button
-              label="회원탈퇴"
-              size="sm"
-              variant="link"
-              className="underline pl-3 py-2"
-              onClick={() => {
-                router.push('/my/account/quit');
-              }}
-            ></Button>
-          </div>
+        </DirtyProvider>
+        <CustomerService />
+        <div className="flex px-16 py-3 gap-2 border border-transparent border-b-border/30">
+          <Button
+            label="회원탈퇴"
+            size="sm"
+            variant="link"
+            className="underline pl-3 py-2"
+            onClick={() => {
+              router.push('/my/account/quit');
+            }}
+          ></Button>
         </div>
-        <Footer />
       </div>
-    </DirtyProvider>
+      <Footer />
+    </div>
   );
 }
