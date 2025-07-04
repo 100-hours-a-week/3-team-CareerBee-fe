@@ -1,4 +1,4 @@
-import LoginButton from '@/src/features/member/ui/LoginButton';
+import LoginButton from '@/src/features/auth/ui/LoginButton';
 
 export default function Page() {
   return (
