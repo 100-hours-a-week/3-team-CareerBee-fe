@@ -95,7 +95,7 @@ export const Header = ({ type = 'main' }: HeaderProps) => {
           </button>
         ) : null}
         <button onClick={handleLogoClick} className="cursor-pointer px-0">
-          <Image src={logo} alt="logo" width="131.5" height="32" />
+          <Image src={logo} alt="logo" width="131.5" height="32" priority />
         </button>
       </div>
 
