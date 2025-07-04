@@ -104,7 +104,7 @@ export const Header = ({ type = 'main' }: HeaderProps) => {
         {showUserAssets && userInfo ? (
           <>
             <div className="flex items-center gap-2">
-              <img src="/assets/coin-small.svg" alt="포인트" className="w-8 h-8 rounded-full" />
+              <img src="/images/coin-small.svg" alt="포인트" className="w-8 h-8 rounded-full" />
               <span className="text-lg font-semibold">{userInfo.point ?? 0}</span>
             </div>
             <Link href="/notification" className="relative">
