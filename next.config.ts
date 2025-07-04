@@ -5,7 +5,8 @@ const nextConfig: NextConfig = {
   images: {
     domains: [
       'board.jinhak.com',
-      'imgorg.catch.co.kr'
+      'imgorg.catch.co.kr',
+      'storage.googleapis.com'
     ],
   },
 };

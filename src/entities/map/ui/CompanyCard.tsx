@@ -6,7 +6,7 @@ import companyCardBackground from '@/src/features/map/assets/company-card-backgr
 import { Button } from '@/src/widgets/ui/button';
 import { Toggle } from '@/src/widgets/ui/toggle';
 
-import { useToggleBookmarkMutation } from '@/src/widgets/api/useToggleBookmarkMutation';
+import { useToggleBookmarkMutation } from '@/src/shared/api/useToggleBookmarkMutation';
 import { toast } from '@/src/shared/model/useToast';
 
 import { useRouter } from 'next/navigation';
