@@ -7,7 +7,7 @@ import { Navbar } from '@/src/shared/ui/navbar';
 import { Toaster } from '@/src/widgets/ui/toaster';
 import React from 'react';
 
-export function AppFrame({ children }: { children: React.ReactNode }) {
+export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const token = useAuthStore((s) => s.token);
 

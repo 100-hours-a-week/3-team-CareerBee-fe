@@ -30,24 +30,18 @@ export default function Home() {
   const companyDisabledMap = useMarkerStore((state) => state.companyDisabledMap);
   const { center, zoom } = useMapStore();
 
-  const [loaded, setLoaded] = useState(false);
-
   const { data: companies = [] } = useCompanyList(center, zoom);
 
   const mapRef = useRef<kakao.maps.Map | null>(null);
 
+  const [loaded, setLoaded] = useState(false);
+
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_KAKAOMAP_KEY}&autoload=false&libraries=clusterer,drawing`;
-    script.async = true;
-    script.onload = () => {
+    if (window.kakao && window.kakao.maps) {
       window.kakao.maps.load(() => {
-        setTimeout(() => {
-          setLoaded(true);
-        }, 300); // 지도 초기화 후 이벤트 발생 시간보다 약간 뒤에 false로 설정
+        setLoaded(true);
       });
-    };
-    document.head.appendChild(script);
+    }
   }, []);
 
   return (
@@ -60,7 +54,10 @@ export default function Home() {
         // setHighlightedCompanyId={setHighlightedCompanyId}
         mapRef={mapRef}
       />
-      <div className="relative flex item-center justify-center w-full h-[calc(100%-4rem)] top-16">
+      <div className="relative flex justify-center w-full h-[calc(100%-4rem)] top-16">
+        {!loaded && (
+          <div className="flex h-full items-center justify-center">지도를 불러오는 중...</div>
+        )}
         {loaded && (
           <Map
             ref={mapRef}

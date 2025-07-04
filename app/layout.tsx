@@ -1,11 +1,12 @@
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
-import { AppFrame } from '@/src/app/ui/AppLayout';
+import { AppLayout } from '@/src/app/ui/AppLayout';
 import { Providers } from '@/src/app/ui/Providers';
 
 import React from 'react';
 import type { Metadata } from 'next';
+import Script from 'next/script';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -26,8 +27,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Script
+          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAOMAP_KEY}&autoload=false&libraries=clusterer,drawing`}
+          strategy="beforeInteractive"
+        />
         <Providers>
-          <AppFrame>{children}</AppFrame>
+          <AppLayout>{children}</AppLayout>
         </Providers>
       </body>
     </html>

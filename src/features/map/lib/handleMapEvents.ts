@@ -16,7 +16,7 @@ export const handleMapMove = (map: kakao.maps.Map) => {
   setZoom(level);
 };
 
-export const handleMoveToCurrentLocation = (mapRef: React.RefObject<kakao.maps.Map>) => {
+export const handleMoveToCurrentLocation = (mapRef: React.MutableRefObject<kakao.maps.Map | null>) => {
   if (!mapRef.current) return;
 
   navigator.geolocation.getCurrentPosition(
