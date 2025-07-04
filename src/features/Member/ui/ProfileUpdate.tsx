@@ -5,7 +5,7 @@ import { Button } from '@/src/widgets/ui/button';
 import ProfileImageInput from '@/src/features/member/ui/profileImageInput';
 import NicknameInput from '@/src/features/member/ui/nicknameInput';
 
-import { SubmitProfileUpdate } from '@/src/features/member/api/submitProfileUpdate';
+import { useSubmitProfileUpdate } from '@/src/features/member/api/useSubmitProfileUpdate';
 import { useDirty } from '@/src/features/member/model/isDirtyContext';
 
 import { handlePresignedUrl } from '@/src/shared/api/handlePresignedUrl';
@@ -22,14 +22,9 @@ export const ProfileUpdate = () => {
   const email = userInfo?.email ?? 'test@example.com';
   const [file, setFile] = useState<File | null>(null);
 
+  const { submit } = useSubmitProfileUpdate();
   const [helperText, setHelperText] = useState('');
-  const {
-    isNicknameDirty,
-    setIsNicknameDirty,
-    isProfileImageDirty,
-    setIsProfileImageDirty,
-    isAnyDirty,
-  } = useDirty();
+  const { isNicknameDirty, setIsNicknameDirty, isProfileImageDirty, isAnyDirty } = useDirty();
 
   useEffect(() => {
     const originalNickname = userInfo?.nickname ?? '닉네임';
@@ -59,32 +54,29 @@ export const ProfileUpdate = () => {
   }, [isAnyDirty]);
 
   const token = useAuthStore((state) => state.token);
+
+  const onSubmit = async (e: any) => {
+    e.preventDefault();
+    await submit({
+      nickname: isNicknameDirty ? nickname : userInfo.nickname,
+      profileUrl: isProfileImageDirty
+        ? await handlePresignedUrl({
+            file,
+            token,
+            type: 'image',
+            uploadType: 'PROFILE_IMAGE',
+          })
+        : undefined,
+      setHelperText: (value: string) => setHelperText(value),
+    });
+    queryClient.refetchQueries({ queryKey: ['userInfo'] });
+  };
+
   return (
     <div className="flex flex-col px-16 pb-3 gap-2 border border-transparent border-b-border/30">
       <div className="text-base font-bold w-full items-start">회원 정보 관리</div>
       <div>
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            await SubmitProfileUpdate({
-              nickname: isNicknameDirty ? nickname : userInfo.nickname,
-              profileUrl: isProfileImageDirty
-                ? await handlePresignedUrl({
-                    file,
-                    token,
-                    type: 'image',
-                    uploadType: 'PROFILE_IMAGE',
-                  })
-                : undefined,
-              setIsNicknameDirty,
-              isProfileImageDirty,
-              setIsProfileImageDirty,
-              setHelperText: (value: string) => setHelperText(value),
-              token,
-            });
-            queryClient.refetchQueries({ queryKey: ['userInfo'] });
-          }}
-        >
+        <form onSubmit={onSubmit}>
           <ProfileImageInput onFileSelect={setFile} />
           <p className="flex w-full justify-end text-xs text-error h-4">{helperText}</p>
           <div className="flex flex-col gap-2">
