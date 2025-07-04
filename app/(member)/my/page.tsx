@@ -9,20 +9,24 @@ import LogoutButton from '@/src/features/member/ui/LogoutButton';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
+import { useEffect } from 'react';
+
 export default function Page() {
   const queryClient = useQueryClient();
   const router = useRouter();
 
   // 뒤로가기
-  window.onpageshow = function (event) {
-    if (
-      event.persisted ||
-      (window.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming).type ==
-        'back_forward'
-    ) {
-      queryClient.refetchQueries({ queryKey: ['userInfo'] });
-    }
-  };
+  useEffect(() => {
+    window.onpageshow = function (event) {
+      if (
+        event.persisted ||
+        (window.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming)
+          .type === 'back_forward'
+      ) {
+        queryClient.refetchQueries({ queryKey: ['userInfo'] });
+      }
+    };
+  }, [queryClient]);
 
   return (
     <>
