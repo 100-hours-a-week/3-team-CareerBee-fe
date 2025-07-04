@@ -14,7 +14,7 @@ export const useSubmitProfileUpdate = () =>{
 
   const token = useAuthStore((state) => state.token);
   
- const submit = async ({
+  const submit = async ({
     nickname,
     profileUrl,
     setHelperText,
