@@ -6,7 +6,7 @@ import { Input } from '@/src/widgets/ui/input';
 import { SuggestionList } from '@/src/features/map/ui/SuggestionList';
 
 import { CompanySuggestion } from '@/src/features/map/model/search';
-import { handleSuggestionSelect } from '@/src/features/map/api/handleSuggestionSelect';
+import { useSuggestionSelect } from '@/src/features/map/api/useSuggestionSelect';
 import { useFetchSuggestions } from '@/src/entities/map/api/useFetchSuggestions';
 
 import { cn } from '@/src/shared/lib/utils';
@@ -28,6 +28,8 @@ export function SearchBar({
   const inputRef = useRef<HTMLInputElement>(null);
   const [showList, setShowList] = useState(value && suggestions.length > 0);
   const [selectedIndex, setSelectedIndex] = useState<number>(-2);
+
+  const { handleSuggestionSelect } = useSuggestionSelect();
 
   const clearInput = () => {
     setSelectedIndex(-2);

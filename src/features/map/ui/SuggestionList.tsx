@@ -1,5 +1,5 @@
 import { cn } from '@/src/shared/lib/utils';
-import { handleSuggestionSelect } from '@/src/features/map/api/handleSuggestionSelect';
+import { useSuggestionSelect } from '@/src/features/map/api/useSuggestionSelect';
 
 export function SuggestionList({
   filteredSuggestions,
@@ -16,6 +16,8 @@ export function SuggestionList({
   isClosing?: boolean;
   selectedIndex: number;
 }) {
+  const { handleSuggestionSelect } = useSuggestionSelect();
+
   return (
     <ul className="z-50 duration-300 w-full rounded-b-3xl max-h-96 overflow-auto">
       {filteredSuggestions.slice(0, 8).map((item, i, arr) => {

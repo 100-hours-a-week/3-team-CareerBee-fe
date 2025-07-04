@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   images: {
     domains: [
       'board.jinhak.com',
-      // 필요하면 다른 도메인도 추가
+      'imgorg.catch.co.kr'
     ],
   },
 };

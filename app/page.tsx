@@ -16,7 +16,7 @@ import { useMapStore } from '@/src/features/map/model/map';
 
 import { safeCluster } from '@/src/entities/map/lib/safeCluster';
 import { useCompanyList } from '@/src/entities/map/api/useCompanyList';
-import { handleMapMove, handleMoveToCurrentLocation } from '@/src/features/map/lib/handleMapEvents';
+import { useMapEvents } from '@/src/features/map/lib/useMapEvents';
 
 import { FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/src/features/map/config/map';
 import { CLUSTER_STYLES } from '@/src/features/map/config/clusterStyles';
@@ -25,18 +25,18 @@ import { Map, MarkerClusterer, Polygon } from 'react-kakao-maps-sdk';
 import { useState, useEffect, useRef } from 'react';
 
 export default function Home() {
-  const { openCardIndex, setOpenCardIndex, highlightedCompanyId, setHighlightedCompanyId } =
-    useCompanyStore();
+  const { openCardIndex, setOpenCardIndex, highlightedCompanyId } = useCompanyStore();
   const { search, setSearch, suggestions } = useSearchStore();
   const companyDisabledMap = useMarkerStore((state) => state.companyDisabledMap);
-  const { center, zoom, setCenter, setZoom } = useMapStore();
+  const { center, zoom } = useMapStore();
+
+  const { handleMapMove, handleMoveToCurrentLocation } = useMapEvents();
 
   const { data: companies = [] } = useCompanyList(center, zoom);
 
   const mapRef = useRef<kakao.maps.Map | null>(null);
 
   const [loaded, setLoaded] = useState(false);
-
   useEffect(() => {
     if (window.kakao && window.kakao.maps) {
       window.kakao.maps.load(() => {
@@ -65,20 +65,8 @@ export default function Home() {
             center={{ lat: center.lat, lng: center.lng }}
             className="w-full h-full pb-16"
             level={zoom}
-            onZoomChanged={(map) =>
-              handleMapMove(map, {
-                setCenter,
-                setZoom,
-                setHighlightedCompanyId,
-              })
-            }
-            onDragEnd={(map) =>
-              handleMapMove(map, {
-                setCenter,
-                setZoom,
-                setHighlightedCompanyId,
-              })
-            }
+            onZoomChanged={handleMapMove}
+            onDragEnd={handleMapMove}
             onClick={() => setOpenCardIndex(null)}
             minLevel={8}
           >

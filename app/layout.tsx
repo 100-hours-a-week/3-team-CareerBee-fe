@@ -23,12 +23,18 @@ export const metadata: Metadata = {
   description: 'IT 구직자를 위한 커리어 시각화 플랫폼 CareerBee',
 };
 
+const kakaoKey = process.env.NEXT_PUBLIC_KAKAOMAP_KEY;
+
+if (!kakaoKey) {
+  throw new Error('Kakao Map Key is missing!');
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Script
-          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAOMAP_KEY}&autoload=false&libraries=clusterer,drawing`}
+          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}&autoload=false&libraries=clusterer,drawing`}
           strategy="beforeInteractive"
         />
         <Providers>
