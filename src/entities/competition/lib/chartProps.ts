@@ -6,4 +6,8 @@ export interface ChartProps {
   solvedCount: number;
 }
 
-export default ChartProps;
+export interface MyChartProps {
+  rank: number;
+  elapsedTime: string;
+  solvedCount: number;
+}

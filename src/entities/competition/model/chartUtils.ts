@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import ChartProps from '@/src/entities/competition/lib/chartProps';
+import { ChartProps } from '@/src/entities/competition/lib/chartProps';
 
 import React from 'react';
 
@@ -253,10 +253,10 @@ export const background = (
             .attr('width', width)
             .attr('height', barHeight)
             .attr('href', (d) => {
-              if (d.rank === 1) return '/assets/red-rank.svg';
-              if (d.rank === 2) return '/assets/green-rank.svg';
-              if (d.rank === 3) return '/assets/blue-rank.svg';
-              return '/assets/yellow-rank.svg'; // rank ≥ 4
+              if (d.rank === 1) return '/images/red-rank.svg';
+              if (d.rank === 2) return '/images/green-rank.svg';
+              if (d.rank === 3) return '/images/blue-rank.svg';
+              return '/images/yellow-rank.svg'; // rank ≥ 4
             })
             .transition()
             .duration(transTime * 2)
@@ -265,10 +265,10 @@ export const background = (
           update
             .attr('preserveAspectRatio', 'none')
             .attr('href', (d) => {
-              if (d.rank === 1) return '/assets/red-rank.svg';
-              if (d.rank === 2) return '/assets/green-rank.svg';
-              if (d.rank === 3) return '/assets/blue-rank.svg';
-              return '/assets/yellow-rank.svg'; // rank ≥ 4
+              if (d.rank === 1) return '/images/red-rank.svg';
+              if (d.rank === 2) return '/images/green-rank.svg';
+              if (d.rank === 3) return '/images/blue-rank.svg';
+              return '/images/yellow-rank.svg'; // rank ≥ 4
             })
             .transition()
             .duration(transTime)

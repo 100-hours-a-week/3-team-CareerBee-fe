@@ -14,7 +14,7 @@ import {
   gap,
   scaleConfigMap,
 } from '@/src/entities/competition/lib/scaleConfig';
-import ChartProps from '@/src/entities/competition/lib/chartProps';
+import { ChartProps } from '@/src/entities/competition/lib/chartProps';
 
 export default function BarChart({
   rankingData,

@@ -1,7 +1,7 @@
-import noProfile from '/assets/no-profile.png';
+import noProfile from '@/public/images/no-profile.png';
 import { formatToMS } from '@/src/entities/competition/lib/timer';
 
-import ChartProps from '@/src/entities/competition/lib/chartProps';
+import { ChartProps, MyChartProps } from '@/src/entities/competition/lib/chartProps';
 
 export const convertToTopChartProps = (data: any[], isDaily: boolean): ChartProps[] => {
   return data.map((item: any, index: number) => ({
@@ -11,4 +11,12 @@ export const convertToTopChartProps = (data: any[], isDaily: boolean): ChartProp
     elapsedTime: isDaily ? formatToMS(item.elapsedTime) : String(item.continuous),
     solvedCount: isDaily ? item.solvedCount : Math.round(item.correctRate * 1000) / 1000,
   }));
+};
+
+export const convertToMyChartProps = (item: any, isDaily: boolean): MyChartProps => {
+  return {
+    rank: item?.rank ?? -1,
+    elapsedTime: isDaily ? formatToMS(item.elapsedTime) : String(item.continuous),
+    solvedCount: isDaily ? item.solvedCount : item.correctRate,
+  };
 };

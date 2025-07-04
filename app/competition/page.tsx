@@ -1,11 +1,13 @@
+'use client';
+
 import { PiCaretLeft, PiCaretRight } from 'react-icons/pi';
 
 import { Button } from '@/src/widgets/ui/button';
 import LiveBarChart from '@/src/features/competition/ui/liveChart';
 import StaticBarChart from '@/src/entities/competition/ui/staticChart';
 import Timer, { checkTime } from '@/src/entities/competition/lib/timer';
-import RankCardList from './components/rankCardList';
-import MyRankCard from '@/features/Competition/components/myRankCard';
+import RankCardList from '@/src/entities/competition/ui/rankCardList';
+import MyRankCard from '@/src/features/competition/ui/myRankCard';
 import {
   COMPETITION_START_TIME,
   COMPETITION_END_TIME,
