@@ -2,11 +2,13 @@
 
 import { MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import CompanyCard from '@/src/entities/map/ui/CompanyCard';
-import noImg from '@/public/images/no-image.png';
+import markerFallback from '@/src/entities/map/assets/marker-fallback.svg';
 import { useCompanyStore } from '@/src/shared/lib/company';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { useCompanyCardController } from '@/src/features/map/api/useCompanyCardController';
 import { CompanyProps } from '@/src/entities/map/model/company';
+
+import { useEffect, useState } from 'react';
 
 interface MapOverlayProps {
   company: CompanyProps;
@@ -27,14 +29,23 @@ export default function MapOverlay({ company, isOpen, disabled, isHighlighted }:
 
   const { fetchCompanyDetail } = useCompanyCardController(company.id);
 
+  const [isValid, setIsValid] = useState(true);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = company.markerUrl;
+    img.onload = () => setIsValid(true);
+    img.onerror = () => setIsValid(false);
+  }, [company.markerUrl]);
+
   return (
     <>
       {!disabled && (
         <MapMarker
           position={position}
           image={{
-            src: company.markerUrl ?? noImg,
-            size: isHighlighted ? { width: 44, height: 60 } : { width: 37, height: 50 },
+            src: isValid ? company.markerUrl : markerFallback.src,
+            size: { width: 37, height: 50 },
           }}
           clickable={true}
           onClick={fetchCompanyDetail}
