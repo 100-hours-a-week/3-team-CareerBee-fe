@@ -5,7 +5,7 @@ import { StateBasedModal } from '@/src/widgets/ui/modal';
 
 import { useUiStore } from '@/src/shared/model/ui';
 import { useCompetitionStore } from '@/src/entities/competition/model/competitionStore';
-import { useUserInfo } from '@/src/features/member/api/useUserInfo';
+import { useUserInfo } from '@/src/features/member/model/useUserInfo';
 
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
@@ -104,7 +104,7 @@ export const Header = ({ type = 'main' }: HeaderProps) => {
         {showUserAssets && userInfo ? (
           <>
             <div className="flex items-center gap-2">
-              <img src="/assets/coin-small.svg" alt="포인트" className="w-8 h-8 rounded-full" />
+              <img src="/images/coin.svg" alt="포인트" className="w-8 h-8 rounded-full" />
               <span className="text-lg font-semibold">{userInfo.point ?? 0}</span>
             </div>
             <Link href="/notification" className="relative">

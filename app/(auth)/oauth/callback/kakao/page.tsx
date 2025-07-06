@@ -1,8 +1,15 @@
+'use client';
+
+import { Loader } from '@/src/widgets/ui/loader';
+import { useKakaoOAuth } from '@/src/features/auth/api/useKakaoOAuth';
+
 export default function Page() {
+  useKakaoOAuth();
+
   return (
-    <div>
-      <h1>페이지</h1>
-      <p>라우팅 확인용입니다.</p>
+    <div className="flex flex-col gap-4 h-screen items-center justify-center text-lg font-semibold">
+      <Loader />
+      <p>로그인 중이에요...</p>
     </div>
   );
 }
