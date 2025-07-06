@@ -10,14 +10,6 @@ interface MapStore {
   setZoom: (_zoom: number) => void;
 }
 
-function clearLegacyStorage() {
-  if (localStorage.getItem('map-storage')) {
-    localStorage.removeItem('map-storage');
-  }
-}
-
-clearLegacyStorage();
-
 export const useMapStore = create<MapStore>()(
   persist(
     (set) => ({

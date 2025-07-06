@@ -32,6 +32,7 @@ export default function Page() {
 
   const pathname = usePathname();
 
+  console.log(pathname);
   const [company, setCompany] = useState<Company>();
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const token = useAuthStore((state) => state.token);
@@ -71,8 +72,8 @@ export default function Page() {
     );
 
   return (
-    <AnimatePresence>
-      <div className="overflow-auto">
+    <div className="overflow-auto">
+      <AnimatePresence mode="wait">
         {!exit && (
           <motion.div
             key={pathname}
@@ -177,7 +178,7 @@ export default function Page() {
             </div>
           </motion.div>
         )}
-      </div>
-    </AnimatePresence>
+      </AnimatePresence>
+    </div>
   );
 }
