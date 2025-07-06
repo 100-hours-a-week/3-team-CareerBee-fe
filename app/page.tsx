@@ -21,10 +21,11 @@ import { useMapEvents } from '@/src/features/map/lib/useMapEvents';
 import { FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/src/features/map/config/map';
 import { CLUSTER_STYLES } from '@/src/features/map/config/clusterStyles';
 
+import { useNotificationSSE } from '@/src/shared/model/useNotificationSSE';
 import { Map, MarkerClusterer, Polygon } from 'react-kakao-maps-sdk';
 import { useState, useEffect, useRef } from 'react';
 
-export default function Home() {
+export default function Page() {
   const { openCardIndex, setOpenCardIndex, highlightedCompanyId } = useCompanyStore();
   const { search, setSearch, suggestions } = useSearchStore();
   const companyDisabledMap = useMarkerStore((state) => state.companyDisabledMap);
@@ -45,6 +46,7 @@ export default function Home() {
     }
   }, []);
 
+  useNotificationSSE();
   return (
     <>
       <SearchBar
