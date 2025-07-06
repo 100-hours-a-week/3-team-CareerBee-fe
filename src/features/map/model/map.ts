@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { KTB } from '@/src/features/map/config/map';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type LatLng = { lat: number; lng: number };
 interface MapStore {
@@ -9,6 +9,14 @@ interface MapStore {
   setCenter: (_center: LatLng) => void;
   setZoom: (_zoom: number) => void;
 }
+
+function clearLegacyStorage() {
+  if (localStorage.getItem('map-storage')) {
+    localStorage.removeItem('map-storage');
+  }
+}
+
+clearLegacyStorage();
 
 export const useMapStore = create<MapStore>()(
   persist(
@@ -19,7 +27,8 @@ export const useMapStore = create<MapStore>()(
       setZoom: (zoom: number) => set({ zoom }),
     }),
     {
-      name: 'map-storage', // localStorage 키
+      name: 'map-storage', // sessionStorage 키
+      storage: createJSONStorage(()=>sessionStorage),
     },
   ),
 );
