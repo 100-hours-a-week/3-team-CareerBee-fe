@@ -1,4 +1,4 @@
-import { safePost } from '@/lib/request';
+import { safePost } from '@/src/shared/api/request';
 
 interface PresignedUploadOptions {
   file: File | null;

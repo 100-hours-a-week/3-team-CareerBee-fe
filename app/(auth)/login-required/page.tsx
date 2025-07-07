@@ -1,5 +1,4 @@
-import { Button } from '@/src/widgets/ui/button';
-import handleLogin from '@/src/features/auth/api/kakaoLogin';
+import LoginButton from '@/src/features/auth/ui/LoginButton';
 
 export default function Page() {
   return (
@@ -10,13 +9,7 @@ export default function Page() {
         지금 바로 로그인하고 <br />
         맞춤형 서비스를 경험해보세요
       </p>
-      <Button
-        label="카카오톡으로 시작하기"
-        size="lg"
-        fullWidth={true}
-        className="mx-16 mb-8 font-bold"
-        onClick={handleLogin}
-      ></Button>
+      <LoginButton />
     </div>
   );
 }

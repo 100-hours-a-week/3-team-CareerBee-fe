@@ -1,9 +1,9 @@
 import { Toggle } from '@/src/widgets/ui/toggle';
 
-import { CompanyProps } from '@/src/entities/map/model/company';
 import { useMarkerStore } from '@/src/features/map/model/marker';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import fetchBookmarkedIds from '@/src/entities/map/api/fetchBookmarkedIds';
+import { useCompanyList } from '@/src/entities/map/api/useCompanyList';
 
 import { useState, useEffect, useRef } from 'react';
 
@@ -15,12 +15,12 @@ interface FilterProps {
 }
 interface Props {
   filters: FilterProps[];
-  companies: CompanyProps[];
 }
 
 const isCategoryFilter = (id: string) => CATEGORY_FILTERS.includes(id);
 
-const FilterGroup = ({ filters, companies }: Props) => {
+const FilterGroup = ({ filters }: Props) => {
+  const { data: companies = [] } = useCompanyList();
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [bookmarkedIds, setBookmarkedIds] = useState<number[]>([]);
   const setCompanyDisabledMap = useMarkerStore((state) => state.setCompanyDisabledMap);

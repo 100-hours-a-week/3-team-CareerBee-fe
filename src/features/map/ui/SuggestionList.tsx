@@ -3,7 +3,6 @@ import { useSuggestionSelect } from '@/src/features/map/api/useSuggestionSelect'
 
 export function SuggestionList({
   filteredSuggestions,
-  mapRef,
   // onSuggestionSelect,
   onClose,
   selectedIndex,
@@ -11,7 +10,6 @@ export function SuggestionList({
 }: {
   filteredSuggestions: { id: number; name: string }[];
   // onSuggestionSelect?: (_value: { id: number; name: string }) => void;
-  mapRef: React.MutableRefObject<kakao.maps.Map | null>;
   onClose?: () => void;
   isClosing?: boolean;
   selectedIndex: number;
@@ -32,7 +30,7 @@ export function SuggestionList({
               isLast && 'rounded-b-[24px]',
             )}
             onClick={() => {
-              handleSuggestionSelect(item, mapRef);
+              handleSuggestionSelect(item);
               onClose?.();
             }}
           >

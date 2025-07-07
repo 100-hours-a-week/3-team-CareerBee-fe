@@ -18,12 +18,10 @@ export function SearchBar({
   value,
   onChange,
   // setHighlightedCompanyId,
-  mapRef,
   ...props
 }: React.ComponentProps<typeof Input> & {
   suggestions?: CompanySuggestion[];
   // setHighlightedCompanyId: React.Dispatch<React.SetStateAction<number | null>>;
-  mapRef: React.MutableRefObject<kakao.maps.Map | null>;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [showList, setShowList] = useState(value && suggestions.length > 0);
@@ -85,7 +83,7 @@ export function SearchBar({
 
               if (e.key === 'Enter' && selectedIndex >= 0) {
                 e.preventDefault();
-                handleSuggestionSelect(suggestions[selectedIndex], mapRef);
+                handleSuggestionSelect(suggestions[selectedIndex]);
                 setShowList(false);
                 clearInput();
               }
@@ -109,7 +107,6 @@ export function SearchBar({
         {showList && (
           <SuggestionList
             filteredSuggestions={suggestions}
-            mapRef={mapRef}
             onClose={clearInput}
             selectedIndex={selectedIndex}
           />

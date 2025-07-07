@@ -2,6 +2,7 @@ import { toast } from '@/src/shared/model/useToast';
 
 import { useMapStore } from '@/src/features/map/model/map';
 import { useCompanyStore } from '@/src/shared/lib/company';
+import { useMapRefStore } from '@/src/features/map/model/mapRef';
 
 export function useMapEvents() {
   const { setCenter, setZoom } = useMapStore();
@@ -19,18 +20,19 @@ export function useMapEvents() {
     setZoom(level);
   };
 
-  const handleMoveToCurrentLocation = (mapRef: React.MutableRefObject<kakao.maps.Map | null>) => {
-    if (!mapRef.current) return;
+  const handleMoveToCurrentLocation = () => {
+    const map = useMapRefStore((state) => state.mapRef);
+    if (!map) return;
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
         const currentPos = new window.kakao.maps.LatLng(latitude, longitude);
-        mapRef.current?.setCenter(currentPos);
+        map?.setCenter(currentPos);
 
         setTimeout(() => {
-          if (mapRef.current) {
-            handleMapMove(mapRef.current);
+          if (map) {
+            handleMapMove(map);
           }
         }, 300);
       },

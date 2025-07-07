@@ -5,45 +5,23 @@
 
 import { SearchBar } from '@/src/features/map/ui/SearchBar';
 import { FilterGroup } from '@/src/features/map/ui/filter';
-import MapOverlay from '@/src/entities/map/ui/MapOverlay';
 import { Button } from '@/src/widgets/ui/button';
 import { PiCrosshairSimple } from 'react-icons/pi';
 
-import { useCompanyStore } from '@/src/shared/lib/company';
+import KakaoMap from '@/src/features/map/ui/KakaoMap';
 import { useSearchStore } from '@/src/features/map/model/search';
-import { useMarkerStore } from '@/src/features/map/model/marker';
-import { useMapStore } from '@/src/features/map/model/map';
 
-import { safeCluster } from '@/src/entities/map/lib/safeCluster';
-import { useCompanyList } from '@/src/entities/map/api/useCompanyList';
 import { useMapEvents } from '@/src/features/map/lib/useMapEvents';
 
-import { FILTERS, MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/src/features/map/config/map';
-import { CLUSTER_STYLES } from '@/src/features/map/config/clusterStyles';
+import { FILTERS } from '@/src/features/map/config/map';
 
-import { Map, MarkerClusterer, Polygon } from 'react-kakao-maps-sdk';
-import { useState, useEffect, useRef } from 'react';
+import { useNotificationSSE } from '@/src/shared/model/useNotificationSSE';
 
-export default function Home() {
-  const { openCardIndex, setOpenCardIndex, highlightedCompanyId } = useCompanyStore();
+export default function Page() {
   const { search, setSearch, suggestions } = useSearchStore();
-  const companyDisabledMap = useMarkerStore((state) => state.companyDisabledMap);
-  const { center, zoom } = useMapStore();
+  const { handleMoveToCurrentLocation } = useMapEvents();
 
-  const { handleMapMove, handleMoveToCurrentLocation } = useMapEvents();
-
-  const { data: companies = [] } = useCompanyList(center, zoom);
-
-  const mapRef = useRef<kakao.maps.Map | null>(null);
-
-  const [loaded, setLoaded] = useState(false);
-  useEffect(() => {
-    if (window.kakao && window.kakao.maps) {
-      window.kakao.maps.load(() => {
-        setLoaded(true);
-      });
-    }
-  }, []);
+  useNotificationSSE();
 
   return (
     <>
@@ -52,60 +30,16 @@ export default function Home() {
         value={search}
         onChange={(e: { target: { value: string } }) => setSearch(e.target.value)}
         suggestions={suggestions}
-        // setHighlightedCompanyId={setHighlightedCompanyId}
-        mapRef={mapRef}
       />
       <div className="relative flex justify-center w-full h-[calc(100%-4rem)] top-16">
-        {!loaded && (
-          <div className="flex h-full items-center justify-center">지도를 불러오는 중...</div>
-        )}
-        {loaded && (
-          <Map
-            ref={mapRef}
-            center={{ lat: center.lat, lng: center.lng }}
-            className="w-full h-full pb-16"
-            level={zoom}
-            onZoomChanged={handleMapMove}
-            onDragEnd={handleMapMove}
-            onClick={() => setOpenCardIndex(null)}
-            minLevel={8}
-          >
-            <MarkerClusterer
-              averageCenter={true}
-              minLevel={4}
-              minClusterSize={3}
-              onCreate={(clusterer) => safeCluster(clusterer, mapRef.current)}
-              calculator={[10, 30, 50, 100]}
-              styles={CLUSTER_STYLES}
-            >
-              {companies.map((company, index) => (
-                <MapOverlay
-                  key={company.id}
-                  company={company}
-                  index={index}
-                  isOpen={openCardIndex === company.id}
-                  disabled={companyDisabledMap[company.id] ?? false}
-                  isHighlighted={highlightedCompanyId === company.id}
-                />
-              ))}
-            </MarkerClusterer>
-            <Polygon
-              path={[MAP_POLYGON_PATH, MAP_POLYGON_HOLE]}
-              strokeWeight={2}
-              strokeColor={'#D32F2F'}
-              strokeOpacity={0.6}
-              fillColor={'#D32F2F'}
-              fillOpacity={0.3}
-            />
-          </Map>
-        )}
-
         {/* 필터 UI를 지도 위에 고정 */}
         <div className="absolute left-0 right-0 z-10 px-2 bg-gradient-to-b from-white/60 from-60% to-transparent">
           <div className="max-w-full ">
-            <FilterGroup filters={FILTERS} companies={companies} />
+            <FilterGroup filters={FILTERS} />
           </div>
         </div>
+
+        <KakaoMap />
 
         {/* 내 위치 찾기 버튼 */}
         <div className="absolute bottom-6 left-4 z-40 [&_svg]:size-8">
@@ -115,7 +49,7 @@ export default function Home() {
               variant="icon"
               className="bg-white rounded-full w-12 h-12 m-0 p-2 shadow-md"
               onClick={() => {
-                handleMoveToCurrentLocation(mapRef);
+                handleMoveToCurrentLocation();
               }}
             />
           </div>
