@@ -1,3 +1,5 @@
+'use client';
+
 import '@/src/widgets/assets/loader.css';
 import '@/src/widgets/assets/circleLoader.css';
 

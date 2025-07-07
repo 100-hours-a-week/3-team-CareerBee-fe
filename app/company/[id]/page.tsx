@@ -2,7 +2,7 @@
 
 import noImg from '@/public/images/no-image.png';
 
-import { Loader } from '@/src/widgets/ui/loader';
+import { LoaderWrapper } from '@/src/widgets/ui/loaderWrapper';
 import RecruitmentBanner from '@/src/entities/company/ui/RecruitmentBanner';
 import CompanyTitle from '@/src/entities/company/ui/CompanyTitle';
 import CompanySummary from '@/src/entities/company/ui/CompanySummary';
@@ -66,7 +66,7 @@ export default function Page() {
   if (!company)
     return (
       <div className="flex flex-col gap-4 h-screen items-center justify-center text-lg font-semibold">
-        <Loader />
+        <LoaderWrapper />
         <p>기업 정보를 불러오는 중이에요...</p>
       </div>
     );
