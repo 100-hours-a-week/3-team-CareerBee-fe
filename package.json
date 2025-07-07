@@ -8,6 +8,7 @@
     "start": "next start --port 5173",
     "lint": "next lint"
   },
+  "type": "module",
   "dependencies": {
     "@fontsource/pretendard": "^5.2.5",
     "@lottiefiles/dotlottie-react": "^0.13.5",

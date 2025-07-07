@@ -1,51 +1,31 @@
-const js = require('@eslint/js');
-const globals = require('globals');
-const reactHooks = require('eslint-plugin-react-hooks');
-const reactRefresh = require('eslint-plugin-react-refresh');
-const react = require('eslint-plugin-react');
-const prettier = require('eslint-plugin-prettier');
-const tseslint = require('typescript-eslint');
-const jsxA11y = require('eslint-plugin-jsx-a11y');
-const eslintImport = require('eslint-plugin-import');
+import js from '@eslint/js';
+import next from 'eslint-config-next';
+import tseslint from 'typescript-eslint';
+import prettier from 'eslint-plugin-prettier';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
 
-module.exports = [
-  {
-    ignores: ['dist'],
-  },
+export default [
   js.configs.recommended,
+  ...next(),
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
       parser: tseslint.parser,
       parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
         project: './tsconfig.json',
-        sourceType: 'module',
       },
-    },
-    env: {
-      node: true,
     },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
-      react,
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
       prettier,
       'jsx-a11y': jsxA11y,
-      'import': eslintImport,
     },
     rules: {
       ...tseslint.configs.recommendedTypeChecked[0].rules,
-      ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'no-console': 'warn',
       'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
-      'prettier/prettier': ['error', {"endOfLine": "auto"}],
+      'prettier/prettier': ['error', { endOfLine: 'auto' }],
       'react/react-in-jsx-scope': 'off',
       'import/prefer-default-export': 'off',
       'react/jsx-props-no-spreading': 'off',
@@ -56,11 +36,6 @@ module.exports = [
       'jsx-a11y/no-static-element-interactions': 'warn',
       'no-use-before-define': ['error', { functions: false, classes: true, variables: true }],
       'react/destructuring-assignment': ['warn', 'always'],
-    },
-    settings: {
-      react: {
-        version: 'detect',
-      },
     },
   },
 ];
