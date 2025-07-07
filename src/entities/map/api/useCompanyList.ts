@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { instance as axios } from "@/src/shared/api/axios";
 import { useMapStore } from '@/src/features/map/model/map';
 
-import { RADIUS_BY_LEVEL } from "@/src/features/map/config/map"
+import { RADIUS_BY_LEVEL, KTB } from "@/src/features/map/config/map"
 import { CompanyProps } from "@/src/entities/map/model/company";
 
 export const useCompanyList = () => {
@@ -13,9 +13,9 @@ export const useCompanyList = () => {
     center?.lng !== undefined &&
     zoom !== undefined;
 
-  const latBucket = isReady ? Math.round(center.lat * 100) / 100 : 0;
-  const lngBucket = isReady ? Math.round(center.lng * 100) / 100 : 0;
-  const zoomBucket = isReady ? Math.floor(zoom / 2) * 2 : 0;
+  const latBucket = isReady ? Math.round(center.lat * 100) / 100 : KTB.lat;
+  const lngBucket = isReady ? Math.round(center.lng * 100) / 100 : KTB.lng;
+  const zoomBucket = isReady ? Math.floor(zoom / 2) * 2 : 5;
 
   return useQuery<CompanyProps[], Error>({
     queryKey: ["companyList", latBucket, lngBucket, zoomBucket],
@@ -31,6 +31,6 @@ export const useCompanyList = () => {
     },
     enabled: isReady,
     placeholderData: (previous) => previous,
-    staleTime: 60 * 1000,
+    staleTime: 5 * 60 * 1000,
   });
 }

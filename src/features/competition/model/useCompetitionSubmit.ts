@@ -2,7 +2,6 @@ import { useAnswerStore } from '@/src/features/competition/model/answerStore';
 import { useCompetitionStore } from '@/src/features/competition/model/competitionStore';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 
-import handleSubmit from '@/src/features/competition/api/handleSubmit';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { safePost } from '@/src/shared/api/request';

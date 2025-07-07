@@ -10,7 +10,7 @@ import {
   background,
 } from '@/src/entities/competition/model/chartUtils';
 import { width, barHeight, gap, scaleConfigMap } from '@/src/entities/competition/lib/scaleConfig';
-import ChartProps from '@/src/entities/competition/lib/chartProps';
+import { ChartProps } from '@/src/entities/competition/lib/chartProps';
 
 const height = scaleConfigMap.daily.height;
 const scaleFns = scaleConfigMap.daily.scaleFns;
