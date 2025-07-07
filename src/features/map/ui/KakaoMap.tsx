@@ -3,7 +3,7 @@
 /* global kakao */
 
 import MapOverlay from '@/src/entities/map/ui/MapOverlay';
-import { MAP_POLYGON_PATH, MAP_POLYGON_HOLE } from '@/src/features/map/config/map';
+import { MAP_POLYGON_PATH, MAP_POLYGON_HOLE, KTB } from '@/src/features/map/config/map';
 import { CLUSTER_STYLES } from '@/src/features/map/config/clusterStyles';
 
 import { safeCluster } from '@/src/entities/map/lib/safeCluster';
@@ -32,7 +32,7 @@ export default function KakaoMap() {
   const companyDisabledMap = useMarkerStore((state) => state.companyDisabledMap);
   const { handleMapMove } = useMapEvents();
   const { center, zoom } = useMapStore();
-  const { data: companies = [] } = useCompanyList(center, zoom);
+  const { data: companies = [] } = useCompanyList();
 
   const mapRef = useRef<kakao.maps.Map | null>(null);
 
@@ -51,7 +51,10 @@ export default function KakaoMap() {
   return (
     <Map
       ref={mapRef}
-      center={{ lat: center.lat, lng: center.lng }}
+      center={{
+        lat: center?.lat ?? KTB.lat,
+        lng: center?.lng ?? KTB.lng,
+      }}
       className="w-full h-full pb-16"
       level={zoom}
       onZoomChanged={handleMapMove}

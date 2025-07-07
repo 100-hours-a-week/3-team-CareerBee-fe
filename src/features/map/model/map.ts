@@ -1,11 +1,10 @@
 import { create } from 'zustand';
-import { KTB } from '@/src/features/map/config/map';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type LatLng = { lat: number; lng: number };
 interface MapStore {
-  center: LatLng;
-  zoom: number;
+  center: LatLng | undefined;
+  zoom: number | undefined;
   setCenter: (_center: LatLng) => void;
   setZoom: (_zoom: number) => void;
 }
@@ -13,8 +12,8 @@ interface MapStore {
 export const useMapStore = create<MapStore>()(
   persist(
     (set) => ({
-      center: { lat: KTB.lat, lng: KTB.lng }, // default
-      zoom: 5,
+      center: undefined,
+      zoom: undefined,
       setCenter: (center: LatLng) => set({ center }),
       setZoom: (zoom: number) => set({ zoom }),
     }),

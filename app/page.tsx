@@ -10,9 +10,7 @@ import { PiCrosshairSimple } from 'react-icons/pi';
 
 import KakaoMap from '@/src/features/map/ui/KakaoMap';
 import { useSearchStore } from '@/src/features/map/model/search';
-import { useMapStore } from '@/src/features/map/model/map';
 
-import { useCompanyList } from '@/src/entities/map/api/useCompanyList';
 import { useMapEvents } from '@/src/features/map/lib/useMapEvents';
 
 import { FILTERS } from '@/src/features/map/config/map';
@@ -21,11 +19,7 @@ import { useNotificationSSE } from '@/src/shared/model/useNotificationSSE';
 
 export default function Page() {
   const { search, setSearch, suggestions } = useSearchStore();
-  const { center, zoom } = useMapStore();
-
   const { handleMoveToCurrentLocation } = useMapEvents();
-
-  const { data: companies = [] } = useCompanyList(center, zoom);
 
   useNotificationSSE();
 
@@ -36,13 +30,12 @@ export default function Page() {
         value={search}
         onChange={(e: { target: { value: string } }) => setSearch(e.target.value)}
         suggestions={suggestions}
-        // setHighlightedCompanyId={setHighlightedCompanyId}
       />
       <div className="relative flex justify-center w-full h-[calc(100%-4rem)] top-16">
         {/* 필터 UI를 지도 위에 고정 */}
         <div className="absolute left-0 right-0 z-10 px-2 bg-gradient-to-b from-white/60 from-60% to-transparent">
           <div className="max-w-full ">
-            <FilterGroup filters={FILTERS} companies={companies} />
+            <FilterGroup filters={FILTERS} />
           </div>
         </div>
 

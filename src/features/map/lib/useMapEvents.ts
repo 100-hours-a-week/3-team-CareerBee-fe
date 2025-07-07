@@ -24,7 +24,6 @@ export function useMapEvents() {
     const map = useMapRefStore((state) => state.mapRef);
     if (!map) return;
 
-
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
