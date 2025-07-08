@@ -1,10 +1,12 @@
-interface RecruitmentBannerProps {
-  isRecruiting: boolean;
-}
+'use client';
 
-export default function RecruitmentBanner({ isRecruiting }: RecruitmentBannerProps) {
-  if (!isRecruiting) return null;
+import { useCompanyStore } from '@/src/entities/company/model/companyDetail';
 
+export default function RecruitmentBanner() {
+  const { company } = useCompanyStore();
+
+  if (!company) return;
+  if (company.recruitments.length > 0) return;
   return (
     <div className="overflow-hidden h-6 bg-secondary text-text-primary text-sm flex items-center">
       <div className="flex animate-marquee whitespace-nowrap min-w-max">
