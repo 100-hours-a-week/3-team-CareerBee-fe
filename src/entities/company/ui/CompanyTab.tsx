@@ -1,5 +1,3 @@
-'use client';
-
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/src/widgets/ui/tabs';
 import DefaultTab from '@/src/entities/company/ui/defaultTab';
 import RecruitTab from '@/src/entities/company/ui/recruit';
@@ -7,12 +5,9 @@ import IssueTab from '@/src/entities/company/ui/issue';
 import BenefitTab from '@/src/entities/company/ui/benefit';
 import TechstackTab from '@/src/entities/company/ui/techstack';
 
-import { useCompanyStore } from '@/src/entities/company/model/companyDetail';
+import { Company } from '@/src/entities/company/model/companyType';
 
-export const CompanyTab = () => {
-  const { company } = useCompanyStore();
-
-  if (!company) return;
+export const CompanyTab = ({ company }: { company: Company }) => {
   return (
     <Tabs defaultValue="defaultTab" className="grow mt-4 w-full">
       <TabsList>

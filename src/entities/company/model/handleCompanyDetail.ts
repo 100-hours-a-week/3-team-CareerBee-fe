@@ -6,11 +6,7 @@ export async function handleCompanyDetail(
   setIsBookmarked: (val: boolean) => void,
   bookmarkStatus: (id: number, cb: (val: boolean) => void) => void
 ) {
-  try {
-    const data = await fetchCompanyDetail(id);
-    setCompany(data);
-    bookmarkStatus(Number(id), setIsBookmarked);
-  } catch (error) {
-    console.error('기업 정보 불러오기 실패', error);
-  }
+  const data = await fetchCompanyDetail(id);
+  setCompany(data);
+  bookmarkStatus(Number(id), setIsBookmarked);
 }

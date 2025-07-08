@@ -1,15 +1,9 @@
-'use client';
-
 import noImg from '@/public/images/no-image.png';
 
-import { useCompanyStore } from '@/src/entities/company/model/companyDetail';
-
+import { CompanyGalleryProps } from '@/src/entities/company/model/companyType';
 import Image from 'next/image';
 
-export const CompanyGallery = () => {
-  const { company } = useCompanyStore();
-
-  if (!company) return;
+export const CompanyGallery = ({ company }: { company: CompanyGalleryProps }) => {
   return (
     <div className="relative grid grid-cols-4 grid-rows-2 gap-1 max-w-full h-56 mx-auto">
       {[...Array(5)].map((_, index) => {

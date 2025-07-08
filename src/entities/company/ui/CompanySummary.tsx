@@ -1,13 +1,7 @@
-'use client';
-
 import { PiStar, PiStarFill, PiStarHalfFill } from 'react-icons/pi';
+import { CompanySummaryProps } from '@/src/entities/company/model/companyType';
 
-import { useCompanyStore } from '@/src/entities/company/model/companyDetail';
-
-export default function CompanySummary() {
-  const { company } = useCompanyStore();
-
-  if (!company) return;
+export default function CompanySummary({ company }: { company: CompanySummaryProps }) {
   return (
     <div className="flex flex-col px-4 gap-2 my-2">
       <div className="text-lg font-semibold">{company.title}</div>
