@@ -1,12 +1,11 @@
 'use client';
 
-import noImg from '@/public/images/no-image.png';
-
 import { LoaderWrapper } from '@/src/widgets/ui/loaderWrapper';
 import RecruitmentBanner from '@/src/entities/company/ui/RecruitmentBanner';
 import CompanyTitle from '@/src/entities/company/ui/CompanyTitle';
 import CompanySummary from '@/src/entities/company/ui/CompanySummary';
 import CompanyTab from '@/src/entities/company/ui/CompanyTab';
+import CompanyGallery from '@/src/entities/company/ui/CompanyGallery';
 
 import { fetchCompanyDetail } from '@/src/entities/company/api/fetchCompanyDetail';
 // import { useFetchBookmarkStatus } from '@/src/shared/api/useFetchBookmarkStatus';
@@ -18,7 +17,6 @@ import { motion } from 'motion/react';
 import { AnimatePresence } from 'motion/react';
 import { useParams, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-import Image from 'next/image';
 
 export default function Page() {
   const { id } = useParams<{ id: string }>();
@@ -61,34 +59,7 @@ export default function Page() {
               <RecruitmentBanner isRecruiting={company.recruitments.length > 0} />
 
               {/* 갤러리 */}
-              <div className="relative grid grid-cols-4 grid-rows-2 gap-1 max-w-full h-56 mx-auto">
-                {[...Array(5)].map((_, index) => {
-                  const photo = company.photos?.[index];
-                  const imageUrl = photo?.url ?? noImg;
-                  return (
-                    <div
-                      key={index}
-                      className={
-                        index === 0
-                          ? 'col-span-2 row-span-2 relative aspect-[4/3]'
-                          : 'relative aspect-[4/3]'
-                      }
-                    >
-                      <Image
-                        src={imageUrl}
-                        alt={company.name ?? 'no image'}
-                        fill
-                        className="rounded-lg object-cover"
-                        sizes={
-                          index === 0
-                            ? '(max-width: 600px) 100vw, 400px'
-                            : '(max-width: 600px) 50vw, 200px'
-                        }
-                      />
-                    </div>
-                  );
-                })}
-              </div>
+              <CompanyGallery />
 
               {/* 기업 제목 */}
               <CompanyTitle />
@@ -96,6 +67,7 @@ export default function Page() {
               {/* 기업 정보 */}
               <CompanySummary />
 
+              {/* 기업 상세 탭 */}
               <CompanyTab />
             </div>
           </motion.div>

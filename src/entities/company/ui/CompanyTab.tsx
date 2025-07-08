@@ -1,3 +1,5 @@
+'use client';
+
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/src/widgets/ui/tabs';
 import DefaultTab from '@/src/entities/company/ui/defaultTab';
 import RecruitTab from '@/src/entities/company/ui/recruit';

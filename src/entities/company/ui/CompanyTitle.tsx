@@ -1,3 +1,5 @@
+'use client';
+
 import noImg from '@/public/images/no-image.png';
 import { PiBookmarkSimple, PiBookmarkSimpleFill, PiShare } from 'react-icons/pi';
 
