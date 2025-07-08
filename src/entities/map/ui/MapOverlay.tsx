@@ -45,7 +45,7 @@ export default function MapOverlay({ company, isOpen, disabled, isHighlighted }:
           position={position}
           image={{
             src: isValid ? company.markerUrl : markerFallback.src,
-            size: { width: 37, height: 50 },
+            size: isHighlighted ? { width: 48, height: 66 } : { width: 37, height: 50 },
           }}
           clickable={true}
           onClick={fetchCompanyDetail}
