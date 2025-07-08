@@ -9,29 +9,26 @@ import CompanySummary from '@/src/entities/company/ui/CompanySummary';
 import CompanyTab from '@/src/entities/company/ui/CompanyTab';
 
 import { fetchCompanyDetail } from '@/src/entities/company/api/fetchCompanyDetail';
-import { useFetchBookmarkStatus } from '@/src/shared/api/useFetchBookmarkStatus';
+// import { useFetchBookmarkStatus } from '@/src/shared/api/useFetchBookmarkStatus';
 
 import { useCompanyStore } from '@/src/entities/company/model/companyDetail';
-import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { useUiStore } from '@/src/shared/model/ui';
 
 import { motion } from 'motion/react';
 import { AnimatePresence } from 'motion/react';
 import { useParams, usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Image from 'next/image';
-
-import { Company } from '@/src/entities/company/model/companyType';
 
 export default function Page() {
   const { id } = useParams<{ id: string }>();
   const pathname = usePathname();
 
-  const [company] = useState<Company>();
-  const { isBookmarked, setIsBookmarked } = useCompanyStore();
-  const token = useAuthStore((state) => state.token);
+  const { company } = useCompanyStore();
 
-  const { bookmarkStatus } = useFetchBookmarkStatus();
+  // const [company] = useState<Company>();
+
+  // const { bookmarkStatus } = useFetchBookmarkStatus();
 
   const backPressedFromHeader = useUiStore((state) => state.backPressedFromHeader);
   const mapPressedFromNavbar = useUiStore((state) => state.mapPressedFromNavbar);
@@ -39,7 +36,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchCompanyDetail(id);
-  }, [id, bookmarkStatus]);
+  }, [id]);
 
   if (!company)
     return (
@@ -94,25 +91,10 @@ export default function Page() {
               </div>
 
               {/* 기업 제목 */}
-              <div className="-mt-9 pl-2 relative z-10">
-                <CompanyTitle
-                  logoUrl={company.logoUrl ?? noImg}
-                  name={company.name}
-                  wishCount={company.wishCount}
-                  isLoggedIn={!!token}
-                  companyId={company.id}
-                  isBookmarked={token ? isBookmarked : false}
-                  setIsBookmarked={setIsBookmarked}
-                />
-              </div>
+              <CompanyTitle />
 
               {/* 기업 정보 */}
-              <CompanySummary
-                title={company.title}
-                rating={company.rating}
-                annualSalary={company.financials.annualSalary}
-                startingSalary={company.financials.startingSalary}
-              />
+              <CompanySummary />
 
               <CompanyTab />
             </div>
