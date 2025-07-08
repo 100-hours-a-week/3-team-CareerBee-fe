@@ -5,7 +5,7 @@ import {
   PiCloud,
   PiMicrosoftTeamsLogo,
 } from 'react-icons/pi';
-import { TechStack } from '@/src/entities/company/model/company';
+import { TechStack } from '@/src/entities/company/model/companyType';
 import React from 'react';
 
 interface Props {
