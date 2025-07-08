@@ -8,7 +8,7 @@ import { useMapRefStore } from '@/src/features/map/model/mapRef';
 export function useSuggestionSelect(){
   const { setCenter, setZoom } = useMapStore();
   const { setHighlightedCompanyId } = useCompanyStore();
-  const map = useMapRefStore((state) => state.mapRef);
+  const { mapRef } = useMapRefStore();
 
   const handleSuggestionSelect = async (
     suggestion: CompanySuggestion,
@@ -22,10 +22,10 @@ export function useSuggestionSelect(){
   
       setHighlightedCompanyId(suggestion.id);
   
-      if (map) {
+      if (mapRef) {
         const newCenter = new window.kakao.maps.LatLng(latitude, longitude);
-        map.setLevel(3);
-        map.setCenter(newCenter);
+        mapRef.setLevel(3);
+        mapRef.setCenter(newCenter);
   
         setCenter({
           lat: newCenter.getLat(),

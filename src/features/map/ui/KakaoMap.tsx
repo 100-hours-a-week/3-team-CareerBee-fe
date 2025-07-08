@@ -20,21 +20,19 @@ import { Map, MarkerClusterer, Polygon } from 'react-kakao-maps-sdk';
 
 export default function KakaoMap() {
   const { setMapRef } = useMapRefStore();
-  const ref = useRef<kakao.maps.Map | null>(null);
+  const mapRef = useRef<kakao.maps.Map | null>(null);
 
   useEffect(() => {
-    if (ref.current) {
-      setMapRef(ref.current);
+    if (mapRef.current) {
+      setMapRef(mapRef.current);
     }
-  }, [ref.current]);
+  }, [mapRef.current]);
 
   const { openCardIndex, setOpenCardIndex, highlightedCompanyId } = useCompanyStore();
   const companyDisabledMap = useMarkerStore((state) => state.companyDisabledMap);
   const { handleMapMove } = useMapEvents();
   const { center, zoom } = useMapStore();
   const { data: companies = [] } = useCompanyList();
-
-  const mapRef = useRef<kakao.maps.Map | null>(null);
 
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
