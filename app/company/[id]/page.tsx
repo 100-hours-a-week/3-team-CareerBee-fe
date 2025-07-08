@@ -9,16 +9,12 @@ export async function generateStaticParams() {
   const companies = await fetchAllCompanies();
   return companies.map((company) => ({ id: String(company.id) }));
 }
-
-export default async function CompanyPage(props: { params: { id: string } }) {
-  const { params } = await props;
-
-  let company;
+type PageParams = Promise<{ itemId: string }>;
+export default async function CompanyPage({ params }: { params: PageParams }) {
   try {
-    company = await fetchCompanyDetail(params.id);
+    const company = await fetchCompanyDetail((await params).itemId);
+    return <CompanyDetail company={company} />;
   } catch (error) {
     return notFound();
   }
-
-  return <CompanyDetail company={company} />;
 }
