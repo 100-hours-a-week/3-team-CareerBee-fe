@@ -7,8 +7,8 @@ import CompanySummary from '@/src/entities/company/ui/CompanySummary';
 import CompanyTab from '@/src/entities/company/ui/CompanyTab';
 import CompanyGallery from '@/src/entities/company/ui/CompanyGallery';
 
-import { fetchCompanyDetail } from '@/src/entities/company/api/fetchCompanyDetail';
-// import { useFetchBookmarkStatus } from '@/src/shared/api/useFetchBookmarkStatus';
+import { handleCompanyDetail } from '@/src/entities/company/model/handleCompanyDetail';
+import { useFetchBookmarkStatus } from '@/src/shared/api/useFetchBookmarkStatus';
 
 import { useCompanyStore } from '@/src/entities/company/model/companyDetail';
 import { useUiStore } from '@/src/shared/model/ui';
@@ -22,19 +22,16 @@ export default function Page() {
   const { id } = useParams<{ id: string }>();
   const pathname = usePathname();
 
-  const { company } = useCompanyStore();
-
-  // const [company] = useState<Company>();
-
-  // const { bookmarkStatus } = useFetchBookmarkStatus();
+  const { setCompany, setIsBookmarked, company } = useCompanyStore();
+  const { bookmarkStatus } = useFetchBookmarkStatus();
 
   const backPressedFromHeader = useUiStore((state) => state.backPressedFromHeader);
   const mapPressedFromNavbar = useUiStore((state) => state.mapPressedFromNavbar);
   const exit = backPressedFromHeader || mapPressedFromNavbar;
 
   useEffect(() => {
-    fetchCompanyDetail(id);
-  }, [id]);
+    handleCompanyDetail(id, setCompany, setIsBookmarked, bookmarkStatus);
+  }, [id, setCompany, setIsBookmarked, bookmarkStatus]);
 
   if (!company)
     return (
@@ -56,7 +53,7 @@ export default function Page() {
             transition={{ duration: 0.4, ease: 'easeInOut' }}
           >
             <div className="flex flex-col grow">
-              <RecruitmentBanner isRecruiting={company.recruitments.length > 0} />
+              <RecruitmentBanner />
 
               {/* 갤러리 */}
               <CompanyGallery />
