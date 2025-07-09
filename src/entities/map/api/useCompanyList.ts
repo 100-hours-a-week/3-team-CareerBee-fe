@@ -13,9 +13,9 @@ export const useCompanyList = () => {
     center?.lng !== undefined &&
     zoom !== undefined;
 
-  const latBucket = isReady ? Math.round(center.lat * 100) / 100 : KTB.lat;
-  const lngBucket = isReady ? Math.round(center.lng * 100) / 100 : KTB.lng;
-  const zoomBucket = isReady ? Math.floor(zoom / 2) * 2 : 5;
+  const latBucket = isReady ? Math.round(center.lat * 1000) / 1000 : KTB.lat;
+  const lngBucket = isReady ? Math.round(center.lng * 1000) / 1000 : KTB.lng;
+  const zoomBucket = isReady ? zoom : 5;
 
   return useQuery<CompanyProps[], Error>({
     queryKey: ["companyList", latBucket, lngBucket, zoomBucket],

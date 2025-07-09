@@ -7,7 +7,7 @@ import {
   PiCurrencyCircleDollar,
   PiMoneyWavy,
 } from 'react-icons/pi';
-import { Company } from '@/src/entities/company/model/company';
+import { Company } from '@/src/entities/company/model/companyType';
 interface Props {
   company: Company;
 }

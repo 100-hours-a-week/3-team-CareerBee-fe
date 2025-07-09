@@ -1,11 +1,9 @@
-/* global kakao */
-
 import { PiMagnifyingGlass, PiX } from 'react-icons/pi';
 import { Button } from '@/src/widgets/ui/button';
 import { Input } from '@/src/widgets/ui/input';
 import { SuggestionList } from '@/src/features/map/ui/SuggestionList';
 
-import { CompanySuggestion } from '@/src/features/map/model/search';
+import { useSearchStore } from '@/src/features/map/model/search';
 import { useSuggestionSelect } from '@/src/features/map/api/useSuggestionSelect';
 import { useFetchSuggestions } from '@/src/entities/map/api/useFetchSuggestions';
 
@@ -13,34 +11,25 @@ import { cn } from '@/src/shared/lib/utils';
 import { useState, useEffect, useRef } from 'react';
 import React from 'react';
 
-export function SearchBar({
-  suggestions = [],
-  value,
-  onChange,
-  // setHighlightedCompanyId,
-  ...props
-}: React.ComponentProps<typeof Input> & {
-  suggestions?: CompanySuggestion[];
-  // setHighlightedCompanyId: React.Dispatch<React.SetStateAction<number | null>>;
-}) {
+export function SearchBar() {
+  const { search, setSearch, suggestions } = useSearchStore();
+
   const inputRef = useRef<HTMLInputElement>(null);
-  const [showList, setShowList] = useState(value && suggestions.length > 0);
+  const [showList, setShowList] = useState(search && suggestions.length > 0);
   const [selectedIndex, setSelectedIndex] = useState<number>(-2);
 
   const { handleSuggestionSelect } = useSuggestionSelect();
 
   const clearInput = () => {
     setSelectedIndex(-2);
-    const syntheticEvent = {
-      target: { value: '' },
-    } as React.ChangeEvent<HTMLInputElement>;
-    onChange?.(syntheticEvent);
+    setSearch('');
+    inputRef.current?.focus();
   };
   useEffect(() => {
-    if (value === '') {
+    if (search === '') {
       setSelectedIndex(-2);
     }
-  }, [value]);
+  }, [search]);
 
   useFetchSuggestions();
 
@@ -63,8 +52,8 @@ export function SearchBar({
             ref={inputRef}
             variant="search"
             className="pl-12 pr-10"
-            value={value}
-            onChange={onChange}
+            value={search}
+            onChange={(e: { target: { value: string } }) => setSearch(e.target.value)}
             onKeyDown={(e) => {
               if (!suggestions.length) return;
               else {
@@ -92,9 +81,8 @@ export function SearchBar({
                 clearInput();
               }
             }}
-            {...props}
           />
-          {value && (
+          {search && (
             <Button
               variant="icon"
               className="absolute right-2 top-1/2 -translate-y-1/2"

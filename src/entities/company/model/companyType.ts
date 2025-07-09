@@ -49,6 +49,21 @@ export interface Company {
   recruitments: Recruitment[];
 }
 
-export interface CompanyDetailResponse {
-  company: Company;
+// 기업 상세 탭 타입
+export interface CompanyGalleryProps{
+  photos: CompanyPhoto[];
+  name: string;
+}
+
+export interface CompanyTitleProps{
+  logoUrl: string;
+  name: string;
+  wishCount: number;
+  id: number;
+}
+
+export interface CompanySummaryProps{
+  title: string;
+  rating: number;
+  financials: Financials;
 }

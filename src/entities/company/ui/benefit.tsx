@@ -6,7 +6,7 @@ import {
   PiHeartbeat,
   PiDotsThreeCircle,
 } from 'react-icons/pi';
-import { CompanyBenefit } from '@/src/entities/company/model/company';
+import { CompanyBenefit } from '@/src/entities/company/model/companyType';
 import type { JSX } from 'react';
 
 type BenefitType =
