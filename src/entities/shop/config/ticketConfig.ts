@@ -22,3 +22,9 @@ export const ticketConfig: Record<TicketType, ProductProps['ticket']> = {
     point: 5,
   },
 };
+
+export const ticketImgs: Record<TicketType, string> = {
+  red: ticketRed.src,
+  green: ticketGreen.src,
+  blue: ticketBlue.src,
+};
