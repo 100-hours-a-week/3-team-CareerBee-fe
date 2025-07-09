@@ -25,7 +25,7 @@ const ticketConfig: Record<TicketType, ProductProps['ticket']> = {
   red: {
     title: '레드 뽑기권',
     ticketImage: ticketRed.src,
-    point: 5,
+    point: 15,
   },
   green: {
     title: '그린 뽑기권',
@@ -35,13 +35,13 @@ const ticketConfig: Record<TicketType, ProductProps['ticket']> = {
   blue: {
     title: '블루 뽑기권',
     ticketImage: ticketBlue.src,
-    point: 15,
+    point: 5,
   },
 };
 
 const ProductList = () => {
   return (
-    <div className="grid grid-cols-3 gap-8 px-5 mt-20">
+    <div className="grid grid-cols-3 gap-8 px-5 mt-16">
       {Object.entries(ticketConfig).map(([key, ticket]) => (
         <Product
           key={key}
