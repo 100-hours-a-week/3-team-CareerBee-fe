@@ -1,14 +1,18 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "skipLibCheck": true,
     "strict": true,
     "noUnusedLocals": true,
@@ -19,10 +23,25 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@/pages/": ["src/pages/"],
-      "@/layout/": ["src/layout/"]
-    }
+      "@/*": ["./*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "allowJs": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true
   },
-  "include": ["src", "vite.config.ts"]
+  "include": [
+    "next-env.d.ts",
+    "app",
+    "src",
+    ".next/types/**/*.ts",
+    "next.config.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
