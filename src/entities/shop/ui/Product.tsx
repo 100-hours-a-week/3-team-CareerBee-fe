@@ -1,4 +1,5 @@
 import { Button } from '@/src/widgets/ui/button';
+
 export interface ProductProps {
   ticket: {
     title: string;
@@ -7,15 +8,17 @@ export interface ProductProps {
   };
   productImage: string;
   productDescription: string;
+  count: number;
 }
 
-const Product = ({ ticket, productImage, productDescription }: ProductProps) => {
+const Product = ({ ticket, productImage, productDescription, count }: ProductProps) => {
   return (
     <div className="flex flex-col items-center gap-[10px]">
       <div className="flex flex-col items-center gap-1">
         <img src={ticket.ticketImage} alt={ticket.title} className="w-20 h-20" />
         <p className="font-ria">{ticket.title}</p>
         <p>{ticket.point} 포인트</p>
+        <p> {count} / 100</p>
       </div>
       <Button label="구매하기" className="rounded-full px-6" variant="primary" />
       <hr className="border-border w-full my-[10px]"></hr>

@@ -1,5 +1,5 @@
 import Intro from '@/src/entities/shop/ui/Intro';
-import ProductList from '@/src/entities/shop/ui/ProductList';
+import ProductList from '@/src/features/shop/ui/ProductList';
 
 export default function Page() {
   return (
