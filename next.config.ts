@@ -2,7 +2,23 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['board.jinhak.com', 'imgorg.catch.co.kr', 'storage.googleapis.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'board.jinhak.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'imgorg.catch.co.kr',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+        port: '',
+      },
+    ],
   },
   async headers() {
     return [
