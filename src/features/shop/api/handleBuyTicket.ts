@@ -6,6 +6,7 @@ import { safePost } from '@/src/shared/api/request';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { toast } from '@/src/shared/model/useToast';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { useMutation } from '@tanstack/react-query';
 
 const handleBuyTicket = ({
@@ -19,7 +20,6 @@ const handleBuyTicket = ({
 }) => {
   const buyTicket = async () => {
     const token = useAuthStore.getState().token;
-
     const ticketTypeToUpper = ticketType.toUpperCase() as Uppercase<TicketType>;
     try {
       const res = await safePost(
@@ -37,10 +37,13 @@ const handleBuyTicket = ({
       throw err;
     }
   };
+
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: buyTicket,
     onSuccess: (result) => {
       toast({ title: '구매가 완료되었어요!', variant: 'success' });
+      queryClient.refetchQueries({ queryKey: ['userInfo'] });
       onSuccess?.();
     },
     onError: () => {

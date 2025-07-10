@@ -3,6 +3,7 @@
 import { Button } from '@/src/widgets/ui/button';
 import handleBuyTicket from '@/src/features/shop/api/handleBuyTicket';
 import { TicketType } from '@/src/entities/shop/lib/ticket';
+import { BuyModal } from '@/src/features/shop/ui/BuyModal';
 
 import { useState } from 'react';
 
@@ -39,12 +40,9 @@ const Product = ({
         <p>{ticket.point} 포인트</p>
         <p> {count} / 100</p>
       </div>
-      <Button
-        label="구매하기"
-        className="rounded-full px-6"
-        variant="primary"
-        onClick={() => buyTicketMutation.mutate()}
-      />
+      <BuyModal point={ticket.point} buyTicketMutation={buyTicketMutation}>
+        <Button label="구매하기" className="rounded-full px-6" variant="primary" />
+      </BuyModal>
       <hr className="border-border w-full my-[10px]"></hr>
       <img src={productImage} alt={productDescription} className="w-[108px] h-[108px]" />
       <p className="text-center">{productDescription}</p>

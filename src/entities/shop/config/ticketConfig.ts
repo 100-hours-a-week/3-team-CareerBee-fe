@@ -1,4 +1,4 @@
-import { ProductProps } from '@/src/entities/shop/ui/Product';
+import { ProductProps } from '@/src/features/shop/ui/Product';
 import { TicketType } from '@/src/entities/shop/lib/ticket';
 
 import ticketRed from '@/src/entities/shop/assets/ticket-red.png';

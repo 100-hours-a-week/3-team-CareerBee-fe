@@ -3,7 +3,7 @@
 import { TicketType } from '@/src/entities/shop/lib/ticket';
 import { ticketConfig, ticketImgs } from '@/src/entities/shop/config/ticketConfig';
 import { productProps } from '@/src/entities/shop/config/productConfig';
-import Product from '@/src/entities/shop/ui/Product';
+import Product from '@/src/features/shop/ui/Product';
 
 import getTicketCount from '@/src/features/shop/api/getTicketCount';
 import getMyTicketCount from '@/src/features/shop/api/getMyTicketCount';
@@ -42,24 +42,24 @@ const ProductList = () => {
   return (
     <>
       {token && (
-        <div className="flex justify-center gap-4 mt-6">
+        <div className="flex justify-center gap-12">
           {Object.entries(ticketImgs).map(([key, ticket]) => (
-            <div key={key} className="flex flex-col gap-2">
+            <div key={key} className="flex flex-row gap-2">
               <img src={ticket} alt={`${key} ticket`} className="w-6 h-6" />
-              <span className="text-sm font-medium">{myCount![key as TicketType] ?? 0}개</span>
+              <span className="text-sm font-medium">{myCount?.[key as TicketType] ?? 0}개</span>
             </div>
           ))}
         </div>
       )}
-      <div className="grid grid-cols-3 gap-8 px-5 mt-14">
+      <div className="grid grid-cols-3 gap-8 px-5 mt-12">
         {Object.entries(ticketConfig).map(([key, ticket]) => (
           <Product
             key={key}
             ticketType={key as TicketType}
             ticket={ticket}
-            productImage={products[key as TicketType].productImage}
-            productDescription={products[key as TicketType].title}
-            ticketCount={count[key as TicketType]}
+            productImage={products?.[key as TicketType].prizeImgUrl}
+            productDescription={products?.[key as TicketType].prizeName}
+            ticketCount={count?.[key as TicketType]}
           />
         ))}
       </div>
