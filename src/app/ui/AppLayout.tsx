@@ -24,6 +24,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     if (pathname.startsWith('/resume')) return 'nav';
     if (pathname === '/competition' && !!token) return 'main';
     else if (pathname === '/competition') return 'login';
+    if (pathname.startsWith('/shop')) return 'nav';
     return 'minimal';
   })();
 
