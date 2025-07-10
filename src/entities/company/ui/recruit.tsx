@@ -14,7 +14,9 @@ export default function RecruitTab({ id }: { id: number }) {
   } = useQuery({
     queryKey: ['recruitments', id],
     queryFn: () => fetchRecruitments({ companyId: id }),
-    staleTime: 1000 * 60 * 20,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 
   return (
