@@ -9,7 +9,6 @@ import { NeedMorePointsModal } from '@/src/features/shop/ui/NeedMorePointsModal'
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { useUserInfo } from '@/src/features/member/model/useUserInfo';
 
-import Image from 'next/image';
 import { useState } from 'react';
 
 export interface ProductProps {
@@ -67,7 +66,7 @@ const Product = ({
         </BuyModal>
       )}
       <hr className="border-border w-full my-[10px]"></hr>
-      <Image
+      <img
         src={
           productImage && productImage.startsWith('http') ? productImage.trim() : '/fallback.png'
         }
