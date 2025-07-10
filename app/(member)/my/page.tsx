@@ -23,7 +23,7 @@ export default function Page() {
         (window.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming)
           .type === 'back_forward'
       ) {
-        queryClient.refetchQueries({ queryKey: ['userInfo'] });
+        void queryClient.refetchQueries({ queryKey: ['userInfo'] });
       }
     };
   }, [queryClient]);
