@@ -33,7 +33,7 @@ const useHandleBuyTicket = ({
       );
       return res.data;
     } catch (err: any) {
-      toast({ title: err.message, variant: 'destructive' });
+      console.log(err);
       throw err;
     }
   };
@@ -47,8 +47,9 @@ const useHandleBuyTicket = ({
       queryClient.invalidateQueries({ queryKey: ['myTicketCount'] });
       onSuccess?.();
     },
-    onError: () => {
-      toast({ title: '티켓 구매에 실패했어요.', variant: 'destructive' });
+    onError: (err: any) => {
+      console.log(err);
+      toast({ title: err.response.data.message, variant: 'destructive' });
       onError?.();
     },
   });

@@ -1,5 +1,6 @@
 'use client';
 
+import { Loader } from '@/src/widgets/ui/loader';
 import { TicketType } from '@/src/entities/shop/lib/ticket';
 import { ticketConfig, ticketImgs } from '@/src/entities/shop/config/ticketConfig';
 import { productProps } from '@/src/entities/shop/config/productConfig';
@@ -31,7 +32,13 @@ const ProductList = () => {
     queryFn: getProduct,
   });
 
-  if (!count || isLoading) return <div>로딩 중...</div>;
+  if (!count || isLoading)
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-lg font-semibold">
+        <Loader />
+        <p>상품을 불러오는 중이에요...</p>
+      </div>
+    );
 
   return (
     <>
