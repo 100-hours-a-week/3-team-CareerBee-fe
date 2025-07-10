@@ -2,6 +2,7 @@
 
 import MoveLeft from '@/src/features/competition/assets/caret-left.svg';
 import MoveRight from '@/src/features/competition/assets/caret-right.svg';
+import Image from 'next/image';
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/src/widgets/ui/tabs';
 import { Button } from '@/src/widgets/ui/button';
@@ -39,10 +40,10 @@ export default function Page() {
   const [currentTab, setCurrentTab] = useState(1);
   const [showTimeOverModal, setShowTimeOverModal] = useState(false);
 
-  const { timeLeft } = useCompetitionTimer(isSubmitted, setShowTimeOverModal);
+  const { timeLeft } = useCompetitionTimer({ isSubmitted, setShowTimeOverModal });
   useEffect(() => {
     if (isSubmitted === false && timeLeft <= 0) setShowTimeOverModal(true);
-  }, [timeLeft]);
+  }, [timeLeft, isSubmitted]);
 
   const { competitionId } = useCompetitionStore();
   const { problems } = useCompetitionData(competitionId);
@@ -76,11 +77,16 @@ export default function Page() {
       <div className="flex justify-between items-stretch mt-2 w-full h-full">
         {/* 이전 버튼 */}
         {currentTab > 1 ? (
-          <img
-            src={MoveLeft.src}
+          <Image
+            src={MoveLeft}
             alt="이전 문제"
             className="h-16 my-auto cursor-pointer"
             onClick={() => setCurrentTab((prev) => Math.max(1, prev - 1))}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') setCurrentTab((prev) => Math.max(1, prev - 1));
+            }}
           />
         ) : (
           <div className="h-16 w-8 my-auto"></div>
@@ -128,17 +134,24 @@ export default function Page() {
             fullWidth={true}
             disabled={!notAnswered}
             className="mt-4"
-            onClick={() => handleSubmitClick(isSubmitted)}
+            onClick={() => {
+              void handleSubmitClick(isSubmitted);
+            }}
           ></Button>
           <div className="h-12" />
         </div>
         {/* 다음 문제 */}
         {currentTab < 5 ? (
-          <img
-            src={MoveRight.src}
+          <Image
+            src={MoveRight}
             alt="다음 문제"
             className="h-16 my-auto cursor-pointer"
             onClick={() => setCurrentTab((prev) => Math.min(5, prev + 1))}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') setCurrentTab((prev) => Math.min(5, prev + 1));
+            }}
           />
         ) : (
           <div className="h-16 w-8 my-auto"></div>

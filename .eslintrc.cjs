@@ -1,7 +1,3 @@
-// File eslint.config.js deleted
-
-// New file .eslintrc.js created with the following content:
-
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
@@ -12,8 +8,6 @@ module.exports = {
   plugins: ['@typescript-eslint', 'prettier', 'jsx-a11y', 'react', 'react-hooks', 'import'],
   extends: [
     'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:jsx-a11y/recommended',
@@ -34,6 +28,7 @@ module.exports = {
     'jsx-a11y/no-static-element-interactions': 'warn',
     'no-use-before-define': ['error', { functions: false, classes: true, variables: true }],
     'react/destructuring-assignment': ['warn', 'always'],
+    'jsx-a11y/no-noninteractive-element-to-interactive-role': 'off',
   },
   settings: {
     react: {

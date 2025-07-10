@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/src/widgets/ui/button';
-import handleBuyTicket from '@/src/features/shop/api/handleBuyTicket';
+import handleBuyTicket from '@/src/features/shop/api/useHandleBuyTicket';
 import { TicketType } from '@/src/entities/shop/lib/ticket';
 import { BuyModal } from '@/src/features/shop/ui/BuyModal';
 import { NeedMorePointsModal } from '@/src/features/shop/ui/NeedMorePointsModal';

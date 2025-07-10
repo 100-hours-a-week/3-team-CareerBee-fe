@@ -34,10 +34,10 @@ export async function retryWithRefreshedToken(config: AxiosRequestConfig) {
     const res = await originAxios.post(`${API_URL}/api/v1/auth/reissue`, null, {
       withCredentials: true,
     });
-    const newToken = res.data.data.newAccessToken;
+    const newToken: string = (res.data as { data: { newAccessToken: string } }).data.newAccessToken;
     useAuthStore.getState().setToken(newToken);
 
-    requestQueue.forEach((cb) => cb(newToken));
+    requestQueue.forEach((cb: (_token: string) => void) => cb(newToken));
     requestQueue = [];
     isRefreshing = false;
 
@@ -57,9 +57,9 @@ export async function retryWithRefreshedToken(config: AxiosRequestConfig) {
     const status = (e as AxiosError)?.response?.status;
     if (status && status < 500 && !originAxios.isCancel(e)) {
       await forceLogout();
-      return Promise.reject(e);
+      return Promise.reject(new Error((e as Error).message));
     } else {
-      return Promise.reject(e);
+      return Promise.reject(new Error((e as Error).message));
     }
   }
 }
@@ -77,6 +77,6 @@ export async function forceLogout() {
     console.error('로그아웃 중 예외 발생:', err);
   }
 
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  await new Promise<void>((resolve) => setTimeout(resolve, 3000));
   window.location.replace('/login');
 }

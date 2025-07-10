@@ -1,3 +1,5 @@
+/* global kakao */
+
 import { toast } from '@/src/shared/model/useToast';
 
 import { useMapStore } from '@/src/features/map/model/map';
@@ -7,6 +9,7 @@ import { useMapRefStore } from '@/src/features/map/model/mapRef';
 export function useMapEvents() {
   const { setCenter, setZoom } = useMapStore();
   const { setHighlightedCompanyId } = useCompanyStore();
+  const map = useMapRefStore((state) => state.mapRef);
 
   const handleMapMove = (map: kakao.maps.Map) => {
     const level = map.getLevel();
@@ -21,7 +24,6 @@ export function useMapEvents() {
   };
 
   const handleMoveToCurrentLocation = () => {
-    const map = useMapRefStore((state) => state.mapRef);
     if (!map) return;
 
     navigator.geolocation.getCurrentPosition(

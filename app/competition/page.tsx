@@ -21,7 +21,7 @@ import { safeGet } from '@/src/shared/api/request';
 import { useCompetitionStore } from '@/src/entities/competition/model/competitionStore';
 
 import { cn } from '@/src/shared/lib/utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Page() {
@@ -54,34 +54,43 @@ export default function Page() {
   // 일일 대회 id 조회
   const { competitionId, setCompetitionId, setIsSubmitted } = useCompetitionStore();
   useEffect(() => {
-    (async () => {
-      const res = await safeGet('/api/v1/competitions/ids');
-      if (res.httpStatusCode === 200) {
-        setCompetitionId(res.data.competitionId);
+    const fetchCompetitionId = async () => {
+      try {
+        const res = await safeGet('/api/v1/competitions/ids');
+        if (res.httpStatusCode === 200) {
+          setCompetitionId(res.data.competitionId as number);
+        }
+      } catch (error) {
+        console.error('Failed to fetch competition ID', error);
       }
-    })();
+    };
+    void fetchCompetitionId();
   }, [setCompetitionId]);
 
   // 멤버별 대회 참가 여부 조회
   const [alreadyEntered, setAlreadyEntered] = useState(false);
   const token = useAuthStore((state) => state.token);
-  const hasJoinedCompetition = async () => {
-    const res = await safeGet(`/api/v1/members/competitions/${competitionId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (res.httpStatusCode === 200) {
-      setAlreadyEntered(res.data.isParticipant);
-      setIsSubmitted(res.data.isParticipant);
+  const hasJoinedCompetition = useCallback(async () => {
+    try {
+      const res = await safeGet(`/api/v1/members/competitions/${competitionId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.httpStatusCode === 200) {
+        setAlreadyEntered(res.data.isParticipant as boolean);
+        setIsSubmitted(res.data.isParticipant as boolean);
+      }
+    } catch (error) {
+      console.error('Failed to check competition participation', error);
     }
-  };
+  }, [competitionId, token, setIsSubmitted]);
 
   useEffect(() => {
     if (competitionId != null && token) {
-      hasJoinedCompetition();
+      void hasJoinedCompetition();
     }
-  }, [competitionId]);
+  }, [competitionId, token, hasJoinedCompetition]);
 
   return (
     <div className="py-5">

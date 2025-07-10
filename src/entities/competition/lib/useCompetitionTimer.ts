@@ -5,7 +5,15 @@ import { useCompetitionStore } from '@/src/features/competition/model/competitio
 
 import { useState, useEffect } from 'react';
 
-export const useCompetitionTimer = (isSubmitted: boolean, setShowTimeOverModal: Function) => {
+type UseCompetitionTimerProps = {
+  isSubmitted: boolean;
+  setShowTimeOverModal: (_val: boolean) => void;
+};
+
+export const useCompetitionTimer = ({
+  isSubmitted,
+  setShowTimeOverModal,
+}: UseCompetitionTimerProps) => {
   const { setJoinedTime } = useCompetitionStore();
   const getInitialTimeLeft = () => {
     const curr = checkTime('ms');

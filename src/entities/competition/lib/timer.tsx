@@ -54,7 +54,7 @@ function useCompetitionTimer(
       setTime(formatToMS(remainingMs));
     } else {
       const currS = checkTime('s');
-      let UTC_DUE_TIME_S = Math.floor(UTC_DUE_TIME_MS / 1000);
+      const UTC_DUE_TIME_S = Math.floor(UTC_DUE_TIME_MS / 1000);
       const remainingSeconds = avoidMinus(UTC_DUE_TIME_S - currS, 24 * 60 * 60);
       setTime(formatToHMS(remainingSeconds));
     }

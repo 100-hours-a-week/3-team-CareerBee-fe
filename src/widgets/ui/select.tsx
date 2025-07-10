@@ -129,9 +129,20 @@ const SelectLabel = React.forwardRef<
 >(({ className, onClick, ...props }, ref) => (
   <div
     role="button"
-    ref={ref}
+    tabIndex={0}
     onClick={onClick}
+    onKeyDown={(e) => {
+      if ((e.key === 'Enter' || e.key === ' ') && onClick) {
+        const mouseEvent = new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+        });
+        e.currentTarget.dispatchEvent(mouseEvent);
+      }
+    }}
     className="flex w-full px-1 items-center justify-between hover:bg-accent cursor-pointer rounded-sm"
+    ref={ref}
   >
     <SelectPrimitive.Label
       className={cn('bg-transparent py-2 text-sm font-medium text-text-primary', className)}

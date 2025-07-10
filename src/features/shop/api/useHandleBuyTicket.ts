@@ -9,7 +9,7 @@ import { toast } from '@/src/shared/model/useToast';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMutation } from '@tanstack/react-query';
 
-const handleBuyTicket = ({
+const useHandleBuyTicket = ({
   ticketType,
   onSuccess,
   onError,
@@ -54,4 +54,4 @@ const handleBuyTicket = ({
   });
 };
 
-export default handleBuyTicket;
+export default useHandleBuyTicket;

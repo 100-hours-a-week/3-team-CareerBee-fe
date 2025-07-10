@@ -75,7 +75,13 @@ export default function CompanyCard({
   return (
     <div
       role="button"
+      tabIndex={0}
       onClick={handleClickAnywhere}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          handleClickAnywhere(e as unknown as React.MouseEvent<HTMLDivElement>);
+        }
+      }}
       className={cn(
         'relative rounded-xl p-2 w-64 z-30 cursor-pointer bg-no-repeat bg-cover',
         isCompanyCardList ? 'bg-white border border-border h-40' : 'h-44',
