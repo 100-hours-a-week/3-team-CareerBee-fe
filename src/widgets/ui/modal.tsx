@@ -131,7 +131,7 @@ interface ModalProps {
   cancelText?: string;
   actionText?: string;
   cancelButton?: boolean;
-  onAction: () => void;
+  onAction?: () => void;
 }
 
 export const Modal = ({

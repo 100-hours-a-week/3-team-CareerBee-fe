@@ -44,6 +44,7 @@ const handleBuyTicket = ({
     onSuccess: (result) => {
       toast({ title: '구매가 완료되었어요!', variant: 'success' });
       queryClient.refetchQueries({ queryKey: ['userInfo'] });
+      queryClient.invalidateQueries({ queryKey: ['myTicketCount'] });
       onSuccess?.();
     },
     onError: () => {

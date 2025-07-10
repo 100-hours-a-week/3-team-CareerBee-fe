@@ -11,29 +11,30 @@ import getProduct from '@/src/entities/shop/api/getProduct';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 
 import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 const ProductList = () => {
   const token = useAuthStore.getState().token;
 
-  const [count, setCount] = useState<Record<TicketType, number>>();
-  const [myCount, setMyCount] = useState<Record<TicketType, number>>();
+  const { data: count } = useQuery({
+    queryKey: ['ticketCount'],
+    queryFn: getTicketCount,
+  });
+
+  const { data: myCount } = useQuery({
+    queryKey: ['myTicketCount'],
+    queryFn: getMyTicketCount,
+    enabled: !!token,
+  });
+
   const [products, setProducts] = useState<productProps>({} as productProps);
 
-  const fetchCounts = async () => {
-    const countData = await getTicketCount();
-    if (countData) setCount(countData);
-
-    if (!token) return;
-    const myCountData = await getMyTicketCount();
-    if (myCountData) setMyCount(myCountData);
-  };
   const fetchProducts = async () => {
     const products = await getProduct();
     if (products) setProducts(products);
   };
 
   useEffect(() => {
-    fetchCounts();
     fetchProducts();
   }, []);
 
@@ -57,7 +58,7 @@ const ProductList = () => {
             key={key}
             ticketType={key as TicketType}
             ticket={ticket}
-            productImage={products?.[key as TicketType].prizeImgUrl}
+            productImage={products?.[key as TicketType].prizeImgUrl ?? ''}
             productDescription={products?.[key as TicketType].prizeName}
             ticketCount={count?.[key as TicketType]}
           />
