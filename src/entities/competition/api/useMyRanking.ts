@@ -32,4 +32,3 @@ export const useMyRanking = () => {
 
   return { myRanking, isLoading, isError };
 };
-

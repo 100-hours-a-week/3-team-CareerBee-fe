@@ -19,7 +19,7 @@ export const useMapStore = create<MapStore>()(
     }),
     {
       name: 'map-storage', // sessionStorage 키
-      storage: createJSONStorage(()=>sessionStorage),
+      storage: createJSONStorage(() => sessionStorage),
     },
   ),
 );

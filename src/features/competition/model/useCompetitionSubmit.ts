@@ -53,12 +53,12 @@ export function useCompetitionSubmit({
             },
           },
         );
-        
+
         if (res.httpStatusCode === 200) {
           setIsSubmitted(true);
           setJoinedTime(null);
           const { setAnswers } = useAnswerStore.getState();
-          
+
           const gradingResult = res.data?.gradingResults;
           if (gradingResult && gradingResult.length > 0) {
             setAnswers(gradingResult);
@@ -67,7 +67,6 @@ export function useCompetitionSubmit({
       } catch {
         toast({ title: '제출에 실패했습니다.', variant: 'destructive' });
       }
-
     },
     [problems, selectedAnswers, timeLeft, token, competitionId, setShowPointResult],
   );

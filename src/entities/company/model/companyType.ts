@@ -50,19 +50,19 @@ export interface Company {
 }
 
 // 기업 상세 탭 타입
-export interface CompanyGalleryProps{
+export interface CompanyGalleryProps {
   photos: CompanyPhoto[];
   name: string;
 }
 
-export interface CompanyTitleProps{
+export interface CompanyTitleProps {
   logoUrl: string;
   name: string;
   wishCount: number;
   id: number;
 }
 
-export interface CompanySummaryProps{
+export interface CompanySummaryProps {
   title: string;
   rating: number;
   financials: Financials;
