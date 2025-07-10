@@ -7,7 +7,6 @@ export const fetchIssue = async ({ companyId }: { companyId: number }) => {
       },
     },
   );
-  // console.log(res);
   if (res.status == 200) {
     const json = await res.json();
     return json.data.recentIssue;
