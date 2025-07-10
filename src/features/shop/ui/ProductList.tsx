@@ -10,7 +10,6 @@ import getMyTicketCount from '@/src/features/shop/api/getMyTicketCount';
 import getProduct from '@/src/entities/shop/api/getProduct';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 
-import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 const ProductList = () => {
@@ -27,18 +26,12 @@ const ProductList = () => {
     enabled: !!token,
   });
 
-  const [products, setProducts] = useState<productProps>({} as productProps);
+  const { data: products, isLoading } = useQuery<productProps | null>({
+    queryKey: ['products'],
+    queryFn: getProduct,
+  });
 
-  const fetchProducts = async () => {
-    const products = await getProduct();
-    if (products) setProducts(products);
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  if (!count) return null;
+  if (!count || isLoading) return <div>로딩 중...</div>;
 
   return (
     <>
@@ -58,8 +51,8 @@ const ProductList = () => {
             key={key}
             ticketType={key as TicketType}
             ticket={ticket}
-            productImage={products?.[key as TicketType].prizeImgUrl ?? ''}
-            productDescription={products?.[key as TicketType].prizeName}
+            productImage={products?.[key as TicketType]?.prizeImgUrl ?? ''}
+            productDescription={products?.[key as TicketType]?.prizeName ?? ''}
             ticketCount={count?.[key as TicketType]}
           />
         ))}

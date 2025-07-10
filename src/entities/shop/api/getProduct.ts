@@ -1,4 +1,5 @@
 import { safeGet } from '@/src/shared/api/request';
+import { productProps } from '@/src/entities/shop/config/productConfig';
 
 const getProduct = async () => {
   try {
@@ -9,8 +10,9 @@ const getProduct = async () => {
         red: redTicket,
         green: greenTicket,
         blue: blueTicket,
-      };
+      } as productProps;
     }
+    return null;
   } catch {
     return null;
   }
