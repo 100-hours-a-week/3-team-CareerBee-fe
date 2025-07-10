@@ -25,10 +25,12 @@ module.exports = {
     'import/no-extraneous-dependencies': ['error'],
     'jsx-a11y/alt-text': 'warn',
     'jsx-a11y/anchor-is-valid': 'warn',
-    'jsx-a11y/no-static-element-interactions': 'warn',
+    'jsx-a11y/click-events-have-key-events': 'warn',
     'no-use-before-define': ['error', { functions: false, classes: true, variables: true }],
     'react/destructuring-assignment': ['warn', 'always'],
+    'jsx-a11y/no-static-element-interactions': 'off',
     'jsx-a11y/no-noninteractive-element-to-interactive-role': 'off',
+    'jsx-a11y/no-noninteractive-element-interactions': 'off',
   },
   settings: {
     react: {
