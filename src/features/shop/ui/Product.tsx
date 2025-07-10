@@ -68,7 +68,9 @@ const Product = ({
       )}
       <hr className="border-border w-full my-[10px]"></hr>
       <Image
-        src={productImage && productImage.startsWith('http') ? productImage : '/fallback.png'}
+        src={
+          productImage && productImage.startsWith('http') ? productImage.trim() : '/fallback.png'
+        }
         alt={productDescription}
         width={108}
         height={108}
