@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'CareerBee - IT 커리어 지도',
-  description: 'IT 구직자를 위한 커리어 시각화 플랫폼 CareerBee',
+  description: 'IT 구직자를 위한 커리어 시각화 플랫폼',
 };
 
 const kakaoKey = process.env.NEXT_PUBLIC_KAKAOMAP_KEY;
