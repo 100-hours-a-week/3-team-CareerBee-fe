@@ -55,10 +55,11 @@ const ProductList = () => {
         {Object.entries(ticketConfig).map(([key, ticket]) => (
           <Product
             key={key}
+            ticketType={key as TicketType}
             ticket={ticket}
             productImage={products[key as TicketType].productImage}
             productDescription={products[key as TicketType].title}
-            count={count[key as TicketType]}
+            ticketCount={count[key as TicketType]}
           />
         ))}
       </div>
