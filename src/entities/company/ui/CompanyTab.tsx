@@ -7,7 +7,7 @@ import TechstackTab from '@/src/entities/company/ui/techstack';
 
 import { Company } from '@/src/entities/company/model/companyType';
 
-export const CompanyTab = ({ company }: { company: Company }) => {
+export const CompanyTab = ({ company, issue }: { company: Company; issue: string | null }) => {
   return (
     <Tabs defaultValue="defaultTab" className="grow mt-4 w-full">
       <TabsList>
@@ -36,7 +36,7 @@ export const CompanyTab = ({ company }: { company: Company }) => {
         <RecruitTab id={company.id} />
       </TabsContent>
       <TabsContent value="issue">
-        <IssueTab name={company.name} issue={company.recentIssue} />
+        <IssueTab name={company.name} issue={issue} />
       </TabsContent>
       <TabsContent value="benefit">
         <BenefitTab benefits={company.benefits} />

@@ -12,7 +12,7 @@ export default function IssueTab({ name, issue }: Props) {
         <PiPresentationChart />
         <p>{`${name}의 사업 현황은?`}</p>
       </div>
-      {issue ? <p className="px-7">{issue}</p> : <p>최근 이슈가 없어요.</p>}
+      {issue ? <p className="px-7">{issue!}</p> : <p className="px-7">최근 이슈가 없어요.</p>}
     </div>
   );
 }

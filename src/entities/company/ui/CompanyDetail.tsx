@@ -19,7 +19,13 @@ import { AnimatePresence } from 'motion/react';
 import { usePathname } from 'next/navigation';
 import { useUiStore } from '@/src/shared/model/ui';
 
-export default function CompanyDetail({ company }: { company: Company }) {
+export default function CompanyDetail({
+  company,
+  issue,
+}: {
+  company: Company;
+  issue: string | null;
+}) {
   const pathname = usePathname();
   const backPressedFromHeader = useUiStore((state) => state.backPressedFromHeader);
   const mapPressedFromNavbar = useUiStore((state) => state.mapPressedFromNavbar);
@@ -67,7 +73,7 @@ export default function CompanyDetail({ company }: { company: Company }) {
               <CompanyGallery company={companyGallery} />
               <CompanyTitle company={companyTitle} />
               <CompanySummary company={companySummary} />
-              <CompanyTab company={company} />
+              <CompanyTab company={company} issue={issue} />
             </div>
           </motion.div>
         )}
