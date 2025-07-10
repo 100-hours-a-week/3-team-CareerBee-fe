@@ -1,3 +1,5 @@
+'use client';
+
 import { PiBell, PiCaretDown, PiCaretLeft } from 'react-icons/pi';
 import logo from '@/public/images/logo-with-title.png';
 
