@@ -33,20 +33,20 @@ export interface Company {
   name: string;
   title: string;
   logoUrl: string;
-  recentIssue: string;
+  recentIssue: string; //빼기
   companyType: 'ENTERPRISE' | 'MID_SIZED' | 'SME';
   recruitingStatus: string;
   address: string;
   employeeCount: number;
   homepageUrl: string;
   description: string;
-  wishCount: number;
+  wishCount: number; //빼기
   rating: number;
   financials: Financials;
   photos: CompanyPhoto[];
   benefits: CompanyBenefit[];
   techStacks: TechStack[];
-  recruitments: Recruitment[];
+  // recruitments: Recruitment[]; //빼기
 }
 
 // 기업 상세 탭 타입

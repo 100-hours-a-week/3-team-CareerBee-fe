@@ -1,18 +1,32 @@
+'use client';
+
 import { PiBriefcase } from 'react-icons/pi';
 import { Recruitment } from '@/src/entities/company/model/companyType';
+import { fetchRecruitments } from '@/src/entities/company/api/fetchRecruitments';
+
+import { useEffect, useState } from 'react';
 
 interface Props {
   recruitments: Recruitment[];
 }
 
-export default function RecruitTab({ recruitments }: Props) {
+export default function RecruitTab({ id }: { id: number }) {
+  const [recruitments, setRecruitments] = useState<Recruitment[] | null>(null);
+  useEffect(() => {
+    const getData = async () => {
+      const data = await fetchRecruitments({ companyId: id });
+      setRecruitments(data);
+    };
+    getData();
+  }, [id]);
+
   return (
     <div className="px-2">
       <div className="flex gap-2 py-2 [&_svg]:size-5">
         <PiBriefcase />
         <p>현재 채용 정보</p>
       </div>
-      {recruitments.length > 0 ? (
+      {recruitments ? (
         <ul className="space-y-2 px-7">
           {recruitments.map((recruitment) => (
             <li key={recruitment.id} className="flex gap-1 items-start">

@@ -33,7 +33,7 @@ export const CompanyTab = ({ company }: { company: Company }) => {
         <DefaultTab company={company} />
       </TabsContent>
       <TabsContent value="recruit">
-        <RecruitTab recruitments={company.recruitments} />
+        <RecruitTab id={company.id} />
       </TabsContent>
       <TabsContent value="issue">
         <IssueTab name={company.name} issue={company.recentIssue} />
