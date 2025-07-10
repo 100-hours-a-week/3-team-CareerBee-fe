@@ -33,6 +33,7 @@ const useHandleBuyTicket = ({
       );
       return res.data;
     } catch (err: any) {
+      console.log(err);
       throw err;
     }
   };
