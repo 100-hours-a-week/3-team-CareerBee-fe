@@ -5,6 +5,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: 's3-careerbee-prod-images.s3.ap-northeast-2.amazonaws.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
         hostname: 'board.jinhak.com',
         port: '',
       },
