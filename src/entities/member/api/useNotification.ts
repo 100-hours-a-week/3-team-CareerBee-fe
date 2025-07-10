@@ -1,6 +1,7 @@
 import { safeGet, safePatch } from '@/src/shared/api/request';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { QueryClient } from '@tanstack/react-query';
+import type { QueryFunctionContext } from '@tanstack/react-query';
 
 export interface NotifyProps {
   id: number;
@@ -10,9 +11,25 @@ export interface NotifyProps {
   isRead: boolean;
 }
 
-export const getNotification = async ({ pageParam = 0 }: { pageParam?: number }) => {
+export interface NotificationPage {
+  important: NotifyProps[];
+  basic: NotifyProps[];
+  hasNext: boolean;
+  nextCursor?: number;
+}
+
+const errorType = {
+  important: [],
+  basic: [],
+  hasNext: false,
+  nextCursor: undefined,
+};
+
+export const getNotification = async (context: QueryFunctionContext): Promise<NotificationPage> => {
+  const pageParam = (context.pageParam as number) ?? 0;
   const token = useAuthStore.getState().token;
-  if (!token) return;
+
+  if (!token) return errorType;
   let res;
   if (process.env.NEXT_USE_MOCK === 'true') {
     const mock = await fetch('/mock/mock-notification.json');
@@ -30,6 +47,7 @@ export const getNotification = async ({ pageParam = 0 }: { pageParam?: number })
     const { nextCursor, hasNext } = res.data;
     return { important, basic, nextCursor, hasNext };
   }
+  return errorType;
 };
 
 export function useNotificationRead() {

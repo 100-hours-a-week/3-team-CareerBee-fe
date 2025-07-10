@@ -38,5 +38,6 @@ const Dropdown = React.forwardRef<HTMLDivElement, dropdownProps>(
     );
   },
 );
+Dropdown.displayName = 'Dropdown';
 
 export default Dropdown;

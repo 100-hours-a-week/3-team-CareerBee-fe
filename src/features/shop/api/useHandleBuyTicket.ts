@@ -9,7 +9,7 @@ import { toast } from '@/src/shared/model/useToast';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMutation } from '@tanstack/react-query';
 
-const handleBuyTicket = ({
+const useHandleBuyTicket = ({
   ticketType,
   onSuccess,
   onError,
@@ -41,7 +41,7 @@ const handleBuyTicket = ({
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: buyTicket,
-    onSuccess: (result) => {
+    onSuccess: () => {
       toast({ title: '구매가 완료되었어요!', variant: 'success' });
       queryClient.refetchQueries({ queryKey: ['userInfo'] });
       queryClient.invalidateQueries({ queryKey: ['myTicketCount'] });
@@ -54,4 +54,4 @@ const handleBuyTicket = ({
   });
 };
 
-export default handleBuyTicket;
+export default useHandleBuyTicket;

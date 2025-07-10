@@ -1,3 +1,5 @@
+/* global kakao */
+
 // 타입 안정성을 위한 SafeCluster
 type SafeCluster = kakao.maps.Cluster & {
   _markers?: (kakao.maps.Marker | kakao.maps.CustomOverlay)[];

@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export default function Page() {
   return (
     <>
@@ -14,10 +16,11 @@ export default function Page() {
       </div>
       <div className="flex justify-center w-full mt-4 mb-auto">
         <a href="https://www.buymeacoffee.com/ssammu" target="_blank" rel="noopener noreferrer">
-          <img
+          <Image
             src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
             alt="Buy Me A Coffee"
-            className="h-10 w-auto"
+            className="w-auto"
+            height={40}
           />
         </a>
       </div>

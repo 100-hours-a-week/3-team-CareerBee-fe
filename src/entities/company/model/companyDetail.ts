@@ -3,10 +3,10 @@ import { Company } from '@/src/entities/company/model/companyType';
 
 interface CompanyStore {
   company: Company | null;
-  setCompany: (company: Company) => void;
+  setCompany: (_company: Company) => void;
   clearCompany: () => void;
   isBookmarked: boolean;
-  setIsBookmarked: (isBookmarked: boolean) => void;
+  setIsBookmarked: (_isBookmarked: boolean) => void;
 }
 
 export const useCompanyStore = create<CompanyStore>((set) => ({

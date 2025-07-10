@@ -8,6 +8,7 @@ import handleQuit from '@/src/features/member/api/handleQuit';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function Page() {
   const router = useRouter();
@@ -15,9 +16,9 @@ export default function Page() {
 
   return (
     <div className="flex flex-col gap-6 py-3 px-16 w-full mb-auto">
-      <div className="text-xl font-bold w-full items-start">회원 탈퇴를 진행할게요.</div>
+      <div className="text-xl font-bold w-full items-start">회원 탈퇴를 진행할게요. </div>
       <div className="flex w-full justify-center">
-        <img src="/images/logo.png" className="w-28" alt="커리어비 로고" />
+        <Image src="/images/logo.png" alt="커리어비 로고" width={112} height={112} />
       </div>
       <div className=" flex flex-col gap-1 text-sm font-medium">
         <p className="text-center">그동안 커리어비와 함께해 주셔서 감사합니다.🙇</p>
@@ -67,7 +68,7 @@ export default function Page() {
           cancelText="되돌아가기"
           actionText="탈퇴 진행하기"
           cancelButton={false}
-          onAction={() => handleQuit(selectedReason)}
+          onAction={() => void handleQuit(selectedReason)}
         />
       </div>
     </div>

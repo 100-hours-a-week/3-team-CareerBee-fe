@@ -9,30 +9,33 @@ import {
   NotifyProps,
 } from '@/src/entities/member/api/useNotification';
 
+import type { NotificationPage } from '@/src/entities/member/api/useNotification';
+
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import React from 'react';
 
 export default function Page() {
   // 무한스크롤
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: ['notifications'],
-    queryFn: getNotification,
-    initialPageParam: 0,
-    getNextPageParam: (lastPage) => (lastPage?.hasNext ? lastPage.nextCursor : undefined),
-  });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery<NotificationPage>({
+      queryKey: ['notifications'],
+      queryFn: getNotification,
+      initialPageParam: 0,
+      getNextPageParam: (lastPage) => (lastPage?.hasNext ? lastPage.nextCursor : undefined),
+    });
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (!bottomRef.current || !hasNextPage) return;
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        fetchNextPage();
+        void fetchNextPage();
       }
     });
     observer.observe(bottomRef.current);
     return () => observer.disconnect();
-  }, [bottomRef, hasNextPage]);
+  }, [bottomRef, hasNextPage, fetchNextPage]);
 
   // 안 읽은 알림 읽음 처리
   const { markNotificationsAsRead } = useNotificationRead();
@@ -40,14 +43,18 @@ export default function Page() {
     if (!data?.pages) return;
 
     const unread = data.pages
-      .flatMap((page) => [...(page?.basic || []), ...(page?.important || [])])
+      .flatMap((page) => {
+        const important = Array.isArray(page?.important) ? page.important : [];
+        const basic = Array.isArray(page?.basic) ? page.basic : [];
+        return [...important, ...basic];
+      })
       .filter((noti) => !noti.isRead)
       .map((noti) => noti.id);
 
     if (unread.length > 0) {
-      markNotificationsAsRead(unread);
+      void markNotificationsAsRead(unread);
     }
-  }, [data?.pages]);
+  }, [data?.pages, markNotificationsAsRead]);
 
   const hasImportant = data?.pages?.some(
     (page) => page && Array.isArray(page.important) && page.important.length > 0,
@@ -59,9 +66,8 @@ export default function Page() {
   // 알림 아이콘 읽음 처리
   const queryClient = useQueryClient();
   useEffect(() => {
-    queryClient.setQueryData(['userInfo'], (oldData: any) => {
-      if (!oldData) return oldData;
-      if (oldData.hasNewAlarm === false) return oldData;
+    queryClient.setQueryData(['userInfo'], (oldData: { hasNewAlarm: boolean } | undefined) => {
+      if (!oldData || oldData.hasNewAlarm === false) return oldData;
       return {
         ...oldData,
         hasNewAlarm: false,

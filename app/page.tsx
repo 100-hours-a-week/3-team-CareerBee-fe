@@ -1,7 +1,6 @@
 'use client';
 // 지도 기반의 검색 페이지. 메인 페이지이자 진입 페이지.
 // 도메인 상에서 "지도 도메인"
-/* global kakao */
 
 import { SearchBar } from '@/src/features/map/ui/SearchBar';
 import { FilterGroup } from '@/src/features/map/ui/filter';

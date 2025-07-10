@@ -5,15 +5,11 @@ import { safePatch } from '@/src/shared/api/request';
 import { toast } from '@/src/shared/model/useToast';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 
-export const useSubmitProfileUpdate = () =>{
-  const {
-    setIsNicknameDirty,
-    isProfileImageDirty,
-    setIsProfileImageDirty,
-  } = useDirty();
+export const useSubmitProfileUpdate = () => {
+  const { setIsNicknameDirty, isProfileImageDirty, setIsProfileImageDirty } = useDirty();
 
   const token = useAuthStore((state) => state.token);
-  
+
   const submit = async ({
     nickname,
     profileUrl,
@@ -23,7 +19,6 @@ export const useSubmitProfileUpdate = () =>{
     profileUrl?: string | null;
     setHelperText: (_value: string) => void;
   }) => {
-
     if (!token) return;
 
     try {
@@ -44,4 +39,4 @@ export const useSubmitProfileUpdate = () =>{
     }
   };
   return { submit };
-}
+};

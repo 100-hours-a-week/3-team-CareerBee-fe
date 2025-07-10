@@ -63,7 +63,7 @@ export default function CompanyDetail({ company }: { company: Company }) {
             transition={{ duration: 0.4, ease: 'easeInOut' }}
           >
             <div className="flex flex-col grow">
-              <RecruitmentBanner isRecruiting={company.recruitments.length > 0} />
+              <RecruitmentBanner isRecruiting={company.recruitingStatus == 'ONGOING'} />
               <CompanyGallery company={companyGallery} />
               <CompanyTitle company={companyTitle} />
               <CompanySummary company={companySummary} />

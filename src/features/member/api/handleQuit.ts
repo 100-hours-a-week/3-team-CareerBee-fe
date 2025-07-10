@@ -5,7 +5,7 @@ import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { queryClient } from '@/src/shared/lib/react-query-client';
 
 export const handleQuit = async (selectedReason: string) => {
-  const token = useAuthStore((state) => state.token);
+  const token = useAuthStore.getState().token;
 
   try {
     await safeDelete(

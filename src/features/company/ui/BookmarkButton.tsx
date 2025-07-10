@@ -36,7 +36,7 @@ export const BookmarkButton = ({ companyId }: { companyId: number }) => {
 
   return (
     <>
-      {!!token ? (
+      {token ? (
         <Toggle
           variant="save"
           size="xs"

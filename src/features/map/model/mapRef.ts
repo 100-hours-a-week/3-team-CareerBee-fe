@@ -1,3 +1,5 @@
+/* global kakao */
+
 import { create } from 'zustand';
 
 interface MapRefState {
