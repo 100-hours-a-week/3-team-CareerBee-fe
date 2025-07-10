@@ -1,5 +1,5 @@
 export default function RecruitmentBanner({ isRecruiting }: { isRecruiting: boolean }) {
-  if (isRecruiting) return;
+  if (!isRecruiting) return;
   return (
     <div className="overflow-hidden h-6 bg-secondary text-text-primary text-sm flex items-center">
       <div className="flex animate-marquee whitespace-nowrap min-w-max">

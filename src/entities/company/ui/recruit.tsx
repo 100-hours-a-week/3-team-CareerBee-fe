@@ -4,21 +4,18 @@ import { PiBriefcase } from 'react-icons/pi';
 import { Recruitment } from '@/src/entities/company/model/companyType';
 import { fetchRecruitments } from '@/src/entities/company/api/fetchRecruitments';
 
-import { useEffect, useState } from 'react';
-
-interface Props {
-  recruitments: Recruitment[];
-}
+import { useQuery } from '@tanstack/react-query';
 
 export default function RecruitTab({ id }: { id: number }) {
-  const [recruitments, setRecruitments] = useState<Recruitment[] | null>(null);
-  useEffect(() => {
-    const getData = async () => {
-      const data = await fetchRecruitments({ companyId: id });
-      setRecruitments(data);
-    };
-    getData();
-  }, [id]);
+  const {
+    data: recruitments,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['recruitments', id],
+    queryFn: () => fetchRecruitments({ companyId: id }),
+    staleTime: 1000 * 60 * 20,
+  });
 
   return (
     <div className="px-2">
@@ -26,9 +23,13 @@ export default function RecruitTab({ id }: { id: number }) {
         <PiBriefcase />
         <p>현재 채용 정보</p>
       </div>
-      {recruitments ? (
+      {isLoading ? (
+        <></>
+      ) : isError || recruitments === null ? (
+        <p className="px-7">채용 정보를 불러오는 데 실패했어요.</p>
+      ) : recruitments.length > 0 ? (
         <ul className="space-y-2 px-7">
-          {recruitments.map((recruitment) => (
+          {recruitments.map((recruitment: Recruitment) => (
             <li key={recruitment.id} className="flex gap-1 items-start">
               <p className="whitespace-nowrap">[{recruitment.title}]</p>
               <a

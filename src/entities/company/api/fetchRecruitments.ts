@@ -6,5 +6,5 @@ export const fetchRecruitments = async ({ companyId }: { companyId: number }) =>
   if (res.httpStatusCode == 200) {
     return res.data.recruitments;
   }
-  return [];
+  return null;
 };
