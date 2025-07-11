@@ -25,7 +25,6 @@ export const BookmarkButton = ({ companyId }: { companyId: number }) => {
   useEffect(() => {
     const getWishCount = async () => {
       const count = await fetchWishCount({ companyId: companyId });
-      console.log(count);
       setCount(count);
     };
     getWishCount();
