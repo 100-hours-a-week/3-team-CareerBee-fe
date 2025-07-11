@@ -10,11 +10,10 @@ import { useToggleBookmarkMutation } from '@/src/shared/api/useToggleBookmarkMut
 import { toast } from '@/src/shared/model/useToast';
 
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import React from 'react';
 import { cn } from '@/src/shared/lib/utils';
-import { image } from 'd3';
 
 interface CompanyCardProps {
   companyId: number;
