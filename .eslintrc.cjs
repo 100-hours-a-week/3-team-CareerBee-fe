@@ -1,0 +1,40 @@
+module.exports = {
+  root: true,
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
+  },
+  plugins: ['@typescript-eslint', 'prettier', 'jsx-a11y', 'react', 'react-hooks', 'import'],
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:jsx-a11y/recommended',
+    'plugin:prettier/recommended',
+    'next/core-web-vitals',
+  ],
+  rules: {
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
+    'no-console': 'warn',
+    'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
+    'react/react-in-jsx-scope': 'off',
+    'import/prefer-default-export': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'import/no-extraneous-dependencies': ['error'],
+    'jsx-a11y/alt-text': 'warn',
+    'jsx-a11y/anchor-is-valid': 'warn',
+    'jsx-a11y/click-events-have-key-events': 'warn',
+    'no-use-before-define': ['error', { functions: false, classes: true, variables: true }],
+    'react/destructuring-assignment': ['warn', 'always'],
+    'jsx-a11y/no-static-element-interactions': 'off',
+    'jsx-a11y/no-noninteractive-element-to-interactive-role': 'off',
+    'jsx-a11y/no-noninteractive-element-interactions': 'off',
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
+};
