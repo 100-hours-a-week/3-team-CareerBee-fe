@@ -27,14 +27,8 @@ jobs:
           corepack enable
           corepack prepare pnpm@10.7.1 --activate
 
-      - name: Install dependencies
-        run: pnpm install
-
       - name: Create .env file
         run: echo "${{ secrets.ENV_FILE_CONTENTS }}" > .env
-
-      - name: Build Next.js App
-        run: pnpm build
 
       - name: Copy .env to next folder
         run: cp .env .next/
