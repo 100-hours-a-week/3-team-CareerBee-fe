@@ -1,9 +1,11 @@
 import { NextResponse, NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get('accessToken')?.value;
+  const token = request.cookies.get('refreshToken')?.value;
+  console.log('📦 쿠키에 있는 refreshToken:', token);
 
   if (!token) {
+    console.log('❌ 토큰이 없어서 /login-required 로 이동');
     return NextResponse.redirect(new URL('/login-required', request.url));
   }
 
@@ -15,7 +17,6 @@ export const config = {
     '/my/:path*',
     '/competition/entry',
     '/service/:path*',
-    '/oauth/callback/:path*',
     '/notification',
     '/resume/:path*',
     '/interview/saved',
