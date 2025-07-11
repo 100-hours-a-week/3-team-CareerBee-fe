@@ -36,8 +36,8 @@ jobs:
       - name: Build Next.js App
         run: pnpm build
 
-      - name: Copy .env to dist folder
-        run: cp .env dist/
+      - name: Copy .env to next folder
+        run: cp .env .next/
 
       - name: Set timestamp-based image tag (Asia/Seoul)
         run: |
