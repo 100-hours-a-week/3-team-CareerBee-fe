@@ -15,14 +15,22 @@ COPY . .
 RUN pnpm install
 RUN pnpm build
 
-# --- 2단계: 배포용 이미지 (Nginx) ---
-FROM nginx:1.28.0-alpine-slim
+# --- 2단계: 배포용 이미지  ---
+FROM node:22-alpine AS runner
 
-# 빌드된 정적 파일 복사
-COPY --from=builder /frontend/dist /usr/share/nginx/html
+WORKDIR /frontend
 
-# 80포트 오픈
-EXPOSE 80
+ENV NODE_ENV=production
 
-# 기본 엔트리포인트 유지
-CMD ["nginx", "-g", "daemon off;"]
+# production 의존성만 따로 복사하고 싶다면 아래 주석 해제
+# COPY --from=builder /app/node_modules ./node_modules
+
+COPY --from=builder /frontend/.next ./.next
+COPY --from=builder /frontend/public ./public
+COPY --from=builder /frontend/package.json ./package.json
+COPY --from=builder /frontend/node_modules ./node_modules
+COPY --from=builder /frontend/.env ./.env
+
+EXPOSE 3000
+
+CMD ["pnpm", "start"]
