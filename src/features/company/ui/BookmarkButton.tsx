@@ -58,9 +58,9 @@ export const BookmarkButton = ({ companyId }: { companyId: number }) => {
           }
           pressed={isBookmarked === true}
           onPressedChange={() => {
-            // if (!handleToggleBookmark.isPending) {
-            handleToggleBookmark.mutate();
-            // }
+            if (!handleToggleBookmark.isPending) {
+              handleToggleBookmark.mutate();
+            }
           }}
           disabled={handleToggleBookmark.isPending}
         />
