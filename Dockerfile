@@ -31,6 +31,6 @@ COPY --from=builder /frontend/package.json ./package.json
 COPY --from=builder /frontend/node_modules ./node_modules
 COPY --from=builder /frontend/.env ./.env
 
-EXPOSE 3000
+EXPOSE 5173
 
 CMD ["pnpm", "start"]
