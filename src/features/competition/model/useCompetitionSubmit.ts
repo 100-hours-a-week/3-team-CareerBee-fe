@@ -38,6 +38,7 @@ export function useCompetitionSubmit({
       }));
 
       const submitAt = Date.now();
+      console.log(submitAt, '-', participatedAt, '=', submitAt - participatedAt);
       try {
         const res = await safePost(
           `/api/v1/competitions/${competitionId}/results`,
