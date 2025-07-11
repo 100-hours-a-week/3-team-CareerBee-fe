@@ -21,7 +21,7 @@ FROM node:22-alpine AS runner
 WORKDIR /frontend
 
 RUN corepack enable && corepack prepare pnpm@10.7.1 --activate
-ENV NODE_ENV=productio
+ENV NODE_ENV=production
 
 # production 의존성만 따로 복사하고 싶다면 아래 주석 해제
 # COPY --from=builder /app/node_modules ./node_modules
