@@ -45,7 +45,6 @@ export default function CompanyDetail({
   const companyTitle: CompanyTitleProps = {
     logoUrl: company.logoUrl,
     name: company.name,
-    wishCount: company.wishCount,
     id: company.id,
   };
 
