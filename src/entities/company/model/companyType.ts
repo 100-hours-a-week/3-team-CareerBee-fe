@@ -33,20 +33,17 @@ export interface Company {
   name: string;
   title: string;
   logoUrl: string;
-  recentIssue: string;
   companyType: 'ENTERPRISE' | 'MID_SIZED' | 'SME';
   recruitingStatus: string;
   address: string;
   employeeCount: number;
   homepageUrl: string;
   description: string;
-  wishCount: number;
   rating: number;
   financials: Financials;
   photos: CompanyPhoto[];
   benefits: CompanyBenefit[];
   techStacks: TechStack[];
-  recruitments: Recruitment[];
 }
 
 // 기업 상세 탭 타입
@@ -58,7 +55,6 @@ export interface CompanyGalleryProps {
 export interface CompanyTitleProps {
   logoUrl: string;
   name: string;
-  wishCount: number;
   id: number;
 }
 

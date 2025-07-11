@@ -6,6 +6,7 @@ import { toast } from '@/src/shared/model/useToast';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 
 import { useFetchBookmarkStatus } from '@/src/shared/api/useFetchBookmarkStatus';
+import { fetchWishCount } from '@/src/entities/company/api/fetchWishCount';
 import { useToggleBookmarkMutation } from '@/src/shared/api/useToggleBookmarkMutation';
 
 import { useState, useEffect } from 'react';
@@ -20,7 +21,15 @@ export const BookmarkButton = ({ companyId }: { companyId: number }) => {
     bookmarkStatus(companyId, setIsBookmarked);
   }, []);
 
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState<number>(0);
+  useEffect(() => {
+    const getWishCount = async () => {
+      const count = await fetchWishCount({ companyId: companyId });
+      console.log(count);
+      setCount(count);
+    };
+    getWishCount();
+  }, []);
 
   const handleToggleBookmark = useToggleBookmarkMutation({
     companyId,
@@ -53,6 +62,7 @@ export const BookmarkButton = ({ companyId }: { companyId: number }) => {
               handleToggleBookmark.mutate();
             }
           }}
+          disabled={handleToggleBookmark.isPending}
         />
       ) : (
         <PiBookmarkSimple />

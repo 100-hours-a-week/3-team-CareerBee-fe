@@ -52,7 +52,7 @@ const Product = ({
             label="구매하기"
             className="rounded-full px-6"
             variant="primary"
-            disabled={!token}
+            disabled={!token || count <= 0}
           />
         </NeedMorePointsModal>
       ) : (
@@ -61,7 +61,7 @@ const Product = ({
             label="구매하기"
             className="rounded-full px-6"
             variant="primary"
-            disabled={!token}
+            disabled={!token || count <= 0}
           />
         </BuyModal>
       )}

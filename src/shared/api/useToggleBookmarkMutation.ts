@@ -38,7 +38,6 @@ export const useToggleBookmarkMutation = ({
           headers: { Authorization: `Bearer ${token}` },
         });
       }
-      setIsBookmarked(next);
       return next;
     } catch (err) {
       console.error('북마크 토글 실패', err);
@@ -49,6 +48,7 @@ export const useToggleBookmarkMutation = ({
   return useMutation({
     mutationFn: handleToggleBookmark,
     onSuccess: (result) => {
+      setIsBookmarked(result);
       onSuccess?.(result);
     },
     onError: () => {
