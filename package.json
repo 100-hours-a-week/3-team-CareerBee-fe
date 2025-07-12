@@ -6,9 +6,11 @@
     "dev": "next dev --port 5173",
     "build": "next build",
     "start": "next start --port 5173",
-    "lint": "next lint"
+    "lint": "next lint",
+    "dev:https":"next dev --experimental-https --port 5173"
   },
-  "type": "module",
+    "type": "module",
+
   "dependencies": {
     "@fontsource/pretendard": "^5.2.5",
     "@lottiefiles/dotlottie-react": "^0.13.5",
