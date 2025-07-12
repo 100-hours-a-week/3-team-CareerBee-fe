@@ -72,8 +72,9 @@ export default function Page() {
                 render={({ field }) => <ResumeUploadInput field={field} setError={setError} />}
               />
             </label>
-            <p className="text-xs text-error font-medium w-64 text-start">
-              {errors.resume?.message?.toString() || 'PDF 파일만 업로드할 수 있습니다.'}
+            <p className="text-xs text-error font-medium w-64 h-4 text-start">
+              {errors.resume?.message?.toString() ??
+                (!watch('resume')?.[0] ? 'PDF 파일만 업로드할 수 있습니다.' : '')}
             </p>
           </div>
           <UploadButton isReady={isReady} />
