@@ -1,6 +1,6 @@
 import { safePost } from '@/src/shared/api/request';
 import { handlePresignedUrl } from '@/src/shared/api/handlePresignedUrl';
-import { useResumeStore } from '@/src/features/resume/model/resumeStore';
+import { useResumeStore } from '@/src/features/resume/upload/model/resumeStore';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 
 import React from 'react';

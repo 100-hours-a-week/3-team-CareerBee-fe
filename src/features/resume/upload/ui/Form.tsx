@@ -2,11 +2,11 @@
 
 import fileUpload from '@/src/features/resume/assets/file-arrow-up-light.svg';
 
-import UploadButton from '@/src/features/resume/ui/UploadButton';
-import ResumeUploadInput from '@/src/features/resume/ui/ResumeUploadInput';
+import UploadButton from '@/src/features/resume/upload/ui/UploadButton';
+import ResumeUploadInput from '@/src/features/resume/upload/ui/ResumeUploadInput';
 
-import { useUploadPdf } from '@/src/features/resume/api/useUploadPdf';
-import { useUploadUrlStore } from '@/src/features/resume/model/urlStore';
+import { useUploadPdf } from '@/src/features/resume/upload/api/useUploadPdf';
+import { useUploadUrlStore } from '@/src/features/resume/upload/model/urlStore';
 
 import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';

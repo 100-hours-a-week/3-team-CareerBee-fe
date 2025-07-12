@@ -1,5 +1,5 @@
-import UploadTitle from '@/src/features/resume/ui/UploadTitle';
-import UploadForm from '@/src/features/resume/ui/UploadForm';
+import UploadTitle from '@/src/features/resume/upload/ui/UploadTitle';
+import UploadForm from '@/src/features/resume/upload/ui/Form';
 
 export default function Page() {
   return (

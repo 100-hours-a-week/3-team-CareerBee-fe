@@ -1,4 +1,4 @@
-import { useUploadUrlStore } from '@/src/features/resume/model/urlStore';
+import { useUploadUrlStore } from '@/src/features/resume/upload/model/urlStore';
 import { ControllerRenderProps, UseFormSetError } from 'react-hook-form';
 
 export const ResumeUploadInput = ({
