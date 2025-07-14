@@ -33,3 +33,6 @@ next-env.d.ts
 /out/
 
 /_src
+
+# 로컬 인증서
+certificates

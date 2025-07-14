@@ -10,7 +10,7 @@ import { useToggleBookmarkMutation } from '@/src/shared/api/useToggleBookmarkMut
 import { toast } from '@/src/shared/model/useToast';
 
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import React from 'react';
 import { cn } from '@/src/shared/lib/utils';
@@ -127,10 +127,10 @@ export default function CompanyCard({
       <div className="flex items-center">
         {/* 이미지 */}
         <div className="relative w-[108px] h-[108px] rounded-md flex items-center justify-center overflow-hidden mr-auto">
-          <Image
-            src={imageUrl || noImg}
+          <img
+            src={imageUrl || noImg.src}
             alt={companyName}
-            fill
+            // fill
             sizes="(max-width: 640px) 100vw, 108px"
             className="object-cover rounded-md"
           />

@@ -9,7 +9,7 @@ export const CompanyGallery = ({ company }: { company: CompanyGalleryProps }) =>
     <div className="relative grid grid-cols-4 grid-rows-2 gap-1 max-w-full h-56 mx-auto">
       {[...Array(5)].map((_, index) => {
         const photo = company.photos?.[index];
-        const imageUrl = photo?.url ?? noImg;
+        const imageUrl = photo?.url ?? noImg.src;
         return (
           <div
             key={index}
@@ -21,10 +21,11 @@ export const CompanyGallery = ({ company }: { company: CompanyGalleryProps }) =>
               src={imageUrl}
               alt={company.name ?? 'no image'}
               // fill
-              className="rounded-lg object-cover"
-              sizes={
-                index === 0 ? '(max-width: 600px) 100vw, 400px' : '(max-width: 600px) 50vw, 200px'
-              }
+              // className="rounded-lg object-cover"
+              // sizes={
+              //   index === 0 ? '(max-width: 600px) 100vw, 400px' : '(max-width: 600px) 50vw, 200px'
+              // }
+              className="rounded-lg object-cover w-full h-full"
             />
           </div>
         );

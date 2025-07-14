@@ -45,6 +45,12 @@ export default function Page() {
     if (isSubmitted === false && timeLeft <= 0) setShowTimeOverModal(true);
   }, [timeLeft, isSubmitted]);
 
+  const [participatedAt, setParticipatedAt] = useState(0);
+  useEffect(() => {
+    const now = Date.now();
+    setParticipatedAt(now);
+  }, []);
+
   const { competitionId } = useCompetitionStore();
   const { problems } = useCompetitionData(competitionId);
 
@@ -62,7 +68,7 @@ export default function Page() {
   const { handleSubmitClick } = useCompetitionSubmit({
     problems,
     selectedAnswers,
-    timeLeft,
+    participatedAt,
     setShowPointResult,
   });
 
