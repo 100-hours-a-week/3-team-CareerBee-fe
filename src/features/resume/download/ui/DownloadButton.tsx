@@ -17,10 +17,12 @@ export const DownloadButton = () => {
           onClick={requestResume}
         ></Button>
         <Button
-          label="고급 이력서 생성(Coming Soon)"
+          label="고급 이력서 생성"
           variant="primary"
-          disabled={true}
           className="w-[11.5625rem] rounded-lg text-xs font-medium"
+          onClick={() => {
+            router.push('/resume/download/advanced');
+          }}
         ></Button>
       </div>
       <Button
