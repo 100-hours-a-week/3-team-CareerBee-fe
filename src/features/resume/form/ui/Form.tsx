@@ -28,53 +28,55 @@ export const Form = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      position: '',
+      preferredJob: '',
       tier: '',
-      certification_count: resume?.certificationCount ?? undefined,
-      project_count: resume?.projectCount ?? undefined,
-      major_type: resume?.majorType ?? undefined,
-      work_period: resume?.workPeriod ?? undefined,
-      role: resume?.position ?? undefined,
-      additional_experiences: resume?.additionalExperiences ?? undefined,
+      certificationCount: resume?.certificationCount ?? undefined,
+      projectCount: resume?.projectCount ?? undefined,
+      majorType: resume?.majorType ?? undefined,
+      companyName: resume?.companyName ?? undefined,
+      workPeriod: resume?.workPeriod ?? undefined,
+      position: resume?.position ?? undefined,
+      additionalExperiences: resume?.additionalExperiences ?? undefined,
     },
     mode: 'onChange',
   });
 
   const [visibleFields, setVisibleFields] = useState({
     tier: false,
-    certification_count: false,
-    project_count: false,
-    major_type: false,
+    certificationCount: false,
+    projectCount: false,
+    majorType: false,
     work: false,
   });
 
   const watchedValues = watch([
-    'position',
+    'preferredJob',
     'tier',
-    'certification_count',
-    'project_count',
-    'major_type',
+    'certificationCount',
+    'projectCount',
+    'majorType',
   ]);
-  let isReady = false;
+
+  const [isReady, setIsReady] = useState(false);
   useEffect(() => {
-    isReady = Object.values(watchedValues).every((v) => v !== '' && v !== undefined);
+    setIsReady(Object.values(watchedValues).every((v) => v !== '' && v !== undefined));
   }, [watchedValues]);
 
-  const watchedPosition = watch('position');
+  const watchedPreferredJob = watch('preferredJob');
   const watchedTier = watch('tier');
-  const watchedCert = watch('certification_count');
-  const watchedProject = watch('project_count');
-  const watchedMajor = watch('major_type');
+  const watchedCert = watch('certificationCount');
+  const watchedProject = watch('projectCount');
+  const watchedMajor = watch('majorType');
 
   useEffect(() => {
     setVisibleFields({
-      tier: Boolean(watchedPosition),
-      certification_count: Boolean(watchedTier),
-      project_count: watchedCert !== undefined,
-      major_type: watchedProject !== undefined,
+      tier: Boolean(watchedPreferredJob),
+      certificationCount: Boolean(watchedTier),
+      projectCount: watchedCert !== undefined,
+      majorType: watchedProject !== undefined,
       work: watchedMajor !== undefined,
     });
-  }, [watchedPosition, watchedTier, watchedCert, watchedProject, watchedMajor]);
+  }, [watchedPreferredJob, watchedTier, watchedCert, watchedProject, watchedMajor]);
 
   const { handleSubmit } = useSubmitResume();
 
@@ -86,7 +88,7 @@ export const Form = () => {
           <p className="text-sm font-medium">선호 직무*</p>
           <Controller
             control={control}
-            name="position"
+            name="preferredJob"
             render={({ field }) => (
               <Dropdown
                 {...field}
@@ -117,10 +119,10 @@ export const Form = () => {
         )}
 
         {/* IT 자격증 개수 */}
-        {visibleFields.certification_count && (
+        {visibleFields.certificationCount && (
           <NumberForm
             title="IT 자격증 개수*"
-            controllerName="certification_count"
+            controllerName="certificationCount"
             rules={{
               required: '0~50 사이의 숫자를 입력해주세요.',
               min: [0, '0 이상 입력해주세요.'],
@@ -128,15 +130,15 @@ export const Form = () => {
             }}
             placeholder="숫자를 입력해주세요."
             control={control}
-            errors={errors.certification_count}
+            errors={errors.certificationCount}
           />
         )}
 
         {/* 프로젝트 개수 */}
-        {visibleFields.project_count && (
+        {visibleFields.projectCount && (
           <NumberForm
             title="프로젝트 개수*"
-            controllerName="project_count"
+            controllerName="projectCount"
             rules={{
               required: '0~10 사이의 숫자를 입력해주세요.',
               min: [0, '0 이상 입력해주세요.'],
@@ -144,19 +146,19 @@ export const Form = () => {
             }}
             placeholder="이력서에 추가할 프로젝트 개수를 입력해주세요."
             control={control}
-            errors={errors.project_count}
+            errors={errors.projectCount}
           />
         )}
 
         {/* 전공자/비전공자 */}
-        {visibleFields.major_type && (
+        {visibleFields.majorType && (
           <div className="flex flex-col w-full gap-1">
             <div className="text-sm flex w-full">
               <p className=" font-medium mr-auto">전공자/비전공자*</p>
             </div>
             <Controller
               control={control}
-              name="major_type"
+              name="majorType"
               render={({ field }) => (
                 <RadioGroup
                   className="flex space-x-6"
@@ -188,41 +190,53 @@ export const Form = () => {
               가장 최근 경력을 기준으로 기입해주세요!
             </p>
 
+            {/* 기업명 */}
+            <TextForm
+              title="기업명"
+              controllerName="companyName"
+              rules={{
+                maxLength: [25, '입력을 확인해주세요. (최대 25자)'],
+              }}
+              placeholder="기업명을 입력해주세요."
+              control={control}
+              errors={errors.companyName}
+            />
+
             {/* 근무 기간 */}
             <NumberForm
               title="근무 기간"
-              controllerName="work_period"
+              controllerName="workPeriod"
               rules={{
                 min: [1, '1 이상 입력해주세요.'],
                 max: [999, '999 이하까지만 입력 가능합니다.'],
               }}
               placeholder="월 단위로 입력해주세요."
               control={control}
-              errors={errors.work_period}
+              errors={errors.workPeriod}
             />
 
             {/* 직무 */}
             <TextForm
               title="직무"
-              controllerName="role"
+              controllerName="position"
               rules={{
                 maxLength: [25, '입력을 확인해주세요. (최대 25자)'],
               }}
               placeholder="담당 직무를 입력해주세요."
               control={control}
-              errors={errors.role}
+              errors={errors.position}
             />
 
             {/* 기타 어필 */}
             <LongTextForm
               title="기타 어필"
-              controllerName="additional_experiences"
+              controllerName="additionalExperiences"
               rules={{
                 maxLength: [100, '입력을 확인해주세요. (최대 100자)'],
               }}
               placeholder="TOPCIT, 수상이력, 기술 스터디, 대회 참가 이력..."
               control={control}
-              errors={errors.additional_experiences}
+              errors={errors.additionalExperiences}
             />
           </>
         )}

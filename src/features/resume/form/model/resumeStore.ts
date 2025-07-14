@@ -6,6 +6,7 @@ interface resumeResultProps {
   certificationCount: number | undefined;
   projectCount: number | undefined;
   majorType: string | undefined;
+  companyName: string | undefined;
   workPeriod: number | undefined;
   position: string | undefined;
   additionalExperiences: string | undefined;
@@ -23,6 +24,7 @@ const initialResultValues: resumeResultProps = {
   certificationCount: 0,
   projectCount: 0,
   majorType: '',
+  companyName: '',
   workPeriod: 0,
   position: '',
   additionalExperiences: '',

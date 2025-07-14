@@ -10,11 +10,12 @@ export interface rulesProps {
 }
 
 type inputType =
-  | 'certification_count'
-  | 'project_count'
-  | 'work_period'
-  | 'role'
-  | 'additional_experiences';
+  | 'certificationCount'
+  | 'projectCount'
+  | 'companyName'
+  | 'workPeriod'
+  | 'position'
+  | 'additionalExperiences';
 export interface formProps {
   title: string;
   controllerName: inputType;

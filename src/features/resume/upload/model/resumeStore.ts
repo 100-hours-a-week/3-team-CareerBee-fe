@@ -5,6 +5,7 @@ interface resumeProps {
   projectCount?: number;
   majorType?: string;
   companyType?: string;
+  companyName?: string;
   workPeriod?: number;
   position?: string;
   additionalExperiences?: string;

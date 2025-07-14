@@ -12,7 +12,7 @@ export const ProgressBar = ({ values }: ProgressBarProps) => {
         <div
           className="h-3 bg-primary transition-all duration-1000 rounded-full"
           style={{
-            width: `${(Object.values(values).filter(Boolean).length / 5) * 100}%`,
+            width: `${(Object.values(values).filter((v) => v !== undefined && v !== '').length / 5) * 100}%`,
           }}
         />
       </div>
@@ -22,9 +22,9 @@ export const ProgressBar = ({ values }: ProgressBarProps) => {
         className="absolute top-[-1.75rem]"
         style={{
           left: `calc(${
-            Object.values(values).filter(Boolean).length === 5
+            Object.values(values).filter((v) => v !== undefined && v !== '').length === 5
               ? 92
-              : (Object.values(values).filter(Boolean).length / 5) * 100
+              : (Object.values(values).filter((v) => v !== undefined && v !== '').length / 5) * 100
           }% - 12px)`,
           transition: 'left 1s ease',
           height: '24px',

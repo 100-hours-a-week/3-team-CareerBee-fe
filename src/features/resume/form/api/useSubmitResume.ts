@@ -15,14 +15,15 @@ export const useSubmitResume = () => {
     if (!token) return;
 
     const body = {
-      preferredJob: data.position,
+      preferredJob: data.preferredJob,
       psTier: data.tier,
-      certificationCount: data.certification_count,
-      projectCount: data.project_count,
-      majorType: data.major_type,
-      workPeriod: data.work_period,
-      position: data.role,
-      additionalExperiences: data.additional_experiences,
+      certificationCount: data.certificationCount,
+      projectCount: data.projectCount,
+      majorType: data.majorType,
+      companyName: data.companyName,
+      workPeriod: data.workPeriod,
+      position: data.position,
+      additionalExperiences: data.additionalExperiences,
     };
 
     try {

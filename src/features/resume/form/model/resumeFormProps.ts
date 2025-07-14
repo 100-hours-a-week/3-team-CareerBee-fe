@@ -1,10 +1,11 @@
 export interface ResumeFormProps {
-  position: string;
+  preferredJob: string;
   tier: string;
-  certification_count: number | undefined;
-  project_count: number | undefined;
-  major_type: string | undefined;
-  work_period: number | undefined;
-  role: string | undefined;
-  additional_experiences: string | undefined;
+  certificationCount: number | undefined;
+  projectCount: number | undefined;
+  majorType: string | undefined;
+  companyName: string | undefined;
+  workPeriod: number | undefined;
+  position: string | undefined;
+  additionalExperiences: string | undefined;
 }
