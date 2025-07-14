@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface resumeResultProps {
   preferredJob: string;
@@ -30,8 +31,23 @@ const initialResultValues: resumeResultProps = {
   additionalExperiences: '',
 };
 
-export const useResumeResultStore = create<ResumeResultState>((set) => ({
-  result: initialResultValues,
-  setResult: (values) => set({ result: values }),
-  resetResult: () => set({ result: initialResultValues }),
-}));
+export const useResumeResultStore = create<ResumeResultState>()(
+  persist(
+    (set) => ({
+      result: initialResultValues,
+      setResult: (values) => set({ result: values }),
+      resetResult: () => set({ result: initialResultValues }),
+    }),
+    {
+      name: 'resume-result-storage',
+      storage: {
+        getItem: (key) => {
+          const item = sessionStorage.getItem(key);
+          return item ? JSON.parse(item) : null;
+        },
+        setItem: (key, value) => sessionStorage.setItem(key, JSON.stringify(value)),
+        removeItem: (key) => sessionStorage.removeItem(key),
+      },
+    },
+  ),
+);

@@ -1,6 +1,6 @@
 import { safePost } from '@/src/shared/api/request';
 import { handlePresignedUrl } from '@/src/shared/api/handlePresignedUrl';
-import { useResumeStore } from '@/src/features/resume/upload/model/resumeStore';
+import { useResumeResultStore } from '@/src/features/resume/form/model/resumeStore';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 
 import React from 'react';
@@ -35,7 +35,7 @@ export const useUploadPdf = () => {
           },
         );
         if (res.httpStatusCode === 200) {
-          useResumeStore.getState().setResume(res.data);
+          useResumeResultStore.getState().setResult(res.data);
           router.push('/resume/form');
         }
       } catch (err: any) {

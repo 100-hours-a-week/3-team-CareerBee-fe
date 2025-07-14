@@ -11,7 +11,8 @@ import TextForm from '@/src/features/resume/form/ui/textForm';
 import LongTextForm from '@/src/features/resume/form/ui/longtextForm';
 
 import { useSubmitResume } from '@/src/features/resume/form/api/useSubmitResume';
-import { useResumeStore } from '@/src/features/resume/upload/model/resumeStore';
+import { useResumeResultStore } from '@/src/features/resume/form/model/resumeStore';
+import { findTier } from '@/src/entities/resume/download/lib/findTier';
 
 import { baekjoonTierItems } from '@/src/features/resume/form/model/baekjoonTierItems';
 
@@ -20,26 +21,43 @@ import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 
 export const Form = () => {
-  const { resume } = useResumeStore();
+  const { result } = useResumeResultStore();
   const {
     control,
     handleSubmit: rhfHandleSubmit,
     watch,
     formState: { errors },
+    reset,
   } = useForm({
     defaultValues: {
-      preferredJob: '',
-      tier: '',
-      certificationCount: resume?.certificationCount ?? undefined,
-      projectCount: resume?.projectCount ?? undefined,
-      majorType: resume?.majorType ?? undefined,
-      companyName: resume?.companyName ?? undefined,
-      workPeriod: resume?.workPeriod ?? undefined,
-      position: resume?.position ?? undefined,
-      additionalExperiences: resume?.additionalExperiences ?? undefined,
+      preferredJob: result?.preferredJob ?? undefined,
+      tier: result?.psTier ?? undefined,
+      certificationCount: result?.certificationCount ?? undefined,
+      projectCount: result?.projectCount ?? undefined,
+      majorType: result?.majorType ?? undefined,
+      companyName: result?.companyName ?? undefined,
+      workPeriod: result?.workPeriod ?? undefined,
+      position: result?.position ?? undefined,
+      additionalExperiences: result?.additionalExperiences ?? undefined,
     },
     mode: 'onChange',
   });
+
+  useEffect(() => {
+    if (result) {
+      reset({
+        preferredJob: result?.preferredJob ?? undefined,
+        tier: result?.psTier ?? undefined,
+        certificationCount: result?.certificationCount ?? undefined,
+        projectCount: result?.projectCount ?? undefined,
+        majorType: result?.majorType ?? undefined,
+        companyName: result?.companyName ?? undefined,
+        workPeriod: result?.workPeriod ?? undefined,
+        position: result?.position ?? undefined,
+        additionalExperiences: result?.additionalExperiences ?? undefined,
+      });
+    }
+  }, [result, reset]);
 
   const [visibleFields, setVisibleFields] = useState({
     tier: false,
@@ -91,8 +109,9 @@ export const Form = () => {
             name="preferredJob"
             render={({ field }) => (
               <Dropdown
-                {...field}
                 placeholder="선호 직무"
+                onChange={field.onChange}
+                value={field.value}
                 items={[
                   { label: '프론트엔드', value: 'FRONTEND' },
                   { label: '백엔드', value: 'BACKEND' },
@@ -112,7 +131,12 @@ export const Form = () => {
               control={control}
               name="tier"
               render={({ field }) => (
-                <DoubleDropdown {...field} placeholder="백준 티어" items={baekjoonTierItems} />
+                <DoubleDropdown
+                  {...field}
+                  placeholder="백준 티어"
+                  value={findTier(field.value)}
+                  items={baekjoonTierItems}
+                />
               )}
             />
           </div>

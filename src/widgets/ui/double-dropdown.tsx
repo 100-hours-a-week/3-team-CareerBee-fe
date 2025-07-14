@@ -25,17 +25,18 @@ interface TierOptionGroup {
 interface dropdownProps {
   placeholder: string;
   items: TierOptionGroup[];
+  value?: string;
   onChange?: (_value: string) => void;
 }
 
 const DoubleDropdown = React.forwardRef<HTMLDivElement, dropdownProps>(
-  ({ placeholder, items, onChange }, _ref) => {
+  ({ placeholder, items, value, onChange }, _ref) => {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
 
     return (
       <Select onValueChange={onChange}>
         <SelectTrigger>
-          <SelectValue placeholder={placeholder} />
+          <SelectValue placeholder={value ? value : placeholder} />
         </SelectTrigger>
         <SelectContent>
           {items.map((item, index) => (
