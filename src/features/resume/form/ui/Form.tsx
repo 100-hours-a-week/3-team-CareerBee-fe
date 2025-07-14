@@ -163,22 +163,17 @@ export const Form = () => {
                   onValueChange={field.onChange}
                   value={field.value}
                 >
-                  <div className="flex items-center space-x-2 p-1">
-                    <RadioGroupItem value={'MAJOR'} id={'MAJOR'} className="min-h-5 min-w-5" />
-                    <label htmlFor={'MAJOR'} className={cn(`cursor-pointer`)}>
-                      전공자
-                    </label>
-                  </div>
-                  <div className="flex items-center space-x-2 p-1">
-                    <RadioGroupItem
-                      value={'NON_MAJOR'}
-                      id={'NON_MAJOR'}
-                      className="min-h-5 min-w-5"
-                    />
-                    <label htmlFor={'NON_MAJOR'} className={cn(`cursor-pointer`)}>
-                      비전공자
-                    </label>
-                  </div>
+                  {[
+                    { value: 'MAJOR', label: '전공자' },
+                    { value: 'NON_MAJOR', label: '비전공자' },
+                  ].map(({ value, label }) => (
+                    <div key={value} className="flex items-center space-x-2 p-1">
+                      <RadioGroupItem value={value} id={value} className="min-h-5 min-w-5" />
+                      <label htmlFor={value} className={cn('cursor-pointer')}>
+                        {label}
+                      </label>
+                    </div>
+                  ))}
                 </RadioGroup>
               )}
             />
