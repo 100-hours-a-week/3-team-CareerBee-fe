@@ -15,15 +15,16 @@ export interface itemProps {
 interface dropdownProps {
   placeholder: string;
   items: itemProps[];
+  value?: string;
   onChange?: (_value: string) => void;
 }
 
 const Dropdown = React.forwardRef<HTMLDivElement, dropdownProps>(
-  ({ placeholder, items, onChange }, _ref) => {
+  ({ placeholder, items, value, onChange }, _ref) => {
     return (
       <Select onValueChange={onChange}>
         <SelectTrigger>
-          <SelectValue placeholder={placeholder} />
+          <SelectValue placeholder={value ? value : placeholder} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
