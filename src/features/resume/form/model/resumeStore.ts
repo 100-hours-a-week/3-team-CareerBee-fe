@@ -3,12 +3,12 @@ import { create } from 'zustand';
 interface resumeResultProps {
   preferredJob: string;
   psTier: string;
-  certificationCount: number;
-  projectCount: number;
-  majorType: string;
-  workPeriod: number;
-  position: string;
-  additionalExperiences: string;
+  certificationCount: number | undefined;
+  projectCount: number | undefined;
+  majorType: string | undefined;
+  workPeriod: number | undefined;
+  position: string | undefined;
+  additionalExperiences: string | undefined;
 }
 
 interface ResumeResultState {

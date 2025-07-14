@@ -55,7 +55,10 @@ export const Form = () => {
     'project_count',
     'major_type',
   ]);
-  const isReady = Object.values(watchedValues).every((v) => v !== '');
+  let isReady = false;
+  useEffect(() => {
+    isReady = Object.values(watchedValues).every((v) => v !== '' && v !== undefined);
+  }, [watchedValues]);
 
   const watchedPosition = watch('position');
   const watchedTier = watch('tier');
