@@ -4,6 +4,7 @@ import { Button } from '@/src/widgets/ui/button';
 import { StateBasedModal } from '@/src/widgets/ui/modal';
 import GridFormat from '@/src/features/resume/download/ui/GridFormat';
 
+import { findTier } from '@/src/features/resume/download/lib/findTier';
 import { useResumeResultStore } from '@/src/features/resume/form/model/resumeStore';
 import { handleDownload } from '@/src/features/resume/download/model/handleDownload';
 
@@ -23,7 +24,7 @@ export default function Form() {
           <GridFormat>선호 직무</GridFormat>
           <div className="font-medium pl-4">{data.preferredJob}</div>
           <GridFormat>백준 티어</GridFormat>
-          <div className="font-medium pl-4">{data.psTier}</div>
+          <div className="font-medium pl-4">{findTier(data.psTier)}</div>
           <GridFormat>IT 자격증 개수</GridFormat>
           <div className="font-medium pl-4">{data.certificationCount} 개</div>
           <GridFormat>프로젝트 개수</GridFormat>
