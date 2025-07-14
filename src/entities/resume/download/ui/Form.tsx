@@ -1,19 +1,17 @@
 'use client';
 
-import { StateBasedModal } from '@/src/widgets/ui/modal';
 import GridFormat from '@/src/entities/resume/download/ui/GridFormat';
-import { DownloadButton } from '@/src/features/resume/download/ui/downloadButton';
+import DownloadButton from '@/src/features/resume/download/ui/DownloadButton';
+import DownloadModal from '@/src/features/resume/download/ui/DownloadModal';
 
 import { findTier } from '@/src/entities/resume/download/lib/findTier';
 import { useResumeResultStore } from '@/src/features/resume/form/model/resumeStore';
-import { handleDownload } from '@/src/features/resume/download/model/handleDownload';
 
 import React from 'react';
 
 export default function Form() {
   const { result: data } = useResumeResultStore();
 
-  const { isSuccess, setIsSuccess, isFailed, setIsFailed } = handleDownload();
   return (
     <>
       <div className="gap-0">
@@ -56,29 +54,7 @@ export default function Form() {
       </div>
 
       <DownloadButton />
-
-      <StateBasedModal
-        open={isSuccess}
-        onOpenChange={() => {}}
-        title="이력서가 생성되었어요."
-        description={<>다시 보고 싶다면 마이페이지 → 내 이력 조회에서 확인하실 수 있어요.</>}
-        actionText="확인"
-        cancelButton={false}
-        onAction={() => {
-          setIsSuccess(false);
-        }}
-      />
-      <StateBasedModal
-        open={isFailed}
-        onOpenChange={() => {}}
-        title="이력서를 만드는 중에 문제가 생겼어요."
-        description={<>잠시 후 다시 시도해주세요.</>}
-        actionText="확인"
-        cancelButton={false}
-        onAction={() => {
-          setIsFailed(false);
-        }}
-      />
+      <DownloadModal />
     </>
   );
 }

@@ -35,3 +35,5 @@ export const DownloadButton = () => {
     </div>
   );
 };
+
+export default DownloadButton;
