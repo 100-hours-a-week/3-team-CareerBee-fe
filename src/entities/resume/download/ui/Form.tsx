@@ -2,9 +2,9 @@
 
 import { Button } from '@/src/widgets/ui/button';
 import { StateBasedModal } from '@/src/widgets/ui/modal';
-import GridFormat from '@/src/features/resume/download/ui/GridFormat';
+import GridFormat from '@/src/entities/resume/download/ui/GridFormat';
 
-import { findTier } from '@/src/features/resume/download/lib/findTier';
+import { findTier } from '@/src/entities/resume/download/lib/findTier';
 import { useResumeResultStore } from '@/src/features/resume/form/model/resumeStore';
 import { handleDownload } from '@/src/features/resume/download/model/handleDownload';
 
@@ -38,11 +38,11 @@ export default function Form() {
 
         <div className="grid grid-cols-[auto,1fr] gap-y-4 py-2 text-sm">
           <GridFormat className="px-2">기업</GridFormat>
-          <div className="font-medium pl-4">카카오</div>
+          <div className="font-medium pl-4">{data.companyName ? data.companyName : '-'}</div>
           <GridFormat className="px-2">근무 기간</GridFormat>
-          <div className="font-medium pl-4">{data.workPeriod} 개월</div>
+          <div className="font-medium pl-4">{data.workPeriod ? data.workPeriod : '-'} 개월</div>
           <GridFormat className="px-2">직무</GridFormat>
-          <div className="font-medium pl-4">{data.position}</div>
+          <div className="font-medium pl-4">{data.position ? data.position : '-'}</div>
         </div>
 
         <div className="font-semibold pt-3 pb-2">기타 어필</div>

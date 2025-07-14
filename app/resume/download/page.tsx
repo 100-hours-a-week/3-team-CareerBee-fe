@@ -1,5 +1,5 @@
-import Form from '@/src/features/resume/download/ui/Form';
-import FormTitle from '@/src/features/resume/download/ui/FormTitle';
+import Form from '@/src/entities/resume/download/ui/Form';
+import FormTitle from '@/src/entities/resume/download/ui/FormTitle';
 import Loading from '@/src/features/resume/download/ui/Loading';
 
 export default function Page() {
