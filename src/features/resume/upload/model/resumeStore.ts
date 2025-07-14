@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 
 interface resumeProps {
-  certificationCount: number;
-  projectCount: number;
-  majorType: string;
-  companyType: string;
-  workPeriod: number;
-  position: string;
-  additionalExperiences: string;
+  certificationCount?: number;
+  projectCount?: number;
+  majorType?: string;
+  companyType?: string;
+  workPeriod?: number;
+  position?: string;
+  additionalExperiences?: string;
 }
 
 interface ResumeState {

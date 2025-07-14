@@ -30,12 +30,12 @@ export const Form = () => {
     defaultValues: {
       position: '',
       tier: '',
-      certification_count: resume?.certificationCount ?? 0,
-      project_count: resume?.projectCount ?? 0,
-      major_type: resume?.majorType ?? '',
-      work_period: resume?.workPeriod ?? 0,
-      role: resume?.position ?? '',
-      additional_experiences: resume?.additionalExperiences ?? '',
+      certification_count: resume?.certificationCount ?? undefined,
+      project_count: resume?.projectCount ?? undefined,
+      major_type: resume?.majorType ?? undefined,
+      work_period: resume?.workPeriod ?? undefined,
+      role: resume?.position ?? undefined,
+      additional_experiences: resume?.additionalExperiences ?? undefined,
     },
     mode: 'onChange',
   });
@@ -67,10 +67,11 @@ export const Form = () => {
     setVisibleFields({
       tier: Boolean(watchedPosition),
       certification_count: Boolean(watchedTier),
-      project_count: watchedCert !== null && watchedCert !== undefined,
-      major_type: watchedProject !== null && watchedProject !== undefined,
-      work: watchedMajor !== '',
+      project_count: watchedCert !== undefined,
+      major_type: watchedProject !== undefined,
+      work: watchedMajor !== undefined,
     });
+    console.log('🚀 ~ Form ~ watchedValues:', watchedValues);
   }, [watchedPosition, watchedTier, watchedCert, watchedProject, watchedMajor]);
 
   const { handleSubmit } = useSubmitResume();
@@ -229,7 +230,7 @@ export const Form = () => {
           </>
         )}
       </div>
-      <ProgressBar watchedValues={watchedValues} />
+      <ProgressBar values={watchedValues} />
       <SubmitButton isReady={isReady} />
     </form>
   );

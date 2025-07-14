@@ -30,7 +30,7 @@ export default function NumberForm({
           return (
             <Input
               {...field}
-              value={field.value === null ? '' : field.value}
+              value={field.value ?? ''}
               type="number"
               step="1"
               inputMode="numeric"
