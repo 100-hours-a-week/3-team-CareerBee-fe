@@ -44,6 +44,7 @@ export const UploadForm = () => {
         >
           {fileUrl ? (
             <iframe
+              title="pdf 미리보기"
               src={`${fileUrl}#toolbar=0&navpanes=0&scrollbar=0`}
               className="w-full h-full rounded-lg"
             />

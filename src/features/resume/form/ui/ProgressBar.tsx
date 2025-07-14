@@ -2,7 +2,13 @@ import BeeImage from '@/src/features/resume/form/assets/bee.png';
 import BeehiveImage from '@/src/features/resume/form/assets/beehive.png';
 
 interface ProgressBarProps {
-  values: [string, string, number | undefined, number | undefined, string | undefined];
+  values: [
+    string | undefined,
+    string | undefined,
+    number | undefined,
+    number | undefined,
+    string | undefined,
+  ];
 }
 
 export const ProgressBar = ({ values }: ProgressBarProps) => {

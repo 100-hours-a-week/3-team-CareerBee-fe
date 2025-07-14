@@ -18,9 +18,9 @@ export default function Form() {
         <hr />
         <div className="grid grid-cols-[auto,1fr] gap-y-4 text-sm py-2">
           <GridFormat>선호 직무</GridFormat>
-          <div className="font-medium pl-4">{data.preferredJob}</div>
+          <div className="font-medium pl-4">{data.preferredJob ?? '-'}</div>
           <GridFormat>백준 티어</GridFormat>
-          <div className="font-medium pl-4">{findTier(data.psTier)}</div>
+          <div className="font-medium pl-4">{data.tier ? findTier(data.tier) : '-'}</div>
           <GridFormat>IT 자격증 개수</GridFormat>
           <div className="font-medium pl-4">{data.certificationCount} 개</div>
           <GridFormat>프로젝트 개수</GridFormat>

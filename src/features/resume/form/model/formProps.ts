@@ -1,4 +1,4 @@
-import { ResumeFormProps } from '@/src/features/resume/form/model/resumeFormProps';
+import { ResumeFormProps } from '@/src/features/resume/form/model/resumeStore';
 
 import { Control, FieldError } from 'react-hook-form';
 

@@ -31,7 +31,7 @@ export const Form = () => {
   } = useForm({
     defaultValues: {
       preferredJob: result?.preferredJob ?? undefined,
-      tier: result?.psTier ?? undefined,
+      tier: result?.tier ?? undefined,
       certificationCount: result?.certificationCount ?? undefined,
       projectCount: result?.projectCount ?? undefined,
       majorType: result?.majorType ?? undefined,
@@ -48,7 +48,7 @@ export const Form = () => {
     if (result) {
       reset({
         preferredJob: result?.preferredJob ?? undefined,
-        tier: result?.psTier ?? undefined,
+        tier: result?.tier ?? undefined,
         certificationCount: result?.certificationCount ?? undefined,
         projectCount: result?.projectCount ?? undefined,
         majorType: result?.majorType ?? undefined,
@@ -135,7 +135,7 @@ export const Form = () => {
                 <DoubleDropdown
                   {...field}
                   placeholder="백준 티어"
-                  value={findTier(field.value)}
+                  value={field.value ? findTier(field.value) : ''}
                   items={baekjoonTierItems}
                 />
               )}

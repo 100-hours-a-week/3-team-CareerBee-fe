@@ -1,10 +1,10 @@
 'use client';
 
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { handleDownload } from '@/src/features/resume/download/model/handleDownload';
+import { useDownload } from '@/src/features/resume/download/model/useDownload';
 
 export const Loading = () => {
-  const { isLoading } = handleDownload();
+  const { isLoading } = useDownload();
   return (
     <>
       {isLoading ? (

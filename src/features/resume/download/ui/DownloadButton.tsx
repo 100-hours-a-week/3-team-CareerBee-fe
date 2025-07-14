@@ -1,11 +1,11 @@
 import { Button } from '@/src/widgets/ui/button';
-import { handleDownload } from '@/src/features/resume/download/model/handleDownload';
+import { useDownload } from '@/src/features/resume/download/model/useDownload';
 
 import { useRouter } from 'next/navigation';
 
 export const DownloadButton = () => {
   const router = useRouter();
-  const { requestResume } = handleDownload();
+  const { requestResume } = useDownload();
 
   return (
     <div className="gap-3 flex flex-col">

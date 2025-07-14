@@ -1,4 +1,4 @@
-import { ResumeFormProps } from '@/src/features/resume/form/model/resumeFormProps';
+import { ResumeFormProps } from '@/src/features/resume/form/model/resumeStore';
 
 import { toast } from '@/src/shared/model/useToast';
 import { safePatch } from '@/src/shared/api/request';
@@ -16,7 +16,7 @@ export const useSubmitResume = () => {
 
     const body = {
       preferredJob: data.preferredJob,
-      psTier: data.tier,
+      tier: data.tier,
       certificationCount: data.certificationCount,
       projectCount: data.projectCount,
       majorType: data.majorType,

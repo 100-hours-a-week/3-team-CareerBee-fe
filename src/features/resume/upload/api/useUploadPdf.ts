@@ -23,23 +23,19 @@ export const useUploadPdf = () => {
         uploadType: 'RESUME',
       });
 
-      try {
-        const res = await safePost(
-          '/api/v1/members/resume/complete-upload',
-          {
-            objectKey: objectKey,
-          },
-          {
-            headers: { Authorization: `Bearer ${token}` },
-            timeout: 0,
-          },
-        );
-        if (res.httpStatusCode === 200) {
-          useResumeResultStore.getState().setResult(res.data);
-          router.push('/resume/form');
-        }
-      } catch (err: any) {
-        throw err;
+      const res = await safePost(
+        '/api/v1/members/resume/complete-upload',
+        {
+          objectKey: objectKey,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          timeout: 0,
+        },
+      );
+      if (res.httpStatusCode === 200) {
+        useResumeResultStore.getState().setResult(res.data);
+        router.push('/resume/form');
       }
     }
   };

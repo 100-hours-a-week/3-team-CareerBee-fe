@@ -5,7 +5,7 @@ import { safePost } from '@/src/shared/api/request';
 
 import { useState, useEffect } from 'react';
 
-export const handleDownload = () => {
+export const useDownload = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isFailed, setIsFailed] = useState(false);

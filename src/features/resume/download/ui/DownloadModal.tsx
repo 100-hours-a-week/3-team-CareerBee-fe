@@ -1,9 +1,9 @@
 import { StateBasedModal } from '@/src/widgets/ui/modal';
 
-import { handleDownload } from '@/src/features/resume/download/model/handleDownload';
+import { useDownload } from '@/src/features/resume/download/model/useDownload';
 
 export const DownloadModal = () => {
-  const { isSuccess, setIsSuccess, isFailed, setIsFailed } = handleDownload();
+  const { isSuccess, setIsSuccess, isFailed, setIsFailed } = useDownload();
 
   return (
     <>

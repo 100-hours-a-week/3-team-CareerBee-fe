@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-interface resumeResultProps {
+export interface ResumeFormProps {
   preferredJob: string | undefined;
-  psTier: string | undefined;
+  tier: string | undefined;
   certificationCount: number | undefined;
   projectCount: number | undefined;
   majorType: string | undefined;
@@ -14,14 +14,14 @@ interface resumeResultProps {
 }
 
 interface ResumeResultState {
-  result: resumeResultProps;
-  setResult: (_values: resumeResultProps) => void;
+  result: ResumeFormProps;
+  setResult: (_values: ResumeFormProps) => void;
   resetResult: () => void;
 }
 
-const initialResultValues: resumeResultProps = {
+const initialResultValues: ResumeFormProps = {
   preferredJob: undefined,
-  psTier: undefined,
+  tier: undefined,
   certificationCount: undefined,
   projectCount: undefined,
   majorType: undefined,
