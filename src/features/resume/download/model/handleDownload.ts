@@ -1,3 +1,5 @@
+'use client';
+
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { safePost } from '@/src/shared/api/request';
 
@@ -9,11 +11,12 @@ export const handleDownload = () => {
   const [isFailed, setIsFailed] = useState(false);
 
   useEffect(() => {
-    setIsLoading(true);
+    setIsLoading(false);
   }, []);
 
   const { token } = useAuthStore.getState();
   const requestResume = async () => {
+    setIsLoading(true);
     try {
       const res = await safePost(
         '/api/v1/members/resume',
@@ -43,5 +46,5 @@ export const handleDownload = () => {
     }
   };
 
-  return { isLoading, requestResume };
+  return { isLoading, isSuccess, setIsSuccess, isFailed, setIsFailed, requestResume };
 };
