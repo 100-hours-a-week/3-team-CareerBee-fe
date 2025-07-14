@@ -31,6 +31,7 @@ export default function LongTextForm({
           return (
             <Textarea
               {...field}
+              value={field.value ?? ''}
               variant="default"
               placeholder={placeholder}
               maxLength={rules.maxLength ? rules.maxLength[0] : 0}

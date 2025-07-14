@@ -71,7 +71,6 @@ export const Form = () => {
       major_type: watchedProject !== undefined,
       work: watchedMajor !== undefined,
     });
-    console.log('🚀 ~ Form ~ watchedValues:', watchedValues);
   }, [watchedPosition, watchedTier, watchedCert, watchedProject, watchedMajor]);
 
   const { handleSubmit } = useSubmitResume();

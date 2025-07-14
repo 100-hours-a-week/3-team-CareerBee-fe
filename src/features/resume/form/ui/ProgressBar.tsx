@@ -6,8 +6,6 @@ interface ProgressBarProps {
 }
 
 export const ProgressBar = ({ values }: ProgressBarProps) => {
-  console.log(values);
-  console.log('🚀 ~ Object.values(values).filter(Boolean):', Object.values(values).filter(Boolean));
   return (
     <div className="w-full mt-10 relative">
       <div className="w-full h-3 bg-muted rounded-full overflow-hidden">

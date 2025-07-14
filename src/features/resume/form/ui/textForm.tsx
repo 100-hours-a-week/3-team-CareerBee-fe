@@ -28,7 +28,15 @@ export default function TextForm({
             : undefined,
         }}
         render={({ field }) => {
-          return <Input {...field} type="text" variant="resume" placeholder={placeholder} />;
+          return (
+            <Input
+              {...field}
+              value={field.value ?? ''}
+              type="text"
+              variant="resume"
+              placeholder={placeholder}
+            />
+          );
         }}
       />
     </div>
