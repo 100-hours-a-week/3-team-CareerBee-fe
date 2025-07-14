@@ -44,6 +44,7 @@ export const Form = () => {
   });
 
   useEffect(() => {
+    console.log(result);
     if (result) {
       reset({
         preferredJob: result?.preferredJob ?? undefined,

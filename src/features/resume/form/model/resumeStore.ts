@@ -2,8 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface resumeResultProps {
-  preferredJob: string;
-  psTier: string;
+  preferredJob: string | undefined;
+  psTier: string | undefined;
   certificationCount: number | undefined;
   projectCount: number | undefined;
   majorType: string | undefined;
@@ -20,15 +20,15 @@ interface ResumeResultState {
 }
 
 const initialResultValues: resumeResultProps = {
-  preferredJob: '',
-  psTier: '',
-  certificationCount: 0,
-  projectCount: 0,
-  majorType: '',
-  companyName: '',
-  workPeriod: 0,
-  position: '',
-  additionalExperiences: '',
+  preferredJob: undefined,
+  psTier: undefined,
+  certificationCount: undefined,
+  projectCount: undefined,
+  majorType: undefined,
+  companyName: undefined,
+  workPeriod: undefined,
+  position: undefined,
+  additionalExperiences: undefined,
 };
 
 export const useResumeResultStore = create<ResumeResultState>()(
