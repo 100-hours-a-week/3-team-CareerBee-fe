@@ -1,6 +1,6 @@
 'use client';
 
-import fileUpload from '@/src/features/resume/assets/file-arrow-up-light.svg';
+import fileUpload from '@/src/features/resume/upload/assets/file-arrow-up-light.png';
 
 import UploadButton from '@/src/features/resume/upload/ui/UploadButton';
 import ResumeUploadInput from '@/src/features/resume/upload/ui/ResumeUploadInput';
