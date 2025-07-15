@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import QuestionTab from '@/src/features/interview/ui/QuestionTab';
 import { Toggle } from '@/src/widgets/ui/toggle';
+import QuestionTab from '@/src/features/interview/ui/QuestionTab';
+import Feedback from '@/src/features/interview/ui/Feedback';
 
 import { interviewType } from '@/src/entities/interview/model/interviewType';
 
@@ -18,7 +19,7 @@ export const InterviewTab = () => {
   const [activeTab, setActiveTab] = useState<interviewType['type'] | 'SAVED'>('FRONTEND');
 
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <div className="flex items-center justify-center gap-2 w-full whitespace-nowrap">
         {interviewTabs.map(({ label, value }) => (
           <Toggle
@@ -32,7 +33,8 @@ export const InterviewTab = () => {
         ))}
       </div>
       <QuestionTab />
-    </>
+      <Feedback />
+    </div>
   );
 };
 

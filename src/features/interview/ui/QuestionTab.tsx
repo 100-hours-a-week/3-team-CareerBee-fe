@@ -15,7 +15,7 @@ export const QuestionTab = () => {
     mode: 'onChange',
   });
   return (
-    <div className="mt-4">
+    <>
       {/* 답변 입력 */}
       <form>
         <LongTextForm
@@ -31,16 +31,17 @@ export const QuestionTab = () => {
           mainQuestion={true}
         />
 
-        <div className="flex w-full justify-center mt-10">
+        <div className="flex w-full justify-center mt-6">
           <Button
             type="submit"
             disabled={!watch('question')}
             label="AI 첨삭 확인하기"
             className="rounded-lg w-44"
+            // onClick={handleSubmit()}
           />
         </div>
       </form>
-    </div>
+    </>
   );
 };
 

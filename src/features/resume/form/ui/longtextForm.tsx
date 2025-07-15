@@ -17,7 +17,7 @@ export default function LongTextForm({
   return (
     <div className="flex flex-col w-full gap-1">
       <div className="text-sm flex w-full">
-        <p className={cn('mr-auto font-medium', mainQuestion ? 'font-bold text-lg' : '')}>
+        <p className={cn('mr-auto font-medium', mainQuestion ? 'font-bold text-lg mb-2' : '')}>
           {title}
         </p>
         {!mainQuestion && errors && (

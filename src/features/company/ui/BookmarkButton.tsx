@@ -43,7 +43,7 @@ export const BookmarkButton = ({ companyId }: { companyId: number }) => {
   });
 
   return (
-    <>
+    <div className="flex">
       {token ? (
         <Toggle
           variant="save"
@@ -67,7 +67,7 @@ export const BookmarkButton = ({ companyId }: { companyId: number }) => {
         <PiBookmarkSimple />
       )}
       <span className="text-lg mr-1">{count}</span>
-    </>
+    </div>
   );
 };
 
