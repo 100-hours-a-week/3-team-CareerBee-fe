@@ -17,7 +17,7 @@ export const Profile = () => {
   return (
     <>
       <img
-        src={userInfo?.profileUrl || noProfile}
+        src={userInfo?.profileUrl || noProfile.src}
         className="bg-white rounded-full w-16 h-16 object-cover"
         alt="프로필 이미지"
       ></img>
