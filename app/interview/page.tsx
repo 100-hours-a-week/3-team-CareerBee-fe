@@ -1,5 +1,5 @@
-import ToBeContinued from '@/src/shared/ui/ToBeContinued';
+import InterviewTab from '@/src/entities/interview/ui/InterviewTab';
 
 export default function Page() {
-  return <ToBeContinued />;
+  return <InterviewTab />;
 }

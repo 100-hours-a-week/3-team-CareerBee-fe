@@ -26,6 +26,9 @@ export default function LongTextForm({
           maxLength: rules.maxLength
             ? { value: rules.maxLength[0], message: rules.maxLength[1] }
             : undefined,
+          minLength: rules.minLength
+            ? { value: rules.minLength[0], message: rules.minLength[1] }
+            : undefined,
         }}
         render={({ field }) => {
           return (
@@ -35,6 +38,7 @@ export default function LongTextForm({
               variant="default"
               placeholder={placeholder}
               maxLength={rules.maxLength ? rules.maxLength[0] : 0}
+              minLength={rules.minLength ? rules.minLength[0] : 0}
             />
           );
         }}
