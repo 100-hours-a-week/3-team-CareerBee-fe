@@ -32,7 +32,7 @@ export default function ProfileImageUploader({
     <div className="flex relative justify-center w-full ">
       <label htmlFor="profile-upload" className="cursor-pointer relative w-24 h-24">
         <img
-          src={previewUrl || userInfo?.profileUrl || noProfile}
+          src={previewUrl || userInfo?.profileUrl || noProfile.src}
           alt="프로필 이미지"
           className="w-24 h-24 rounded-full object-cover p-1"
         />

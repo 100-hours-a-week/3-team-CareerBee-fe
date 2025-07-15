@@ -33,6 +33,7 @@ export async function handlePresignedUrl({
       },
     );
 
+    console.log(presignedRes.data);
     const { uploadUrl, objectKey } = presignedRes.data;
 
     await fetch(uploadUrl, {
