@@ -15,13 +15,11 @@ export const QuestionTab = () => {
     mode: 'onChange',
   });
   return (
-    <>
-      {/* 제목 */}
-      <div> </div>
+    <div className="mt-4">
       {/* 답변 입력 */}
       <form>
         <LongTextForm
-          title="질문이 들어옵니다."
+          title="질문이 ㅇㄹㅇㄴㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㅏㄴ일ㄴ어림ㄴ이ㅏ리ㅏ어리ㅓ아러ㅣ넝러ㅣㄴ어ㅣㅏㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹ."
           controllerName="question"
           rules={{
             minLength: [20, '입력을 확인해주세요. (최소 20자)'],
@@ -30,6 +28,7 @@ export const QuestionTab = () => {
           placeholder="답변을 입력해주세요."
           control={control}
           errors={errors.question}
+          mainQuestion={true}
         />
 
         <div className="flex w-full justify-center mt-10">
@@ -41,7 +40,7 @@ export const QuestionTab = () => {
           />
         </div>
       </form>
-    </>
+    </div>
   );
 };
 

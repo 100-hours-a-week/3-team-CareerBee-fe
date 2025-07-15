@@ -1,7 +1,8 @@
 'use client';
 
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/src/widgets/ui/tabs';
+import { useState } from 'react';
 import QuestionTab from '@/src/features/interview/ui/QuestionTab';
+import { Toggle } from '@/src/widgets/ui/toggle';
 
 import { interviewType } from '@/src/entities/interview/model/interviewType';
 
@@ -14,24 +15,24 @@ const interviewTabs: { label: string; value: interviewType['type'] | 'SAVED' }[]
 ];
 
 export const InterviewTab = () => {
-  return (
-    <Tabs defaultValue="FRONTEND" className="grow mt-4 w-full">
-      <TabsList>
-        {interviewTabs.map((tab) => (
-          <TabsTrigger key={tab.value} value={tab.value} variant="pill">
-            {tab.label}
-          </TabsTrigger>
-        ))}
-      </TabsList>
+  const [activeTab, setActiveTab] = useState<interviewType['type'] | 'SAVED'>('FRONTEND');
 
-      <TabsContent value="FRONTEND" className="grow">
-        <QuestionTab />
-      </TabsContent>
-      <TabsContent value="BACKEND"></TabsContent>
-      <TabsContent value="AI"></TabsContent>
-      <TabsContent value="DEVOPS"></TabsContent>
-      <TabsContent value="SAVED"></TabsContent>
-    </Tabs>
+  return (
+    <>
+      <div className="flex items-center justify-center gap-2 w-full whitespace-nowrap">
+        {interviewTabs.map(({ label, value }) => (
+          <Toggle
+            key={value}
+            variant="pill"
+            label={label}
+            pressed={activeTab === value}
+            onPressedChange={() => setActiveTab(value)}
+            className="shadow-md px-6 py-1 min-w-[104px] text-sm rounded-full border border-border/50 bg-white text-gray-800 whitespace-nowrap"
+          />
+        ))}
+      </div>
+      <QuestionTab />
+    </>
   );
 };
 

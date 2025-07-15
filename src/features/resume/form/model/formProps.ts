@@ -24,4 +24,5 @@ export interface formProps {
   placeholder: string;
   control: Control<any>;
   errors?: FieldError;
+  mainQuestion?: boolean;
 }
