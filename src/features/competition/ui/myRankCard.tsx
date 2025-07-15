@@ -86,7 +86,7 @@ export default function MyRankCard({ rankingView, competitionTime }: MyRankCardP
         >
           <div className="pl-2 pr-3 font-bold">{rank}</div>
           <img
-            src={userInfo?.profileUrl || noProfile}
+            src={userInfo?.profileUrl || noProfile.src}
             className="w-8 h-8 mx-1.5"
             alt="프로필 이미지"
           />
