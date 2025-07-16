@@ -1,11 +1,14 @@
 import LongTextForm from '@/src/features/resume/form/ui/longtextForm';
 import { Button } from '@/src/widgets/ui/button';
 
-import { useForm } from 'react-hook-form';
+import { interviewType } from '@/src/entities/interview/model/questionStore';
 import { useUserInfo } from '@/src/features/member/model/useUserInfo';
+import { useQuestionStore } from '@/src/entities/interview/model/questionStore';
+
+import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 
-export const QuestionTab = () => {
+export const QuestionTab = ({ type }: { type: interviewType | 'SAVED' }) => {
   const { data: userInfo } = useUserInfo();
   const {
     control,
@@ -17,12 +20,14 @@ export const QuestionTab = () => {
     },
     mode: 'onChange',
   });
+
+  const questionText = useQuestionStore((s) => s.getQuestionByType(type as interviewType));
   return (
     <>
       {/* 답변 입력 */}
       <form>
         <div className="mr-auto font-medium font-bold text-lg mb-2">
-          ㅇㄹㅇㄴㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㅏㄴ일ㄴ어림ㄴ이ㅏ리ㅏ어리ㅓ아러ㅣ넝러ㅣㄴ어ㅣㅏㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹ
+          {questionText || '면접 문제가 들어옵니다.'}
         </div>
         <div className="relative">
           <LongTextForm
