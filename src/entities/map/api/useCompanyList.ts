@@ -17,7 +17,7 @@ export const useCompanyList = () => {
   return useQuery<CompanyProps[], Error>({
     queryKey: ['companyList', latBucket, lngBucket, zoomBucket],
     queryFn: async () => {
-      if (!center || zoom === undefined) {
+      if (center == undefined || zoom === undefined) {
         throw new Error('Map center and zoom must be defined');
       }
       const radius = RADIUS_BY_LEVEL[zoom] ?? 1000;
@@ -26,7 +26,7 @@ export const useCompanyList = () => {
       });
       return data.data.companies;
     },
-    enabled: isReady,
+    // enabled: isReady,
     placeholderData: (previous) => previous,
     staleTime: 5 * 60 * 1000,
   });

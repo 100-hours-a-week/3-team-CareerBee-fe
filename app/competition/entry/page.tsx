@@ -54,7 +54,14 @@ export default function Page() {
   const { competitionId } = useCompetitionStore();
   const { problems } = useCompetitionData(competitionId);
 
-  const [selectedAnswers, setSelectedAnswers] = useState<number[]>([0, 0, 0, 0, 0]);
+  const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (problems.length > 0) {
+      setSelectedAnswers(Array(problems.length).fill(0));
+    }
+  }, [problems]);
+
   const notAnswered = selectedAnswers.every((answer) => answer !== 0);
   const isSolved = (index: number) => selectedAnswers[index] !== 0;
 
@@ -147,16 +154,16 @@ export default function Page() {
           <div className="h-12" />
         </div>
         {/* 다음 문제 */}
-        {currentTab < 5 ? (
+        {currentTab < problems.length ? (
           <Image
             src={MoveRight}
             alt="다음 문제"
             className="h-16 my-auto cursor-pointer"
-            onClick={() => setCurrentTab((prev) => Math.min(5, prev + 1))}
+            onClick={() => setCurrentTab((prev) => Math.min(problems.length, prev + 1))}
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') setCurrentTab((prev) => Math.min(5, prev + 1));
+              if (e.key === 'Enter') setCurrentTab((prev) => Math.min(problems.length, prev + 1));
             }}
           />
         ) : (
