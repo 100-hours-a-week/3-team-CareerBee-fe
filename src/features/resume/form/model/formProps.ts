@@ -1,26 +1,28 @@
-import { ResumeFormProps } from '@/src/features/resume/form/model/resumeStore';
-
 import { Control, FieldError } from 'react-hook-form';
 
 export interface rulesProps {
   required?: string;
   maxLength?: [number, string];
+  minLength?: [number, string];
   min?: [number, string];
   max?: [number, string];
 }
 
-type inputType =
+type resumeType =
   | 'certificationCount'
   | 'projectCount'
   | 'companyName'
   | 'workPeriod'
   | 'position'
-  | 'additionalExperiences';
+  | 'additionalExperiences'
+  | 'question';
+
 export interface formProps {
   title: string;
-  controllerName: inputType;
+  controllerName: resumeType;
   rules: rulesProps;
   placeholder: string;
-  control: Control<ResumeFormProps>;
+  control: Control<any>;
   errors?: FieldError;
+  mainQuestion?: boolean;
 }

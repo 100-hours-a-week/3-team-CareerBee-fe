@@ -11,7 +11,13 @@ import { useToggleBookmarkMutation } from '@/src/shared/api/useToggleBookmarkMut
 
 import { useState, useEffect } from 'react';
 
-export const BookmarkButton = ({ companyId }: { companyId: number }) => {
+export const BookmarkButton = ({
+  companyId,
+  className,
+}: {
+  companyId: number;
+  className?: string;
+}) => {
   const token = useAuthStore((state) => state.token);
 
   const { bookmarkStatus } = useFetchBookmarkStatus();
@@ -43,7 +49,7 @@ export const BookmarkButton = ({ companyId }: { companyId: number }) => {
   });
 
   return (
-    <>
+    <div className={`flex ${className ?? ''}`}>
       {token ? (
         <Toggle
           variant="save"
@@ -67,7 +73,7 @@ export const BookmarkButton = ({ companyId }: { companyId: number }) => {
         <PiBookmarkSimple />
       )}
       <span className="text-lg mr-1">{count}</span>
-    </>
+    </div>
   );
 };
 

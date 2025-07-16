@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { useState } from 'react';
 
@@ -43,33 +45,39 @@ const textVariants = cva(`flex w-full placeholder:text-text-secondary text-base`
 const Textarea = React.forwardRef<
   HTMLTextAreaElement,
   React.ComponentProps<'textarea'> & { variant?: 'default'; showCount?: boolean }
->(({ className, maxLength, variant = 'default', onChange, showCount = true, ...props }, ref) => {
-  const [textCount, setTextCount] = useState('000');
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTextCount(
-      String(e.target.value.length).padStart(maxLength ? String(maxLength).length : 3, '0'),
-    );
-    onChange?.(e);
-  };
+>(
+  (
+    { className, maxLength, minLength, variant = 'default', onChange, showCount = true, ...props },
+    ref,
+  ) => {
+    const [textCount, setTextCount] = useState('000');
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setTextCount(
+        String(e.target.value.length).padStart(maxLength ? String(maxLength).length : 3, '0'),
+      );
+      onChange?.(e);
+    };
 
-  return (
-    <div className={cn(divVariants({ variant }), className)}>
-      <textarea
-        className={cn(textVariants({ variant }))}
-        maxLength={maxLength}
-        ref={ref}
-        onChange={handleChange}
-        {...props}
-      />
-      {showCount && (
-        <p className="w-full text-end text-xs text-text-secondary">
-          <span>{textCount}</span>
-          <span>/{maxLength}</span>
-        </p>
-      )}
-    </div>
-  );
-});
+    return (
+      <div className={cn(divVariants({ variant }), className)}>
+        <textarea
+          className={cn(textVariants({ variant }))}
+          maxLength={maxLength}
+          minLength={minLength}
+          ref={ref}
+          onChange={handleChange}
+          {...props}
+        />
+        {showCount && (
+          <p className="w-full text-end text-xs text-text-secondary">
+            <span>{textCount}</span>
+            <span>/{maxLength}</span>
+          </p>
+        )}
+      </div>
+    );
+  },
+);
 Textarea.displayName = 'Textarea';
 
 export { Textarea };

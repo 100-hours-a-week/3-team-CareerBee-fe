@@ -4,7 +4,7 @@ import { Button } from '@/src/widgets/ui/button';
 import handleBuyTicket from '@/src/features/shop/api/useHandleBuyTicket';
 import { TicketType } from '@/src/entities/shop/lib/ticket';
 import { BuyModal } from '@/src/features/shop/ui/BuyModal';
-import { NeedMorePointsModal } from '@/src/features/shop/ui/NeedMorePointsModal';
+import { NeedMorePointsModal } from '@/src/shared/ui/NeedMorePointsModal';
 
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { useUserInfo } from '@/src/features/member/model/useUserInfo';
