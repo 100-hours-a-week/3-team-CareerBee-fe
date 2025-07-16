@@ -46,9 +46,9 @@ export default function Question({
         </div>
         <>
           <RadioGroup
-            defaultValue={selectedValue.toString()}
+            defaultValue={String(selectedValue ?? '')}
             className="flex flex-col space-y-6"
-            value={selectedValue.toString()}
+            value={String(selectedValue ?? '')}
             onValueChange={onChange}
             disabled={showExplanation}
           >
