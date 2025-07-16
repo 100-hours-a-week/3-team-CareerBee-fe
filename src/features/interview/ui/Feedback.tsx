@@ -1,6 +1,7 @@
 import { Button } from '@/src/widgets/ui/button';
 import BookmarkButton from '@/src/features/company/ui/BookmarkButton';
 import ShareButton from '@/src/features/company/ui/ShareButton';
+import { BuyInterviewModal } from './BuyInterviewModal';
 
 import { useFeedback } from '@/src/features/interview/model/useFeedback';
 
@@ -14,7 +15,9 @@ export const Feedback = () => {
       <div className="flex flex-col mt-auto gap-2">
         <div className="flex items-center justify-center gap-16 [&_svg]:size-6 bg-transparent">
           <ShareButton />
-          <Button label="다음 문제 보기" variant="primary"></Button>
+          <BuyInterviewModal>
+            <Button label="다음 문제 보기" variant="primary"></Button>
+          </BuyInterviewModal>
           <BookmarkButton className="px-3 py-1" companyId={0} />
         </div>
       </div>
