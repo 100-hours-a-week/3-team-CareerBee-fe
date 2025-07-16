@@ -1,5 +1,8 @@
 import LongTextForm from '@/src/features/resume/form/ui/longtextForm';
 import { Button } from '@/src/widgets/ui/button';
+import AILoading from '@/src/shared/ui/AILoading';
+
+import { useAIResponseState } from '@/src/features/resume/download/api/fetchQuestion';
 
 import { useForm } from 'react-hook-form';
 
@@ -16,8 +19,11 @@ export const Question = () => {
     mode: 'onChange',
   });
 
+  const { isLoading } = useAIResponseState();
+
   return (
     <>
+      {isLoading ?? <AILoading />}
       <form>
         <LongTextForm
           title="질문이 들어옵니다."
