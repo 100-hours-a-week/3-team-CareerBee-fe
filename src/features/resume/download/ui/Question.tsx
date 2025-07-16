@@ -3,10 +3,9 @@ import { Button } from '@/src/widgets/ui/button';
 import AILoading from '@/src/shared/ui/AILoading';
 
 import { useAIResponseState } from '@/src/features/resume/download/api/fetchQuestion';
-import { AIQuestion } from '@/src/shared/model/eventAIQuestionReady';
+import { useAIStore } from '@/src/shared/model/eventAIQuestionReady';
 
 import { useForm } from 'react-hook-form';
-import { useQuery } from '@tanstack/react-query';
 
 export const Question = () => {
   const {
@@ -21,7 +20,7 @@ export const Question = () => {
   });
 
   const { isLoading } = useAIResponseState();
-  const { data: aiQuestion } = useQuery<AIQuestion>({ queryKey: ['aiQuestion'] });
+  const { aiQuestion } = useAIStore();
 
   return (
     <>

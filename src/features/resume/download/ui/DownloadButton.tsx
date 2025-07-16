@@ -1,6 +1,8 @@
 import { Button } from '@/src/widgets/ui/button';
 import { useDownload } from '@/src/features/resume/download/model/useDownload';
 
+import { fetchQuestion } from '@/src/features/resume/download/api/fetchQuestion';
+
 import { useRouter } from 'next/navigation';
 
 export const DownloadButton = () => {
@@ -21,6 +23,7 @@ export const DownloadButton = () => {
           variant="primary"
           className="w-[11.5625rem] rounded-lg text-xs font-medium"
           onClick={() => {
+            fetchQuestion();
             router.push('/resume/download/advanced');
           }}
         ></Button>

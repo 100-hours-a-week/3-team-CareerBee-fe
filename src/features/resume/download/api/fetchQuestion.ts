@@ -13,7 +13,7 @@ export const useAIResponseState = create<AIResponseState>((set) => ({
 }));
 
 export const fetchQuestion = async () => {
-  const { setIsLoading } = useAIResponseState();
+  const { setIsLoading } = useAIResponseState.getState();
   const token = useAuthStore.getState().token;
 
   const res = await safePost(
@@ -27,7 +27,6 @@ export const fetchQuestion = async () => {
   );
 
   if (res.httpStatusCode === 202) {
-    //TODO: 성공 로직
     setIsLoading(true);
   }
 };
