@@ -3,13 +3,14 @@ import { Button } from '@/src/widgets/ui/button';
 import AILoading from '@/src/shared/ui/AILoading';
 
 import { useAIResponseState } from '@/src/features/resume/download/api/fetchQuestion';
+import { AIQuestion } from '@/src/shared/model/eventAIQuestionReady';
 
 import { useForm } from 'react-hook-form';
+import { useQuery } from '@tanstack/react-query';
 
 export const Question = () => {
   const {
     control,
-    // handleSubmit,
     watch,
     formState: { errors },
   } = useForm({
@@ -20,13 +21,14 @@ export const Question = () => {
   });
 
   const { isLoading } = useAIResponseState();
+  const { data: aiQuestion } = useQuery<AIQuestion>({ queryKey: ['aiQuestion'] });
 
   return (
     <>
       {isLoading ?? <AILoading />}
       <form>
         <LongTextForm
-          title="질문이 들어옵니다."
+          title={aiQuestion?.question ?? '질문이 들어옵니다.'}
           controllerName="question"
           rules={{
             maxLength: [500, '입력을 확인해주세요. (최대 500자)'],

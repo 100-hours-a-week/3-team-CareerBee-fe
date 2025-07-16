@@ -3,6 +3,8 @@
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { retryWithRefreshedToken } from '@/src/entities/auth/lib/authManager';
 
+import { eventAIQuestionReady } from './eventAIQuestionReady';
+
 import { useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
@@ -42,6 +44,8 @@ export const useSSE = () => {
         }));
       }
     });
+
+    eventAIQuestionReady(eventSource);
 
     eventSource.onerror = (error) => {
       eventSource.close();
