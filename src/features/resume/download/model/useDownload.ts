@@ -28,17 +28,29 @@ export const useDownload = () => {
         },
       );
 
-      const resumeUrl = res.data?.resumeUrl;
+      const rawUrl = res.data?.resumeUrl;
 
-      if (resumeUrl) {
-        const link = document.createElement('a');
-        link.href = resumeUrl;
-        link.download = '';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        setIsLoading(false);
-        setIsSuccess(true);
+      if (rawUrl) {
+        const matches = rawUrl.match(/file_url=([^,]+), file_name=([^\}]+)/);
+
+        if (matches && matches.length === 3) {
+          const fileUrl = matches[1];
+          const fileName = matches[2];
+
+          const link = document.createElement('a');
+          link.href = fileUrl;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          setIsLoading(false);
+          setIsSuccess(true);
+        } else {
+          console.error('resumeUrl 파싱 실패:', rawUrl);
+          setIsLoading(false);
+          setIsFailed(true);
+        }
       }
     } catch (error) {
       setIsLoading(false);
