@@ -4,6 +4,7 @@ import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { retryWithRefreshedToken } from '@/src/entities/auth/lib/authManager';
 
 import { eventAIQuestionReady } from './eventAIQuestionReady';
+import { eventResumeUpload } from '@/src/features/resume/upload/model/eventResumeUpload';
 
 import { useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -46,6 +47,7 @@ export const useSSE = () => {
     });
 
     eventAIQuestionReady(eventSource);
+    eventResumeUpload(eventSource);
 
     eventSource.onerror = (error) => {
       eventSource.close();

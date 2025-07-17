@@ -3,10 +3,10 @@ import { useResumeResultStore } from '@/src/features/resume/form/model/resumeSto
 
 import { EventSourcePolyfill } from 'event-source-polyfill';
 
-export const eventAIQuestionReady = (eventSource: EventSourcePolyfill) => {
+export const eventResumeUpload = (eventSource: EventSourcePolyfill) => {
   const { setIsLoading } = useUploadStore();
 
-  eventSource.addEventListener('ai-question-ready', async (e: any) => {
+  eventSource.addEventListener('resume-extracted', async (e: any) => {
     const data = JSON.parse(e.data);
     useResumeResultStore.getState().setResult(data);
     setIsLoading(false);
