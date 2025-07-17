@@ -9,70 +9,73 @@ import { eventResumeUpload } from '@/src/features/resume/upload/model/eventResum
 import { useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
+import { useEffect } from 'react';
 
 export const useSSE = () => {
   const queryClient = useQueryClient();
+  const token = useAuthStore.getState().token;
   const sseRef = useRef<EventSource | null>(null);
 
-  const token = useAuthStore.getState().token;
-  if (sseRef.current) return; // 이미 연결된 경우 실행 방지
-  if (!token) return;
+  useEffect(() => {
+    if (sseRef.current || !token) return;
 
-  const EventSource = EventSourcePolyfill || NativeEventSource;
-  let retryCount = 0;
+    const EventSource = EventSourcePolyfill || NativeEventSource;
+    let retryCount = 0;
 
-  const connect = () => {
-    const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/sse/subscribe`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      heartbeatTimeout: 60 * 60 * 1000,
-      withCredentials: true,
-    });
+    const connect = () => {
+      const eventSource = new EventSource(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/sse/subscribe`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          heartbeatTimeout: 60 * 60 * 1000,
+          withCredentials: true,
+        },
+      );
 
-    sseRef.current = eventSource;
+      sseRef.current = eventSource;
 
-    eventSource.addEventListener('open', () => {
-      retryCount = 0;
-    });
+      eventSource.addEventListener('open', () => {
+        retryCount = 0;
+      });
 
-    // 새 알림 수신
-    eventSource.addEventListener('notification', (e: any) => {
-      if (e.data === 'true') {
-        queryClient.setQueryData(['userInfo'], (prev: any) => ({
-          ...prev,
-          hasNewAlarm: true,
-        }));
-      }
-    });
+      eventSource.addEventListener('notification', (e: any) => {
+        if (e.data === 'true') {
+          queryClient.setQueryData(['userInfo'], (prev: any) => ({
+            ...prev,
+            hasNewAlarm: true,
+          }));
+        }
+      });
 
-    eventAIQuestionReady(eventSource);
-    eventResumeUpload(eventSource);
+      eventAIQuestionReady(eventSource);
+      eventResumeUpload(eventSource);
 
-    eventSource.onerror = (error) => {
-      eventSource.close();
-      sseRef.current = null;
+      eventSource.onerror = (error) => {
+        eventSource.close();
+        sseRef.current = null;
 
-      // 토큰 이슈로 연결 해제 시
-      if ((error as any).status === 401) {
-        retryWithRefreshedToken(eventSource);
-      } else {
-        const retryDelay = Math.min(1000 * 2 ** retryCount, 30000); // 최대 30초
-        retryCount += 1;
+        if ((error as any).status === 401) {
+          retryWithRefreshedToken(eventSource);
+        } else {
+          const retryDelay = Math.min(1000 * 2 ** retryCount, 30000);
+          retryCount += 1;
 
-        setTimeout(() => {
-          console.log(`SSE 재연결 시도 (${retryCount}회)...`);
-          connect();
-        }, retryDelay);
-      }
+          setTimeout(() => {
+            console.log(`SSE 재연결 시도 (${retryCount}회)...`);
+            connect();
+          }, retryDelay);
+        }
+      };
     };
+
+    connect();
 
     return () => {
       console.log('SSE 연결 해제');
-      eventSource.close();
+      sseRef.current?.close();
       sseRef.current = null;
     };
-  };
-
-  connect();
+  }, [token]);
 };

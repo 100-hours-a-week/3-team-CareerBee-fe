@@ -20,12 +20,9 @@ export const useAIStore = create<AIStore>((set) => ({
 }));
 
 export const eventAIQuestionReady = (eventSource: EventSourcePolyfill) => {
-  const { setIsLoading } = useAIResponseState();
-  const { setAIQuestion } = useAIStore();
-
   eventSource.addEventListener('ai-question-ready', async (e: any) => {
     const newQuestion = JSON.parse(e.data);
-    setAIQuestion(newQuestion);
-    setIsLoading(false);
+    useAIStore.getState().setAIQuestion(newQuestion);
+    useAIResponseState.getState().setIsLoading(false);
   });
 };
