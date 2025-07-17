@@ -20,11 +20,11 @@ export const CircleLoader = ({ size = 50 }: { size?: number }) => {
   );
 };
 
-export const AILoading = (title: string) => {
+export const AILoading = ({ title }: { title: string }) => {
   return (
-    <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/20">
+    <div className="top-0 left-0 h-full w-full z-50 flex flex-col justify-center items-center overflow-hidden">
       <DotLottieReact src="/animation/AI-loading.lottie" loop autoplay className="h-72 z-50" />
-      <div className="absolute mt-24 text-lg font-black text-white">title</div>
+      <div className="-mt-24 text-lg font-bold text-black">{title}</div>
     </div>
   );
 };

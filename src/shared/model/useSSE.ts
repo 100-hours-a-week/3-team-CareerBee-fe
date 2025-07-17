@@ -1,3 +1,5 @@
+'use client';
+
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { retryWithRefreshedToken } from '@/src/entities/auth/lib/authManager';
 
