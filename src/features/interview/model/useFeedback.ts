@@ -9,7 +9,7 @@ export const useFeedback = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const res = { httpStatusCode: 201, feedback: '그래그래그래' };
+      const res = { httpStatusCode: 201, feedback: '피드백이 들어옵니다.' };
       if (res.httpStatusCode === 201) {
         setShowFeedback(true);
         setFeedback(res.feedback);

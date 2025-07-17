@@ -8,6 +8,7 @@ import { useTabStore } from '@/src/entities/interview/model/tabStore';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { QuestionTabProps } from '@/src/entities/interview/model/interviewType';
 import { useMemberQuestionQuery } from '@/src/entities/interview/model/useMemberQuestionQuery';
+import { postAnswer } from '../api/postAnswer';
 
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
@@ -18,17 +19,13 @@ export const QuestionTab = ({ questions }: QuestionTabProps) => {
   const activeTab = useTabStore((s) => s.activeTab);
 
   // 회원용 CSR 쿼리
-  const {
-    data: memberQuestionText,
-    refetch,
-    isFetching,
-  } = useMemberQuestionQuery(activeTab, !!token || activeTab === 'SAVED');
+  const { data: memberQuestionData } = useMemberQuestionQuery(!!token || activeTab === 'SAVED');
 
   // 비회원용 SSR 데이터
   const guestQuestionText = questions.find((q) => q.type === activeTab)?.question ?? '';
 
   const questionText = token
-    ? memberQuestionText?.memberInterviewProblemResp.question
+    ? memberQuestionData?.memberInterviewProblemResp?.question
     : guestQuestionText;
 
   const {
@@ -44,7 +41,22 @@ export const QuestionTab = ({ questions }: QuestionTabProps) => {
 
   return (
     <>
-      <form>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+
+          if (!token || !memberQuestionData) return;
+
+          postAnswer({
+            token,
+            type: activeTab,
+            problemId: memberQuestionData.memberInterviewProblemResp.id,
+            question: memberQuestionData.memberInterviewProblemResp.question,
+            answer: watch('question'),
+            isFreeProblem: memberQuestionData.memberSolveAvailability.isFreePossible,
+          });
+        }}
+      >
         <QuestionTitle questionText={questionText} />
         <div className="relative">
           <LongTextForm
@@ -77,7 +89,6 @@ export const QuestionTab = ({ questions }: QuestionTabProps) => {
             disabled={!watch('question')}
             label="AI 첨삭 확인하기"
             className="rounded-lg w-44"
-            // onClick={handleSubmit()}
           />
         </div>
       </form>
