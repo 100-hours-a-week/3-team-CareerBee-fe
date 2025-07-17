@@ -16,15 +16,13 @@ export const QuestionTab = ({ questions }: QuestionTabProps) => {
   // const token = useAuthStore.getState().token;
   const token = useAuthStore((state) => state.token);
   const activeTab = useTabStore((s) => s.activeTab);
-  // const questionText = questions.find((q) => q.type === activeTab)?.question ?? '';
 
   // 회원용 CSR 쿼리
-
   const {
     data: memberQuestionText,
     refetch,
     isFetching,
-  } = useMemberQuestionQuery(activeTab, !!token || activeTab === 'SAVED'); // enabled는 token 있을 때만
+  } = useMemberQuestionQuery(activeTab, !!token || activeTab === 'SAVED');
 
   // 비회원용 SSR 데이터
   const guestQuestionText = questions.find((q) => q.type === activeTab)?.question ?? '';

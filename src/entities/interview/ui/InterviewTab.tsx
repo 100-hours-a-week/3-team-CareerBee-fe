@@ -4,7 +4,6 @@ import { Toggle } from '@/src/widgets/ui/toggle';
 
 import { interviewType } from '@/src/entities/interview/model/interviewType';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
-import { fetchQuestions } from '@/src/entities/interview/api/fetchQuestion';
 import { useTabStore } from '@/src/entities/interview/model/tabStore';
 
 import { useEffect } from 'react';
@@ -24,9 +23,6 @@ export const InterviewTab = () => {
   const { activeTab, setActiveTab } = useTabStore();
   useEffect(() => {
     setIsClient(true);
-    if (!token) {
-      fetchQuestions();
-    }
   }, [token]);
 
   return (
