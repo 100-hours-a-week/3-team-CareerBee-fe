@@ -1,15 +1,20 @@
+'use client';
+
 import LongTextForm from '@/src/features/resume/form/ui/longtextForm';
 import { Button } from '@/src/widgets/ui/button';
+import QuestionTitle from '@/src/entities/interview/ui/QuestionTitle';
+import QuestionMemberTitle from '@/src/entities/interview/ui/QuestionMemberTitle';
 
 import { interviewType } from '@/src/entities/interview/model/questionStore';
-import { useUserInfo } from '@/src/features/member/model/useUserInfo';
-import { useQuestionStore } from '@/src/entities/interview/model/questionStore';
+import { useAuthStore } from '@/src/entities/auth/model/auth';
 
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export const QuestionTab = ({ type }: { type: interviewType | 'SAVED' }) => {
-  const { data: userInfo } = useUserInfo();
+  // const token = useAuthStore.getState().token;
+  const token = useAuthStore((state) => state.token);
   const {
     control,
     watch,
@@ -21,14 +26,18 @@ export const QuestionTab = ({ type }: { type: interviewType | 'SAVED' }) => {
     mode: 'onChange',
   });
 
-  const questionText = useQuestionStore((s) => s.getQuestionByType(type as interviewType));
+  const [isReady, setIsReady] = useState(false);
+  useEffect(() => {
+    if (token) {
+      setIsReady(true);
+    }
+  }, []);
+
   return (
     <>
       {/* 답변 입력 */}
       <form>
-        <div className="mr-auto font-medium font-bold text-lg mb-2">
-          {questionText || '면접 문제가 들어옵니다.'}
-        </div>
+        {isReady && !token ? <QuestionTitle type={type} /> : <QuestionMemberTitle type={type} />}
         <div className="relative">
           <LongTextForm
             title=""
@@ -42,7 +51,7 @@ export const QuestionTab = ({ type }: { type: interviewType | 'SAVED' }) => {
             errors={errors.question}
             mainQuestion={true}
           />
-          {!userInfo?.token && (
+          {!token && (
             <div className="absolute inset-0 backdrop-blur-[2px] bg-white/10 flex items-center justify-center z-10 rounded-md">
               <div className="flex gap-2 items-center text-sm text-gray-700 font-medium">
                 <p>회원만 참여할 수 있어요.</p>
