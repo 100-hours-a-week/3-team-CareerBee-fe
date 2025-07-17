@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
 
-export const useNotificationSSE = () => {
+export const useSSE = () => {
   const queryClient = useQueryClient();
   const sseRef = useRef<EventSource | null>(null);
 
@@ -31,6 +31,7 @@ export const useNotificationSSE = () => {
       retryCount = 0;
     });
 
+    // 새 알림 수신
     eventSource.addEventListener('notification', (e: any) => {
       if (e.data === 'true') {
         queryClient.setQueryData(['userInfo'], (prev: any) => ({
