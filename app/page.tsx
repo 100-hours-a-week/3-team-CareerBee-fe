@@ -9,11 +9,7 @@ import KakaoMap from '@/src/features/map/ui/KakaoMap';
 
 import { FILTERS } from '@/src/features/map/config/map';
 
-import { useSSE } from '@/src/shared/model/useSSE';
-
 export default function Page() {
-  useSSE();
-
   return (
     <>
       <SearchBar />
