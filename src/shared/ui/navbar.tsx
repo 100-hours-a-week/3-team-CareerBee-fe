@@ -80,6 +80,9 @@ export const Navbar = () => {
         >
           <button
             onClick={(e) => {
+              const isSamePath = pathname === item.href;
+
+              if (isSamePath) return;
               if (isCompanyDetailPage && item.href === '/') {
                 e.preventDefault();
                 setMapPressedFromNavbar(true);
