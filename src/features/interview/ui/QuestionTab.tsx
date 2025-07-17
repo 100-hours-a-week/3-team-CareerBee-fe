@@ -3,18 +3,20 @@
 import LongTextForm from '@/src/features/resume/form/ui/longtextForm';
 import { Button } from '@/src/widgets/ui/button';
 import QuestionTitle from '@/src/entities/interview/ui/QuestionTitle';
-import QuestionMemberTitle from '@/src/entities/interview/ui/QuestionMemberTitle';
 
-import { interviewType } from '@/src/entities/interview/model/questionStore';
+import { useTabStore } from '@/src/entities/interview/model/tabStore';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
+import { QuestionTabProps } from '@/src/entities/interview/model/interviewType';
 
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
-export const QuestionTab = ({ type }: { type: interviewType | 'SAVED' }) => {
+export const QuestionTab = ({ questions }: QuestionTabProps) => {
   // const token = useAuthStore.getState().token;
   const token = useAuthStore((state) => state.token);
+  const activeTab = useTabStore((s) => s.activeTab);
+  const questionText = questions.find((q) => q.type === activeTab)?.question ?? '';
+
   const {
     control,
     watch,
@@ -26,18 +28,10 @@ export const QuestionTab = ({ type }: { type: interviewType | 'SAVED' }) => {
     mode: 'onChange',
   });
 
-  const [isReady, setIsReady] = useState(false);
-  useEffect(() => {
-    if (token) {
-      setIsReady(true);
-    }
-  }, []);
-
   return (
     <>
-      {/* 답변 입력 */}
       <form>
-        {isReady && !token ? <QuestionTitle type={type} /> : <QuestionMemberTitle type={type} />}
+        <QuestionTitle questionText={questionText} />
         <div className="relative">
           <LongTextForm
             title=""

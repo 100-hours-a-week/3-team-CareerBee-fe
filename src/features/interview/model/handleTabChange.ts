@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { fetchMemberQuestions } from '@/src/entities/interview/api/fetchMemberQuestion';
-import { interviewType } from '@/src/entities/interview/model/questionStore';
+import { interviewType } from '@/src/entities/interview/model/interviewType';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 
 export const useTab = () => {

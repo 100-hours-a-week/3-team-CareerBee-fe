@@ -1,4 +1,4 @@
-import { interviewType } from '@/src/entities/interview/model/questionStore';
+import { interviewType } from '@/src/entities/interview/model/interviewType';
 
 import { safeGet } from '@/src/shared/api/request';
 import { useAuthStore } from '@/src/entities/auth/model/auth';

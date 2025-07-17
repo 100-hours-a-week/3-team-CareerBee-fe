@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/src/widgets/ui/button';
 import BookmarkButton from '@/src/features/company/ui/BookmarkButton';
 import ShareButton from '@/src/features/company/ui/ShareButton';

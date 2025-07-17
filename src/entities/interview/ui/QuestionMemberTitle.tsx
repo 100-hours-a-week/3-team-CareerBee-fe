@@ -1,4 +1,4 @@
-import { interviewType } from '@/src/entities/interview/model/questionStore';
+import { interviewType } from '@/src/entities/interview/model/interviewType';
 import { useQueryClient } from '@tanstack/react-query';
 
 export const QuestionMemberTitle = ({ type }: { type: interviewType | 'SAVED' }) => {
