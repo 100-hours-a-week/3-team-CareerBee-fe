@@ -5,7 +5,6 @@ import { Toggle } from '@/src/widgets/ui/toggle';
 import { interviewType } from '@/src/entities/interview/model/interviewType';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { fetchQuestions } from '@/src/entities/interview/api/fetchQuestion';
-import { useTab } from '@/src/features/interview/model/handleTabChange';
 import { useTabStore } from '@/src/entities/interview/model/tabStore';
 
 import { useEffect } from 'react';
@@ -23,7 +22,6 @@ export const InterviewTab = () => {
   const token = useAuthStore.getState().token;
   const [isClient, setIsClient] = useState(false);
   const { activeTab, setActiveTab } = useTabStore();
-  const handleTabChange = useTab();
   useEffect(() => {
     setIsClient(true);
     if (!token) {
@@ -45,8 +43,7 @@ export const InterviewTab = () => {
             pressed={activeTab === value}
             onPressedChange={async () => {
               if (!isDisabled) {
-                const res = await handleTabChange(value);
-                setActiveTab(res);
+                setActiveTab(value);
               }
             }}
             className="shadow-md px-6 py-1 min-w-[104px] text-sm rounded-full border border-border/50 bg-white text-gray-800 whitespace-nowrap"
