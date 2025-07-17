@@ -8,7 +8,8 @@ import React from 'react';
 export const useUploadPdf = () => {
   const token = useAuthStore.getState().token;
 
-  const { setIsLoading } = useUploadStore();
+  const { setIsLoading, setIsClicked } = useUploadStore();
+
   const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
     if (!token) return;
     e.preventDefault();
@@ -33,7 +34,9 @@ export const useUploadPdf = () => {
         },
       );
       if (res.httpStatusCode === 202) {
+        console.log('success');
         setIsLoading(true);
+        setIsClicked(true);
       }
     }
   };

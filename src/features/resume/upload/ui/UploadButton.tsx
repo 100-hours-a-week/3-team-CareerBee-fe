@@ -7,9 +7,8 @@ import { useEffect, useState } from 'react';
 
 export const UploadButton = ({ isReady }: { isReady: boolean }) => {
   const router = useRouter();
-  const { isLoading } = useUploadStore();
+  const { isLoading, isClicked } = useUploadStore();
   const [label, setLabel] = useState('완료');
-  const [submit, setSubmit] = useState(false);
 
   useEffect(() => {
     if (isLoading) {
@@ -18,6 +17,11 @@ export const UploadButton = ({ isReady }: { isReady: boolean }) => {
       router.push('/resume/form');
     }
   }, [isLoading]);
+  console.log(!isReady, isClicked, !isReady || isClicked);
+
+  useEffect(() => {
+    console.log(!isReady, isClicked, !isReady || isClicked);
+  }, [isClicked, isReady]);
 
   return (
     <div className="flex gap-16 pt-12 w-full justify-center">
@@ -29,11 +33,10 @@ export const UploadButton = ({ isReady }: { isReady: boolean }) => {
       />
       <Button
         type="submit"
-        disabled={!isReady || submit}
+        disabled={!isReady || isClicked}
         label={label}
         variant="primary"
         className="w-40"
-        onClick={() => setSubmit(true)}
       />
     </div>
   );
