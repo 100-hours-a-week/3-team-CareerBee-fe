@@ -6,7 +6,6 @@ import ShareButton from '@/src/features/company/ui/ShareButton';
 import { BuyInterviewModal } from './BuyInterviewModal';
 import { AILoading } from '@/src/widgets/ui/loader';
 
-// import { useFeedback } from '@/src/features/interview/model/useFeedback';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { useFeedbackStore } from '@/src/features/interview/model/feedbackStore';
 import { useMemberQuestionQuery } from '@/src/entities/interview/model/useMemberQuestionQuery';
@@ -14,7 +13,6 @@ import { useMemberQuestionQuery } from '@/src/entities/interview/model/useMember
 import { useQuery } from '@tanstack/react-query';
 
 export const Feedback = () => {
-  // const { feedback } = useFeedback();
   const { isLoading } = useFeedbackStore();
   const token = useAuthStore.getState().token;
   const { data: question } = useMemberQuestionQuery(!!token);
