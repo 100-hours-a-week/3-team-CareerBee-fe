@@ -1,4 +1,4 @@
-import AnswerForm from '@/src/features/resume/download/ui/answerForm';
+import AnswerForm from '@/src/features/resume/download/ui/AnswerForm';
 import { Button } from '@/src/widgets/ui/button';
 import { AILoading } from '@/src/widgets/ui/loader';
 
