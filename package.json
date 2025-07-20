@@ -7,10 +7,9 @@
     "build": "next build",
     "start": "next start --port 5173",
     "lint": "next lint",
-    "dev:https":"next dev --experimental-https --port 5173"
+    "dev:https": "next dev --experimental-https --port 5173"
   },
-    "type": "module",
-
+  "type": "module",
   "dependencies": {
     "@fontsource/pretendard": "^5.2.5",
     "@lottiefiles/dotlottie-react": "^0.13.5",
@@ -38,6 +37,7 @@
     "react-hook-form": "7.54.1",
     "react-icons": "^5.5.0",
     "react-kakao-maps-sdk": "^1.1.27",
+    "react-markdown": "^10.1.0",
     "tailwind-merge": "^3.2.0",
     "tailwind-variants": "^1.0.0",
     "tailwindcss-animate": "^1.0.7",
