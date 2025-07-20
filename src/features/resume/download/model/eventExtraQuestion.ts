@@ -26,21 +26,20 @@ export const eventExtraQuestionSecond = (eventSource: EventSourcePolyfill) => {
       const rawUrl = data?.resumeDownloadUrl;
 
       if (rawUrl) {
-        const matches = rawUrl.match(/file_url=([^,]+), file_name=([^\}]+)/);
-
-        if (matches && matches.length === 3) {
-          const fileUrl = matches[1];
-          const fileName = matches[2];
-
-          const link = document.createElement('a');
-          link.href = fileUrl;
-          link.download = fileName;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        } else {
-          console.error('resumeUrl 파싱 실패:', rawUrl);
+        const link = document.createElement('a');
+        link.href = rawUrl;
+        const defaultFileName = 'resume_download.docx';
+        try {
+          const url = new URL(rawUrl);
+          const pathname = url.pathname;
+          const extractedName = pathname.substring(pathname.lastIndexOf('/') + 1);
+          link.download = extractedName || defaultFileName;
+        } catch {
+          link.download = defaultFileName;
         }
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       }
     }
 
