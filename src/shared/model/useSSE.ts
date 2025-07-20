@@ -3,7 +3,10 @@
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { retryWithRefreshedToken } from '@/src/entities/auth/lib/authManager';
 
-import { eventExtraQuestion } from '@/src/features/resume/download/model/eventExtraQuestion';
+import {
+  eventExtraQuestion,
+  eventExtraQuestionSecond,
+} from '@/src/features/resume/download/model/eventExtraQuestion';
 import { eventResumeUpload } from '@/src/features/resume/upload/model/eventResumeUpload';
 
 import { useRef } from 'react';
@@ -50,6 +53,7 @@ export const useSSE = () => {
       });
 
       eventExtraQuestion(eventSource);
+      eventExtraQuestionSecond(eventSource);
       eventResumeUpload(eventSource);
 
       eventSource.onerror = (error) => {

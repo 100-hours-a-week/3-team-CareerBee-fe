@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 export interface AIResponse {
-  memberId: string;
+  type: string;
   question: string;
 }
 
