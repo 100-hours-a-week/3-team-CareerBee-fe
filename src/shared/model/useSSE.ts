@@ -63,6 +63,7 @@ export const useSSE = () => {
       eventResumeUpload(eventSource);
 
       eventSource.onerror = (error) => {
+        console.log('SSE 연결 오류');
         eventSource.close();
         sseRef.current = null;
 

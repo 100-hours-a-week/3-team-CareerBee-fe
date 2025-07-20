@@ -17,11 +17,6 @@ export const UploadButton = ({ isReady }: { isReady: boolean }) => {
       router.push('/resume/form');
     }
   }, [isLoading]);
-  console.log(!isReady, isClicked, !isReady || isClicked);
-
-  useEffect(() => {
-    console.log(!isReady, isClicked, !isReady || isClicked);
-  }, [isClicked, isReady]);
 
   return (
     <div className="flex gap-16 pt-12 w-full justify-center">

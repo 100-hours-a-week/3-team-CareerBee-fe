@@ -34,7 +34,6 @@ export const useUploadPdf = () => {
         },
       );
       if (res.httpStatusCode === 202) {
-        console.log('success');
         setIsLoading(true);
         setIsClicked(true);
       }
