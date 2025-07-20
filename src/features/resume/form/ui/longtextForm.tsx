@@ -1,6 +1,7 @@
 import { Textarea } from '@/src/widgets/ui/textarea';
 
 import { formProps } from '@/src/features/resume/form/model/formProps';
+import Markdown from 'react-markdown';
 
 import { cn } from '@/src/shared/lib/utils';
 import { Controller } from 'react-hook-form';
@@ -17,9 +18,9 @@ export default function LongTextForm({
   return (
     <div className="flex flex-col w-full gap-1">
       <div className="text-sm flex w-full">
-        <p className={cn('mr-auto font-medium', mainQuestion ? 'font-bold text-lg mb-2' : '')}>
-          {title}
-        </p>
+        <div className={cn('mr-auto font-medium', mainQuestion ? 'font-bold text-lg mb-2' : '')}>
+          <Markdown>{title}</Markdown>
+        </div>
         {!mainQuestion && errors && (
           <p className="text-xs text-error font-medium">{errors.message}</p>
         )}
