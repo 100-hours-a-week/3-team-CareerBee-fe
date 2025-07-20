@@ -1,4 +1,4 @@
-import LongTextForm from '@/src/features/resume/form/ui/longtextForm';
+import AnswerForm from '@/src/features/resume/download/ui/answerForm';
 import { Button } from '@/src/widgets/ui/button';
 import { AILoading } from '@/src/widgets/ui/loader';
 
@@ -37,12 +37,12 @@ export const Question = () => {
   };
 
   return (
-    <>
+    <div className="mt-4">
       {isLoading ? (
         <AILoading title="질문 생성 중..." />
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
-          <LongTextForm
+          <AnswerForm
             title={extraQuestion?.question ?? '질문이 들어옵니다.'}
             controllerName="question"
             rules={{
@@ -63,7 +63,7 @@ export const Question = () => {
           </div>
         </form>
       )}
-    </>
+    </div>
   );
 };
 
