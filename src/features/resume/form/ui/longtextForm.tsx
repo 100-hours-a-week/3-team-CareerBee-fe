@@ -46,6 +46,7 @@ export default function LongTextForm({
               placeholder={placeholder}
               maxLength={rules.maxLength ? rules.maxLength[0] : 0}
               minLength={rules.minLength ? rules.minLength[0] : 0}
+              className={!mainQuestion ? 'h-[416px] mt-2' : ''}
             />
           );
         }}

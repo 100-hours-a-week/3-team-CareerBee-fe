@@ -37,7 +37,7 @@ export const Question = () => {
   };
 
   return (
-    <>
+    <div className="mt-4">
       {isLoading ? (
         <AILoading title="질문 생성 중..." />
       ) : (
@@ -63,7 +63,7 @@ export const Question = () => {
           </div>
         </form>
       )}
-    </>
+    </div>
   );
 };
 
