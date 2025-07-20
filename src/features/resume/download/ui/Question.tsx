@@ -2,8 +2,10 @@ import LongTextForm from '@/src/features/resume/form/ui/longtextForm';
 import { Button } from '@/src/widgets/ui/button';
 import AILoading from '@/src/shared/ui/AILoading';
 
-import { useAIResponseState } from '@/src/features/resume/download/api/fetchQuestion';
-import { useAIStore } from '@/src/shared/model/eventAIQuestionReady';
+import {
+  useExtraQuestion,
+  useAIResponseState,
+} from '@/src/features/resume/download/model/extraQuestionStore';
 
 import { useForm } from 'react-hook-form';
 
@@ -20,14 +22,14 @@ export const Question = () => {
   });
 
   const { isLoading } = useAIResponseState();
-  const { aiQuestion } = useAIStore();
+  const { extraQuestion } = useExtraQuestion();
 
   return (
     <>
       {isLoading ?? <AILoading />}
       <form>
         <LongTextForm
-          title={aiQuestion?.question ?? '질문이 들어옵니다.'}
+          title={extraQuestion?.question ?? '질문이 들어옵니다.'}
           controllerName="question"
           rules={{
             maxLength: [500, '입력을 확인해주세요. (최대 500자)'],
