@@ -1,6 +1,7 @@
 import LongTextForm from '@/src/features/resume/form/ui/longtextForm';
 import { Button } from '@/src/widgets/ui/button';
-import AILoading from '@/src/shared/ui/AILoading';
+// import AILoading from '@/src/shared/ui/AILoading';
+import { AILoading } from '@/src/widgets/ui/loader';
 
 import {
   useExtraQuestion,
@@ -41,28 +42,31 @@ export const Question = () => {
 
   return (
     <>
-      {isLoading ?? <AILoading />}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <LongTextForm
-          title={extraQuestion?.question ?? '질문이 들어옵니다.'}
-          controllerName="question"
-          rules={{
-            maxLength: [500, '입력을 확인해주세요. (최대 500자)'],
-          }}
-          placeholder="자유롭게 작성해주세요."
-          control={control}
-          errors={errors.question}
-        />
-
-        <div className="flex w-full justify-center mt-10">
-          <Button
-            type="submit"
-            disabled={!watch('question')}
-            label="다음 질문 보기"
-            className="rounded-lg w-44"
+      {isLoading ? (
+        <AILoading title="질문 생성 중..." />
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <LongTextForm
+            title={extraQuestion?.question ?? '질문이 들어옵니다.'}
+            controllerName="question"
+            rules={{
+              maxLength: [500, '입력을 확인해주세요. (최대 500자)'],
+            }}
+            placeholder="자유롭게 작성해주세요."
+            control={control}
+            errors={errors.question}
           />
-        </div>
-      </form>
+
+          <div className="flex w-full justify-center mt-10">
+            <Button
+              type="submit"
+              disabled={!watch('question')}
+              label="다음 질문 보기"
+              className="rounded-lg w-44"
+            />
+          </div>
+        </form>
+      )}
     </>
   );
 };

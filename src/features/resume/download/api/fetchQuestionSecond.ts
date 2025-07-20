@@ -11,7 +11,7 @@ export const fetchQuestion = async () => {
   const res = await safePost(
     '/api/v1/members/advanced-resume/update',
     {
-      answer: { answer },
+      answer,
     },
     {
       headers: {

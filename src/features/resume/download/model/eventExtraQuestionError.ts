@@ -1,11 +1,11 @@
 import { useAIResponseState } from '@/src/features/resume/download/model/extraQuestionStore';
-import { Toast } from '@/src/shared/ui/toast';
+import { toast } from '@/src/shared/model/useToast';
 
 import { EventSourcePolyfill } from 'event-source-polyfill';
 
 export const eventExtraQuestionError = (eventSource: EventSourcePolyfill) => {
   eventSource.addEventListener('advanced-resume-init-error', async (e: any) => {
     useAIResponseState.getState().setIsLoading(false);
-    Toast({ variant: 'destructive', title: 'AI 오류 발생' });
+    toast({ variant: 'destructive', title: 'AI 오류 발생' });
   });
 };
