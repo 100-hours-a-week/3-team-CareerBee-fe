@@ -7,7 +7,7 @@ export const fetchQuestion = async () => {
   const token = useAuthStore.getState().token;
 
   const res = await safePost(
-    '/api/v1/advanced-resume/init',
+    '/api/v1/members/advanced-resume/init',
     {},
     {
       headers: {
