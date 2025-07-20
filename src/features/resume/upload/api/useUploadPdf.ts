@@ -1,14 +1,14 @@
 import { safePost } from '@/src/shared/api/request';
 import { handlePresignedUrl } from '@/src/shared/api/handlePresignedUrl';
-import { useResumeResultStore } from '@/src/features/resume/form/model/resumeStore';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
+import { useUploadStore } from '@/src/features/resume/upload/model/uploadStore';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
 
 export const useUploadPdf = () => {
   const token = useAuthStore.getState().token;
-  const router = useRouter();
+
+  const { setIsLoading, setIsClicked } = useUploadStore();
 
   const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
     if (!token) return;
@@ -33,9 +33,9 @@ export const useUploadPdf = () => {
           timeout: 0,
         },
       );
-      if (res.httpStatusCode === 200) {
-        useResumeResultStore.getState().setResult(res.data);
-        router.push('/resume/form');
+      if (res.httpStatusCode === 202) {
+        setIsLoading(true);
+        setIsClicked(true);
       }
     }
   };

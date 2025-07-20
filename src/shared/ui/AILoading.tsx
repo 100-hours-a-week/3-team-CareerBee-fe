@@ -3,7 +3,7 @@
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { useDownload } from '@/src/features/resume/download/model/useDownload';
 
-export const Loading = () => {
+export const AILoading = () => {
   const { isLoading } = useDownload();
   return (
     <>
@@ -19,4 +19,4 @@ export const Loading = () => {
   );
 };
 
-export default Loading;
+export default AILoading;
