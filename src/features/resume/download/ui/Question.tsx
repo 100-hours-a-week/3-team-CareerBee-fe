@@ -1,7 +1,7 @@
 import LongTextForm from '@/src/features/resume/form/ui/longtextForm';
 import { Button } from '@/src/widgets/ui/button';
 // import AILoading from '@/src/shared/ui/AILoading';
-import { AILoading } from '@/src/widgets/ui/loader';
+import { AILoading, CircleLoader } from '@/src/widgets/ui/loader';
 
 import {
   useExtraQuestion,
@@ -11,20 +11,17 @@ import { useAnswer } from '@/src/features/resume/download/model/answerStore';
 import { fetchQuestion } from '@/src/features/resume/download/api/fetchQuestionSecond';
 
 import { useForm } from 'react-hook-form';
-import { useEffect } from 'react';
 
 export const Question = () => {
   const { isLoading } = useAIResponseState();
   const { extraQuestion } = useExtraQuestion();
-  useEffect(() => {
-    console.log('🚀 ~ Question ~ isLoading:', isLoading);
-  }, [isLoading]);
 
   const {
     control,
     watch,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     defaultValues: {
       question: '',
@@ -35,15 +32,16 @@ export const Question = () => {
   const { setAnswer } = useAnswer();
 
   const onSubmit = (data: { question: string }) => {
-    console.log('제출');
     setAnswer(data.question);
     fetchQuestion();
+    reset(); // clear the form input
   };
 
   return (
     <>
       {isLoading ? (
-        <AILoading title="질문 생성 중..." />
+        // <AILoading title="질문 생성 중..." />
+        <CircleLoader />
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
           <LongTextForm
