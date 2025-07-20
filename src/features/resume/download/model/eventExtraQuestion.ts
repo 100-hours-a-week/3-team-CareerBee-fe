@@ -2,6 +2,7 @@ import {
   useExtraQuestion,
   useAIResponseState,
 } from '@/src/features/resume/download/model/extraQuestionStore';
+import { useDownload } from '@/src/features/resume/download/model/downloadStore';
 
 import { EventSourcePolyfill } from 'event-source-polyfill';
 
@@ -25,22 +26,8 @@ export const eventExtraQuestionSecond = (eventSource: EventSourcePolyfill) => {
     } else if (data.type == 'complete') {
       const rawUrl = data?.resumeDownloadUrl;
 
-      if (rawUrl) {
-        const link = document.createElement('a');
-        link.href = rawUrl;
-        const defaultFileName = 'resume_download.docx';
-        try {
-          const url = new URL(rawUrl);
-          const pathname = url.pathname;
-          const extractedName = pathname.substring(pathname.lastIndexOf('/') + 1);
-          link.download = extractedName || defaultFileName;
-        } catch {
-          link.download = defaultFileName;
-        }
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
+      useDownload.getState().setUrl(rawUrl);
+      useDownload.getState().setIsReady(true);
     }
 
     useAIResponseState.getState().setIsLoading(false);
