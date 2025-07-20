@@ -24,7 +24,7 @@ export const useSSE = () => {
   const sseRef = useRef<EventSource | null>(null);
 
   useEffect(() => {
-    if (sseRef.current || !token) return;
+    if (sseRef.current || !token || token.length < 10) return;
 
     const EventSource = EventSourcePolyfill || NativeEventSource;
     let retryCount = 0;

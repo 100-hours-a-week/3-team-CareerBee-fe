@@ -1,7 +1,6 @@
 import LongTextForm from '@/src/features/resume/form/ui/longtextForm';
 import { Button } from '@/src/widgets/ui/button';
-// import AILoading from '@/src/shared/ui/AILoading';
-import { AILoading, CircleLoader } from '@/src/widgets/ui/loader';
+import { AILoading } from '@/src/widgets/ui/loader';
 
 import {
   useExtraQuestion,
@@ -34,14 +33,13 @@ export const Question = () => {
   const onSubmit = (data: { question: string }) => {
     setAnswer(data.question);
     fetchQuestion();
-    reset(); // clear the form input
+    reset();
   };
 
   return (
     <>
       {isLoading ? (
-        // <AILoading title="질문 생성 중..." />
-        <CircleLoader />
+        <AILoading title="질문 생성 중..." />
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
           <LongTextForm

@@ -31,7 +31,7 @@ export const useDownload = () => {
       const rawUrl = res.data?.resumeUrl;
 
       if (rawUrl) {
-        const matches = rawUrl.match(/file_url=([^,]+), file_name=([^\}]+)/);
+        const matches = rawUrl.match(/file_url=([^,]+), file_name=([^}]+)/);
 
         if (matches && matches.length === 3) {
           const fileUrl = matches[1];
