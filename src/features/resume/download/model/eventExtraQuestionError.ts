@@ -9,3 +9,10 @@ export const eventExtraQuestionError = (eventSource: EventSourcePolyfill) => {
     toast({ variant: 'destructive', title: 'AI 오류 발생' });
   });
 };
+
+export const eventExtraQuestionSecondError = (eventSource: EventSourcePolyfill) => {
+  eventSource.addEventListener('advanced-resume-update-error', async (e: any) => {
+    useAIResponseState.getState().setIsLoading(false);
+    toast({ variant: 'destructive', title: 'AI 오류 발생' });
+  });
+};

@@ -7,6 +7,10 @@ import {
   eventExtraQuestion,
   eventExtraQuestionSecond,
 } from '@/src/features/resume/download/model/eventExtraQuestion';
+import {
+  eventExtraQuestionError,
+  eventExtraQuestionSecondError,
+} from '@/src/features/resume/download/model/eventExtraQuestionError';
 import { eventResumeUpload } from '@/src/features/resume/upload/model/eventResumeUpload';
 
 import { useRef } from 'react';
@@ -54,6 +58,8 @@ export const useSSE = () => {
 
       eventExtraQuestion(eventSource);
       eventExtraQuestionSecond(eventSource);
+      eventExtraQuestionError(eventSource);
+      eventExtraQuestionSecondError(eventSource);
       eventResumeUpload(eventSource);
 
       eventSource.onerror = (error) => {
