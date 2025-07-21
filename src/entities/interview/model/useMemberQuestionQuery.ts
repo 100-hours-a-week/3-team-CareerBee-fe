@@ -1,3 +1,5 @@
+'use client';
+
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { safeGet } from '@/src/shared/api/request';
 import { useTabStore } from '@/src/entities/interview/model/tabStore';

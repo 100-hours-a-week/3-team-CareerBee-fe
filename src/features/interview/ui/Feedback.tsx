@@ -6,20 +6,10 @@ import ShareButton from '@/src/features/company/ui/ShareButton';
 import { BuyInterviewModal } from './BuyInterviewModal';
 import { AILoading } from '@/src/widgets/ui/loader';
 
-import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { useFeedbackStore } from '@/src/features/interview/model/feedbackStore';
-import { useMemberQuestionQuery } from '@/src/entities/interview/model/useMemberQuestionQuery';
 
-import { useQuery } from '@tanstack/react-query';
-
-export const Feedback = () => {
+export const Feedback = ({ feedback }: { feedback: { feedback: string } | undefined }) => {
   const { isLoading } = useFeedbackStore();
-  const token = useAuthStore.getState().token;
-  const { data: question } = useMemberQuestionQuery(!!token);
-  const { data: feedback } = useQuery<{ feedback: string } | undefined>({
-    queryKey: ['feedback', question?.memberInterviewProblemResp.id],
-    enabled: false,
-  });
 
   return (
     <>

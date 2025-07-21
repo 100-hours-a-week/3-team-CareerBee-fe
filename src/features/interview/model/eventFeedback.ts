@@ -4,13 +4,12 @@ import { useQueryClient } from '@tanstack/react-query';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 
 export const eventFeedback = (eventSource: EventSourcePolyfill) => {
-  const { setIsLoading } = useFeedbackStore();
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   eventSource.addEventListener('problem-feedback', async (e: any) => {
     const feedback = JSON.parse(e.data);
 
-    queryClient.setQueryData(['feedback', 'FRONTEND'], feedback);
-    setIsLoading(false);
+    // queryClient.setQueryData(['feedback', 'FRONTEND'], feedback);
+    useFeedbackStore.getState().setIsLoading(false);
   });
 };

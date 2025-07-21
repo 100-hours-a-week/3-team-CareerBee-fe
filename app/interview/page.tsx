@@ -1,6 +1,5 @@
 import InterviewTab from '@/src/entities/interview/ui/InterviewTab';
-import QuestionTab from '@/src/features/interview/ui/QuestionTab';
-import Feedback from '@/src/features/interview/ui/Feedback';
+import TabContent from '@/src/features/interview/ui/TabContent';
 
 import { fetchQuestions } from '@/src/entities/interview/api/fetchQuestion';
 
@@ -10,8 +9,7 @@ export default async function Page() {
   return (
     <div className="flex flex-col gap-4 py-5 px-5 w-full mb-auto overflow-y-auto">
       <InterviewTab />
-      <QuestionTab questions={questions} />
-      <Feedback />
+      <TabContent questions={questions} />
     </div>
   );
 }
