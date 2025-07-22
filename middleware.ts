@@ -1,14 +1,17 @@
 import { NextResponse, NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  if (process.env.NODE_ENV !== 'production') {
-    return NextResponse.next();
-  }
+  const { pathname } = request.nextUrl;
 
-  const token = request.cookies.get('refreshToken')?.value;
+  if (process.env.NODE_ENV === 'production') {
+    if (pathname.startsWith('/interview')) {
+      return NextResponse.redirect(new URL('/to-be-continued', request.url));
+    }
 
-  if (!token) {
-    return NextResponse.redirect(new URL('/login-required', request.url));
+    const token = request.cookies.get('refreshToken')?.value;
+    if (!token) {
+      return NextResponse.redirect(new URL('/login-required', request.url));
+    }
   }
 
   return NextResponse.next();
@@ -22,6 +25,7 @@ export const config = {
     '/notification',
     '/resume/:path*',
     '/interview/saved',
+    '/interview/:path*',
     '/my',
   ],
 };
