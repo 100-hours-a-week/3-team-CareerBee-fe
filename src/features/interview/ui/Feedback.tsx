@@ -6,10 +6,20 @@ import ShareButton from '@/src/features/company/ui/ShareButton';
 import { BuyInterviewModal } from './BuyInterviewModal';
 import { AILoading } from '@/src/widgets/ui/loader';
 
+import { useEffect } from 'react';
+import { useMemberQuestionQuery } from '@/src/entities/interview/model/useMemberQuestionQuery';
 import { useFeedbackStore } from '@/src/features/interview/model/feedbackStore';
 
 export const Feedback = ({ feedback }: { feedback: { feedback: string } | undefined }) => {
-  const { isLoading } = useFeedbackStore();
+  const { isLoading, isReady, setIsReady } = useFeedbackStore();
+  const { refetch } = useMemberQuestionQuery(false);
+
+  useEffect(() => {
+    if (isReady) {
+      refetch();
+      setIsReady(false);
+    }
+  }, [isReady, refetch]);
 
   return (
     <>
