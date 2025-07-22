@@ -77,7 +77,7 @@ export const Question = () => {
         onOpenChange={(open) => {
           if (!open) {
             useDownload.getState().setIsReady(false);
-            router.push('/');
+            router.push('/my');
           }
         }}
         onAction={() => {
