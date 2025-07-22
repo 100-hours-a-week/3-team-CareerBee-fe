@@ -209,11 +209,7 @@ export const Form = () => {
 
         {visibleFields.work && (
           <>
-            <p className="text-xs font-medium">
-              이직을 희망하시는 경우,
-              <br />
-              가장 최근 경력을 기준으로 기입해주세요!
-            </p>
+            <p className="mt-2 text-xs font-medium">가장 최근 경력을 기준으로 기입해주세요!</p>
 
             {/* 기업명 */}
             <TextForm
