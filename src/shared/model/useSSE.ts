@@ -13,6 +13,7 @@ import {
 } from '@/src/features/resume/download/model/eventExtraQuestionError';
 import { eventResumeUpload } from '@/src/features/resume/upload/model/eventResumeUpload';
 import { eventFeedback } from '@/src/features/interview/model/eventFeedback';
+import { eventFeedbackError } from '@/src/features/interview/model/eventFeedbackError';
 
 import { useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -58,7 +59,7 @@ export const useSSE = () => {
         }
       });
       eventFeedback(eventSource);
-
+      eventFeedbackError(eventSource);
       eventExtraQuestion(eventSource);
       eventExtraQuestionSecond(eventSource);
       eventExtraQuestionError(eventSource);

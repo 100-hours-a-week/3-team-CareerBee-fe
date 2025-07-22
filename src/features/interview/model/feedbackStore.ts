@@ -13,3 +13,13 @@ export const useFeedbackStore = create<feedbackStore>((set) => ({
   isReady: false,
   setIsReady: (ready) => set({ isReady: ready }),
 }));
+
+interface AIResponseState {
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
+}
+
+export const useAIResponseState = create<AIResponseState>((set) => ({
+  isLoading: false,
+  setIsLoading: (loading) => set({ isLoading: loading }),
+}));
