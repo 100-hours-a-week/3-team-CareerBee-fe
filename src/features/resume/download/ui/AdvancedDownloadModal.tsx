@@ -12,7 +12,6 @@ export const AdvancedDownloadModal = () => {
       title="이력서 생성에 성공했어요!"
       description="이력서를 다운로드 받으시겠어요?"
       actionText="다운로드"
-      cancelText="홈으로"
       onOpenChange={(open) => {
         if (!open) {
           useDownload.getState().setIsReady(false);

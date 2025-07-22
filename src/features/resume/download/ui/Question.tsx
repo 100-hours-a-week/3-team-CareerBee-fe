@@ -11,6 +11,7 @@ import { useAnswer } from '@/src/features/resume/download/model/answerStore';
 import { fetchQuestion } from '@/src/features/resume/download/api/fetchQuestionSecond';
 
 import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 
 export const Question = () => {
   const { isLoading } = useAIResponseState();
@@ -29,18 +30,36 @@ export const Question = () => {
     mode: 'onChange',
   });
 
-  const { setAnswer } = useAnswer();
+  const { setAnswer, step, setStep } = useAnswer();
+
+  useEffect(() => {
+    setStep(0);
+  }, []);
+  useEffect(() => {
+    console.log('🚀 ~ Question ~ step:', step);
+  }, [step]);
 
   const onSubmit = (data: { question: string }) => {
     setAnswer(data.question);
     fetchQuestion();
+    setStep(step + 1);
     reset();
   };
 
   return (
     <div className="mt-4">
       {isLoading ? (
-        <AILoading title="질문 생성 중..." />
+        step === 3 ? (
+          <div className="flex flex-col items-center">
+            <AILoading title="이력서 생성 중..." />
+            <p className="text-sm text-text-primary mt-2 text-center">잠시 후 완료됩니다.</p>
+            <p className="text-xs text-muted-foreground mt-2 text-center">
+              둘러보시다가 마이페이지 - 이력서 생성에서 다시 확인해보세요.
+            </p>
+          </div>
+        ) : (
+          <AILoading title="질문 생성 중..." />
+        )
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
           <AnswerForm
