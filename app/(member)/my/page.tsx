@@ -34,7 +34,7 @@ export default function Page() {
         <div className="flex items-center h-fit px-6 py-4 gap-4 border border-transparent border-b-border/30">
           <Profile />
           <Button
-            label="내 이력 조회"
+            label="이력서 생성"
             variant="primary"
             className="text-sm rounded-xl px-6"
             onClick={() => {
