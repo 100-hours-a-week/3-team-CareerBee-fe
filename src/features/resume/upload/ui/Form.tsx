@@ -1,6 +1,7 @@
 'use client';
 
 import fileUpload from '@/src/features/resume/upload/assets/file-arrow-up-light.png';
+import AdvancedDownloadModal from '@/src/features/resume/download/ui/AdvancedDownloadModal';
 
 import UploadButton from '@/src/features/resume/upload/ui/UploadButton';
 import ResumeUploadInput from '@/src/features/resume/upload/ui/ResumeUploadInput';
@@ -75,6 +76,7 @@ export const UploadForm = () => {
         </p>
       </div>
       <UploadButton isReady={isReady} />
+      <AdvancedDownloadModal />
     </form>
   );
 };

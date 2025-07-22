@@ -11,7 +11,7 @@ export const DownloadModal = () => {
         open={isSuccess}
         onOpenChange={() => {}}
         title="이력서가 생성되었어요."
-        description={<>다시 보고 싶다면 마이페이지 → 내 이력 조회에서 확인하실 수 있어요.</>}
+        description={<>다시 보고 싶다면 마이페이지 → 이력서 생성에서 확인하실 수 있어요.</>}
         actionText="확인"
         cancelButton={false}
         onAction={() => {
