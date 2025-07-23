@@ -1,3 +1,5 @@
-export type interviewType = {
-  type: 'BACKEND' | 'FRONTEND' | 'DEVOPS' | 'AI';
+export type interviewType = 'BACKEND' | 'FRONTEND' | 'DEVOPS' | 'AI';
+
+export type QuestionTabProps = {
+  questions: { type: interviewType | 'SAVED'; question: string }[];
 };
