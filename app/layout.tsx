@@ -3,15 +3,10 @@ import './globals.css';
 import { AppLayout } from '@/src/app/ui/AppLayout';
 import { Providers } from '@/src/app/ui/Providers';
 import GoogleAnalytics from '@/src/shared/lib/GoogleAnalytics';
+import Seo from '@/src/shared/lib/Seo';
 
 import React from 'react';
-import type { Metadata } from 'next';
 import Script from 'next/script';
-
-export const metadata: Metadata = {
-  title: 'CareerBee - IT 커리어 지도',
-  description: 'IT 구직자를 위한 커리어 시각화 플랫폼',
-};
 
 const kakaoKey = process.env.NEXT_PUBLIC_KAKAOMAP_KEY;
 
@@ -22,6 +17,7 @@ if (!kakaoKey) {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <Seo />
       <body className="antialiased">
         {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
           <GoogleAnalytics googleAnalyticsId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
