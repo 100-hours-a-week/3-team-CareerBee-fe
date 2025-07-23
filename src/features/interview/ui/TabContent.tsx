@@ -7,20 +7,24 @@ import { QuestionTabProps } from '@/src/entities/interview/model/interviewType';
 import { useMemberQuestionQuery } from '@/src/entities/interview/model/useMemberQuestionQuery';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { useFeedbackStore } from '@/src/features/interview/model/feedbackStore';
+import { useTabStore } from '@/src/entities/interview/model/tabStore';
 
 export const TabContent = ({ questions }: QuestionTabProps) => {
   const token = useAuthStore.getState().token;
   const { isLoading } = useFeedbackStore();
+  const activeTab = useTabStore().activeTab;
 
-  const { data: question } = useMemberQuestionQuery(!!token);
+  const { data: question } = useMemberQuestionQuery(activeTab !== 'SAVED' && !!token);
 
-  return (
+  return activeTab !== 'SAVED' ? (
     <>
       <QuestionTab questions={questions} />
       {(isLoading || question?.memberInterviewProblemResp?.feedback) && (
         <Feedback feedback={{ feedback: question.memberInterviewProblemResp.feedback }} />
       )}
     </>
+  ) : (
+    <></>
   );
 };
 
