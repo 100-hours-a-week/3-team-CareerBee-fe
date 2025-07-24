@@ -1,9 +1,9 @@
 import './globals.css';
 
+import { pretendard } from '@/src/shared/lib/fonts';
 import { AppLayout } from '@/src/app/ui/AppLayout';
 import { Providers } from '@/src/app/ui/Providers';
 import GoogleAnalytics from '@/src/shared/lib/GoogleAnalytics';
-import Seo from '@/src/shared/lib/Seo';
 
 import React from 'react';
 import Script from 'next/script';
@@ -16,8 +16,7 @@ if (!kakaoKey) {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <Seo />
+    <html lang="ko" className={`${pretendard.variable}`}>
       <body className="antialiased">
         {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
           <GoogleAnalytics googleAnalyticsId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
