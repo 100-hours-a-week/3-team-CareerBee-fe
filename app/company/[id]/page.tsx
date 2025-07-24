@@ -9,12 +9,9 @@ import { fetchIssue } from '@/src/entities/company/api/fetchIssue';
 
 import { Metadata } from 'next';
 
-export async function generateStaticParams() {
-  const companies = await fetchAllCompanies();
-  return companies.map((company) => ({ id: String(company.id) }));
-}
+type PageParams = Promise<{ id: string }>;
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: PageParams }): Promise<Metadata> {
   const { id } = await params;
   const company = await fetchCompanySummary(id);
 
@@ -39,7 +36,11 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   };
 }
 
-type PageParams = Promise<{ id: string }>;
+export async function generateStaticParams() {
+  const companies = await fetchAllCompanies();
+  return companies.map((company) => ({ id: String(company.id) }));
+}
+
 export default async function CompanyPage({ params }: { params: PageParams }) {
   const { id } = await params;
   const issue = await fetchIssue({ companyId: Number(id) });
