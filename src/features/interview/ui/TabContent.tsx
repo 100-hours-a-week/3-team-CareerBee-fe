@@ -2,6 +2,7 @@
 
 import QuestionTab from './QuestionTab';
 import Feedback from './Feedback';
+import SavedInterview from '@/src/entities/interview/ui/SavedInterview';
 
 import { QuestionTabProps } from '@/src/entities/interview/model/interviewType';
 import { useMemberQuestionQuery } from '@/src/entities/interview/model/useMemberQuestionQuery';
@@ -24,7 +25,7 @@ export const TabContent = ({ questions }: QuestionTabProps) => {
       )}
     </>
   ) : (
-    <></>
+    <SavedInterview />
   );
 };
 
