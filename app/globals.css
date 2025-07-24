@@ -17,13 +17,6 @@
   font-style: normal;
   font-display: swap;
 }
-@font-face {
-  font-family: 'RiaSans';
-  src: url('/fonts/ria-sans/RiaSans-ExtraBold.woff2') format('woff2');
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
 
 @tailwind base;
 @tailwind components;
