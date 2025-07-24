@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import 'pretendard/dist/web/variable/pretendardvariable.css';
-
 /* 리아체 */
 @font-face {
   font-family: 'RiaSans';
@@ -184,7 +182,6 @@ input[type='number'] {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
 
-    --font-pretendard: 'Pretendard Variable', sans-serif;
   }
   /* .dark {
     --background: 0 0% 3.9%;
