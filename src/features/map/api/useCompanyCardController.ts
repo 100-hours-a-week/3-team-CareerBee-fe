@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { useCompanyStore } from '@/src/shared/lib/company';
 import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { instance as axios } from '@/src/shared/api/axios';
@@ -9,7 +8,7 @@ export function useCompanyCardController(companyId: number) {
   const token = useAuthStore((state) => state.token);
   const { bookmarkStatus } = useFetchBookmarkStatus();
 
-  const fetchCompanyDetail = useCallback(async () => {
+  const fetchCompanyDetail = async () => {
     const newIndex = openCardIndex === companyId ? null : companyId;
     setOpenCardIndex(newIndex);
 
@@ -31,15 +30,7 @@ export function useCompanyCardController(companyId: number) {
     } catch (e) {
       console.error('기업 간단 정보 조회 실패: ', e);
     }
-  }, [
-    openCardIndex,
-    companyId,
-    setOpenCardIndex,
-    setCompanyInfo,
-    setIsBookmarked,
-    token,
-    bookmarkStatus,
-  ]);
+  };
 
   return { fetchCompanyDetail };
 }
