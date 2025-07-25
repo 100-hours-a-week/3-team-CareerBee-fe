@@ -5,6 +5,8 @@ import { useAuthStore } from '@/src/entities/auth/model/auth';
 import { Header } from '@/src/shared/ui/header';
 import { Navbar } from '@/src/shared/ui/navbar';
 import { Toaster } from '@/src/widgets/ui/toaster';
+import { useSSE } from '@/src/shared/model/useSSE';
+
 import React from 'react';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -24,7 +26,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     if (pathname.startsWith('/resume')) return 'nav';
     if (pathname === '/competition' && !!token) return 'main';
     else if (pathname === '/competition') return 'login';
-    if (pathname.startsWith('/shop')) return 'nav';
+    if (pathname.startsWith('/shop')) return 'main';
+    if (pathname.startsWith('/interview') && !!token) return 'main';
+    else if (pathname.startsWith('/interview')) return 'login';
     return 'minimal';
   })();
 
@@ -40,6 +44,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       return false;
     return true;
   };
+
+  useSSE();
 
   return (
     <>

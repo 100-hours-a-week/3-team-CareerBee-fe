@@ -1,20 +1,15 @@
-import Script from 'next/script';
+import Seo from '@/src/shared/lib/Seo';
 
 export default function Head() {
   return (
     <>
-      {/* Google Analytics */}
-      <Script async src="https://www.googletagmanager.com/gtag/js?id=G-9WM6MNGPP8" />
-      <Script
-        id="google-analytics"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-9WM6MNGPP8');
-          `,
-        }}
+      <Seo />
+      <link
+        rel="preload"
+        href="/fonts/pretendard/PretendardVariable.woff2"
+        as="font"
+        type="font/woff2"
+        crossOrigin="anonymous"
       />
     </>
   );

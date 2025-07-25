@@ -9,11 +9,7 @@ import KakaoMap from '@/src/features/map/ui/KakaoMap';
 
 import { FILTERS } from '@/src/features/map/config/map';
 
-import { useNotificationSSE } from '@/src/shared/model/useNotificationSSE';
-
 export default function Page() {
-  useNotificationSSE();
-
   return (
     <>
       <SearchBar />
