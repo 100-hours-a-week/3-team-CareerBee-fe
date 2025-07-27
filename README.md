@@ -1,54 +1,92 @@
-# React + TypeScript + Vite
+# 🐝 CareerBee - 프론트엔드
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+IT 구직자들을 위한 커리어 시각화 서비스 **CareerBee**의 프론트엔드 레포지토리입니다.  
+기업 정보, 채용 공고, CS 대회, 모의 면접 등을 시각화하여 구직자의 정보 탐색 피로도를 줄이고 동기를 부여합니다.
 
-Currently, two official plugins are available:
+> **배포 주소:** [https://www.careerbee.co.kr](https://www.careerbee.co.kr)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🚀 주요 기능
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 📍 **지도 기반 기업 탐색**: 카카오맵을 이용한 위치 기반 기업 탐색
+- 🏢 **기업 상세 페이지**: 채용 공고, 최신 이슈, 유저 관심도 등을 시각화
+- 🥇 **CS 실시간 대회**: 매일 열리는 CS 문제 풀이 대회
+- 📄 **이력서 생성**: AI 기반 질문 제공으로 이력서 생성
+- 🧠 **면접 질문 생성 및 답변**: AI 기반 질문 추천 및 답변 저장
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+---
+
+## 🛠 기술 스택
+
+| 영역       | 기술                                           |
+|------------|------------------------------------------------|
+| 프레임워크 | Next.js15, TypeScript                    |
+| 상태 관리 | Zustand, TanStack Query 5                      |
+| 스타일링   | Tailwind CSS, shadcn/ui                       |
+| 애니메이션 | Framer Motion                                  |
+| 시각화     | D3.js                                       |
+| 지도       | Kakao Map SDK                                  |
+| 빌드 도구 | pnpm                                     |
+
+---
+
+## 📁 폴더 구조 (FSD 기반)
+
+```
+├── app/                         # 라우터 및 엔트리포인트
+└── src/
+      ├── app/                   # 전역으로 필요한 함수
+      ├── features/           # 기능 단위 UI + 비즈니스 로직
+      ├── entities/             # 단순 정보 뷰어 로직
+      ├── shared/              # 공통 컴포넌트, 유틸, 타입 등
+      └── widgets/            # 여러 기능이 결합된 UI 위젯
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## ⚙️ 실행 방법
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+# 패키지 설치
+pnpm install
+
+# 개발 서버 실행
+pnpm dev
+
+# 빌드
+pnpm build
+
+# 빌드 결과 프리뷰
+pnpm preview
+
 ```
+⸻
+
+## 📝 커밋 컨벤션
+
+| 태그     | 설명                        |
+|----------|-----------------------------|
+| Feat     | 새로운 기능 추가             |
+| Fix      | 버그 수정                   |
+| Refact   | 리팩토링                    |
+| Style    | 스타일 변경        |
+| Docs     | 문서 변경                   |
+| Chore    | 환경설정, 빌드 등 기타     |
+| File   | 파일/폴더명 변경, 삭제         |
+
+
+⸻
+
+## 👨‍💻 개발자
+
+- emily.kim(김부경)
+
+
+⸻
+
+### 📌 기타 참고 사항
+
+-	일부 기능은 개발 중이며, /to-be-continued로 리디렉션됩니다.
+-	개발 서버와 운영 서버는 각각 develop, main 브랜치 기준으로 배포됩니다.
+
