@@ -6,10 +6,18 @@ export const Seo = () => {
       <title>CareerBee - IT 커리어 지도</title>
       <meta
         name="description"
-        content="커리어비는 IT 구직자를 위한 커리어 시각화 플랫폼을 제공하는 서비스입니다."
+        content="커리어비는 IT 구직자를 위한 커리어 시각화 플랫폼입니다. 지도 기반 기업 정보, 채용 공고, AI 이력서 생성, 실시간 대회 기능을 제공합니다! 지금 바로 당신의 커리어 여정을 시작해보세요."
       />
-      <meta name="keywords" content="커리어비, IT 취업, AI 코칭, 이력서, 채용 정보, 지도, 판교" />
+      <meta
+        name="keywords"
+        content="커리어비, IT 취업, AI 코칭, 이력서, 채용 정보, 채용, 대회, IT, 지도, 판교"
+      />
       <meta name="author" content="ssammu" />
+
+      <meta name="site:name" content="커리어비" />
+      <meta name="site:name:ko" content="커리어비" />
+      <meta name="site:name:en" content="CareerBee" />
+      <meta property="og:site_name" content="커리어비" />
 
       {/* Open Graph */}
       <meta property="og:title" content="CareerBee - IT 커리어 지도" />
