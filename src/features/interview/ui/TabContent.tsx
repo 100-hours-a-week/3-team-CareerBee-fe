@@ -10,15 +10,17 @@ import { useFeedbackStore } from '@/src/features/interview/model/feedbackStore';
 
 export const TabContent = ({ questions }: QuestionTabProps) => {
   const token = useAuthStore.getState().token;
-  const { isLoading } = useFeedbackStore();
+  const { isLoading, feedback } = useFeedbackStore();
 
   const { data: question } = useMemberQuestionQuery(!!token);
 
   return (
     <>
       <QuestionTab questions={questions} />
-      {(isLoading || question?.memberInterviewProblemResp?.feedback) && (
-        <Feedback feedback={{ feedback: question.memberInterviewProblemResp.feedback }} />
+      {(isLoading || question?.memberInterviewProblemResp?.feedback || feedback !== '') && (
+        <Feedback
+          feedback={{ feedback: question.memberInterviewProblemResp.feedback || feedback }}
+        />
       )}
     </>
   );

@@ -5,6 +5,8 @@ interface feedbackStore {
   setIsLoading: (loading: boolean) => void;
   isReady: boolean;
   setIsReady: (loading: boolean) => void;
+  feedback: string;
+  setFeedback: (feedback: string) => void;
 }
 
 export const useFeedbackStore = create<feedbackStore>((set) => ({
@@ -12,6 +14,8 @@ export const useFeedbackStore = create<feedbackStore>((set) => ({
   setIsLoading: (loading) => set({ isLoading: loading }),
   isReady: false,
   setIsReady: (ready) => set({ isReady: ready }),
+  feedback: '',
+  setFeedback: (feedback) => set({ feedback }),
 }));
 
 interface AIResponseState {
