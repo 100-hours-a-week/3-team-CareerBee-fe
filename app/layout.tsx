@@ -1,6 +1,6 @@
 import './globals.css';
 
-import { pretendard } from '@/src/shared/lib/fonts';
+import { pretendard, riaSans } from '@/src/shared/lib/fonts';
 import { AppLayout } from '@/src/app/ui/AppLayout';
 import { Providers } from '@/src/app/ui/Providers';
 import GoogleAnalytics from '@/src/shared/lib/GoogleAnalytics';
@@ -16,7 +16,7 @@ if (!kakaoKey) {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`${pretendard.variable}`}>
+    <html lang="ko" className={`${pretendard.variable} ${riaSans.variable}`}>
       <body className="antialiased">
         {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
           <GoogleAnalytics googleAnalyticsId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
