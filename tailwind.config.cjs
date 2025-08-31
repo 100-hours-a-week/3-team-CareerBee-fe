@@ -6,7 +6,7 @@ module.exports = {
     extend: {
       fontFamily: {
         pretendard: ['var(--font-pretendard)'],
-        ria: ['"RiaSans"', 'sans-serif'],
+        ria: ['var(--font-ria)'],
       },
       borderRadius: {
         xl: 'calc(var(--radius) + 4px)',
